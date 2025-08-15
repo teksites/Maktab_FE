@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+
 @* Required *@
 <MudThemeProvider />
 <MudPopoverProvider />
@@ -9,18 +10,68 @@
 @* Needed for snackbars *@
 <MudSnackbarProvider />
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<MudLayout>
+     <MudAppBar Elevation="1">
+          <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+          <MudText Typo="Typo.h5" Class="ml-3">Maktab</MudText>
+          <MudSpacer />
+          <MudToolBar Edge="Edge.End">
+               @* <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" /> *@
+               <MudMenu Dense
+                        Variant="Variant.Text"
+                        Color="Color.Inherit"
+                        Icon="@Icons.Material.TwoTone.MoreVert">
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+                    @* <MudMenu StartIcon="@Icons.Material.TwoTone.Settings"
+                             IconColor="Color.Primary"
+                             Label="Settings">
+                         <MudMenuItem Icon="@Icons.Material.TwoTone.DarkMode"
+                                      IconColor="Color.Secondary"
+                                      Label="Dark Theme" />
+                    </MudMenu> 
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+                    <MudDivider />*@
+
+                    <MudMenuItem Href="/"
+                                 ForceLoad
+                                 Icon="@Icons.Material.TwoTone.Login"
+                                 IconColor="Color.Primary"
+                                 Label="Sign In" />
+
+                    @* <MudMenuItem Href="/"
+                                 ForceLoad
+                                 Icon="@Icons.Material.TwoTone.Logout"
+                                 IconColor="Color.Primary"
+                                 Label="Sign Out" /> *@
+               </MudMenu>
+               <MudTooltip Text="Notification">
+                    <MudBadge Dot="true" Visible="false" Class="mx-6 my-4" Overlap="true" Bordered="true">
+                         <MudIconButton Icon="@Icons.Material.Outlined.Notifications" Color="Color.Inherit" Edge="Edge.End" />
+                    </MudBadge>
+               </MudTooltip>
+
+               <MudAvatar Color="Color.Inherit" Variant="Variant.Outlined" >M</MudAvatar>
+           </MudToolBar>
+
+     </MudAppBar>
+     <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+          <NavMenu/>
+     </MudDrawer>
+
+     <MudMainContent>
+          <MudAlert hidden="true"/>
+          <MudContainer MaxWidth="MaxWidth.Medium" >
+               @Body
+          </MudContainer>
+     </MudMainContent>
+</MudLayout>
+
+
+@code {
+     bool _drawerOpen = true;
+
+     void DrawerToggle()
+     {
+          _drawerOpen = !_drawerOpen;
+     }
+}
