@@ -1,42 +1,54 @@
 ﻿using Maktab.Core.Interfaces.Services;
 using Maktab.Domain.Helpers;
+using MaktabDataContracts.Requests.Authentication;
+using MaktabDataContracts.Responses.Authentication;
 
 namespace Maktab.Domain.Services
 {
-     internal class SessionService : ISessionService
+     public class SessionService : BaseService, ISessionService
      {
           private const string loginUrl = @"/api/users/session/login";
           private const string logoutUrl = @"/api/users/session/{0}/logout";
 
-
-
-          private IHttpService _httpService;
-          private ILocalStorageService _localStorageService;
-
-
           public SessionService(IHttpService httpService, ILocalStorageService localStorageService)
+           : base(httpService, localStorageService)
           {
-               _httpService = httpService;
-               _localStorageService = localStorageService;
+               
           }
 
-          public Task<object> CreateUserSession(string username, string password)
+          public async Task<bool> Login(UserLoginInformation loginInformation)
           {
-               throw new NotImplementedException();
+               var isloggedIn = false;
 
-               _localStorageService.SetItem(Constants.CurrentUserNameKey, username);
-               _localStorageService.SetItem(Constants.CurrentUserIdKey, "");
-               _localStorageService.SetItem(Constants.SessionIdKey, "");
+               try
+               {
 
-               _localStorageService.SetItem(Constants.AccessTokenKey, "");
-               _localStorageService.SetItem(Constants.RefreshTokenKey, "");
+                    var authenticationReponse = await _httpService.Post<AuthenticationResponse>(loginUrl, loginInformation, false);
+                    if (authenticationReponse != null)
+                    {
+                         //await _localStorageService.SetItem(_userKey, User);
 
-               _localStorageService.SetItem(Constants.SessionStartTimeKey, "");
-               _localStorageService.SetItem(Constants.SessionEndTimeKey, "");
+                         await _localStorageService.SetItem(Constants.CurrentUserNameKey, loginInformation.UserName);
+                         await _localStorageService.SetItem(Constants.CurrentUserIdKey, authenticationReponse.UserId);
+                         await _localStorageService.SetItem(Constants.SessionIdKey, authenticationReponse.SessionId);
 
-               _localStorageService.SetItem(Constants.AuthorizationStateKey, "");
+                         await _localStorageService.SetItem(Constants.AccessTokenKey, authenticationReponse.AccessToken);
+                         await _localStorageService.SetItem(Constants.RefreshTokenKey, authenticationReponse.RefreshToken);
 
+                         await _localStorageService.SetItem(Constants.SessionStartTimeKey, authenticationReponse.LoginTime);
+                         await _localStorageService.SetItem(Constants.SessionEndTimeKey, authenticationReponse.ExpiresIn);
 
+                         await _localStorageService.SetItem(Constants.AuthorizationStateKey, "true");
+
+                         isloggedIn = true;
+                    }
+               }
+               catch (Exception ex)
+               {
+                    //Intensionally leftblank
+               }
+
+               return isloggedIn;
           }
 
           public async Task<bool> IsAuthenticatedAsync()

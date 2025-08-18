@@ -16,20 +16,17 @@ namespace Maktab.Infrastructure.Services
           private NavigationManager _navigationManager;
           private ILocalStorageService _localStorageService;
           private IConfiguration _configuration;
-          private ISessionService _sessionService;
 
           public HttpService(
               HttpClient httpClient,
               NavigationManager navigationManager,
               ILocalStorageService localStorageService,
-              IConfiguration configuration,
-              ISessionService sessionService)
+              IConfiguration configuration)
           {
                _httpClient = httpClient;
                _navigationManager = navigationManager;
                _localStorageService = localStorageService;
                _configuration = configuration;
-               _sessionService = sessionService;
           }
 
           public async Task<T> Get<T>(string uri)
@@ -44,10 +41,10 @@ namespace Maktab.Infrastructure.Services
                await sendRequest(request);
           }
 
-          public async Task<T> Post<T>(string uri, object value)
+          public async Task<T> Post<T>(string uri, object value, bool autoLogout = true)
           {
                var request = createRequest(HttpMethod.Post, uri, value);
-               return await sendRequest<T>(request);
+               return await sendRequest<T>(request, autoLogout);
           }
 
           public async Task Put(string uri, object value = null)
@@ -58,7 +55,7 @@ namespace Maktab.Infrastructure.Services
 
           public async Task<T> Put<T>(string uri, object value)
           {
-               var request = createRequest(HttpMethod.Put, uri, value);
+               var request = createRequest(HttpMethod.Put, uri);
                return await sendRequest<T>(request);
           }
 
@@ -84,7 +81,7 @@ namespace Maktab.Infrastructure.Services
                return request;
           }
 
-          private async Task sendRequest(HttpRequestMessage request)
+          private async Task sendRequest(HttpRequestMessage request, bool autoLogout = true)
           {
                await addJwtHeader(request);
                await addSessionHeaderInfo(request);
@@ -93,7 +90,7 @@ namespace Maktab.Infrastructure.Services
                using var response = await _httpClient.SendAsync(request);
 
                // auto logout on 401 response
-               if (response.StatusCode == HttpStatusCode.Unauthorized)
+               if (autoLogout && response.StatusCode == HttpStatusCode.Unauthorized)
                {
                     _navigationManager.NavigateTo("account/logout");
                     return;
@@ -102,7 +99,7 @@ namespace Maktab.Infrastructure.Services
                await handleErrors(response);
           }
 
-          private async Task<T> sendRequest<T>(HttpRequestMessage request)
+          private async Task<T> sendRequest<T>(HttpRequestMessage request, bool autoLogout = true)
           {
                await addJwtHeader(request);
 
@@ -112,7 +109,7 @@ namespace Maktab.Infrastructure.Services
                using var response = await _httpClient.SendAsync(request);
 
                // auto logout on 401 response
-               if (response.StatusCode == HttpStatusCode.Unauthorized)
+               if (autoLogout && response.StatusCode == HttpStatusCode.Unauthorized)
                {
                     _navigationManager.NavigateTo("account/logout");
                     return default;
@@ -129,16 +126,22 @@ namespace Maktab.Infrastructure.Services
           private async Task addJwtHeader(HttpRequestMessage request)
           {
                // add jwt auth header if user is logged in and request is to the api url
-               var token = await _sessionService.GetAuthTokenAsync();
-               var isApiUrl = !request.RequestUri.IsAbsoluteUri;
-               if (token != null && isApiUrl)
+               var token = await _localStorageService.GetItem<String>(Constants.AccessTokenKey, string.Empty);
+               //var isApiUrl = !request.RequestUri.IsAbsoluteUri;
+               if (string.IsNullOrEmpty(token))
+               {
+                    //&& isApiUrl)
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+               }
           }
 
           private async Task addSessionHeaderInfo(HttpRequestMessage request)
           {
-               var sessionId = await _sessionService.GetLoggedInUserSessionIdAsync();
-               await addCustomHeaders(request, Constants.SessionIdKey, sessionId.ToString());
+               var sessionId = await _localStorageService.GetItem<Guid>(Constants.SessionIdKey, Guid.Empty);
+               if (sessionId != Guid.Empty)
+               {
+                    await addCustomHeaders(request, Constants.SessionIdKey, sessionId.ToString());
+               }
           }
 
           private async Task addCustomHeaders(HttpRequestMessage request, string key, string value)
@@ -148,6 +151,10 @@ namespace Maktab.Infrastructure.Services
 
           private async Task handleErrors(HttpResponseMessage response)
           {
+               if(response.StatusCode == HttpStatusCode.Unauthorized)
+               {
+                    throw new UnauthorizedAccessException(response.ReasonPhrase);
+               }
                // throw exception on error response
                if (!response.IsSuccessStatusCode)
                {

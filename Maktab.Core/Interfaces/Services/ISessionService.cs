@@ -1,9 +1,12 @@
 ﻿
+using MaktabDataContracts.Requests.Authentication;
+using MaktabDataContracts.Responses.Authentication;
+
 namespace Maktab.Core.Interfaces.Services
 {
-     public interface ISessionService
+     public interface ISessionService : IDomainService
      {
-          Task<object> CreateUserSession(string username, string password);
+          Task<bool> Login(UserLoginInformation loginInformation);
           Task<bool> LogoutAsync(bool removeLogInDetails = false);
 
           Task<bool> IsAuthenticatedAsync();

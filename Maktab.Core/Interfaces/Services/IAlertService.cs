@@ -2,7 +2,7 @@
 
 namespace Maktab.Core.Interfaces.Services
 {
-     public interface IAlertService
+     public interface IAlertService: IApplicationService
      {
           event Action<Alert> OnAlert;
           void Success(string message, bool keepAfterRouteChange = false, bool autoClose = true);

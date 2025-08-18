@@ -1,6 +1,6 @@
 namespace Maktab.Core.Interfaces.Services
 {
-    public interface ISystemService
+    public interface ISystemService : IApplicationService
     {
         public string GetFormFactor();
         public string GetPlatform();
