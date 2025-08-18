@@ -13,12 +13,12 @@ Welcome to your new app.
 @code {
      protected async override void OnInitialized()
      {
-          //bool isAuthorized = await SessionService.IsAuthenticatedAsync();
-          // if (isAuthorized)
-          // {
-          //      Navigation.NavigateTo("/customer/dashboard");
-          // }
-          // else
+          bool isAuthorized = await SessionService.IsAuthenticatedAsync();
+          if (isAuthorized)
+          {
+               Navigation.NavigateTo("/customer/dashboard");
+          }
+          else
           {
                Navigation.NavigateTo("/account/login");
           }

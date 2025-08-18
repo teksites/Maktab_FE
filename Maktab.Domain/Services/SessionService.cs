@@ -59,6 +59,7 @@ namespace Maktab.Domain.Services
                     var expiredTime = await GetSessionEndTime();
                     if (expiredTime <= DateTime.UtcNow)
                     {
+                         authState = false;
                          await this.LogoutAsync();
                     }
                }
