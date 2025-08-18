@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Maktab.Infrastructure.Services
 {
@@ -16,6 +17,7 @@ namespace Maktab.Infrastructure.Services
           private NavigationManager _navigationManager;
           private ILocalStorageService _localStorageService;
           private IConfiguration _configuration;
+          private JsonSerializerOptions _serializerOptions;
 
           public HttpService(
               HttpClient httpClient,
@@ -27,6 +29,15 @@ namespace Maktab.Infrastructure.Services
                _navigationManager = navigationManager;
                _localStorageService = localStorageService;
                _configuration = configuration;
+
+               _serializerOptions = new JsonSerializerOptions
+               {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = true,
+                    PropertyNameCaseInsensitive = true,
+               };
+
+               _serializerOptions.Converters.Add(new JsonStringEnumConverter());
           }
 
           public async Task<T> Get<T>(string uri)
@@ -81,13 +92,13 @@ namespace Maktab.Infrastructure.Services
                return request;
           }
 
-          private async Task sendRequest(HttpRequestMessage request, bool autoLogout = true)
+          private async Task sendRequest(HttpRequestMessage request, bool autoLogout = true, CancellationToken cancellationToken = default)
           {
                await addJwtHeader(request);
                await addSessionHeaderInfo(request);
 
                // send request
-               using var response = await _httpClient.SendAsync(request);
+               using var response = await _httpClient.SendAsync(request, cancellationToken);
 
                // auto logout on 401 response
                if (autoLogout && response.StatusCode == HttpStatusCode.Unauthorized)
@@ -99,14 +110,14 @@ namespace Maktab.Infrastructure.Services
                await handleErrors(response);
           }
 
-          private async Task<T> sendRequest<T>(HttpRequestMessage request, bool autoLogout = true)
+          private async Task<T> sendRequest<T>(HttpRequestMessage request, bool autoLogout = true, CancellationToken cancellationToken = default)
           {
                await addJwtHeader(request);
 
                await addSessionHeaderInfo(request);
 
                // send request
-               using var response = await _httpClient.SendAsync(request);
+               using var response = await _httpClient.SendAsync(request, cancellationToken);
 
                // auto logout on 401 response
                if (autoLogout && response.StatusCode == HttpStatusCode.Unauthorized)
@@ -117,10 +128,7 @@ namespace Maktab.Infrastructure.Services
 
                await handleErrors(response);
 
-               var options = new JsonSerializerOptions();
-               options.PropertyNameCaseInsensitive = true;
-               options.Converters.Add(new StringConverter());
-               return await response.Content.ReadFromJsonAsync<T>(options);
+               return await response.Content.ReadFromJsonAsync<T>(_serializerOptions, cancellationToken);
           }
 
           private async Task addJwtHeader(HttpRequestMessage request)
