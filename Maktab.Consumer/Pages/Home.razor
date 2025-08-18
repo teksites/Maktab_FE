@@ -1,7 +1,26 @@
 ﻿@page "/"
 
+@inject NavigationManager Navigation
+@inject ISessionService SessionService
+
+
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+@code {
+     protected async override void OnInitialized()
+     {
+          //bool isAuthorized = await SessionService.IsAuthenticatedAsync();
+          // if (isAuthorized)
+          // {
+          //      Navigation.NavigateTo("/customer/dashboard");
+          // }
+          // else
+          {
+               Navigation.NavigateTo("/account/login");
+          }
+     }
+}

@@ -97,17 +97,17 @@
      bool authenticating = false;
      string[] errors = { };
      string username;
-     string _errorMessage = "alpha bravo";
+     string _errorMessage ;
      MudTextField<string> pwField;
      MudForm form;
 
-     protected override async void OnInitialized()
-     {
-          base.OnInitialized();
+     // protected override async void OnInitialized()
+     // {
+     //      base.OnInitialized();
 
-          username = "usman.mahmood@ymail.com";
+     //      username = "usman.mahmood@ymail.com";
 
-     }
+     // }
 
      private IEnumerable<string> PasswordStrength(string pw)
      {

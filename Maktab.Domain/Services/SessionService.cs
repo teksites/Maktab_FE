@@ -38,7 +38,7 @@ namespace Maktab.Domain.Services
                          await _localStorageService.SetItem(Constants.SessionStartTimeKey, authenticationReponse.LoginTime);
                          await _localStorageService.SetItem(Constants.SessionEndTimeKey, authenticationReponse.ExpiresIn);
 
-                         await _localStorageService.SetItem(Constants.AuthorizationStateKey, "true");
+                         await _localStorageService.SetItem<bool>(Constants.AuthorizationStateKey, true);
 
                          isloggedIn = true;
                     }
@@ -105,22 +105,35 @@ namespace Maktab.Domain.Services
 
           protected async Task<bool> LogoutSession(Guid sessionId)
           {
-               var formatedUrl = string.Format(logoutUrl, sessionId);
-               await _httpService.Put("formatedUrl");
+               try
                {
-                    await _localStorageService.RemoveItem(Constants.SessionIdKey);
-                    await _localStorageService.RemoveItem(Constants.AccessTokenKey);
-                    await _localStorageService.RemoveItem(Constants.RefreshTokenKey);
-
-                    await _localStorageService.RemoveItem(Constants.CurrentUserIdKey);
-
-                    await _localStorageService.RemoveItem(Constants.SessionStartTimeKey);
-                    await _localStorageService.RemoveItem(Constants.SessionEndTimeKey);
-
-                    await _localStorageService.SetItem<bool>(Constants.AuthorizationStateKey, false);
-
-                    return true;
+                    var formatedUrl = string.Format(logoutUrl, sessionId);
+                    await _httpService.Put("formatedUrl", false);
+                    {
+                         await CleanLocalStorage();
+                         return true;
+                    }
                }
+               catch (Exception ex)
+               {
+                    await CleanLocalStorage();
+               }
+
+               return false;
+          }
+
+          private async Task CleanLocalStorage()
+          {
+               await _localStorageService.RemoveItem(Constants.SessionIdKey);
+               await _localStorageService.RemoveItem(Constants.AccessTokenKey);
+               await _localStorageService.RemoveItem(Constants.RefreshTokenKey);
+
+               await _localStorageService.RemoveItem(Constants.CurrentUserIdKey);
+
+               await _localStorageService.RemoveItem(Constants.SessionStartTimeKey);
+               await _localStorageService.RemoveItem(Constants.SessionEndTimeKey);
+
+               await _localStorageService.RemoveItem(Constants.AuthorizationStateKey);
           }
      }
 }

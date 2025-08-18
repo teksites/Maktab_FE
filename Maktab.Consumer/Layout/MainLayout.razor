@@ -32,25 +32,29 @@
 
                     <MudDivider />*@
 
-                    <MudMenuItem Href="/"
+                    <MudMenuItem Href="/account/login"
                                  ForceLoad
                                  Icon="@Icons.Material.TwoTone.Login"
                                  IconColor="Color.Primary"
                                  Label="Sign In" />
 
-                    @* <MudMenuItem Href="/"
+                    <MudMenuItem Href="/account/logout"
                                  ForceLoad
                                  Icon="@Icons.Material.TwoTone.Logout"
                                  IconColor="Color.Primary"
-                                 Label="Sign Out" /> *@
+                                 Label="Sign Out" />
+
+                    
                </MudMenu>
                <MudTooltip Text="Notification">
                     <MudBadge Dot="true" Visible="false" Class="mx-6 my-4" Overlap="true" Bordered="true">
                          <MudIconButton Icon="@Icons.Material.Outlined.Notifications" Color="Color.Inherit" Edge="Edge.End" />
                     </MudBadge>
                </MudTooltip>
-
+               @* <MudMenu> *@
                <MudAvatar Color="Color.Inherit" Variant="Variant.Outlined" >M</MudAvatar>
+                    @* 
+               </MudMenu> *@
            </MudToolBar>
 
      </MudAppBar>
@@ -68,7 +72,7 @@
 
 
 @code {
-     bool _drawerOpen = true;
+     bool _drawerOpen = false;
 
      void DrawerToggle()
      {

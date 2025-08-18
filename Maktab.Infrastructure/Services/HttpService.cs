@@ -47,10 +47,10 @@ namespace Maktab.Infrastructure.Services
                return await sendRequest<T>(request, autoLogout);
           }
 
-          public async Task Put(string uri, object value = null)
+          public async Task Put(string uri, object value = null, bool autoLogout = true)
           {
                var request = createRequest(HttpMethod.Put, uri, value);
-               await sendRequest(request);
+               await sendRequest(request, autoLogout);
           }
 
           public async Task<T> Put<T>(string uri, object value)
@@ -128,7 +128,7 @@ namespace Maktab.Infrastructure.Services
                // add jwt auth header if user is logged in and request is to the api url
                var token = await _localStorageService.GetItem<String>(Constants.AccessTokenKey, string.Empty);
                //var isApiUrl = !request.RequestUri.IsAbsoluteUri;
-               if (string.IsNullOrEmpty(token))
+               if (!string.IsNullOrEmpty(token))
                {
                     //&& isApiUrl)
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
