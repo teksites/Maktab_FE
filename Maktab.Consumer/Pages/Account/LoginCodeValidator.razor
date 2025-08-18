@@ -1,0 +1,117 @@
+﻿@page "/account/usercodevalidation"
+
+
+@inject ISessionService SessionService
+@inject IAccountService AccountService
+@inject IUserService UserService
+
+@inject ISnackbar Snackbar
+@* @inject IAlertService AlertService *@
+@inject NavigationManager NavigationManager
+
+
+<MudGrid>
+     <MudItem xs="12" sm="7">
+          <MudPaper Class="pa-4">
+               <MudForm @ref="form" Validated="@(OnValidated)">
+                    <MudTextField T="string" Label="Username" @bind-Text="@emailValidationCode" Required="true" RequiredError="Please enter code!" />
+
+                    <div class="d-flex align-center justify-space-between">
+                         @* <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree!" /> *@
+                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@isCodeValidating" Class="ml-auto" OnClick="@(InitiateCodeValidation)">
+
+                              @if (isCodeValidating)
+                              {
+                                   <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                   <MudText Class="ms-2">Validating</MudText>
+                              }
+                              else
+                              {
+                                   <MudText>Login</MudText>
+                              }
+                         </MudButton>
+                         @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                         {
+                              <MudAlert Severity="Severity.Error" Elevation="0" Class="mt-2">@_errorMessage</MudAlert>
+                         }
+                    </div>
+               </MudForm>
+          </MudPaper>
+          @* <MudPaper Class="pa-4 mt-4">
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(() => form.Validate())">Validate</MudButton>
+               <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(() => form.ResetAsync())" Class="mx-2">Reset</MudButton>
+               <MudButton Variant="Variant.Filled" DropShadow="false" OnClick="@(() => form.ResetValidation())">Reset Validation</MudButton>
+          </MudPaper> *@
+     </MudItem>
+     @*  <MudItem xs="12" sm="5">
+          <MudPaper Class="pa-4 mud-height-full">
+               <MudText Typo="Typo.subtitle2">@($"Errors ({errors.Length})")</MudText>
+               @foreach (var error in errors)
+               {
+                    <MudText Color="@Color.Error">@error</MudText>
+               }
+          </MudPaper>
+     </MudItem> *@
+</MudGrid>
+@code {
+     string username;
+     Guid userId = Guid.Empty;
+     bool success;
+     bool isCodeValidating = false;
+     string emailValidationCode;
+     string _errorMessage;
+     MudForm form;
+
+     protected override async void OnInitialized()
+     {
+          base.OnInitialized();
+
+          username = await SessionService.GetUserNameAsync();
+          userId = await SessionService.GetLoggedInUserIdAsync();
+          var userInfo = await UserService.GetUserById(userId);
+
+          if( userInfo != null && !userInfo.IfTempUser)
+          {
+               NavigationManager.NavigateTo("/customer/dashboard");
+          }
+     }
+
+     private async void InitiateCodeValidation()
+     {
+          try
+          {
+               isCodeValidating = true;
+
+               var activated = await UserService.ValidateUserByActivationCode(
+                    userId,
+                    new MaktabDataContracts.Requests.Users.UserVerificationRequest()
+                    {
+                         EmailVerificationCode = emailValidationCode,
+                    });
+
+          }
+          catch (UnauthorizedAccessException aex)
+          {
+               success = false;
+               //errors = new string[] { "Please provide valid password." };
+               //Snackbar.Add("Please provide valid credentials.", Severity.Error);
+               _errorMessage = "Please provide valid Code.";
+
+          }
+          catch (Exception ex)
+          {
+               //ignored.
+          }
+          finally
+          {
+               isCodeValidating = false;
+          }
+     }
+
+     private void OnValidated()
+     {
+          // Clear error message when form is re-validated
+          if (form.IsValid)
+               _errorMessage = string.Empty;
+     }
+}

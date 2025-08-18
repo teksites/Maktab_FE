@@ -14,6 +14,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Maktab.Core\Maktab.Core.csproj" />
+    <ProjectReference Include="..\Maktab.Domain\Maktab.Domain.csproj" />
+    <ProjectReference Include="..\Maktab.Infrastructure\Maktab.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
   </ItemGroup>
 

@@ -1,0 +1,11 @@
+﻿@page "/account/logout"
+@using Maktab.Core.Interfaces.Services
+
+@inject ISessionService SessionService
+
+@code {
+     protected override async void OnInitialized()
+     {
+          await SessionService.LogoutAsync();
+     }
+}

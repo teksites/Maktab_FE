@@ -1,0 +1,117 @@
+﻿@page "/customer/dashboard"
+
+
+@inject ISessionService SessionService
+@inject ISnackbar Snackbar
+@* @inject IAlertService AlertService *@
+@inject NavigationManager NavigationManager
+
+<MudGrid>
+     <MudItem xs="12" sm="7">
+          <MudPaper Class="pa-4">
+               <MudStack>
+
+
+
+               <MudForm @ref="form" Validated="@(OnValidated)">
+                    <MudTextField T="string" Label="Username" @bind-Text="@username" Required="true" RequiredError="User name is required!" />
+
+                    <MudTextField T="string" Label="Password" HelperText="Password" @ref="pwField"
+                                  InputType="InputType.Password"
+                                  RequiredError="Password is required!" />
+
+                    @* Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true" *@
+
+                    <div class="d-flex align-center justify-space-between">
+                         @* <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree!" /> *@
+                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@authenticating" Class="ml-auto" OnClick="@(InitiateLogin)">
+
+                              @if (authenticating)
+                              {
+                                   <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                   <MudText Class="ms-2">Authenticating</MudText>
+                              }
+                              else
+                              {
+                                   <MudText>Login</MudText>
+                              }
+                         </MudButton>
+                         @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                         {
+                              <MudAlert Severity="Severity.Error" Elevation="0" Class="mt-2">@_errorMessage</MudAlert>
+                         }
+                    </div>
+               </MudForm>
+               </MudStack>
+          </MudPaper>
+          @* <MudPaper Class="pa-4 mt-4">
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(() => form.Validate())">Validate</MudButton>
+               <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(() => form.ResetAsync())" Class="mx-2">Reset</MudButton>
+               <MudButton Variant="Variant.Filled" DropShadow="false" OnClick="@(() => form.ResetValidation())">Reset Validation</MudButton>
+          </MudPaper> *@
+     </MudItem>
+     @*  <MudItem xs="12" sm="5">
+          <MudPaper Class="pa-4 mud-height-full">
+               <MudText Typo="Typo.subtitle2">@($"Errors ({errors.Length})")</MudText>
+               @foreach (var error in errors)
+               {
+                    <MudText Color="@Color.Error">@error</MudText>
+               }
+          </MudPaper>
+     </MudItem> *@
+</MudGrid>
+@code {
+     bool success;
+     bool authenticating = false;
+     string[] errors = { };
+     string username;
+     string _errorMessage;
+     MudTextField<string> pwField;
+     MudForm form;
+
+
+
+     private async void InitiateLogin()
+     {
+          var logInfo = new MaktabDataContracts.Requests.Authentication.UserLoginInformation()
+          {
+               UserName = username,
+               Password = pwField.Value,
+          };
+
+          try
+          {
+               authenticating = true;
+               var result = await SessionService.Login(logInfo);
+
+               NavigationManager.NavigateTo("/account/usercodevalidation");
+
+               //var userId = await SessionService.GetLoggedInUserIdAsync();
+
+
+          }
+          catch (UnauthorizedAccessException aex)
+          {
+               success = false;
+               //errors = new string[] { "Please provide valid password." };
+               //Snackbar.Add("Please provide valid credentials.", Severity.Error);
+               _errorMessage = "Please provide valid credentials.";
+
+          }
+          catch (Exception ex)
+          {
+               //ignored.
+          }
+          finally
+          {
+               authenticating = false;
+          }
+     }
+
+     private void OnValidated()
+     {
+          // Clear error message when form is re-validated
+          if (form.IsValid)
+               _errorMessage = string.Empty;
+     }
+}

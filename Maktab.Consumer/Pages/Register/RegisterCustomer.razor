@@ -1,0 +1,109 @@
+﻿@page "/register/customer"
+
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Requests.Users
+
+@inject ISessionService SessionService
+@inject IUserService UserService
+
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+
+
+<h3>RegisterUser</h3>
+
+<MudGrid>
+     <MudItem xs="12" sm="7">
+          <MudPaper Class="pa-4">
+               <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                    <MudTextField T="string" @bind-Value="addUserInformation.FirstName" Label="First name" Required="true" RequiredError="First name is required!" />
+                    <MudTextField T="string" @bind-Value="addUserInformation.LastName" Label="Last name" Required="true" RequiredError="Last name is required!" />
+                    <MudTextField T="string" @bind-Value="addUserInformation.Email" Label="Email" Required="true" RequiredError="Email is required!"
+                                  Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
+                    <MudTextField T="string" @bind-Value="addUserInformation.Phone" Label="Phone" Required="true" RequiredError="Phone number is required!"
+                                  Validation="@(new PhoneAttribute() { ErrorMessage = "The phone number is invalid"})" />
+
+                    @* <MudSelect @bind-Value="addUserInformation.Relationship" Label="Gender">
+                         @foreach (var margin in Enum.GetValues(typeof(Gender)).Cast<Gender>())
+                         {
+                              <MudSelectItem Value="margin">@margin</MudSelectItem>
+                         }
+                    </MudSelect> *@
+
+                    <MudSelect @bind-Value="addUserInformation.Relationship" Label="Relationship">
+                         @foreach (var margin in Enum.GetValues(typeof(Relationship)).Cast<Relationship>())
+                         {
+                              <MudSelectItem Value="margin">@margin</MudSelectItem>
+                         }
+                    </MudSelect>
+
+                    <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
+                                  InputType="InputType.Password"
+                                  Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                                  RequiredError="Password is required!" />
+                    <MudTextField T="string"
+                                  Label="Password" HelperText="Repeat the password" InputType="InputType.Password"
+                                  Validation="@(new Func<string, string>(PasswordMatch))" />
+                    
+                    <div class="d-flex align-center justify-space-between">
+                         <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree!" />
+                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
+
+                         @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                         {
+                              <MudAlert Severity="Severity.Error" Elevation="0" Class="mt-2">@_errorMessage</MudAlert>
+                         }
+                    </div>
+               </MudForm>
+          </MudPaper>
+          @* <MudPaper Class="pa-4 mt-4">
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(() => form.Validate())">Validate</MudButton>
+               <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(() => form.ResetAsync())" Class="mx-2">Reset</MudButton>
+               <MudButton Variant="Variant.Filled" DropShadow="false" OnClick="@(() => form.ResetValidation())">Reset Validation</MudButton>
+          </MudPaper> *@
+     </MudItem>
+     @* <MudItem xs="12" sm="5">
+          <MudPaper Class="pa-4 mud-height-full">
+               <MudText Typo="Typo.subtitle2">@($"Errors ({errors.Length})")</MudText>
+               @foreach (var error in errors)
+               {
+                    <MudText Color="@Color.Error">@error</MudText>
+               }
+          </MudPaper>
+     </MudItem> *@
+</MudGrid>
+@code {
+
+     AddUserInformation addUserInformation = new AddUserInformation();
+     bool success;
+     string _errorMessage;
+     string[] errors = { };
+     MudTextField<string> pwField1;
+     MudForm form;
+
+     private IEnumerable<string> PasswordStrength(string pw)
+     {
+          if (string.IsNullOrWhiteSpace(pw))
+          {
+               yield return "Password is required!";
+               yield break;
+          }
+          if (pw.Length < 8)
+               yield return "Password must be at least of length 8";
+          if (!Regex.IsMatch(pw, @"[A-Z]"))
+               yield return "Password must contain at least one capital letter";
+          if (!Regex.IsMatch(pw, @"[a-z]"))
+               yield return "Password must contain at least one lowercase letter";
+          if (!Regex.IsMatch(pw, @"[0-9]"))
+               yield return "Password must contain at least one digit";
+     }
+
+     private string PasswordMatch(string arg)
+     {
+          if (pwField1.Value != arg)
+               return "Passwords don't match";
+          return null;
+     }
+}
