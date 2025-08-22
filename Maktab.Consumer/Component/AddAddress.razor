@@ -1,0 +1,107 @@
+﻿@using MudBlazor
+@using System.ComponentModel.DataAnnotations
+@using MaktabDataContracts.Enums
+
+
+<EditForm Model="@AddressModel" OnValidSubmit="HandleValidSubmit">
+     <MudPaper Class="pa-4">
+          <MudText Typo="Typo.h5" Class="mb-4">Add Address</MudText>
+
+          <MudGrid Container="true" Spacing="3">
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="AddressModel.UnitNo"
+                                  Label="Unit No"
+                                  Required="true"
+                                  For="@(() => AddressModel.UnitNo)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="AddressModel.ApartmentNo"
+                                  Label="Apartment No"
+                                  For="@(() => AddressModel.ApartmentNo)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="12">
+                    <MudTextField @bind-Value="AddressModel.AddressLine1"
+                                  Label="Address Line 1"
+                                  Required="true"
+                                  For="@(() => AddressModel.AddressLine1)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="12">
+                    <MudTextField @bind-Value="AddressModel.AddressLine2"
+                                  Label="Address Line 2"
+                                  For="@(() => AddressModel.AddressLine2)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="4">
+                    <MudTextField @bind-Value="AddressModel.PostalCode"
+                                  Label="Postal Code"
+                                  Required="true"
+                                  For="@(() => AddressModel.PostalCode)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="4">
+                    <MudTextField @bind-Value="AddressModel.City"
+                                  Label="City"
+                                  Required="true"
+                                  For="@(() => AddressModel.City)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="4">
+                    <MudTextField @bind-Value="AddressModel.Province"
+                                  Label="Province"
+                                  Required="true"
+                                  For="@(() => AddressModel.Province)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="AddressModel.Country"
+                                  Label="Country"
+                                  Required="true"
+                                  For="@(() => AddressModel.Country)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6" Class="d-flex align-center">
+                    <MudSwitch @bind-Checked="AddressModel.HomeAddress"
+                               T="bool"
+                               Label="Home Address"
+                               Color="Color.Primary" />
+               </MudItem>
+
+               <MudItem xs="12" sm="12">
+                    <MudSelect T="AddressType"
+                               @bind-Value="AddressModel.AddressType"
+                               Label="Address Type"
+                               Required="true"
+                               For="@(() => AddressModel.AddressType)">
+                         <MudSelectItem Value="@AddressType">@AddressType</MudSelectItem>
+                    </MudSelect>
+               </MudItem>
+          </MudGrid>
+
+          <MudStack Direction="Row" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
+               <MudButton Type="Submit" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Check">Save</MudButton>
+               <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
+          </MudStack>
+     </MudPaper>
+</EditForm>
+
+@code {
+     [Parameter, EditorRequired]
+     public MaktabDataContracts.Requests.Addresses.AddAddress AddressModel { get; set; } = new();
+
+     [Parameter] public EventCallback<MaktabDataContracts.Requests.Addresses.AddAddress> OnSave { get; set; }
+     [Parameter] public EventCallback OnCancel { get; set; }
+     [Parameter] public AddressType AddressType { get; set; }
+
+     private async Task HandleValidSubmit()
+     {
+          await OnSave.InvokeAsync(AddressModel);
+     }
+
+     private async Task OnCancelClickedHandler()
+     {
+          await OnCancel.InvokeAsync();
+     }
+}

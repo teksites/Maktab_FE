@@ -1,0 +1,35 @@
+﻿@using MaktabDataContracts.Requests.Children
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <AddChild ChildModel="Child"
+                           OnSave="SaveChild"
+                           OnCancel="CancelDialog" />
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    MudDialog MudDialog { get; set; }
+
+    [Parameter]
+    public Guid FamilyId { get; set; }
+
+    private AddChildRequest Child { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        Child.FamilyId = FamilyId;
+    }
+
+    private async void SaveChild(AddChildRequest child)
+    {
+        await MudDialog.CloseAsync(DialogResult.Ok(child));
+    }
+
+     private async void CancelDialog()
+    {
+          await MudDialog.CloseAsync(DialogResult.Cancel());
+    }
+}

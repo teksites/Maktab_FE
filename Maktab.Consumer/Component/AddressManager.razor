@@ -1,0 +1,28 @@
+﻿@using Maktab.Consumer.Dialogs
+@inject IDialogService DialogService
+
+<MudButton Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddAddressDialog" Class="mb-4">
+    Add Address
+</MudButton>
+
+<AddressDisplayComponent Address="SelectedAddress" />
+
+@code {
+    private AddAddress SelectedAddress;
+
+    private readonly Guid ConnectedId = Guid.NewGuid();
+
+    private async Task OpenAddAddressDialog()
+    {
+        var parameters = new DialogParameters { ["ConnectedId"] = ConnectedId };
+
+        var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+        var dialog = DialogService.Show<AddAddressDialog>("Add Address", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && result.Data is AddAddress newAddress)
+        {
+            SelectedAddress = newAddress;
+        }
+    }
+}

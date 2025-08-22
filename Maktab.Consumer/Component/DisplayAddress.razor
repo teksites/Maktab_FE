@@ -1,0 +1,29 @@
+﻿@using MudBlazor
+
+<MudPaper Class="pa-4 mb-4" Elevation="1">
+     <MudText Typo="Typo.h6" Class="mb-2">Address Details</MudText>
+
+     @if (Address != null)
+     {
+          <MudGrid Container="true" Spacing="2">
+               <MudItem xs="12" sm="6"><b>Unit No:</b> @Address.UnitNo</MudItem>
+               <MudItem xs="12" sm="6"><b>Apartment No:</b> @Address.ApartmentNo</MudItem>
+               <MudItem xs="12"><b>Address Line 1:</b> @Address.AddressLine1</MudItem>
+               <MudItem xs="12"><b>Address Line 2:</b> @Address.AddressLine2</MudItem>
+               <MudItem xs="12" sm="4"><b>Postal Code:</b> @Address.PostalCode</MudItem>
+               <MudItem xs="12" sm="4"><b>City:</b> @Address.City</MudItem>
+               <MudItem xs="12" sm="4"><b>Province:</b> @Address.Province</MudItem>
+               <MudItem xs="12" sm="6"><b>Country:</b> @Address.Country</MudItem>
+               <MudItem xs="12" sm="6"><b>Home Address:</b> @(Address.HomeAddress ? "Yes" : "No")</MudItem>
+               <MudItem xs="12"><b>Address Type:</b> @Address.AddressType.ToString()</MudItem>
+          </MudGrid>
+     }
+     else
+     {
+          <MudText>No address selected.</MudText>
+     }
+</MudPaper>
+
+@code {
+     [Parameter] public MaktabDataContracts.Requests.Addresses.AddAddress Address { get; set; }
+}

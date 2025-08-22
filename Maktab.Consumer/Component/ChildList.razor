@@ -1,0 +1,53 @@
+﻿@using Maktab.Consumer.Dialogs
+@using MaktabDataContracts.Requests.Children
+@using MudBlazor
+@inject IDialogService DialogService
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
+     Add Child
+</MudButton>
+
+<MudTable Items="Children" Elevation="1" Dense="true" Bordered="true" Hover="true">
+     <HeaderContent>
+          <MudTh>First Name</MudTh>
+          <MudTh>Last Name</MudTh>
+          <MudTh>DOB</MudTh>
+          <MudTh>Gender</MudTh>
+          <MudTh>RAMQ #</MudTh>
+          <MudTh>RAMQ Expiry</MudTh>
+          <MudTh>Allergies</MudTh>
+          <MudTh>Other Health</MudTh>
+          <MudTh>Daycare</MudTh>
+     </HeaderContent>
+     <RowTemplate>
+          <MudTd>@context.FirstName</MudTd>
+          <MudTd>@context.LastName</MudTd>
+          <MudTd>@context.DateOfBirth.ToShortDateString()</MudTd>
+          <MudTd>@context.Gender</MudTd>
+          <MudTd>@context.RAMQNumber</MudTd>
+          <MudTd>@context.RAMQExpiry.ToShortDateString()</MudTd>
+          <MudTd>@context.Allergies</MudTd>
+          <MudTd>@context.OtherHealthConditions</MudTd>
+          <MudTd>@(context.WillUseDayCareServices ? "Yes" : "No")</MudTd>
+     </RowTemplate>
+</MudTable>
+
+@code {
+     private readonly Guid FamilyId = Guid.NewGuid();
+
+     private List<AddChildRequest> Children { get; set; } = new();
+
+     private async Task OpenAddChildDialog()
+     {
+          var parameters = new DialogParameters { ["FamilyId"] = FamilyId };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<AddChildDialog>("Add Child", parameters, options);
+          var result = await dialog.Result;
+
+          if (!result.Canceled && result.Data is AddChildRequest child)
+          {
+               Children.Add(child);
+          }
+     }
+}

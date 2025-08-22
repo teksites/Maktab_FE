@@ -1,0 +1,32 @@
+﻿@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <AddAddress AddressModel="Address" OnSave="SaveAddress" OnCancel="CancelDialog" />
+    </DialogContent>
+</MudDialog>
+
+@code {
+     [CascadingParameter]
+     MudDialog MudDialog { get; set; }
+
+     [Parameter]
+     public Guid ConnectedId { get; set; }
+
+     private MaktabDataContracts.Requests.Addresses.AddAddress Address { get; set; } = new();
+
+     protected override void OnInitialized()
+     {
+          Address.ConnectedId = ConnectedId;
+     }
+
+     private async Task SaveAddress(MaktabDataContracts.Requests.Addresses.AddAddress address)
+     {
+          await MudDialog.CloseAsync(DialogResult.Ok(address));
+     }
+
+     private async void CancelDialog()
+     {
+          await MudDialog.CloseAsync(DialogResult.Cancel());
+     }
+}

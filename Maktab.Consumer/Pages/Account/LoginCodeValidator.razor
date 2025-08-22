@@ -13,11 +13,43 @@
 <MudGrid>
      <MudItem xs="12" sm="7">
           <MudPaper Class="pa-4">
-               <MudForm @ref="form" Validated="@(OnValidated)">
-                    <MudTextField T="string" Label="Username" @bind-Text="@emailValidationCode" Required="true" RequiredError="Please enter code!" />
 
-                    <div class="d-flex align-center justify-space-between">
+
+               @if(isInitialized.HasValue && isInitialized.Value)
+               {
+                    <MudForm @ref="form" Validated="@(OnValidated)">
+                    <MudAlert Severity="Severity.Info" Elevation="0" Class="mt-2">Please enter code sent in your email.</MudAlert>
+                    <MudTextField T="string" Label="Code" @bind-Text="@emailValidationCode" Required="true" RequiredError="Please enter code!" />
+
+                    @* <div class="d-flex align-center justify-space-between"> *@
                          @* <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree!" /> *@
+
+                         <MudGrid Justify="Justify.Center">
+
+                         <MudItem xs="12">
+                              <MudStack Row=true>
+
+                                   <MudButton Disabled="@isSendingCodeAgain" onclick="@(InitiateRequestForSendingCode)"
+                                              Variant="Variant.Text"
+                                              Color="Color.Tertiary" >
+                                        @if (isSendingCodeAgain)
+                                        {
+                                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                             <MudText Class="ms-2">Sending code</MudText>
+                                        }
+                                        else
+                                        {
+                                             <MudText>Send code again</MudText>
+                                        }
+                                        
+                                   </MudButton>
+
+                                   @*< MudText Class="mt-3 text-center">
+                                        <MudLink Href="/register/customer" Color="Color.Tertiary">
+                                             Create account
+                                        </MudLink>
+                                   </MudText> *@
+
                          <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@isCodeValidating" Class="ml-auto" OnClick="@(InitiateCodeValidation)">
 
                               @if (isCodeValidating)
@@ -27,15 +59,30 @@
                               }
                               else
                               {
-                                   <MudText>Login</MudText>
+                                   <MudText>Validate</MudText>
                               }
                          </MudButton>
+                                   </MudStack>
+                              </MudItem>
                          @if (!string.IsNullOrWhiteSpace(_errorMessage))
                          {
+                              <MudItem>
                               <MudAlert Severity="Severity.Error" Elevation="0" Class="mt-2">@_errorMessage</MudAlert>
+                                   </MudItem>
                          }
-                    </div>
-               </MudForm>
+
+                         
+                         
+                         </MudGrid>
+
+                    @* </div> *@
+                    </MudForm>
+               }
+               else
+               {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Initializing</MudText>
+               }
           </MudPaper>
           @* <MudPaper Class="pa-4 mt-4">
                <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(() => form.Validate())">Validate</MudButton>
@@ -58,17 +105,22 @@
      Guid userId = Guid.Empty;
      bool success;
      bool isCodeValidating = false;
+     bool isSendingCodeAgain = false;
+     bool? isInitialized = false;
      string emailValidationCode;
      string _errorMessage;
      MudForm form;
 
      protected override async void OnInitialized()
      {
+          //isInitialized = true;
           base.OnInitialized();
 
           username = await SessionService.GetUserNameAsync();
           userId = await SessionService.GetLoggedInUserIdAsync();
           var userInfo = await UserService.GetUserById(userId);
+          isInitialized = true;
+          StateHasChanged();
 
           if( userInfo != null && !userInfo.IfTempUser)
           {
@@ -89,6 +141,16 @@
                          EmailVerificationCode = emailValidationCode,
                     });
 
+               if(activated)
+               {
+                    NavigationManager.NavigateTo("/customer/adddetails");
+               }
+               else
+               {
+                    isCodeValidating = false;
+                    StateHasChanged();
+               }
+
           }
           catch (UnauthorizedAccessException aex)
           {
@@ -100,13 +162,49 @@
           }
           catch (Exception ex)
           {
+               isCodeValidating = false;
+               //ignored.
+          }
+          // finally
+          // {
+
+          // }
+     }
+
+
+     private async void InitiateRequestForSendingCode()
+     {
+          try
+          {
+               isSendingCodeAgain = true;
+
+               var codeSent = await UserService.SendUserActivationCode(userId);
+               if(!codeSent)
+               {
+                    _errorMessage = "Error while requesting new code.";
+               }
+
+
+          }
+          catch (UnauthorizedAccessException aex)
+          {
+               success = false;
+               //errors = new string[] { "Please provide valid password." };
+               //Snackbar.Add("Please provide valid credentials.", Severity.Error);
+               _errorMessage = "Error while requesting new code.";
+          }
+          catch (Exception ex)
+          {
                //ignored.
           }
           finally
           {
-               isCodeValidating = false;
+               isSendingCodeAgain = false;
+               StateHasChanged();
+
           }
      }
+
 
      private void OnValidated()
      {

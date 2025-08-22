@@ -1,0 +1,109 @@
+﻿@using MaktabDataContracts.Requests.Children
+@using MaktabDataContracts.Enums
+@using MudBlazor
+@using System.ComponentModel.DataAnnotations
+
+<EditForm Model="@ChildModel" OnValidSubmit="HandleValidSubmit">
+     <MudPaper Class="pa-4">
+          <MudText Typo="Typo.h5" Class="mb-4">Add Child</MudText>
+
+          <MudGrid Container="true" Spacing="3">
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="ChildModel.FirstName"
+                                  Label="First Name"
+                                  Required="true"
+                                  For="@(() => ChildModel.FirstName)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="ChildModel.LastName"
+                                  Label="Last Name"
+                                  Required="true"
+                                  For="@(() => ChildModel.LastName)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudDatePicker @bind-Date="DateOfBirth"
+                                   Label="Date of Birth"
+                                   Required="true"
+                                   For="@(() => DateOfBirth)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudSelect T="Gender" @bind-Value="ChildModel.Gender"
+                               Label="Gender" Required="true"
+                               For="@(() => ChildModel.Gender)">
+                         <MudSelectItem Value="Gender.Male">Male</MudSelectItem>
+                         <MudSelectItem Value="Gender.Female">Female</MudSelectItem>
+                    </MudSelect>
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="ChildModel.RAMQNumber"
+                                  Label="RAMQ Number"
+                                  Required="true"
+                                  For="@(() => ChildModel.RAMQNumber)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudDatePicker @bind-Date="RAMQExpiry"
+                                   Label="RAMQ Expiry"
+                                   Required="true"
+                                   For="@(() => RAMQExpiry)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudNumericField @bind-Value="ChildModel.RAMQSequenceNumber"
+                                     Label="RAMQ Sequence #"
+                                     Min="1"
+                                     Required="true"
+                                     For="@(() => ChildModel.RAMQSequenceNumber)" />
+               </MudItem>
+
+               <MudItem xs="12">
+                    <MudTextField @bind-Value="ChildModel.Allergies" Label="Allergies" For="@(() => ChildModel.Allergies)" />
+               </MudItem>
+
+               <MudItem xs="12">
+                    <MudTextField @bind-Value="ChildModel.OtherHealthConditions"
+                                  Label="Other Health Conditions"
+                                  For="@(() => ChildModel.OtherHealthConditions)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6" Class="d-flex align-center">
+                    <MudSwitch @bind-Checked="ChildModel.WillUseDayCareServices"
+                               T="bool"
+                               Label="Will Use Daycare Services"
+                               Color="Color.Primary" />
+               </MudItem>
+          </MudGrid>
+
+          <MudStack Direction="Row" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
+               <MudButton Type="Submit" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Check">Save</MudButton>
+               <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
+          </MudStack>
+     </MudPaper>
+</EditForm>
+
+@code {
+     [Parameter, EditorRequired]
+     public AddChildRequest ChildModel { get; set; } = new();
+
+     [Parameter] public EventCallback<AddChildRequest> OnSave { get; set; }
+     [Parameter] public EventCallback OnCancel { get; set; }
+
+     public DateTime? RAMQExpiry { get; set; }
+     public DateTime? DateOfBirth { get; set; }
+
+     private async Task HandleValidSubmit()
+     {
+          ChildModel.RAMQExpiry = RAMQExpiry.Value;
+          ChildModel.DateOfBirth = DateOfBirth.Value;
+          await OnSave.InvokeAsync(ChildModel);
+     }
+
+     private async Task OnCancelClickedHandler()
+     {
+          await OnCancel.InvokeAsync();
+     }
+}

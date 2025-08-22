@@ -1,0 +1,129 @@
+﻿@page "/customer/adddetails"
+
+
+
+
+@inject ISessionService SessionService
+@inject ISnackbar Snackbar
+@inject IUserService UserService
+@inject IDialogService DialogService
+
+
+@* @inject IAlertService AlertService *@
+@inject NavigationManager NavigationManager
+
+<MudGrid>
+     <MudItem xs="12" sm="7">
+          <MudPaper Class="pa-4">
+               <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
+
+                    <MudStepper OnPreviewInteraction="OnPreviewInteraction">
+                         <MudStep Title="Step 1" SecondaryText="Add Spouse" HasError="@(isSpouseAdded == false)" >
+                             <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
+                              <AddSpouse/>
+                              </MudStack>
+                              @* <MudSwitch @bind-Value="_step1Complete" Color="Color.Primary">Flip the switch to be able to advance to step 2</MudSwitch> *@
+                         </MudStep>
+                         <MudStep Title="Step 2" SecondaryText="Add Address" HasError="@(isFamilyAddressAdded == false)">
+                             <AddressManager/>
+                         </MudStep>
+                         <MudStep Title="Step 3" SecondaryText="Add RL 24" HasError="@(isExtendedInfoAdded == false)">
+                              <AddRL24/>
+                         </MudStep>
+                         <MudStep Title="Step 4" SecondaryText="Add Child" HasError="@(isChildAdded == false)">
+                              <ChildList />
+                         </MudStep>
+                    </MudStepper>
+
+               
+               </MudStack>
+          </MudPaper>
+
+     </MudItem>
+
+</MudGrid>
+
+@code {
+
+     Guid userId = Guid.Empty;
+     Guid familyGuid = Guid.Empty;
+     MaktabDataContracts.Responses.Users.UserInformationResponse userInfo = null;
+    bool isInitialized;
+     bool isSpouseAdded;
+     bool isFamilyAddressAdded;
+     bool isChildAdded = false;
+     bool isExtendedInfoAdded = false;
+     bool isEmergencyContactAdded = false;
+     bool isOtherContactAdded;
+     string username = string.Empty;
+     
+
+
+     protected override async void OnInitialized()
+     {
+          //isInitialized = true;
+
+          username = await SessionService.GetUserNameAsync();
+          userId = await SessionService.GetLoggedInUserIdAsync();
+          userInfo = await UserService.GetUserById(userId);
+          isInitialized = true;
+          //StateHasChanged();
+     }
+
+     private async Task OnPreviewInteraction(StepperInteractionEventArgs arg)
+     {
+          if (arg.Action == StepAction.Complete)
+          {
+               // occurrs when clicking next
+               await ControlStepCompletion(arg);
+          }
+          else if (arg.Action == StepAction.Activate)
+          {
+               // occurrs when clicking a step header with the mouse
+               await ControlStepNavigation(arg);
+          }
+     }
+
+     private async Task ControlStepCompletion(StepperInteractionEventArgs arg)
+     {
+          switch (arg.StepIndex)
+          {
+               case 0:
+                    if (!isSpouseAdded)
+                    {
+                         await DialogService.ShowMessageBox("Error", "Please enter spouse details.");
+                         arg.Cancel = true;
+                    }
+                    break;
+               case 1:
+                    if (!isFamilyAddressAdded)
+                    {
+                         await DialogService.ShowMessageBox("Error", "Please add family address");
+                         arg.Cancel = true;
+                    }
+                    break;
+          }
+     }
+
+     private async Task ControlStepNavigation(StepperInteractionEventArgs arg)
+     {
+          switch (arg.StepIndex)
+          {
+               case 1:
+                    if (isSpouseAdded != true)
+                    {
+                         await DialogService.ShowMessageBox("Error", "Finish step 1 first");
+                         arg.Cancel = true;
+                    }
+                    break;
+               case 2:
+                    if (!isSpouseAdded || !isFamilyAddressAdded)
+                    {
+                         await DialogService.ShowMessageBox("Error", "Finish step 1 and 2 first");
+                         arg.Cancel = true;
+                    }
+                    break;
+          }
+     }
+   
+}
