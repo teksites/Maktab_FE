@@ -1,4 +1,5 @@
 ﻿using Maktab.Core.Interfaces.Services;
+using Maktab.Infrastructure.Converters;
 using Maktab.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Configuration;
@@ -38,6 +39,7 @@ namespace Maktab.Infrastructure.Services
                };
 
                _serializerOptions.Converters.Add(new JsonStringEnumConverter());
+               _serializerOptions.Converters.Add(new BoolConverter());
           }
 
           public async Task<T> Get<T>(string uri)
