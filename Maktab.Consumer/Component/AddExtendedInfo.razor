@@ -1,6 +1,5 @@
 ﻿@using Maktab.Consumer.Dialogs
-@using MaktabDataContracts.Requests.Children
-@using MaktabDataContracts.Enums
+
 @using MaktabDataContracts.Requests.Users
 @using MudBlazor
 @using System.ComponentModel.DataAnnotations
@@ -21,7 +20,7 @@
                </MudItem>
 
                <MudItem xs="12" sm="6">
-                    <MudTextField @bind-Value="@ExtendedModel.SIN"
+                    <MudTextField @bind-Value="ExtendedModel.SIN"
                                   Label="SIN"
                                   Required="true"
                                   For="@(() => ExtendedModel.SIN)" />
@@ -31,7 +30,7 @@
 
 
                <MudItem xs="12" sm="6" Class="d-flex align-center">
-                    <MudSwitch @bind-Checked="@ExtendedModel.IsActiveTaxCreditRecipient"
+                    <MudSwitch @bind-Checked="ExtendedModel.IsActiveTaxCreditRecipient"
                                T="bool"
                                Label="Is active tax payer"
                                Color="Color.Primary" />
@@ -47,7 +46,7 @@
 
 @code {
      [Parameter, EditorRequired]
-     public MaktabDataContracts.Requests.Users.AddExtendedUserInformationRequest ExtendedModel { get; set; } = new();
+     public AddExtendedUserInformationRequest ExtendedModel { get; set; } = new();
 
      [Parameter] public EventCallback<AddExtendedUserInformationRequest> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }

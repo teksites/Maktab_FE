@@ -1,6 +1,6 @@
 ﻿@page "/account/login"
 
-@inherits BaseComponent<Login>
+@inherits BaseFormComponent<Login>
 
 @using System.ComponentModel.DataAnnotations
 
@@ -11,12 +11,13 @@
 
                <MudText Typo="Typo.h4" Class="mb-6 text-center">Login</MudText>
 
-               <MudForm @ref="form" OnValidSubmit="@(InitiateLogin)" Validated="@(OnValidated)">
+               <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleLogin)" Validated="@(OnValidated)">
 
                     <MudTextField T="string" Label="Username"
                                   @bind-Value="username"
                                   Required="true"
                                   RequiredError="Username is required"
+                                  Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})"
                                   Immediate="true" />
                      <MudStack  Spacing="0">
                     <MudTextField T="string" Label="Password"
@@ -24,21 +25,22 @@
                                   InputType="InputType.Password"
                                   Required="true"
                                   RequiredError="Password is required"
+                                  Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))"
                                   Immediate="true" />
                          <MudText Class="mt-2" Align="Align.End">
                               <MudLink Href="/account/changepassword" Color="Color.Default">Forgot password</MudLink>
                          </MudText>
                     </MudStack>
 
-                    @if (!string.IsNullOrWhiteSpace(errorMessage))
+                    @if (!string.IsNullOrWhiteSpace(_errorMessage))
                     {
                          <MudAlert Severity="Severity.Error" Elevation="0" Class="my-4">
-                              @errorMessage
+                              @_errorMessage
                          </MudAlert>
                     }
 
                     <MudStack Direction="Row" Justify="Justify.SpaceBetween" Spacing="4" Class="mt-6">
-                         <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@authenticating" OnClick="@(InitiateLogin)">
+                         <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || authenticating)" OnClick="@(HandleLogin)">
                               @if (authenticating)
                               {
                                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
@@ -60,50 +62,40 @@
 </MudGrid>
 
 @code {
-     private MudForm form;
+
+
      private string username = string.Empty;
      private string password = string.Empty;
-
      private bool authenticating = false;
 
-     private async Task InitiateLogin()
+     private async void HandleLogin()
      {
-          errorMessage = string.Empty;
 
-          try
-          {
-               authenticating = true;
-               await InitiateUserAction(LoginToSystem);
-          }
-          finally
-          {
-               authenticating = false;
-          }
+          authenticating = true;
+          RequestRender();
+          await InvokeUserAction(LoginToSystem);
+          authenticating = false;
+          RequestRender();
      }
 
      private async Task LoginToSystem()
      {
           var logInfo = new MaktabDataContracts.Requests.Authentication.UserLoginInformation
-          {
-               UserName = username,
-               Password = password
-          };
+               {
+                    UserName = username,
+                    Password = password
+               };
 
           var result = await SessionService.Login(logInfo);
-
           if (result)
           {
                // Redirect after successful login
                NavigationManager.NavigateTo("/account/usercodevalidation");
           }
-     }
-
-     private void OnValidated()
-     {
-          // Clear error message when form is valid
-          if (form?.IsValid == true)
+          else
           {
-               errorMessage = string.Empty;
+               _errorMessage = "Please provide valid credentials.";
+               RequestRender();
           }
      }
 }

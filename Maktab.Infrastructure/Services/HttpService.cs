@@ -128,7 +128,10 @@ namespace Maktab.Infrastructure.Services
                     return default;
                }
 
-               await handleErrors(response);
+               if (autoLogout)
+               {
+                    await handleErrors(response);
+               }
 
                return await response.Content.ReadFromJsonAsync<T>(_serializerOptions, cancellationToken);
           }

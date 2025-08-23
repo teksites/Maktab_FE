@@ -21,7 +21,7 @@ namespace Maktab.Domain.Services
                var isloggedIn = false;
 
                var authenticationReponse = await _httpService.Post<AuthenticationResponse>(loginUrl, loginInformation, false);
-               if (authenticationReponse != null)
+               if (authenticationReponse != null && authenticationReponse.SessionId != Guid.Empty)
                {
                     //await _localStorageService.SetItem(_userKey, User);
 
@@ -39,10 +39,10 @@ namespace Maktab.Domain.Services
 
                     isloggedIn = true;
                }
-               else
-               {
-                    throw new UnauthorizedAccessException();
-               }
+               //else
+               //{
+               //     throw new UnauthorizedAccessException();
+               //}
 
                return isloggedIn;
           }

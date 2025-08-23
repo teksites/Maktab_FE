@@ -61,10 +61,10 @@
                          </MudButton>
                                    </MudStack>
                               </MudItem>
-                         @if (!string.IsNullOrWhiteSpace(errorMessage))
+                         @if (!string.IsNullOrWhiteSpace(_errorMessage))
                          {
                               <MudItem>
-                              <MudAlert Severity="Severity.Error" Elevation="0" Class="mt-2">@errorMessage</MudAlert>
+                              <MudAlert Severity="Severity.Error" Elevation="0" Class="mt-2">@_errorMessage</MudAlert>
                                    </MudItem>
                          }
 
@@ -153,7 +153,7 @@
                success = false;
                //errors = new string[] { "Please provide valid password." };
                //Snackbar.Add("Please provide valid credentials.", Severity.Error);
-               errorMessage = "Please provide valid Code.";
+               _errorMessage = "Please provide valid Code.";
 
           }
           catch (Exception ex)
@@ -177,7 +177,7 @@
                var codeSent = await UserService.SendUserActivationCodeAsync(userId);
                if(!codeSent)
                {
-                    errorMessage = "Error while requesting new code.";
+                    _errorMessage = "Error while requesting new code.";
                }
 
 
@@ -187,7 +187,7 @@
                success = false;
                //errors = new string[] { "Please provide valid password." };
                //Snackbar.Add("Please provide valid credentials.", Severity.Error);
-               errorMessage = "Error while requesting new code.";
+               _errorMessage = "Error while requesting new code.";
           }
           catch (Exception ex)
           {
@@ -206,6 +206,6 @@
      {
           // Clear error message when form is re-validated
           if (form.IsValid)
-               errorMessage = string.Empty;
+               _errorMessage = string.Empty;
      }
 }
