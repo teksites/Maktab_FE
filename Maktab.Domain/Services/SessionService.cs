@@ -20,32 +20,28 @@ namespace Maktab.Domain.Services
           {
                var isloggedIn = false;
 
-               try
+               var authenticationReponse = await _httpService.Post<AuthenticationResponse>(loginUrl, loginInformation, false);
+               if (authenticationReponse != null)
                {
+                    //await _localStorageService.SetItem(_userKey, User);
 
-                    var authenticationReponse = await _httpService.Post<AuthenticationResponse>(loginUrl, loginInformation, false);
-                    if (authenticationReponse != null)
-                    {
-                         //await _localStorageService.SetItem(_userKey, User);
+                    await _localStorageService.SetItem(Constants.CurrentUserNameKey, loginInformation.UserName);
+                    await _localStorageService.SetItem(Constants.CurrentUserIdKey, authenticationReponse.UserId);
+                    await _localStorageService.SetItem(Constants.SessionIdKey, authenticationReponse.SessionId);
 
-                         await _localStorageService.SetItem(Constants.CurrentUserNameKey, loginInformation.UserName);
-                         await _localStorageService.SetItem(Constants.CurrentUserIdKey, authenticationReponse.UserId);
-                         await _localStorageService.SetItem(Constants.SessionIdKey, authenticationReponse.SessionId);
+                    await _localStorageService.SetItem(Constants.AccessTokenKey, authenticationReponse.AccessToken);
+                    await _localStorageService.SetItem(Constants.RefreshTokenKey, authenticationReponse.RefreshToken);
 
-                         await _localStorageService.SetItem(Constants.AccessTokenKey, authenticationReponse.AccessToken);
-                         await _localStorageService.SetItem(Constants.RefreshTokenKey, authenticationReponse.RefreshToken);
+                    await _localStorageService.SetItem(Constants.SessionStartTimeKey, authenticationReponse.LoginTime);
+                    await _localStorageService.SetItem(Constants.SessionEndTimeKey, authenticationReponse.ExpiresIn);
 
-                         await _localStorageService.SetItem(Constants.SessionStartTimeKey, authenticationReponse.LoginTime);
-                         await _localStorageService.SetItem(Constants.SessionEndTimeKey, authenticationReponse.ExpiresIn);
+                    await _localStorageService.SetItem<bool>(Constants.AuthorizationStateKey, true);
 
-                         await _localStorageService.SetItem<bool>(Constants.AuthorizationStateKey, true);
-
-                         isloggedIn = true;
-                    }
+                    isloggedIn = true;
                }
-               catch (Exception ex)
+               else
                {
-                    //Intensionally leftblank
+                    throw new UnauthorizedAccessException();
                }
 
                return isloggedIn;

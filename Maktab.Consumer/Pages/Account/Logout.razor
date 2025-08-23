@@ -2,10 +2,13 @@
 @using Maktab.Core.Interfaces.Services
 
 @inject ISessionService SessionService
+@inject NavigationManager NavigationManager
+
 
 @code {
      protected override async void OnInitialized()
      {
           await SessionService.LogoutAsync();
+          NavigationManager.NavigateTo("/account/login");
      }
 }

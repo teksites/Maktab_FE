@@ -16,7 +16,8 @@ Welcome to your new app.
           bool isAuthorized = await SessionService.IsAuthenticatedAsync();
           if (isAuthorized)
           {
-               Navigation.NavigateTo("/customer/dashboard");
+               Navigation.NavigateTo("/account/usercodevalidation");
+               //Navigation.NavigateTo("/customer/dashboard");
           }
           else
           {

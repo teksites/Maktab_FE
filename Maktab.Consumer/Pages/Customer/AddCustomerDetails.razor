@@ -28,7 +28,7 @@
                              <AddressManager/>
                          </MudStep>
                          <MudStep Title="Step 3" SecondaryText="Add RL 24" HasError="@(isExtendedInfoAdded == false)">
-                              <AddRL24/>
+                              <AddExtendedInfo/>
                          </MudStep>
                          <MudStep Title="Step 4" SecondaryText="Add Child" HasError="@(isChildAdded == false)">
                               <ChildList />
@@ -65,7 +65,7 @@
 
           username = await SessionService.GetUserNameAsync();
           userId = await SessionService.GetLoggedInUserIdAsync();
-          userInfo = await UserService.GetUserById(userId);
+          userInfo = await UserService.GetUserByIdAsync(userId);
           isInitialized = true;
           //StateHasChanged();
      }

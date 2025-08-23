@@ -1,22 +1,19 @@
 ﻿@page "/register/customer"
 
+@inherits BaseComponent<RegisterCustomer>
+
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
 @using MaktabDataContracts.Enums
 @using MaktabDataContracts.Requests.Users
 
-@inject ISessionService SessionService
 @inject IUserService UserService
 
-@inject ISnackbar Snackbar
-@inject NavigationManager NavigationManager
+<MudGrid Justify="Justify.Center">
 
-
-<h3>RegisterUser</h3>
-
-<MudGrid>
      <MudItem xs="12" sm="7">
           <MudPaper Class="pa-4">
+               <MudText Typo="Typo.h4" Class="mb-6 text-center">Register User</MudText>
                <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
                     <MudTextField T="string" @bind-Value="addUserInformation.FirstName" Label="First name" Required="true" RequiredError="First name is required!" />
                     <MudTextField T="string" @bind-Value="addUserInformation.LastName" Label="Last name" Required="true" RequiredError="Last name is required!" />
@@ -33,7 +30,7 @@
                     </MudSelect> *@
 
                     <MudSelect @bind-Value="addUserInformation.Relationship" Label="Relationship">
-                         @foreach (var margin in Enum.GetValues(typeof(Relationship)).Cast<Relationship>())
+                         @foreach (var margin in relationShips)
                          {
                               <MudSelectItem Value="margin">@margin</MudSelectItem>
                          }
@@ -46,16 +43,48 @@
                     <MudTextField T="string"
                                   Label="Password" HelperText="Repeat the password" InputType="InputType.Password"
                                   Validation="@(new Func<string, string>(PasswordMatch))" />
+
+                    @if (!string.IsNullOrWhiteSpace(errorMessage))
+                    {
+                         <MudAlert Severity="Severity.Error" Elevation="0" Class="my-4">
+                              @errorMessage
+                         </MudAlert>
+                    }
+
+                    <MudStack Direction="Row" Justify="Justify.SpaceBetween" Spacing="4" Class="mt-6">
+@*                          <MudText Class="mt-2">
+                              <MudLink Href="/account/login" Color="Color.Tertiary">LogIn</MudLink>
+                         </MudText> *@
+
+                         <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree to terms and conditions of Matkab!" />
+
+                         <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success && IsRegistering)" OnClick="@(RegisterUser)">
+                              @if (IsRegistering)
+                              {
+                                   <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                                   <span>Registering...</span>
+                              }
+                              else
+                              {
+                                   <span>Register</span>
+                              }
+                         </MudButton>
+
+                         <MudButton Href="/account/login" Variant="Variant.Outlined" Color="Color.Primary" Disabled="@(!success && IsRegistering)">LogIn</MudButton>
+
+                    </MudStack>
+
+
                     
-                    <div class="d-flex align-center justify-space-between">
-                         <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree!" />
+@*                     <div class="d-flex align-center justify-space-between">
+                         
                          <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
 
                          @if (!string.IsNullOrWhiteSpace(_errorMessage))
                          {
                               <MudAlert Severity="Severity.Error" Elevation="0" Class="mt-2">@_errorMessage</MudAlert>
                          }
-                    </div>
+                    </div> *@
                </MudForm>
           </MudPaper>
           @* <MudPaper Class="pa-4 mt-4">
@@ -74,14 +103,23 @@
           </MudPaper>
      </MudItem> *@
 </MudGrid>
+
 @code {
 
      AddUserInformation addUserInformation = new AddUserInformation();
      bool success;
-     string _errorMessage;
+     bool IsRegistering;
      string[] errors = { };
      MudTextField<string> pwField1;
      MudForm form;
+     IEnumerable<Relationship> relationShips;
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          relationShips = Enum.GetValues(typeof(Relationship)).Cast<Relationship>().Where(x => x == Relationship.Mother || x == Relationship.Father);
+     }
 
      private IEnumerable<string> PasswordStrength(string pw)
      {
@@ -105,5 +143,32 @@
           if (pwField1.Value != arg)
                return "Passwords don't match";
           return null;
+     }
+
+     private async void RegisterUser()
+     {
+          errorMessage = string.Empty;
+          try
+          {
+               IsRegistering = true;
+
+               addUserInformation.UserName = addUserInformation.Email;
+               var result = await UserService.RegisterUserAsync(addUserInformation);
+               if (result!= null)
+               {
+                    Snackbar.Add("User has been created.", Severity.Success);
+                    // Redirect after successful login
+                    NavigationManager.NavigateTo("/account/login");
+               }
+          }
+          catch (Exception)
+          {
+               errorMessage = "System was not able to complete your request. Please try again later in a moment.";
+               Snackbar.Add(errorMessage, Severity.Error);
+          }
+          finally
+          {
+               IsRegistering = false;
+          }
      }
 }

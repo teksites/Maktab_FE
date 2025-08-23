@@ -1,25 +1,18 @@
-﻿@using MudBlazor
+﻿@inherits BaseComponent<AddAddress>
 @using System.ComponentModel.DataAnnotations
 @using MaktabDataContracts.Enums
 
+@inject ISessionService SessionService
+@inject IAddressService AddressService
 
-<EditForm Model="@AddressModel" OnValidSubmit="HandleValidSubmit">
+
+@* <EditForm Model="@AddressModel" OnValidSubmit="HandleValidSubmit"> *@
      <MudPaper Class="pa-4">
           <MudText Typo="Typo.h5" Class="mb-4">Add Address</MudText>
+     <MudForm @ref="form" @bind-IsValid="@success" OnValidSubmit="@(HandleValidSubmit)" Validated="@(OnValidated)">
 
           <MudGrid Container="true" Spacing="3">
-               <MudItem xs="12" sm="6">
-                    <MudTextField @bind-Value="AddressModel.UnitNo"
-                                  Label="Unit No"
-                                  Required="true"
-                                  For="@(() => AddressModel.UnitNo)" />
-               </MudItem>
-
-               <MudItem xs="12" sm="6">
-                    <MudTextField @bind-Value="AddressModel.ApartmentNo"
-                                  Label="Apartment No"
-                                  For="@(() => AddressModel.ApartmentNo)" />
-               </MudItem>
+              
 
                <MudItem xs="12" sm="12">
                     <MudTextField @bind-Value="AddressModel.AddressLine1"
@@ -32,6 +25,19 @@
                     <MudTextField @bind-Value="AddressModel.AddressLine2"
                                   Label="Address Line 2"
                                   For="@(() => AddressModel.AddressLine2)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="AddressModel.UnitNo"
+                                  Label="Unit No"
+                                  Required="false"
+                                  For="@(() => AddressModel.UnitNo)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="AddressModel.ApartmentNo"
+                                  Label="Apartment No"
+                                  For="@(() => AddressModel.ApartmentNo)" />
                </MudItem>
 
                <MudItem xs="12" sm="4">
@@ -81,11 +87,12 @@
           </MudGrid>
 
           <MudStack Direction="Row" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
-               <MudButton Type="Submit" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Check">Save</MudButton>
+               <MudButton Type="Submit" Color="Color.Primary" Variant="Variant.Filled" OnClick="@(HandleValidSubmit)" StartIcon="@Icons.Material.Filled.Check">Save</MudButton>
                <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
           </MudStack>
+          </MudForm>
      </MudPaper>
-</EditForm>
+@* </EditForm> *@
 
 @code {
      [Parameter, EditorRequired]
@@ -94,10 +101,54 @@
      [Parameter] public EventCallback<MaktabDataContracts.Requests.Addresses.AddAddress> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }
      [Parameter] public AddressType AddressType { get; set; }
+     [Parameter] public Guid ConnectedId { get; set; } = Guid.Empty;
+
+     private MudForm form;
+     bool success;
+     private bool isSaving = false;
+     private string _errorMessage = string.Empty;
+     bool IsRegistering;
+
 
      private async Task HandleValidSubmit()
      {
+          try
+          {
+               if(ConnectedId == Guid.Empty)
+               {
+                    _errorMessage = "Please provide valid address assignee.";
+                    return;
+               }
+
+
+               isSaving = true;
+               AddressModel.ConnectedId = this.ConnectedId;
+
+               var savedAddress = AddressService.SaveAddress(AddressModel);
+               if(savedAddress == null)
+               {
+                    
+               }
+
+          }
+          catch(Exception ex)
+          {
+               
+          }
+          finally
+          {
+               isSaving = false;
+          }
           await OnSave.InvokeAsync(AddressModel);
+     }
+
+     private void OnValidated()
+     {
+          // Clear error message when form is valid
+          if (form?.IsValid == true)
+          {
+               _errorMessage = string.Empty;
+          }
      }
 
      private async Task OnCancelClickedHandler()

@@ -1,0 +1,86 @@
+﻿@using Maktab.Consumer.Dialogs
+@using MaktabDataContracts.Requests.Children
+@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Requests.Users
+@using MudBlazor
+@using System.ComponentModel.DataAnnotations
+
+@inject IDialogService DialogService
+
+
+<EditForm Model="@ExtendedModel" OnValidSubmit="HandleValidSubmit">
+     <MudPaper Class="pa-4">
+          <MudText Typo="Typo.h5" Class="mb-4">Add SIN</MudText>
+
+          <MudGrid Container="true" Spacing="3">
+               <MudItem xs="12" sm="6">
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddAddressDialog" Class="mb-4">
+                         Add Address
+                    </MudButton>
+                    <DisplayAddress Address="@SelectedAddress" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="ExtendedModel.SIN"
+                                  Label="SIN"
+                                  Required="true"
+                                  For="@(() => ExtendedModel.SIN)" />
+               </MudItem>
+
+
+
+
+               <MudItem xs="12" sm="6" Class="d-flex align-center">
+                    <MudSwitch @bind-Checked="ExtendedModel.IsActiveTaxCreditRecipient"
+                               T="bool"
+                               Label="Is active tax payer"
+                               Color="Color.Primary" />
+               </MudItem>
+          </MudGrid>
+
+          <MudStack Direction="Row" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
+               <MudButton Type="Submit" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Check">Save</MudButton>
+               <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
+          </MudStack>
+     </MudPaper>
+</EditForm>
+
+@code {
+     [Parameter, EditorRequired]
+     public AddExtendedUserInformationRequest ExtendedModel { get; set; } = new();
+
+     [Parameter] public EventCallback<AddExtendedUserInformationRequest> OnSave { get; set; }
+     [Parameter] public EventCallback OnCancel { get; set; }
+     [Parameter] public Guid FamilyId { get; set; }
+
+
+     private MaktabDataContracts.Requests.Addresses.AddAddress SelectedAddress;
+
+     private readonly Guid ConnectedId = Guid.NewGuid();
+
+     private async Task HandleValidSubmit()
+     {
+          await OnSave.InvokeAsync(ExtendedModel);
+     }
+
+     private async Task OnCancelClickedHandler()
+     {
+          await OnCancel.InvokeAsync();
+     }
+
+     
+
+     private async Task OpenAddAddressDialog()
+     {
+          var parameters = new DialogParameters { ["ConnectedId"] = ConnectedId };
+
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+          var dialog = await DialogService.ShowAsync<AddAddressDialog>("Add Address", parameters, options);
+          var result = await dialog.Result;
+
+          if (!result.Canceled && result.Data is MaktabDataContracts.Requests.Addresses.AddAddress newAddress)
+          {
+               SelectedAddress = newAddress;
+          }
+     }
+}

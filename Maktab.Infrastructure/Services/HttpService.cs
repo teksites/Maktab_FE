@@ -54,7 +54,7 @@ namespace Maktab.Infrastructure.Services
                await sendRequest(request);
           }
 
-          public async Task<T> Post<T>(string uri, object value, bool autoLogout = true)
+          public async Task<T> Post<T>(string uri, object? value = null, bool autoLogout = true)
           {
                var request = createRequest(HttpMethod.Post, uri, value);
                return await sendRequest<T>(request, autoLogout);
@@ -86,7 +86,7 @@ namespace Maktab.Infrastructure.Services
 
           // helper methods
 
-          private HttpRequestMessage createRequest(HttpMethod method, string uri, object value = null)
+          private HttpRequestMessage createRequest(HttpMethod method, string uri, object? value = null)
           {
                var request = new HttpRequestMessage(method, uri);
                if (value != null)

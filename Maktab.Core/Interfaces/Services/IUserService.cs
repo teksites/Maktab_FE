@@ -5,8 +5,12 @@ namespace Maktab.Core.Interfaces.Services
 {
      public interface IUserService : IDomainService
      {
-          Task<UserInformationResponse> GetUserById(Guid id);
-          Task<bool> SendUserActivationCode(Guid userId);
-          Task<bool> ValidateUserByActivationCode(Guid userId, UserVerificationRequest request);
+          Task<UserInformationResponse> GetUserByIdAsync(Guid id);
+          Task<UserInformationResponse> RegisterUserAsync(AddUserInformation userInfo);
+          Task<bool> SendUserActivationCodeAsync(Guid userId);
+          Task<bool> ValidateUserByActivationCodeAsync(Guid userId, UserVerificationRequest request);
+          Task<bool> ValidateUsernameAsync(string username);
+          Task<bool> ChangeUserPasswordAsync(Guid userId, UpdateUserPasswordRequest changeRequest);
+          Task<bool> ForgotUserPasswordAsync(string username);
      }
 }
