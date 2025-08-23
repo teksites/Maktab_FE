@@ -47,7 +47,7 @@
 
 @code {
      [Parameter, EditorRequired]
-     public AddExtendedUserInformationRequest ExtendedModel { get; set; } = new();
+     public MaktabDataContracts.Requests.Users.AddExtendedUserInformationRequest ExtendedModel { get; set; } = new();
 
      [Parameter] public EventCallback<AddExtendedUserInformationRequest> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }
