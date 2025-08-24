@@ -163,6 +163,7 @@
 
      private async Task RegisterUser()
      {
+          addUserInformation.Email = addUserInformation.Email.ToLowerInvariant();
           addUserInformation.UserName = addUserInformation.Email;
           var result = await UserService.RegisterUserAsync(addUserInformation);
           if (result != null)
