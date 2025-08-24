@@ -1,0 +1,9 @@
+﻿<MudStack Row=true>
+     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+     <MudText Class="ms-2">@DisplayText</MudText>
+</MudStack>
+
+@code {
+     [Parameter] 
+     public string DisplayText { get; set; }
+}

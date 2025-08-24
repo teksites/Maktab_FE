@@ -8,7 +8,7 @@ namespace Maktab.Core.Interfaces.Services
           Task<UserInformationResponse> GetUserByIdAsync(Guid id);
           Task<UserInformationResponse> RegisterUserAsync(AddUserInformation userInfo);
           Task<bool> SendUserActivationCodeAsync(Guid userId);
-          Task<bool> ValidateUserByActivationCodeAsync(Guid userId, UserVerificationRequest request);
+          Task<bool> ActivateUserByCodeAsync(Guid userId, UserVerificationRequest request);
           Task<bool> ValidateUsernameAsync(string username);
           Task<bool> ChangeUserPasswordAsync(Guid userId, UpdateUserPasswordRequest changeRequest);
           Task<bool> ForgotUserPasswordAsync(string username);

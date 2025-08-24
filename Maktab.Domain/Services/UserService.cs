@@ -13,13 +13,8 @@ namespace Maktab.Domain.Services
           private const string addUser = @"/api/users/add";
           private const string changeUserPassword = @"/api/users/{0}/resetpassword";
           private const string forgotUserPassword = @"/api/users/forgotpassword?userName={0}";
-          private const string checkUserExist = @"/api/users/checkuser?userName={0}";
-
-          
-
-
-
-
+          private const string checkUsernameExist = @"/api/users/checkuser?userName={0}";
+          private const string checkUserRegistered = @"/api/users/checkuser?userName={0}";
 
 
           public UserService(IHttpService httpService, ILocalStorageService localStorageService) 
@@ -34,10 +29,10 @@ namespace Maktab.Domain.Services
                return result;
           }
 
-          public async Task<bool> ValidateUserByActivationCodeAsync(Guid userId, UserVerificationRequest request)
+          public async Task<bool> ActivateUserByCodeAsync(Guid userId, UserVerificationRequest request)
           {
                var formatedUrl = string.Format(validateUserActivationCode, userId);
-               var result = await _httpService.Get<bool>(formatedUrl);
+               var result = await _httpService.Post<bool>(formatedUrl, request);
                return result;
           }
 
@@ -70,7 +65,7 @@ namespace Maktab.Domain.Services
 
           public async Task<bool> ValidateUsernameAsync(string username)
           {
-               var formatedUrl = string.Format(changeUserPassword, checkUserExist);
+               var formatedUrl = string.Format(checkUsernameExist, username);
                var result = await _httpService.Get<bool>(formatedUrl);
                return result;
           }

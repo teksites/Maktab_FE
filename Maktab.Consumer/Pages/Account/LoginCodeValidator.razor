@@ -1,33 +1,32 @@
 ﻿@page "/account/usercodevalidation"
 
-@inherits BaseComponent<LoginCodeValidator>
+@inherits BaseFormComponent<LoginCodeValidator>
 
 @inject IAccountService AccountService
 @inject IUserService UserService
 
 @* @inject IAlertService AlertService *@
 
-<MudGrid>
-     <MudItem xs="12" sm="7">
-          <MudPaper Class="pa-4">
-
+<MudGrid Justify="Justify.Center">
+     <MudItem xs="12" sm="7" md="5">
+          <MudPaper Class="pa-6" Elevation="8">
 
                @if(isInitialized.HasValue && isInitialized.Value)
                {
-                    <MudForm @ref="form" Validated="@(OnValidated)">
-                    <MudAlert Severity="Severity.Info" Elevation="0" Class="mt-2">Please enter code sent in your email.</MudAlert>
-                    <MudTextField T="string" Label="Code" @bind-Text="@emailValidationCode" Required="true" RequiredError="Please enter code!" />
+                    <MudText Typo="Typo.h4" Class="mb-6 text-center">Validate Code</MudText>
+                         <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleCodeValidation)" Validated="@(OnFormValidated)">
+                              <MudGrid Justify="Justify.Center">
+                                   <MudItem xs="12">
+                                        <MudAlert Severity="Severity.Info" Elevation="0" Class="mt-2">Please enter code sent in your email.</MudAlert>
+                                   </MudItem>
+                                   <MudItem xs="12">
+                                        <MudTextField T="string" Label="Code" @bind-Text="@emailValidationCode" Required="true" RequiredError="Please enter code!" />
+                                   </MudItem>
 
-                    @* <div class="d-flex align-center justify-space-between"> *@
-                         @* <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree!" /> *@
+                                     <MudItem xs="12">
+                                       <MudStack Row=true >
 
-                         <MudGrid Justify="Justify.Center">
-
-                         <MudItem xs="12">
-                              <MudStack Row=true>
-
-                                   <MudButton Disabled="@isSendingCodeAgain" onclick="@(InitiateRequestForSendingCode)"
-                                              Variant="Variant.Text"
+                                            <MudButton Disabled="@isSendingCodeAgain" onclick="@(HandleSendUserCode)" Variant="Variant.Text"
                                               Color="Color.Tertiary" >
                                         @if (isSendingCodeAgain)
                                         {
@@ -47,7 +46,7 @@
                                         </MudLink>
                                    </MudText> *@
 
-                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@isCodeValidating" Class="ml-auto" OnClick="@(InitiateCodeValidation)">
+                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isCodeValidating)" Class="ml-auto" OnClick="@(HandleCodeValidation)">
 
                               @if (isCodeValidating)
                               {
@@ -72,30 +71,14 @@
                          
                          </MudGrid>
 
-                    @* </div> *@
                     </MudForm>
                }
                else
                {
-                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Initializing</MudText>
+                    <BusyContent DisplayText="Initializing"/>
                }
           </MudPaper>
-          @* <MudPaper Class="pa-4 mt-4">
-               <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(() => form.Validate())">Validate</MudButton>
-               <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(() => form.ResetAsync())" Class="mx-2">Reset</MudButton>
-               <MudButton Variant="Variant.Filled" DropShadow="false" OnClick="@(() => form.ResetValidation())">Reset Validation</MudButton>
-          </MudPaper> *@
      </MudItem>
-     @*  <MudItem xs="12" sm="5">
-          <MudPaper Class="pa-4 mud-height-full">
-               <MudText Typo="Typo.subtitle2">@($"Errors ({errors.Length})")</MudText>
-               @foreach (var error in errors)
-               {
-                    <MudText Color="@Color.Error">@error</MudText>
-               }
-          </MudPaper>
-     </MudItem> *@
 </MudGrid>
 @code {
      string username;
@@ -104,19 +87,18 @@
      bool isCodeValidating = false;
      bool isSendingCodeAgain = false;
      bool? isInitialized = false;
-     string emailValidationCode;
-     MudForm form;
+     string emailValidationCode =string.Empty;
 
-     protected override async void OnInitialized()
+     protected override async Task OnInitializedAsync()
      {
           //isInitialized = true;
-          base.OnInitialized();
+          await base.OnInitializedAsync();
 
           username = await SessionService.GetUserNameAsync();
           userId = await SessionService.GetLoggedInUserIdAsync();
           var userInfo = await UserService.GetUserByIdAsync(userId);
           isInitialized = true;
-          StateHasChanged();
+          RequestRender();
 
           if( userInfo != null && !userInfo.IfTempUser)
           {
@@ -124,88 +106,64 @@
           }
      }
 
-     private async void InitiateCodeValidation()
+     private async void HandleCodeValidation()
      {
           try
           {
                isCodeValidating = true;
+               RequestRender();
 
-               var activated = await UserService.ValidateUserByActivationCodeAsync(
-                    userId,
-                    new MaktabDataContracts.Requests.Users.UserVerificationRequest()
-                    {
-                         EmailVerificationCode = emailValidationCode,
-                    });
-
-               if(activated)
-               {
-                    NavigationManager.NavigateTo("/customer/adddetails");
-               }
-               else
-               {
-                    isCodeValidating = false;
-                    StateHasChanged();
-               }
+               await InvokeUserAction(ValidateUserCode);
 
           }
-          catch (UnauthorizedAccessException aex)
-          {
-               success = false;
-               //errors = new string[] { "Please provide valid password." };
-               //Snackbar.Add("Please provide valid credentials.", Severity.Error);
-               _errorMessage = "Please provide valid Code.";
-
-          }
-          catch (Exception ex)
+          finally
           {
                isCodeValidating = false;
-               //ignored.
+               RequestRender();
           }
-          // finally
-          // {
+     }
 
-          // }
+     private async Task ValidateUserCode()
+     {
+
+          var activated = await UserService.ActivateUserByCodeAsync( userId,
+               new MaktabDataContracts.Requests.Users.UserVerificationRequest()
+                         {
+                              EmailVerificationCode = emailValidationCode,
+                         });
+
+          if(activated)
+          {
+               NavigationManager.NavigateTo("/customer/adddetails");
+          }
+          else
+          {
+               _errorMessage = "Code can not be validated.";
+          }
      }
 
 
-     private async void InitiateRequestForSendingCode()
+     private async void HandleSendUserCode()
      {
           try
           {
                isSendingCodeAgain = true;
-
-               var codeSent = await UserService.SendUserActivationCodeAsync(userId);
-               if(!codeSent)
-               {
-                    _errorMessage = "Error while requesting new code.";
-               }
-
-
-          }
-          catch (UnauthorizedAccessException aex)
-          {
-               success = false;
-               //errors = new string[] { "Please provide valid password." };
-               //Snackbar.Add("Please provide valid credentials.", Severity.Error);
-               _errorMessage = "Error while requesting new code.";
-          }
-          catch (Exception ex)
-          {
-               //ignored.
+               RequestRender();
+               await InvokeUserAction(SendUserCode);
           }
           finally
           {
                isSendingCodeAgain = false;
-               StateHasChanged();
-
+               RequestRender();
           }
      }
 
-
-     private void OnValidated()
+     private async Task SendUserCode()
      {
-          // Clear error message when form is re-validated
-          if (form.IsValid)
-               _errorMessage = string.Empty;
+          var codeSent = await UserService.SendUserActivationCodeAsync(userId);
+          if (!codeSent)
+          {
+               _errorMessage = "Can not process, please try again in few minutes.";
+          }
      }
 }

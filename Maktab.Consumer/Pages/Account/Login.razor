@@ -11,7 +11,7 @@
 
                <MudText Typo="Typo.h4" Class="mb-6 text-center">Login</MudText>
 
-               <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleLogin)" Validated="@(OnValidated)">
+               <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleLogin)" Validated="@(OnFormValidated)">
 
                     <MudTextField T="string" Label="Username"
                                   @bind-Value="username"

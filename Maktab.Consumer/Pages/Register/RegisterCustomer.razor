@@ -1,6 +1,6 @@
 ﻿@page "/register/customer"
 
-@inherits BaseComponent<RegisterCustomer>
+@inherits BaseFormComponent<RegisterCustomer>
 
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
@@ -14,20 +14,13 @@
      <MudItem xs="12" sm="7">
           <MudPaper Class="pa-4">
                <MudText Typo="Typo.h4" Class="mb-6 text-center">Register User</MudText>
-               <MudForm @ref="form" @bind-IsValid="@_isValid" @bind-Errors="@errors" OnValidSubmit="@(RegisterUser)" Validated="@(OnValidated)">
+               <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandlerRegisterUser)" Validated="@(OnFormValidated)">
                     <MudTextField T="string" @bind-Value="addUserInformation.FirstName" Label="First name" Required="true" RequiredError="First name is required!" />
                     <MudTextField T="string" @bind-Value="addUserInformation.LastName" Label="Last name" Required="true" RequiredError="Last name is required!" />
                     <MudTextField T="string" @bind-Value="addUserInformation.Email" Label="Email" Required="true" RequiredError="Email is required!"
                                   Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
                     <MudTextField T="string" @bind-Value="addUserInformation.Phone" Label="Phone" Required="true" RequiredError="Phone number is required!"
                                   Validation="@(new PhoneAttribute() { ErrorMessage = "The phone number is invalid"})" />
-
-                    @* <MudSelect @bind-Value="addUserInformation.Relationship" Label="Gender">
-                         @foreach (var margin in Enum.GetValues(typeof(Gender)).Cast<Gender>())
-                         {
-                              <MudSelectItem Value="margin">@margin</MudSelectItem>
-                         }
-                    </MudSelect> *@
 
                     <MudSelect @bind-Value="addUserInformation.Relationship" Label="Relationship">
                          @foreach (var margin in relationShips)
@@ -58,7 +51,7 @@
 
                          <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree to terms and conditions of Matkab!" />
 
-                         <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || IsRegistering)" OnClick="@(RegisterUser)">
+                         <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || IsRegistering)" OnClick="@(HandlerRegisterUser)">
                               @if (IsRegistering)
                               {
                                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
@@ -107,12 +100,9 @@
 @code {
 
      AddUserInformation addUserInformation = new AddUserInformation();
-     bool _isValid;
      bool IsRegistering;
-     string[] errors = { };
      MudTextField<string> pwField1;
-     MudForm form;
-     IEnumerable<Relationship> relationShips;
+     IEnumerable<Relationship> relationShips = Array.Empty<Relationship>();
 
      protected override async Task OnInitializedAsync()
      {
@@ -147,39 +137,41 @@
 
      private async void HandlerRegisterUser()
      {
-          await HandlerUserAction(ref IsRegistering, RegisterUser);
-          // try
-          // {
-          //      IsRegistering = true;
-          //      await InvokeUserAction(RegisterUser);
+          try
+          {
+               IsRegistering = true;
+               RequestRender();
 
-          // }
-          // finally
-          // {
-          //      IsRegistering = false;
+               await InvokeUserAction(RegisterUser);
 
-          // }
+          }
+          finally
+          {
+               IsRegistering = false;
+               RequestRender();
+          }
      }
 
      private async Task RegisterUser()
      {
           addUserInformation.Email = addUserInformation.Email.ToLowerInvariant();
           addUserInformation.UserName = addUserInformation.Email;
+
+          var isUserExists = await UserService.ValidateUsernameAsync(addUserInformation.UserName);
+          if (isUserExists)
+          {
+               _errorMessage = "User is already registered with system; Please login to continue.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          addUserInformation.Password = pwField1.Value;
           var result = await UserService.RegisterUserAsync(addUserInformation);
           if (result != null)
           {
                Snackbar.Add("User has been created.", Severity.Success);
                // Redirect after successful login
                NavigationManager.NavigateTo("/account/login");
-          }
-     }
-
-     private void OnValidated()
-     {
-          // Clear error message when form is valid
-          if (form?.IsValid == true)
-          {
-               _errorMessage = string.Empty;
           }
      }
 }
