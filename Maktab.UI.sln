@@ -3,19 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Consumer", "Maktab.Consumer.csproj", "{BBAC9263-DEE8-4258-9F06-8527FC30E149}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Consumer", "Maktab.Consumer\Maktab.Consumer.csproj", "{BBAC9263-DEE8-4258-9F06-8527FC30E149}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Core", "..\Maktab.Core\Maktab.Core.csproj", "{C63E5C16-E2EE-CFCD-FCA9-D8BB562A0EBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Core", "Maktab.Core\Maktab.Core.csproj", "{C63E5C16-E2EE-CFCD-FCA9-D8BB562A0EBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Domain", "..\Maktab.Domain\Maktab.Domain.csproj", "{FF1D1B03-D373-CD12-419A-1732E99E9AF0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Domain", "Maktab.Domain\Maktab.Domain.csproj", "{FF1D1B03-D373-CD12-419A-1732E99E9AF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Infrastructure", "..\Maktab.Infrastructure\Maktab.Infrastructure.csproj", "{8867C9BE-274F-3EC0-81DA-F66BC55A3F38}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Infrastructure", "Maktab.Infrastructure\Maktab.Infrastructure.csproj", "{8867C9BE-274F-3EC0-81DA-F66BC55A3F38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Models", "..\Maktab.Models\Maktab.Models.csproj", "{99E6791F-4714-6781-A346-A49F9826BEE1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaktabDataContracts", "..\..\Shared\datacontracts\MaktabDataContracts\MaktabDataContracts.csproj", "{3DBE544A-7A57-D5F2-87BB-3D929F7B4BE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Models", "Maktab.Models\Maktab.Models.csproj", "{99E6791F-4714-6781-A346-A49F9826BEE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +41,6 @@ Global
 		{99E6791F-4714-6781-A346-A49F9826BEE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99E6791F-4714-6781-A346-A49F9826BEE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99E6791F-4714-6781-A346-A49F9826BEE1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3DBE544A-7A57-D5F2-87BB-3D929F7B4BE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3DBE544A-7A57-D5F2-87BB-3D929F7B4BE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3DBE544A-7A57-D5F2-87BB-3D929F7B4BE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3DBE544A-7A57-D5F2-87BB-3D929F7B4BE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,7 +50,6 @@ Global
 		{FF1D1B03-D373-CD12-419A-1732E99E9AF0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{8867C9BE-274F-3EC0-81DA-F66BC55A3F38} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{99E6791F-4714-6781-A346-A49F9826BEE1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{3DBE544A-7A57-D5F2-87BB-3D929F7B4BE2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {594C31C5-E7F8-402E-B4C9-E547FB413BF9}
