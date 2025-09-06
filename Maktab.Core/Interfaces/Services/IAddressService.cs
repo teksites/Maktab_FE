@@ -8,6 +8,6 @@ namespace Maktab.Core.Interfaces.Services
           Task<bool> DeleteAddressByConnectedId(Guid connectedId);
           Task<bool> DeleteAddressById(Guid addressId);
           Task<AddressResponse> GetAddressById(Guid addressId);
-          Task<AddressResponse> SaveAddress(AddAddress addAddress);
+          Task<AddressResponse> SaveAddressAsync(AddAddress addAddress);
      }
 }

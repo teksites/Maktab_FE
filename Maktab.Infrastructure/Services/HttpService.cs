@@ -66,9 +66,9 @@ namespace Maktab.Infrastructure.Services
                await sendRequest(request, autoLogout);
           }
 
-          public async Task<T> Put<T>(string uri, object value)
+          public async Task<T> Put<T>(string uri, object value = null)
           {
-               var request = createRequest(HttpMethod.Put, uri);
+               var request = createRequest(HttpMethod.Put, uri, value);
                return await sendRequest<T>(request);
           }
 

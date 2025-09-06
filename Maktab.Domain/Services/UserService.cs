@@ -15,6 +15,14 @@ namespace Maktab.Domain.Services
           private const string forgotUserPassword = @"/api/users/forgotpassword?userName={0}";
           private const string checkUsernameExist = @"/api/users/checkuser?userName={0}";
           private const string checkUserRegistered = @"/api/users/checkuser?userName={0}";
+          private const string linkUserToFamilId = @"/api/users/{0}/link/{familyId}";
+          private const string getFamilIdByUserInfo = @"/api/users/familyinfo";
+          private const string getExtendedInfoByUserId = @"/api/users/{0}/extendedinfo";
+          private const string saveExtendedInfo = @"/api/users/{0}/extendedinfo";
+
+
+
+
 
 
           public UserService(IHttpService httpService, ILocalStorageService localStorageService) 
@@ -67,6 +75,49 @@ namespace Maktab.Domain.Services
           {
                var formatedUrl = string.Format(checkUsernameExist, username);
                var result = await _httpService.Get<bool>(formatedUrl);
+               return result;
+          }
+
+          public async Task<UserInformationResponse> LinkUserToFamilyByIdAsync(Guid userId, Guid familyId)
+          {
+               var formatedUrl = string.Format(linkUserToFamilId, userId, familyId);
+               var result = await _httpService.Put<UserInformationResponse>(formatedUrl);
+               return result;
+          }
+
+          public async Task<Guid> GetFamilyIdByUserInfoAsync(string userEmail, string userPhone)
+          {
+               var formatedUrl = new UserFamilyInformationRequest
+               {
+                    Email = userEmail,
+               };
+
+               if(string.IsNullOrEmpty(userPhone))
+               {
+                    formatedUrl.Phone = userPhone;
+               }
+
+               var result = await _httpService.Post<string>(getFamilIdByUserInfo, formatedUrl);
+
+               if (Guid.TryParse(result, out var familyId))
+               {
+                    return familyId;
+               }
+
+               return Guid.Empty;
+          }
+
+          public async Task<ExtendedUserInformationResponse> GetExtendedInfoByUserIdAsync(Guid userId)
+          {
+               var formatedUrl = string.Format(getExtendedInfoByUserId, userId);
+               var result = await _httpService.Get<ExtendedUserInformationResponse>(formatedUrl);
+               return result;
+          }
+
+          public async Task<ExtendedUserInformationResponse> SaveExtendedInfoAsync(Guid userId, MaktabDataContracts.Requests.Users.AddExtendedUserInformationRequest request)
+          {
+               var formatedUrl = string.Format(saveExtendedInfo, userId);
+               var result = await _httpService.Post<ExtendedUserInformationResponse>(formatedUrl, request);
                return result;
           }
      }

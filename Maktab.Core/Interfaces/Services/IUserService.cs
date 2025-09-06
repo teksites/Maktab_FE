@@ -12,5 +12,9 @@ namespace Maktab.Core.Interfaces.Services
           Task<bool> ValidateUsernameAsync(string username);
           Task<bool> ChangeUserPasswordAsync(Guid userId, UpdateUserPasswordRequest changeRequest);
           Task<bool> ForgotUserPasswordAsync(string username);
+          Task<UserInformationResponse> LinkUserToFamilyByIdAsync(Guid userId, Guid familyId);
+          Task<Guid> GetFamilyIdByUserInfoAsync(string userEmail, string userPhone);
+          Task<ExtendedUserInformationResponse> GetExtendedInfoByUserIdAsync(Guid userId);
+          Task<ExtendedUserInformationResponse> SaveExtendedInfoAsync(Guid userId, AddExtendedUserInformationRequest request);
      }
 }

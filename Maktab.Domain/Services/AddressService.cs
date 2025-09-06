@@ -32,7 +32,7 @@ namespace Maktab.Domain.Services
                return result;
           }
 
-          public async Task<AddressResponse> SaveAddress(AddAddress addAddress)
+          public async Task<AddressResponse> SaveAddressAsync(AddAddress addAddress)
           {
                var result = await _httpService.Post<AddressResponse>(saveAddress, addAddress);
                return result;
