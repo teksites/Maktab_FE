@@ -1,4 +1,5 @@
 ﻿@page "/account/usercodevalidation"
+@using Maktab.Consumer.Helpers
 
 @inherits BaseFormComponent<LoginCodeValidator>
 
@@ -100,9 +101,21 @@
           isInitialized = true;
           RequestRender();
 
-          if( userInfo != null && !userInfo.IfTempUser)
+          if (userInfo == null || !userInfo.IsActive)
           {
-               NavigationManager.NavigateTo("/customer/dashboard");
+               NavigationManager.NavigateTo(Constants.LoginRoute);
+          }
+          else if (!userInfo.IfTempUser)
+          {
+               var extendedInfo = await UserService.GetExtendedInfoByUserIdAsync(userId);
+               if (extendedInfo == null)
+               {
+                    NavigationManager.NavigateTo(Constants.CustomerAddProfileDetailRoute);
+               }
+               else
+               {
+                    NavigationManager.NavigateTo(Constants.CustomerDashboardRoute);
+               }
           }
      }
 
@@ -126,19 +139,20 @@
      private async Task ValidateUserCode()
      {
 
-          var activated = await UserService.ActivateUserByCodeAsync( userId,
+          var activated = await UserService.ActivateUserByCodeAsync(userId,
                new MaktabDataContracts.Requests.Users.UserVerificationRequest()
-                         {
-                              EmailVerificationCode = emailValidationCode,
-                         });
+               {
+                    EmailVerificationCode = emailValidationCode,
+               });
 
           if(activated)
           {
-               NavigationManager.NavigateTo("/customer/adddetails");
+               NavigationManager.NavigateTo(Constants.CustomerAddProfileDetailRoute);
           }
           else
           {
                _errorMessage = "Code can not be validated.";
+               Snackbar.Add(_errorMessage, Severity.Error);
           }
      }
 
@@ -164,6 +178,7 @@
           if (!codeSent)
           {
                _errorMessage = "Can not process, please try again in few minutes.";
+               Snackbar.Add(_errorMessage, Severity.Error);
           }
      }
 }

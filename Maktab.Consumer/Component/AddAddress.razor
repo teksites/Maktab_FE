@@ -1,15 +1,13 @@
-﻿@inherits BaseComponent<AddAddress>
+﻿@inherits BaseFormComponent<AddAddress>
 @using System.ComponentModel.DataAnnotations
 @using MaktabDataContracts.Enums
 
-@inject ISessionService SessionService
 @inject IAddressService AddressService
-
 
 @* <EditForm Model="@AddressModel" OnValidSubmit="HandleValidSubmit"> *@
      <MudPaper Class="pa-4">
           <MudText Typo="Typo.h5" Class="mb-4">Add Address</MudText>
-     <MudForm @ref="form" @bind-IsValid="@success" OnValidSubmit="@(HandleValidSubmit)" Validated="@(OnValidated)">
+     <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleAddressSave)" Validated="@(OnFormValidated)">
 
           <MudGrid Container="true" Spacing="3">
               
@@ -79,6 +77,7 @@
                     <MudSelect T="AddressType"
                                @bind-Value="AddressModel.AddressType"
                                Label="Address Type"
+                               ReadOnly = "true"
                                Required="true"
                                For="@(() => AddressModel.AddressType)">
                          <MudSelectItem Value="@AddressType">@AddressType</MudSelectItem>
@@ -86,8 +85,26 @@
                </MudItem>
           </MudGrid>
 
+          @if (!string.IsNullOrWhiteSpace(_errorMessage))
+          {
+               <MudAlert Severity="Severity.Error" Elevation="0" Class="my-4">
+                    @_errorMessage
+               </MudAlert>
+          }
+
           <MudStack Direction="Row" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
-               <MudButton Type="Submit" Color="Color.Primary" Variant="Variant.Filled" OnClick="@(HandleValidSubmit)" StartIcon="@Icons.Material.Filled.Check">Save</MudButton>
+               <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isSaving)" StartIcon="@Icons.Material.Filled.Check" OnClick="@(HandleAddressSave)">
+                    @if (isSaving)
+                    {
+                         <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                         <span>Processing...</span>
+                    }
+                    else
+                    {
+                         <span>Save</span>
+                    }
+               </MudButton>
+               
                <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
           </MudStack>
           </MudForm>
@@ -98,58 +115,64 @@
      [Parameter, EditorRequired]
      public MaktabDataContracts.Requests.Addresses.AddAddress AddressModel { get; set; } = new();
 
-     [Parameter] public EventCallback<MaktabDataContracts.Requests.Addresses.AddAddress> OnSave { get; set; }
+     [Parameter] public EventCallback<MaktabDataContracts.Responses.Addresses.AddressResponse> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }
      [Parameter] public AddressType AddressType { get; set; }
      [Parameter] public Guid ConnectedId { get; set; } = Guid.Empty;
 
-     private MudForm form;
-     bool success;
      private bool isSaving = false;
-     private string _errorMessage = string.Empty;
-     bool IsRegistering;
 
-
-     private async Task HandleValidSubmit()
+     private async Task HandleAddressSave()
      {
           try
           {
-               if(ConnectedId == Guid.Empty)
-               {
-                    _errorMessage = "Please provide valid address assignee.";
-                    return;
-               }
-
-
                isSaving = true;
-               AddressModel.ConnectedId = this.ConnectedId;
-
-               var savedAddress = AddressService.SaveAddress(AddressModel);
-               if(savedAddress == null)
-               {
-                    
-               }
-
-          }
-          catch(Exception ex)
-          {
-               
+               RequestRender();
+               await InvokeUserAction(RequestSavingAddress);
           }
           finally
           {
                isSaving = false;
+               RequestRender();
           }
-          await OnSave.InvokeAsync(AddressModel);
      }
 
-     private void OnValidated()
+
+     private async Task RequestSavingAddress()
      {
-          // Clear error message when form is valid
-          if (form?.IsValid == true)
+          if (ConnectedId == Guid.Empty)
           {
-               _errorMessage = string.Empty;
+               _errorMessage = "Please provide valid address assignee.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
           }
+
+          if (AddressType == AddressType.Unknown)
+          {
+               _errorMessage = "Please provide valid address type.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+
+          AddressModel.ConnectedId = this.ConnectedId;
+          if (AddressModel.AddressType == AddressType.Unknown && AddressType != AddressType.Unknown)
+          {
+               AddressModel.AddressType = this.AddressType;
+          }
+
+          var savedAddress = await AddressService.SaveAddressAsync(AddressModel);
+          if (savedAddress == null)
+          {
+               _errorMessage = "Error saving address please try in few moments.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+
+          await OnSave.InvokeAsync(savedAddress);
      }
+
 
      private async Task OnCancelClickedHandler()
      {

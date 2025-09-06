@@ -1,77 +1,68 @@
-﻿@using MaktabDataContracts.Enums
+﻿@inherits BaseFormComponent<AddSpouse>
+
+
+@using MaktabDataContracts.Enums
 @using MaktabDataContracts.Requests.Users
 @using System.ComponentModel.DataAnnotations
+
+@inject IUserService UserService
+
 @* <MudGrid> 
      <MudItem xs="12" sm="8">*@
-          <MudPaper Class="pa-12">
-               <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors" Spacing="2">
-                    <MudTextField T="string" @bind-Value="addUserInformation.FirstName" Label="First name" Required="true" RequiredError="First name is required!" />
-                    <MudTextField T="string" @bind-Value="addUserInformation.LastName" Label="Last name" Required="true" RequiredError="Last name is required!" />
-                    <MudTextField T="string" @bind-Value="addUserInformation.Email" Label="Email" Required="true" RequiredError="Email is required!"
-                                  Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
-                    <MudTextField T="string" @bind-Value="addUserInformation.Phone" Label="Phone" Required="true" RequiredError="Phone number is required!"
-                                  Validation="@(new PhoneAttribute() { ErrorMessage = "The phone number is invalid"})" />
+<MudPaper Class="pa-12">
+     <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)" Spacing="2">
+          <MudTextField T="string" @bind-Value="addUserInformation.FirstName" Label="First name" Required="true" RequiredError="First name is required!" />
+          <MudTextField T="string" @bind-Value="addUserInformation.LastName" Label="Last name" Required="true" RequiredError="Last name is required!" />
+          <MudTextField T="string" @bind-Value="addUserInformation.Email" Label="Email" Required="true" RequiredError="Email is required!"
+                        Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
+          <MudTextField T="string" @bind-Value="addUserInformation.Phone" Label="Phone" Required="true" RequiredError="Phone number is required!"
+                        Validation="@(new PhoneAttribute() { ErrorMessage = "The phone number is invalid"})" />
 
-                    @* <MudSelect @bind-Value="addUserInformation.Relationship" Label="Gender">
-                         @foreach (var margin in Enum.GetValues(typeof(Gender)).Cast<Gender>())
-                         {
-                              <MudSelectItem Value="margin">@margin</MudSelectItem>
-                         }
-                    </MudSelect> *@
-
-                    <MudSelect @bind-Value="addUserInformation.Relationship" Label="Relationship">
-                         @foreach (var margin in relationShips)
-                         {
-                              <MudSelectItem Value="margin">@margin</MudSelectItem>
-                         }
-                    </MudSelect>
-
-                    @* <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
-                                  InputType="InputType.Password"
-                                  Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
-                                  RequiredError="Password is required!" />
-                    <MudTextField T="string"
-                                  Label="Password" HelperText="Repeat the password" InputType="InputType.Password"
-                                  Validation="@(new Func<string, string>(PasswordMatch))" /> *@
-
-                    <div class="d-flex align-center justify-space-between">
-                         @* <MudCheckBox T="bool" Required="true" RequiredError="You must agree" Label="I agree!" /> *@
-               <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" OnClick="@(RegisterUser)" Class="ml-auto">Register</MudButton>
-
-                         @if (!string.IsNullOrWhiteSpace(_errorMessage))
-                         {
-                              <MudAlert Severity="Severity.Error" Elevation="0" Class="mt-2">@_errorMessage</MudAlert>
-                         }
-                    </div>
-               </MudForm>
-          </MudPaper>
-          @* <MudPaper Class="pa-4 mt-4">
-               <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(() => form.Validate())">Validate</MudButton>
-               <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(() => form.ResetAsync())" Class="mx-2">Reset</MudButton>
-               <MudButton Variant="Variant.Filled" DropShadow="false" OnClick="@(() => form.ResetValidation())">Reset Validation</MudButton>
-          </MudPaper> *@
-@* </MudItem>
-      <MudItem xs="12" sm="5">
-          <MudPaper Class="pa-4 mud-height-full">
-               <MudText Typo="Typo.subtitle2">@($"Errors ({errors.Length})")</MudText>
-               @foreach (var error in errors)
+          <MudSelect @bind-Value="addUserInformation.Relationship" Label="Relationship">
+               @foreach (var margin in relationShips)
                {
-                    <MudText Color="@Color.Error">@error</MudText>
+                    <MudSelectItem Value="margin">@margin</MudSelectItem>
                }
-          </MudPaper>
-     </MudItem> 
-</MudGrid>*@
+          </MudSelect>
+
+
+          @if (!string.IsNullOrWhiteSpace(_errorMessage))
+          {
+               <MudAlert Severity="Severity.Error" Elevation="0" Class="my-4">
+                    @_errorMessage
+               </MudAlert>
+          }
+
+          <MudStack Direction="Row" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
+               <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isSaving)" StartIcon="@Icons.Material.Filled.Check" OnClick="@(HandleSaving)">
+                    @if (isSaving)
+                    {
+                         <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                         <span>Processing...</span>
+                    }
+                    else
+                    {
+                         <span>Save</span>
+                    }
+               </MudButton>
+
+               <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
+          </MudStack>
+
+
+     </MudForm>
+</MudPaper>
 
 @code {
      [Parameter]
-     public Guid FamilyId { get; set; }
+     public Guid FamilyId { get; set; } = Guid.Empty;
+
+     [Parameter] public EventCallback<MaktabDataContracts.Responses.Users.UserInformationResponse> OnSave { get; set; }
+     [Parameter] public EventCallback OnCancel { get; set; }
+
+     private bool isSaving = false;
 
      AddUserInformation addUserInformation = new AddUserInformation();
-     bool success;
-     string _errorMessage;
-     string[] errors = { };
-     MudTextField<string> pwField1;
-     MudForm form;
      IEnumerable<Relationship> relationShips;
 
      protected override async Task OnInitializedAsync()
@@ -81,13 +72,60 @@
           relationShips = Enum.GetValues(typeof(Relationship)).Cast<Relationship>().Where(x=> x == Relationship.Mother || x== Relationship.Father);
      }
 
-     private void RegisterUser()
+     private async Task HandleSaving()
      {
-          
+          try
+          {
+               isSaving = true;
+               RequestRender();
+               await InvokeUserAction(RequestSaving);
+          }
+          finally
+          {
+               isSaving = false;
+               RequestRender();
+          }
      }
 
+     private async Task RequestSaving()
+     {
+          addUserInformation.Email = addUserInformation.Email.ToLowerInvariant();
+          addUserInformation.UserName = addUserInformation.Email;
 
+          if (FamilyId == Guid.Empty)
+          {
+               _errorMessage = "Please provide valid family id to connect.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
 
+          var isUserExists = await UserService.ValidateUsernameAsync(addUserInformation.UserName);
+          if (isUserExists)
+          {
+               _errorMessage = "User is already registered with system. Please contact support";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
 
+          addUserInformation.FamilyId = FamilyId;
+          addUserInformation.Password = "Test1234!";
 
+          var result = await UserService.RegisterUserAsync(addUserInformation);
+          if (result == null)
+          {
+               _errorMessage = "User can not be registered with system. Please try again in few minutes";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          var response = UserService.LinkUserToFamilyByIdAsync(result.UserId, FamilyId);
+          Snackbar.Add("User has been linked.", Severity.Success);
+          await OnSave.InvokeAsync(result);
+     }
+
+     private async Task OnCancelClickedHandler()
+     {
+          await OnCancel.InvokeAsync();
+     }
+     
 }

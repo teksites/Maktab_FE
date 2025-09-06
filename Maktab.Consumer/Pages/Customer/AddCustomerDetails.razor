@@ -1,7 +1,7 @@
 ﻿@page "/customer/adddetails"
 
 
-
+@using MaktabDataContracts.Responses;
 
 @inject ISessionService SessionService
 @inject ISnackbar Snackbar
@@ -20,15 +20,15 @@
                     <MudStepper OnPreviewInteraction="OnPreviewInteraction">
                          <MudStep Title="Step 1" SecondaryText="Add Spouse" HasError="@(isSpouseAdded == false)" >
                              <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
-                              <AddSpouse/>
+                              <AddSpouse FamilyId="@familyGuid" OnSave="@(OnSpouseSaved)"/>
                               </MudStack>
                               @* <MudSwitch @bind-Value="_step1Complete" Color="Color.Primary">Flip the switch to be able to advance to step 2</MudSwitch> *@
                          </MudStep>
                          <MudStep Title="Step 2" SecondaryText="Add Address" HasError="@(isFamilyAddressAdded == false)">
-                             <AddressManager/>
+                              <AddAddress AddressModel="@AddressModel" ConnectedId="@familyGuid" @OnSave="@(OnAddressSaved)" />
                          </MudStep>
                          <MudStep Title="Step 3" SecondaryText="Add RL 24" HasError="@(isExtendedInfoAdded == false)">
-                              <AddExtendedInfo/>
+                              <AddExtendedInfo FamilyId="@familyGuid" AddessId="@HomeAddressId" UserId="@userId" @OnSave="@(OnExtendedInfoSaved)" />
                          </MudStep>
                          <MudStep Title="Step 4" SecondaryText="Add Child" HasError="@(isChildAdded == false)">
                               <ChildList />
@@ -47,8 +47,11 @@
 
      Guid userId = Guid.Empty;
      Guid familyGuid = Guid.Empty;
+     Guid HomeAddressId = Guid.Empty;
+
      MaktabDataContracts.Responses.Users.UserInformationResponse userInfo = null;
-    bool isInitialized;
+     MaktabDataContracts.Requests.Addresses.AddAddress AddressModel = new();
+     bool isInitialized;
      bool isSpouseAdded;
      bool isFamilyAddressAdded;
      bool isChildAdded = false;
@@ -56,7 +59,7 @@
      bool isEmergencyContactAdded = false;
      bool isOtherContactAdded;
      string username = string.Empty;
-     
+
 
 
      protected override async void OnInitialized()
@@ -66,6 +69,7 @@
           username = await SessionService.GetUserNameAsync();
           userId = await SessionService.GetLoggedInUserIdAsync();
           userInfo = await UserService.GetUserByIdAsync(userId);
+          familyGuid = userInfo.FamilyId;
           isInitialized = true;
           //StateHasChanged();
      }
@@ -125,5 +129,29 @@
                     break;
           }
      }
-   
+
+     private void OnSpouseSaved(MaktabDataContracts.Responses.Users.UserInformationResponse spouseInfo)
+     {
+          if (spouseInfo != null)
+          {
+               isSpouseAdded = true;
+          }
+     }
+
+     private void OnAddressSaved(MaktabDataContracts.Responses.Addresses.AddressResponse addressInfo)
+     {
+          if (addressInfo != null)
+          {
+               isFamilyAddressAdded = true;
+               this.HomeAddressId = addressInfo.AddressId;
+          }
+     }
+
+     private void OnExtendedInfoSaved(MaktabDataContracts.Responses.Users.ExtendedUserInformationResponse extendednInfo)
+     {
+          if (extendednInfo != null)
+          {
+               isExtendedInfoAdded = true;
+          }
+     }
 }

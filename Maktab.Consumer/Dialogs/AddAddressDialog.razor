@@ -1,8 +1,9 @@
-﻿@using MudBlazor
+﻿@using MaktabDataContracts.Enums
+@using MudBlazor
 
 <MudDialog>
     <DialogContent>
-        <AddAddress AddressModel="Address" OnSave="SaveAddress" OnCancel="CancelDialog" />
+        <AddAddress AddressModel="Address" AddressType="@(AddressType)" ConnectedId="@(ConnectedId)" OnSave="SaveAddress" OnCancel="CancelDialog" />
     </DialogContent>
 </MudDialog>
 
@@ -10,8 +11,9 @@
      [CascadingParameter]
      MudDialog MudDialog { get; set; }
 
-     [Parameter]
-     public Guid ConnectedId { get; set; }
+
+     [Parameter] public AddressType AddressType { get; set; }
+     [Parameter] public Guid ConnectedId { get; set; } = Guid.Empty;
 
      private MaktabDataContracts.Requests.Addresses.AddAddress Address { get; set; } = new();
 
@@ -20,7 +22,7 @@
           Address.ConnectedId = ConnectedId;
      }
 
-     private async Task SaveAddress(MaktabDataContracts.Requests.Addresses.AddAddress address)
+     private async Task SaveAddress(MaktabDataContracts.Responses.Addresses.AddressResponse address)
      {
           await MudDialog.CloseAsync(DialogResult.Ok(address));
      }
