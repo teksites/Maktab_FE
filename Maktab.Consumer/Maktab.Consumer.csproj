@@ -16,10 +16,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\shared\datacontracts\MaktabDataContracts\MaktabDataContracts.csproj" />
     <ProjectReference Include="..\Maktab.Core\Maktab.Core.csproj" />
     <ProjectReference Include="..\Maktab.Domain\Maktab.Domain.csproj" />
     <ProjectReference Include="..\Maktab.Infrastructure\Maktab.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MaktabDataContracts">
+      <HintPath>..\libraries\MaktabDataContracts\MaktabDataContracts.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
