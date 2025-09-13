@@ -93,47 +93,73 @@ namespace Maktab.Infrastructure.Services
                     request.Content = new StringContent(JsonSerializer.Serialize(value), Encoding.UTF8, "application/json");
                return request;
           }
-
-          private async Task sendRequest(HttpRequestMessage request, bool autoLogout = true, CancellationToken cancellationToken = default)
+          private async Task<HttpResponseMessage> SendRequest(HttpRequestMessage request, bool autoLogout = true, CancellationToken cancellationToken = default)
           {
                await addJwtHeader(request);
                await addSessionHeaderInfo(request);
 
                // send request
-               using var response = await _httpClient.SendAsync(request, cancellationToken);
+               var response = await _httpClient.SendAsync(request, cancellationToken);
+
 
                // auto logout on 401 response
-               if (autoLogout && response.StatusCode == HttpStatusCode.Unauthorized)
+               if (autoLogout)
                {
-                    _navigationManager.NavigateTo("account/logout");
-                    return;
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                         _navigationManager.NavigateTo("account/logout");
+                         return response;
+                    }
+
+                    await handleErrors(response);
                }
 
-               await handleErrors(response);
+               return response;
+          }
+
+          private async Task sendRequest(HttpRequestMessage request, bool autoLogout = true, CancellationToken cancellationToken = default)
+          {
+               using var response = await SendRequest(request, autoLogout, cancellationToken);
           }
 
           private async Task<T> sendRequest<T>(HttpRequestMessage request, bool autoLogout = true, CancellationToken cancellationToken = default)
           {
-               await addJwtHeader(request);
+               //await addJwtHeader(request);
 
-               await addSessionHeaderInfo(request);
+               //await addSessionHeaderInfo(request);
 
-               // send request
-               using var response = await _httpClient.SendAsync(request, cancellationToken);
+               //// send request
+               //using var response = await _httpClient.SendAsync(request, cancellationToken);
 
-               // auto logout on 401 response
-               if (autoLogout && response.StatusCode == HttpStatusCode.Unauthorized)
+               //// auto logout on 401 response
+               //if (autoLogout && response.StatusCode == HttpStatusCode.Unauthorized)
+               //{
+               //     _navigationManager.NavigateTo("account/logout");
+               //     return default;
+               //}
+
+               //if (autoLogout)
+               //{
+               //     await handleErrors(response);
+               //}
+               using (var response = await SendRequest(request, autoLogout, cancellationToken))
                {
-                    _navigationManager.NavigateTo("account/logout");
-                    return default;
-               }
+                    if (response.IsSuccessStatusCode)
+                    {
+                         if (response.StatusCode == HttpStatusCode.NoContent)
+                         {
+                              return default(T);
+                         }
+                    }
+                    //else
+                    //{
+                         return await response.Content.ReadFromJsonAsync<T>(_serializerOptions, cancellationToken);
+                    //}
+                    //}
 
-               if (autoLogout)
-               {
-                    await handleErrors(response);
+                    //response.EnsureSuccessStatusCode();
+                    //return default;
                }
-
-               return await response.Content.ReadFromJsonAsync<T>(_serializerOptions, cancellationToken);
           }
 
           private async Task addJwtHeader(HttpRequestMessage request)
@@ -169,11 +195,12 @@ namespace Maktab.Infrastructure.Services
                     throw new UnauthorizedAccessException(response.ReasonPhrase);
                }
                // throw exception on error response
-               if (!response.IsSuccessStatusCode)
-               {
-                    var error = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
-                    throw new Exception(error["message"]);
-               }
+               response.EnsureSuccessStatusCode();
+               //if (!response.IsSuccessStatusCode)
+               //{
+               //     var error = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+               //     throw new Exception(error["message"]);
+               //}
           }
      }
 }
