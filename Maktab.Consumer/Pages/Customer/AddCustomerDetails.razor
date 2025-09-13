@@ -1,20 +1,22 @@
 ﻿@page "/customer/adddetails"
-
-
 @using MaktabDataContracts.Responses;
 
-@inject ISessionService SessionService
-@inject ISnackbar Snackbar
+@inherits BaseComponent<AddCustomerDetails>
+
+@* @inject ISessionService SessionService
+@inject ISnackbar Snackbar*@
 @inject IUserService UserService
 @inject IDialogService DialogService
 
 
 @* @inject IAlertService AlertService *@
-@inject NavigationManager NavigationManager
+@* @inject NavigationManager NavigationManager *@
 
 <MudGrid>
      <MudItem xs="12" sm="7">
           <MudPaper Class="pa-4">
+               @if (isInitialized.HasValue && isInitialized.Value)
+               {
                <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
 
                     <MudStepper OnPreviewInteraction="OnPreviewInteraction">
@@ -34,9 +36,13 @@
                               <ChildList />
                          </MudStep>
                     </MudStepper>
-
                
                </MudStack>
+               }
+               else
+               {
+                    <BusyContent DisplayText="Initializing" />
+               }
           </MudPaper>
 
      </MudItem>
@@ -51,7 +57,7 @@
 
      MaktabDataContracts.Responses.Users.UserInformationResponse userInfo = null;
      MaktabDataContracts.Requests.Addresses.AddAddress AddressModel = new();
-     bool isInitialized;
+     bool? isInitialized;
      bool isSpouseAdded;
      bool isFamilyAddressAdded;
      bool isChildAdded = false;
@@ -62,8 +68,9 @@
 
 
 
-     protected override async void OnInitialized()
+     protected override async Task OnInitializedAsync()
      {
+          await base.OnInitializedAsync();
           //isInitialized = true;
 
           username = await SessionService.GetUserNameAsync();
@@ -71,7 +78,8 @@
           userInfo = await UserService.GetUserByIdAsync(userId);
           familyGuid = userInfo.FamilyId;
           isInitialized = true;
-          //StateHasChanged();
+          AddressModel.ConnectedId = userId;
+          RequestRender();
      }
 
      private async Task OnPreviewInteraction(StepperInteractionEventArgs arg)
