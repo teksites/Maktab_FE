@@ -9,52 +9,60 @@
      <MudItem xs="12" sm="7" md="5">
           <MudPaper Class="pa-6" Elevation="8">
 
-               <MudText Typo="Typo.h4" Class="mb-6 text-center">Login</MudText>
+               @if (isInitialized.HasValue && isInitialized.Value)
+               {
 
-               <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleLogin)" Validated="@(OnFormValidated)">
+                    <MudText Typo="Typo.h4" Class="mb-6 text-center">Login</MudText>
 
-                    <MudTextField T="string" Label="Username"
-                                  @bind-Value="username"
-                                  Required="true"
-                                  RequiredError="Username is required"
-                                  Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})"
-                                  Immediate="true" />
-                     <MudStack  Spacing="0">
-                    <MudTextField T="string" Label="Password"
-                                  @bind-Value="password"
-                                  InputType="InputType.Password"
-                                  Required="true"
-                                  RequiredError="Password is required"
-                                  Immediate="true" />
-                         <MudText Class="mt-2" Align="Align.End">
-                              <MudLink Href="/account/forgotpassword" Color="Color.Default">Forgot password</MudLink>
-                         </MudText>
-                    </MudStack>
+                    <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleLogin)" Validated="@(OnFormValidated)">
 
-                    @if (!string.IsNullOrWhiteSpace(_errorMessage))
-                    {
-                         <MudAlert Severity="Severity.Error" Elevation="0" Class="my-4">
-                              @_errorMessage
-                         </MudAlert>
-                    }
+                         <MudTextField T="string" Label="Username"
+                                       @bind-Value="username"
+                                       Required="true"
+                                       RequiredError="Username is required"
+                                       Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})"
+                                       Immediate="true" />
+                         <MudStack Spacing="0">
+                              <MudTextField T="string" Label="Password"
+                                            @bind-Value="password"
+                                            InputType="InputType.Password"
+                                            Required="true"
+                                            RequiredError="Password is required"
+                                            Immediate="true" />
+                              <MudText Class="mt-2" Align="Align.End">
+                                   <MudLink Href="/account/forgotpassword" Color="Color.Default">Forgot password</MudLink>
+                              </MudText>
+                         </MudStack>
 
-                    <MudStack Direction="Row" Justify="Justify.SpaceBetween" Spacing="4" Class="mt-6">
-                         <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || authenticating)" OnClick="@(HandleLogin)">
-                              @if (authenticating)
-                              {
-                                   <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
-                                   <span>Authenticating...</span>
-                              }
-                              else
-                              {
-                                   <span>Login</span>
-                              }
-                         </MudButton>
+                         @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                         {
+                              <MudAlert Severity="Severity.Error" Elevation="0" Class="my-4">
+                                   @_errorMessage
+                              </MudAlert>
+                         }
 
-                         <MudButton Href="/register/customer" Variant="Variant.Outlined" Color="Color.Primary" Disabled="@authenticating">Create new account</MudButton>
-                    </MudStack>
+                         <MudStack Direction="Row" Justify="Justify.SpaceBetween" Spacing="4" Class="mt-6">
+                              <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || authenticating)" OnClick="@(HandleLogin)">
+                                   @if (authenticating)
+                                   {
+                                        <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                                        <span>Authenticating...</span>
+                                   }
+                                   else
+                                   {
+                                        <span>Login</span>
+                                   }
+                              </MudButton>
 
-               </MudForm>
+                              <MudButton Href="/register/customer" Variant="Variant.Outlined" Color="Color.Primary" Disabled="@authenticating">Create new account</MudButton>
+                         </MudStack>
+
+                    </MudForm>
+               }
+               else
+               {
+                    <BusyContent DisplayText="Initializing" />
+               }
 
           </MudPaper>
      </MudItem>
@@ -62,10 +70,24 @@
 
 @code {
 
-
+     bool? isInitialized = false;
      private string username = string.Empty;
      private string password = string.Empty;
      private bool authenticating = false;
+
+     protected async override Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+          bool isAuthorized = await SessionService.IsAuthenticatedAsync();
+          if (isAuthorized)
+          {
+               NavigationManager.NavigateTo("/account/usercodevalidation");
+               //Navigation.NavigateTo("/customer/dashboard");
+          }
+
+          isInitialized = true;
+          RequestRender();
+     }
 
      private async void HandleLogin()
      {
@@ -80,10 +102,10 @@
      private async Task LoginToSystem()
      {
           var logInfo = new MaktabDataContracts.Requests.Authentication.UserLoginInformation
-               {
-                    UserName = username,
-                    Password = password
-               };
+          {
+               UserName = username,
+               Password = password
+          };
 
           var result = await SessionService.Login(logInfo);
           if (result)

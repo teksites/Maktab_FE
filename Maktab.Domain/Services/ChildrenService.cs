@@ -31,7 +31,7 @@ namespace Maktab.Domain.Services
           public async Task<IEnumerable<ChildResponse>> GetChildrenByFamilyIdAsync(Guid familyId)
           {
                var formatedUrl = string.Format(getChildrenByFamilyId, familyId);
-               var result = await _httpService.Get< IEnumerable<MaktabApiResult < ChildResponse>>>(formatedUrl);
+               var result = await _httpService.Get<List<MaktabApiResult<ChildResponse>>>(formatedUrl);
 
                var child = result.Select(x => x.Result);
                return child;

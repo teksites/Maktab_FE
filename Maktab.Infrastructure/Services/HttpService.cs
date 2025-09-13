@@ -36,6 +36,7 @@ namespace Maktab.Infrastructure.Services
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                     WriteIndented = true,
                     PropertyNameCaseInsensitive = true,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                };
 
                _serializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -150,10 +151,25 @@ namespace Maktab.Infrastructure.Services
                          {
                               return default(T);
                          }
+
+                         //var contentString = await response.Content.ReadAsStringAsync();
+                         //if (string.IsNullOrWhiteSpace(contentString))
+                         //{
+                         //     // Handle empty content scenario
+                         //     return default!;
+                         //}
+
                     }
                     //else
                     //{
+                    try
+                    {
                          return await response.Content.ReadFromJsonAsync<T>(_serializerOptions, cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                         return default;
+                    }
                     //}
                     //}
 

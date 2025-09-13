@@ -98,8 +98,6 @@
           username = await SessionService.GetUserNameAsync();
           userId = await SessionService.GetLoggedInUserIdAsync();
           var userInfo = await UserService.GetUserByIdAsync(userId);
-          isInitialized = true;
-          RequestRender();
 
           if (userInfo == null || !userInfo.IsActive)
           {
@@ -117,6 +115,9 @@
                     NavigationManager.NavigateTo(Constants.CustomerDashboardRoute);
                }
           }
+
+          isInitialized = true;
+          RequestRender();
      }
 
      private async void HandleCodeValidation()
