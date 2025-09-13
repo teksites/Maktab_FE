@@ -1,0 +1,44 @@
+﻿@inherits BaseComponent<InstructorCard>
+
+<MudPaper Class="pa-3 d-flex" Elevation="0" Square="false">
+     <MudAvatar Size="Size.Large" Class="me-3" Alt="@Name">@GetInitials(Name)</MudAvatar>
+     <div>
+          <MudText Typo="Typo.h6">@Name</MudText>
+          @if (!string.IsNullOrWhiteSpace(Bio))
+          {
+               <MudText Typo="Typo.body2" Color="Color.Secondary">@Bio</MudText>
+          }
+          else
+          {
+               <MudText Typo="Typo.body2" Color="Color.Secondary">No bio available.</MudText>
+          }
+
+          <MudStack Row="true" Spacing="1" Class="mt-2">
+               <MudButton Size="Size.Small" Variant="Variant.Outlined" OnClick="SendMessage">Message</MudButton>
+               <MudButton Size="Size.Small" Variant="Variant.Text" OnClick="ViewProfile">View Profile</MudButton>
+          </MudStack>
+     </div>
+</MudPaper>
+
+@code {
+     [Parameter] public string Name { get; set; } = string.Empty;
+     [Parameter] public string? Bio { get; set; }
+
+     private void SendMessage()
+     {
+          // Open message dialog (implementation placeholder)
+          Snackbar.Add(string.Format("Message sent to {0}", Name), Severity.Info);
+     }
+
+     private void ViewProfile()
+     {
+          // Navigate to instructor profile if you have one
+          Snackbar.Add(string.Format("Navigate to {0} profile (not implemented)", Name), Severity.Info);
+     }
+
+     private string GetInitials(string name)
+     {
+          var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(p => p[0]);
+          return string.Concat(parts).ToUpperInvariant();
+     }
+}

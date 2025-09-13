@@ -1,0 +1,67 @@
+﻿@page "/courses/{CourseId:guid}"
+@using Maktab.Models.Models
+
+@inherits BaseComponent<CourseDetails>
+
+
+@inject IInstitutionService InstitutionService
+@inject NavigationManager Navigation
+
+<MudContainer  Class="mt-8 mb-8">
+    @if (_course is null)
+    {
+        <MudText Typo="Typo.h6">Loading course details...</MudText>
+    }
+    else
+    {
+        <MudPaper Class="pa-6">
+            <!-- Back Navigation -->
+            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="BackToCourses" Class="mb-4">
+                <MudIcon Icon="@Icons.Material.Filled.ArrowBack" /> Back to Courses
+            </MudButton>
+
+            <MudStack>
+            <!-- Title + Category -->
+            <MudText Typo="Typo.h4" GutterBottom="true">@_course.Title</MudText>
+               <MudText Typo="Typo.subtitle1" Color="Color.Secondary" Class="mb-2">
+                    @_course.Instructor
+               </MudText>
+           
+
+            <!-- Image -->
+            <MudImage Src="@_course.ImageUrl" Alt="@_course.Title" Width="300" Class="mb-4 rounded-lg" Elevation="2" />
+
+            <!-- Description -->
+            <MudText Typo="Typo.body1" Class="mb-4">@_course.Description</MudText>
+
+            <!-- Modules -->
+            <CourseModules Modules="@_course.Modules" />
+
+            <MudDivider Class="my-4" />
+
+            
+               </MudStack>
+               <!-- CTA -->
+
+               <MudChip T="string" Color="Color.Secondary" Variant="Variant.Outlined">
+                    @_course.Category
+               </MudChip>
+
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large">
+                    Enroll Now
+               </MudButton>
+        </MudPaper>
+    }
+</MudContainer>
+
+@code {
+    [Parameter] public Guid CourseId { get; set; }
+    private Course? _course;
+
+    protected override async Task OnInitializedAsync()
+    {
+          _course = await InstitutionService.GetCourseByIdAsync(CourseId);
+    }
+
+    private void BackToCourses() => Navigation.NavigateTo("/");
+}

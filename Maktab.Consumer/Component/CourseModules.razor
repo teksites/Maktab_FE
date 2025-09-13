@@ -1,0 +1,27 @@
+﻿@using Maktab.Models.Models
+@inherits BaseComponent<CourseModules>
+
+<MudPaper Class="pa-4 mt-4">
+     <MudText Typo="Typo.h6" Class="mb-2">Course Outline</MudText>
+
+     @if (Modules?.Any() == true)
+     {
+          <MudList T="string" Dense="true">
+               @foreach (var module in Modules)
+               {
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                         <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Primary" />
+                         <MudText>@module</MudText>
+                    </MudStack>
+               }
+          </MudList>
+     }
+     else
+     {
+          <MudText Typo="Typo.body2" Color="Color.Secondary">No modules available</MudText>
+     }
+</MudPaper>
+
+@code {
+     [Parameter] public IEnumerable<string> Modules { get; set; }
+}

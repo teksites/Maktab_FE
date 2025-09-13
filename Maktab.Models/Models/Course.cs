@@ -9,5 +9,7 @@
           public string ImageUrl { get; set; } = string.Empty;
 
           public IEnumerable<string> Modules { get; set; } = Array.Empty<string>();
+
+          public string Instructor { get; set; } = string.Empty;
      }
 }

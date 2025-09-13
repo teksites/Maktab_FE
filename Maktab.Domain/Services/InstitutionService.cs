@@ -36,7 +36,7 @@ namespace Maktab.Domain.Services
 
           public async Task<IEnumerable<Course>> GeCoursesByInstitutionIdAsync(Guid institutionId)
           {
-               return _Courses;
+               return  await Task.FromResult(_Courses);
           }
 
           public async Task<Course> GetCourseByIdAsync(Guid courseId)
@@ -47,52 +47,55 @@ namespace Maktab.Domain.Services
           private List<Course> GetCourses()
           {
                var courses = new List<Course>()
+               {
+               new Course
             {
-                         new Course
-                      {
-                          Id = Guid.NewGuid(),
-                          Title = "Introduction to Islamic Studies",
-                          Category = "Islamic Studies",
-                          Description = "Learn the foundations of Islamic beliefs, practices, and history.",
-                          ImageUrl = "images/courses/islamic-studies.jpg",
-                          Modules = new List<string>
-                          {
-                              "Overview of Islamic Beliefs",
-                              "Pillars of Islam",
-                              "Islamic History & Civilization",
-                              "Contemporary Issues in Islam"
-                          }
-                      },
-                      new Course
-                      {
-                          Id = Guid.NewGuid(),
-                          Title = "Qur’an Recitation (Tajweed)",
-                          Category = "Qur’an",
-                          Description = "Master the art of Qur’an recitation with Tajweed rules.",
-                          ImageUrl = "images/courses/quran-recitation.jpg",
-                          Modules = new List<string>
-                          {
-                              "Introduction to Tajweed",
-                              "Makhaarij (Articulation Points)",
-                              "Rules of Noon and Meem",
-                              "Practice & Recitation Sessions"
-                          }
-                      },
-                      new Course
-                      {
-                          Id = Guid.NewGuid(),
-                          Title = "Qur’an Tafseer (Interpretation)",
-                          Category = "Qur’an",
-                          Description = "Study selected Surahs with detailed Tafseer and context.",
-                          ImageUrl = "images/courses/quran-tafseer.jpg",
-                          Modules = new List<string>
-                          {
-                              "Introduction to Tafseer",
-                              "Tafseer of Surah Al-Fatiha",
-                              "Themes of Surah Al-Baqarah",
-                              "Understanding Makki vs Madani Surahs"
-                          }
-                      },
+                Id = Guid.NewGuid(),
+                Title = "Introduction to Islamic Studies",
+                Category = "Islamic Studies",
+                Description = "Learn the foundations of Islamic beliefs, practices, and history.",
+                ImageUrl = "images/courses/islamic-studies.jpg",
+                Instructor = "Dr. Abdullah Al-Hassan",
+                Modules = new List<string>
+                {
+                    "Overview of Islamic Beliefs",
+                    "Pillars of Islam",
+                    "Islamic History & Civilization",
+                    "Contemporary Issues in Islam"
+                }
+            },
+            new Course
+            {
+                Id = Guid.NewGuid(),
+                Title = "Qur’an Recitation (Tajweed)",
+                Category = "Qur’an",
+                Description = "Master the art of Qur’an recitation with Tajweed rules.",
+                ImageUrl = "images/courses/quran-recitation.jpg",
+                Instructor = "Shaykh Ahmad Khan",
+                Modules = new List<string>
+                {
+                    "Introduction to Tajweed",
+                    "Makhaarij (Articulation Points)",
+                    "Rules of Noon and Meem",
+                    "Practice & Recitation Sessions"
+                }
+            },
+            new Course
+            {
+                Id = Guid.NewGuid(),
+                Title = "Qur’an Tafseer (Interpretation)",
+                Category = "Qur’an",
+                Description = "Study selected Surahs with detailed Tafseer and context.",
+                ImageUrl = "images/courses/quran-tafseer.jpg",
+                Instructor = "Ustadh Fatimah Ali",
+                Modules = new List<string>
+                {
+                    "Introduction to Tafseer",
+                    "Tafseer of Surah Al-Fatiha",
+                    "Themes of Surah Al-Baqarah",
+                    "Understanding Makki vs Madani Surahs"
+                }
+            },
             new Course
             {
                 Id = Guid.NewGuid(),
@@ -100,6 +103,7 @@ namespace Maktab.Domain.Services
                 Category = "Islamic Studies",
                 Description = "Explore the life, character, and mission of Prophet Muhammad (peace be upon him).",
                 ImageUrl = "images/courses/seerah.jpg",
+                Instructor = "Mufti Kareem Siddiqui",
                 Modules = new List<string>
                 {
                     "Early Life in Makkah",
@@ -108,7 +112,7 @@ namespace Maktab.Domain.Services
                     "Key Battles and Lessons"
                 }
             }
-        };
+               };
                return courses;
           }
      }
