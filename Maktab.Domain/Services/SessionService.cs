@@ -105,7 +105,7 @@ namespace Maktab.Domain.Services
                try
                {
                     var formatedUrl = string.Format(logoutUrl, sessionId);
-                    await _httpService.Put("formatedUrl", false);
+                    await _httpService.Put(formatedUrl, false);
                     {
                          await CleanLocalStorage();
                          return true;

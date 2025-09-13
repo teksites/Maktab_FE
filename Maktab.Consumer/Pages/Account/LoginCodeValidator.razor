@@ -107,7 +107,7 @@
           }
           else if (!userInfo.IfTempUser)
           {
-               var extendedInfo = await UserService.GetExtendedInfoByUserIdAsync(userId);
+               var extendedInfo = await UserService.GetExtendedInfoByUserIdAsync(userInfo.UserId);
                if (extendedInfo == null)
                {
                     NavigationManager.NavigateTo(Constants.CustomerAddProfileDetailRoute);

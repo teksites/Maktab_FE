@@ -26,6 +26,7 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddScoped<IHttpService, HttpService>()
                 .AddScoped<ILocalStorageService, LocalStorageService>()
                 .AddScoped<IRoleMenuService, RoleMenuService>()
+                .AddScoped<IInstitutionService, InstitutionService>()
                 .AddScoped<ThemeService>()
 
                 .AddSingleton<ISystemService, SystemService>();
