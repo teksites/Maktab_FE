@@ -17,13 +17,13 @@
      <MudPaper Class="pa-8 d-flex flex-column align-center justify-center text-center" Elevation="0">
           <MudText Typo="Typo.h3" GutterBottom="true">Welcome to Our Institution</MudText>
           <MudText Typo="Typo.subtitle1" Class="mb-6">Explore our wide range of courses and programs.</MudText>
-          <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/courses">View All Courses</MudButton>
+          <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/courses/search">View All Courses</MudButton>
      </MudPaper>
 
      <!-- Courses Section -->
      <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
-
-         <MudGrid GutterSize="3">
+     <CourseList Courses=@_courses />
+        @*  <MudGrid GutterSize="3">
         @foreach (var course in _courses)
         {
             <MudItem xs="12" sm="6" md="4" lg="3">
@@ -42,7 +42,7 @@
                 </MudCard>
             </MudItem>
         }
-    </MudGrid>
+    </MudGrid> *@
 
 
 

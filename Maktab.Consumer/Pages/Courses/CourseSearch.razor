@@ -1,0 +1,76 @@
+﻿@page "/courses/search"
+@using Maktab.Consumer.Helpers
+@using Maktab.Models.Models
+
+@inherits BaseComponent<CourseSearch>
+
+@inject IAccountService AccountService
+@inject IUserService UserService
+@inject IInstitutionService InstitutionService
+
+
+@* @inject IAlertService AlertService *@
+
+
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-8">
+     <MudText Typo="Typo.h4" GutterBottom="true">Available Courses</MudText>
+
+     <!-- Search & Category Filter -->
+     <MudGrid Class="mb-4">
+          <MudItem xs="12" sm="6">
+               <MudTextField @bind-Value="_searchText"
+                             Placeholder="Search courses..."
+                             Adornment="Adornment.Start"
+                             AdornmentIcon="@Icons.Material.Filled.Search"
+                             Immediate="true"
+                             OnBlur="@((_) => ApplyFilters())"
+                             OnKeyUp="@((_) => ApplyFilters())" />
+          </MudItem>
+          <MudItem xs="12" sm="6" Class="d-flex justify-end">
+               <MudChipSet T="string" Mandatory="true" SelectedChipChanged="OnCategoryChanged">
+                    <MudChip T="string" Selected="@(_selectedCategory == null)">All</MudChip>
+                    @foreach (var cat in _categories)
+                    {
+                         <MudChip T="string" Selected="@(_selectedCategory == cat)">@cat</MudChip>
+                    }
+               </MudChipSet>
+          </MudItem>
+     </MudGrid>
+
+     <!-- Reusable CourseList -->
+     <CourseList Courses="@_filteredCourses" />
+</MudContainer>
+
+@code {
+     private IEnumerable<Course> _courses = Array.Empty<Course>();
+     private List<Course> _filteredCourses = new();
+     private List<string> _categories = new();
+     private string? _selectedCategory;
+     private string _searchText = string.Empty;
+
+     protected override async Task OnInitializedAsync()
+     {
+          _courses = await InstitutionService.GeCoursesByInstitutionIdAsync(Guid.Empty);
+          _categories = _courses.Select(c => c.Category).Distinct().ToList();
+          ApplyFilters();
+     }
+
+     private void OnCategoryChanged(MudChip<string> chip)
+     {
+          _selectedCategory = chip.Text == "All" ? null : chip.Text;
+          ApplyFilters();
+     }
+
+     private void ApplyFilters()
+     {
+          _filteredCourses = _courses
+              .Where(c =>
+                  (string.IsNullOrWhiteSpace(_searchText) ||
+                   c.Title.Contains(_searchText, StringComparison.OrdinalIgnoreCase) ||
+                   c.Description.Contains(_searchText, StringComparison.OrdinalIgnoreCase))
+                  && (_selectedCategory == null || c.Category == _selectedCategory))
+              .ToList();
+     }
+}
+
