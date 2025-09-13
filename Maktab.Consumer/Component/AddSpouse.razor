@@ -118,7 +118,6 @@
                return;
           }
 
-          var response = UserService.LinkUserToFamilyByIdAsync(result.UserId, FamilyId);
           Snackbar.Add("User has been linked.", Severity.Success);
           await OnSave.InvokeAsync(result);
      }
