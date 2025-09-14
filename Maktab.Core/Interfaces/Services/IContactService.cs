@@ -1,6 +1,6 @@
 ﻿namespace Maktab.Core.Interfaces.Services
 {
-     public interface IOtherContactService : IDomainService
+     public interface IContactService : IDomainService
      {
      }
 }
