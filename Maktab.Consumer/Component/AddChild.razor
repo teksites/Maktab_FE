@@ -1,5 +1,6 @@
 ﻿@using MaktabDataContracts.Requests.Children
 @using MaktabDataContracts.Enums
+@using MaktabDataContracts.Responses.Children
 @using MudBlazor
 @using System.ComponentModel.DataAnnotations
 
@@ -89,7 +90,7 @@
      [Parameter, EditorRequired]
      public AddChildRequest ChildModel { get; set; } = new();
 
-     [Parameter] public EventCallback<AddChildRequest> OnSave { get; set; }
+     [Parameter] public EventCallback<ChildResponse> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }
 
      public DateTime? RAMQExpiry { get; set; }
@@ -99,7 +100,12 @@
      {
           ChildModel.RAMQExpiry = RAMQExpiry.Value;
           ChildModel.DateOfBirth = DateOfBirth.Value;
-          await OnSave.InvokeAsync(ChildModel);
+
+
+
+          ChildResponse childResponse = null;
+
+          await OnSave.InvokeAsync(childResponse);
      }
 
      private async Task OnCancelClickedHandler()

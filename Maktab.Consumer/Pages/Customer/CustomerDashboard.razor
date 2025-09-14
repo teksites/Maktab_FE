@@ -2,6 +2,8 @@
 
 @using Maktab.Consumer.Helpers
 @using Maktab.Models.Models
+@using MaktabDataContracts.Responses.Children
+@using MaktabDataContracts.Responses.Users
 
 @inherits BaseComponent<CustomerDashboard>
 
@@ -9,77 +11,119 @@
 @inject IUserService UserService
 @inject IInstitutionService InstitutionService
 @inject IChildrenService ChildrenService 
+@inject INotificationService NotificationService
 
 
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
+
 
      @if (isInitialized.HasValue && isInitialized.Value)
      {
-    <!-- Parent Info -->
-    <MudPaper Class="pa-4 mb-4">
-        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-               <MudAvatar Size="Size.Large" Color="Color.Primary">@userFullName[0]</MudAvatar>
-            <MudStack>
-                    <MudText Typo="Typo.h6">@userFullName</MudText>
-                    <MudText Typo="Typo.body2" Color="Color.Secondary">@userInfo.Email</MudText>
-                    <MudText Typo="Typo.body2" Color="Color.Secondary">@userInfo.Phone</MudText>
-            </MudStack>
-        </MudStack>
+
+    <!-- Header -->
+    <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-6">
+        <MudText Typo="Typo.h4">Welcome, @userInfo.FirstName</MudText>
+
+               @* <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+            <!-- Notifications -->
+            <MudBadge Dot="false" Color="Color.Error" Content="@(notifications.Count())">
+                <MudIconButton Icon="@Icons.Material.Filled.Notifications" />
+            </MudBadge>
+
+            <!-- Profile Avatar -->
+            <MudAvatar Color="Color.Primary" Size="Size.Medium">
+                         @userFullName.Substring(0, 1).ToUpper()
+            </MudAvatar>
+        </MudStack> *@
+    </MudStack>
+
+    <!-- Summary Cards -->
+    <MudGrid Class="mb-6">
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudText Typo="Typo.h6">Children</MudText>
+                         <MudText Typo="Typo.h4">@(children.Count())</MudText>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudText Typo="Typo.h6">Registered Courses</MudText>
+                <MudText Typo="Typo.h4">0</MudText>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudText Typo="Typo.h6">Upcoming Classes</MudText>
+                <MudText Typo="Typo.h4">2</MudText>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudCard Class="pa-4">
+                <MudText Typo="Typo.h6">Notifications</MudText>
+                <MudText Typo="Typo.h4">@(notifications.Count())</MudText>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Children Overview via reusable component -->
+    <MudText Typo="Typo.h5" Class="mb-4">Your Children</MudText>
+          <ChildList Children="@children" FamilyId="@userInfo.FamilyId" />
+
+    <!-- Notifications -->
+    <MudText Typo="Typo.h5" Class="mb-4 mt-6">Recent Notifications</MudText>
+    <MudPaper Class="pa-4">
+        <MudList T="Notification" Dense="true">
+            @foreach (var note in notifications)
+            {
+                <MudListItem>
+                    <MudIcon Icon= "Icons.Material.Filled.Event" Color="Color.Primary" Class="me-2" />
+                    <MudText>@note.Message</MudText>
+                    <MudText Typo="Typo.caption" Class="ms-auto">@note.Timestamp.ToShortDateString()</MudText>
+                </MudListItem>
+            }
+        </MudList>
     </MudPaper>
 
-    <!-- Children -->
-    <MudText Typo="Typo.h5" Class="mb-2">Children</MudText>
-    <MudGrid>
-          @foreach (var child in children)
-        {
-            <MudItem xs="12" sm="6">
-                <MudCard>
-                    <MudCardContent>
-                              <MudText Typo="Typo.h6">@(child.FirstName)  @(child.LastName)</MudText>
-                        <MudText Typo="Typo.subtitle2">Enrolled Courses:</MudText>
-                        @* @if (child.EnrolledCourses.Any())
-                        {
-                            <MudChipSet T="Course" ReadOnly="true">
-                                @foreach (var course in child.EnrolledCourses)
-                                {
-                                    <MudChip Color="Color.Primary">@course.Title</MudChip>
-                                }
-                            </MudChipSet>
-                        }
-                        else *@
-                        {
-                            <MudText Typo="Typo.body2" Color="Color.Secondary">
-                                No courses enrolled.
-                            </MudText>
-                        }
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Variant="Variant.Text" OnClick="@(() => GoToChildProfile(child.ChildId))">
-                            View Profile
-                        </MudButton>
-                              <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="@(() => EnrollChild(child.ChildId))">
-                            Enroll in Course
-                        </MudButton>
-                    </MudCardActions>
-                </MudCard>
-            </MudItem>
-        }
-    </MudGrid>
+
      }
      else
      {
      <BusyContent DisplayText="Initializing" />
      }
+
 </MudContainer>
 
+@* <MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
+     <MudStack Spacing="3">
+          <!-- Header -->
+          <MudPaper Class="pa-4 d-flex justify-space-between align-center">
+               <MudText Typo="Typo.h5">Parent Dashboard</MudText>
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => OpenChildDialog())">
+                    <MudIcon Icon="@Icons.Material.Filled.Add" Class="me-1" />
+                    Add Child
+               </MudButton>
+          </MudPaper>
+
+          <!-- Children List -->
+         @*  <ChildList Children="@children" OnEdit="@(EditChild)" /> *-@
+     </MudStack>
+</MudContainer> *@
+
+
+
+
 @code {
+     [Inject] private IDialogService DialogService { get; set; } = default!;
+
 
      bool? isInitialized;
      string userFullName = string.Empty;
      Guid userId = Guid.Empty;
-     MaktabDataContracts.Responses.Users.UserInformationResponse userInfo = null;
-     IEnumerable<MaktabDataContracts.Responses.Children.ChildResponse> children = null;
+     UserInformationResponse userInfo = null;
+     IList<ChildResponse> children = null;
+     IEnumerable<Notification> notifications = null;
 
 
      protected override async Task OnInitializedAsync()
@@ -89,7 +133,8 @@
           userId = await SessionService.GetLoggedInUserIdAsync();
           userInfo = await UserService.GetUserByIdAsync(userId);
           userFullName = $"{userInfo.FirstName} {userInfo.LastName}";
-          children = await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId);
+          children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
+          notifications = await NotificationService.GetNotificationsByUserIdAsync(userInfo.UserId);
           isInitialized = true;
 
           RequestRender();
@@ -99,38 +144,29 @@
 
 
 
-    // private ParentProfile _parent = new ParentProfile
-    // {
-    //     Id = 1,
-    //     FullName = "Ahmed Ali",
-    //     Email = "ahmed.ali@example.com",
-    //     Phone = "+92 300 1234567",
-    //     Children = new List<ChildProfile>
-    //     {
-    //         new ChildProfile
-    //         {
-    //             Id = 1,
-    //             Name = "Fatima",
-    //             Age = 10,
-    //             EnrolledCourses = new List<Course>
-    //             {
-    //                 new Course { Id = 2, Title = "Qur’an Recitation (Tajweed)" },
-    //                 new Course { Id = 4, Title = "Seerah of Prophet Muhammad (PBUH)" }
-    //             }
-    //         },
-    //         new ChildProfile
-    //         {
-    //             Id = 2,
-    //             Name = "Hassan",
-    //             Age = 8,
-    //             EnrolledCourses = new List<Course>()
-    //         }
-    //     }
-    // };
+     private async Task OpenChildDialog(ChildResponse? child = null)
+     {
+          var parameters = new DialogParameters { ["Child"] = child };
+          var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
 
-    private void GoToChildProfile(Guid childId) 
-        => NavigationManager.NavigateTo($"/child/{childId}");
+          var dialog = DialogService.Show<Dialogs.AddChildDialog>(child == null ? "Add New Child" : "Edit Child", parameters, options);
+          var result = await dialog.Result;
 
-    private void EnrollChild(Guid childId) 
-        => NavigationManager.NavigateTo($"/courses?childId={childId}");
+          if (!result.Canceled && result.Data is ChildResponse savedChild)
+          {
+               if (child == null)
+               {
+                    //Parent.Children.Add(savedChild);
+                    Snackbar.Add("Child added successfully!", Severity.Success);
+               }
+               else
+               {
+                    // var index = Parent.Children.FindIndex(c => c.Id == savedChild.Id);
+                    // if (index >= 0) Parent.Children[index] = savedChild;
+                    Snackbar.Add("Child updated successfully!", Severity.Success);
+               }
+          }
+     }
+
+     private Task EditChild(ChildResponse child) => OpenChildDialog(child);
 }

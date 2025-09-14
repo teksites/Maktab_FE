@@ -1,5 +1,6 @@
 ﻿@using Maktab.Consumer.Dialogs
 @using MaktabDataContracts.Requests.Children
+@using MaktabDataContracts.Responses.Children
 @using MudBlazor
 @inject IDialogService DialogService
 
@@ -33,9 +34,11 @@
 </MudTable>
 
 @code {
-     private readonly Guid FamilyId = Guid.NewGuid();
+     [Parameter]
+     public Guid FamilyId { get; set; } = Guid.Empty;
 
-     private List<AddChildRequest> Children { get; set; } = new();
+     [Parameter]
+     public IList<ChildResponse> Children { get; set; } = Array.Empty<ChildResponse>();
 
      private async Task OpenAddChildDialog()
      {
@@ -45,7 +48,7 @@
           var dialog = await DialogService.ShowAsync<AddChildDialog>("Add Child", parameters, options);
           var result = await dialog.Result;
 
-          if (!result.Canceled && result.Data is AddChildRequest child)
+          if (!result.Canceled && result.Data is ChildResponse child)
           {
                Children.Add(child);
           }

@@ -1,9 +1,10 @@
 ﻿@using MaktabDataContracts.Requests.Children
+@using MaktabDataContracts.Responses.Children
 @using MudBlazor
 
 <MudDialog>
     <DialogContent>
-        <AddChild ChildModel="Child"
+        <AddChild ChildModel="@child"
                            OnSave="SaveChild"
                            OnCancel="CancelDialog" />
     </DialogContent>
@@ -16,14 +17,14 @@
     [Parameter]
     public Guid FamilyId { get; set; }
 
-    private AddChildRequest Child { get; set; } = new();
+    private AddChildRequest child { get; set; } = new();
 
     protected override void OnInitialized()
     {
-        Child.FamilyId = FamilyId;
+        child.FamilyId = FamilyId;
     }
 
-    private async void SaveChild(AddChildRequest child)
+     private async void SaveChild(ChildResponse child)
     {
         await MudDialog.CloseAsync(DialogResult.Ok(child));
     }
