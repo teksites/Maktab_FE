@@ -8,11 +8,11 @@ namespace Maktab.Domain.Services
      public class ChildrenService : BaseService, IChildrenService
      {
           private const string getChildById = @"/api/children/{0}";
-          private const string removeChildById = @"/api/children/{0}/delete";
+          private const string removeChildById = @"/api/children/{0}/delete?ifHardDelete=false";
           private const string getChildrenByFamilyId = @"/api/families/{0}/children";
           private const string addChildByFamilyId = @"/api/families/{0}/children/add";
-          private const string removeChildByFamilyId = @"/api/families/{0}/children/delete";
-          private const string hasChildrenByFamilyId = @"/api/children/check";
+          private const string removeChildByFamilyId = @"/api/families/{0}/children/delete?ifHardDelete=false";
+          private const string isChildrenExistByRamQNumber = @"/api/children/check";
 
 
 
@@ -37,10 +37,35 @@ namespace Maktab.Domain.Services
                return child;
           }
 
-          public async Task<ChildResponse> SendUserActivationCodeAsync(Guid familyId, AddChildRequest addChildRequest)
+          public async Task<ChildResponse> AddChildToFamilyAsync(Guid familyId, AddChildRequest addChildRequest)
           {
                var formatedUrl = string.Format(addChildByFamilyId, familyId);
-               var result = await _httpService.Put<ChildResponse>(formatedUrl, addChildRequest);
+               var result = await _httpService.Post<ChildResponse>(formatedUrl, addChildRequest);
+               return result;
+          }
+
+          public async Task<bool> IsChildExistWithRamQNumberAsync(Guid familyId, string ramqNumber)
+          {
+               var verificationRequest = new
+               {
+                    FamilyId = familyId,
+                    RamqNumber = ramqNumber
+               };
+               var result = await _httpService.Post<bool>(isChildrenExistByRamQNumber, verificationRequest);
+               return result;
+          }
+
+          public async Task<bool> RemoveChild(Guid childId)
+          {
+               var formatedUrl = string.Format(removeChildById, childId);
+               var result = await _httpService.Post<bool>(formatedUrl);
+               return result;
+          }
+
+          public async Task<bool> RemoveChildFromFamily(Guid familyId)
+          {
+               var formatedUrl = string.Format(removeChildByFamilyId, familyId);
+               var result = await _httpService.Post<bool>(formatedUrl);
                return result;
           }
      }
