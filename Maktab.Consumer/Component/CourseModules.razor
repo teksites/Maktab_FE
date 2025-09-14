@@ -6,7 +6,7 @@
 
      @if (Modules?.Any() == true)
      {
-          <MudList T="string" Dense="true">
+          @* <MudList T="string" Dense="true">
                @foreach (var module in Modules)
                {
                     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
@@ -14,7 +14,16 @@
                          <MudText>@module</MudText>
                     </MudStack>
                }
-          </MudList>
+          </MudList> *@
+
+          <MudTimeline TimelinePosition="TimelinePosition.Start">
+               @foreach (var module in Modules)
+               {
+                    <MudTimelineItem TimelineAlign="TimelineAlign.Default">
+                         <MudText>@module</MudText>
+                    </MudTimelineItem>
+               }
+               </MudTimeline>
      }
      else
      {

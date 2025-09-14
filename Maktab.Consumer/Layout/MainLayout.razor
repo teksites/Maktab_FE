@@ -20,7 +20,7 @@
           <MudSpacer />
           <MudToolBar Edge="Edge.End">
                @* <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" /> *@
-               
+
                <MudMenu Dense
                         Variant="Variant.Text"
                         Color="Color.Inherit"
@@ -42,13 +42,8 @@
                                  IconColor="Color.Primary"
                                  Label="Sign In" />
 
-                    <MudMenuItem Href="/account/logout"
-                                 ForceLoad
-                                 Icon="@Icons.Material.TwoTone.Logout"
-                                 IconColor="Color.Primary"
-                                 Label="Sign Out" />
 
-                    
+
                </MudMenu>
                <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="@ToggleTheme" />
                <MudTooltip Text="Notification">
@@ -56,24 +51,32 @@
                          <MudIconButton Icon="@Icons.Material.Outlined.Notifications" Color="Color.Inherit" Edge="Edge.End" />
                     </MudBadge>
                </MudTooltip>
-               @* <MudMenu> *@
-               <MudAvatar Color="Color.Inherit" Variant="Variant.Outlined" >M</MudAvatar>
-                    @* 
-               </MudMenu> *@
-           </MudToolBar>
+               <MudMenu Dense>
+                    <ActivatorContent>
+                         <MudAvatar Color="Color.Inherit" Variant="Variant.Outlined">M</MudAvatar>
+                    </ActivatorContent>
+                    <ChildContent>
+                         <MudMenuItem Href="/account/logout"
+                                      ForceLoad
+                                      Icon="@Icons.Material.TwoTone.Logout"
+                                      IconColor="Color.Primary"
+                                      Label="Sign Out" />
+                    </ChildContent>
+               </MudMenu>
+          </MudToolBar>
 
      </MudAppBar>
      <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-          <NavMenu/>
+          <NavMenu />
      </MudDrawer>
 
      <MudMainContent>
           <ErrorBoundary>
-               <MudAlert hidden="true"/>
-               <MudContainer MaxWidth="MaxWidth.Large" >
-                         <ChildContent>
-                              @Body
-                         </ChildContent>
+               <MudAlert hidden="true" />
+               <MudContainer MaxWidth="MaxWidth.Large">
+                    <ChildContent>
+                         @Body
+                    </ChildContent>
                </MudContainer>
           </ErrorBoundary>
      </MudMainContent>

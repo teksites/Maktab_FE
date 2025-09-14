@@ -67,8 +67,8 @@ namespace Maktab.Domain.Services
             new Course
             {
                 Id = Guid.NewGuid(),
-                Title = "Qur’an Recitation (Tajweed)",
-                Category = "Qur’an",
+                Title = "Quran Recitation (Tajweed)",
+                Category = "Quran",
                 Description = "Master the art of Qur’an recitation with Tajweed rules.",
                 ImageUrl = "images/courses/quran-recitation.jpg",
                 Instructor = "Shaykh Ahmad Khan",
@@ -83,8 +83,8 @@ namespace Maktab.Domain.Services
             new Course
             {
                 Id = Guid.NewGuid(),
-                Title = "Qur’an Tafseer (Interpretation)",
-                Category = "Qur’an",
+                Title = "Quran Tafseer (Interpretation)",
+                Category = "Quran",
                 Description = "Study selected Surahs with detailed Tafseer and context.",
                 ImageUrl = "images/courses/quran-tafseer.jpg",
                 Instructor = "Ustadh Fatimah Ali",
