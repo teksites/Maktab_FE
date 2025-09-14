@@ -90,6 +90,9 @@
                </MudList>
           </MudPaper>
 
+          <!-- Courses Section -->
+          <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
+          <CourseList Courses=@_courses />
 
      }
      else
@@ -128,6 +131,7 @@
      UserInformationResponse userInfo = null;
      IList<ChildResponse> children = null;
      IEnumerable<Notification> notifications = null;
+     IEnumerable<Course> _courses = Enumerable.Empty<Course>();
 
 
      protected override async Task OnInitializedAsync()
@@ -139,14 +143,12 @@
           userFullName = $"{userInfo.FirstName} {userInfo.LastName}";
           children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
           notifications = await NotificationService.GetNotificationsByUserIdAsync(userInfo.UserId);
+          _courses = await InstitutionService.GeCoursesByInstitutionIdAsync(Guid.NewGuid());
+
           isInitialized = true;
 
           RequestRender();
      }
-
-
-
-
 
      private async Task OpenChildDialog(ChildResponse? child = null)
      {
