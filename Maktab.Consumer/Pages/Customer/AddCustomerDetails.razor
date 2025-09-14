@@ -1,5 +1,8 @@
 ﻿@page "/customer/adddetails"
+@using MaktabDataContracts.Enums
 @using MaktabDataContracts.Responses;
+@using MaktabDataContracts.Responses.Children
+@using MaktabDataContracts.Responses.Users
 
 @inherits BaseComponent<AddCustomerDetails>
 
@@ -7,6 +10,7 @@
 @inject ISnackbar Snackbar*@
 @inject IUserService UserService
 @inject IDialogService DialogService
+@inject IChildrenService ChildrenService
 
 
 @* @inject IAlertService AlertService *@
@@ -22,18 +26,18 @@
                     <MudStepper OnPreviewInteraction="OnPreviewInteraction">
                          <MudStep Title="Step 1" SecondaryText="Add Spouse" HasError="@(isSpouseAdded == false)" >
                              <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
-                              <AddSpouse FamilyId="@familyGuid" OnSave="@(OnSpouseSaved)"/>
+                              <AddSpouse FamilyId="@userInfo.FamilyId" OnSave="@(OnSpouseSaved)"/>
                               </MudStack>
                               @* <MudSwitch @bind-Value="_step1Complete" Color="Color.Primary">Flip the switch to be able to advance to step 2</MudSwitch> *@
                          </MudStep>
                          <MudStep Title="Step 2" SecondaryText="Add Address" HasError="@(isFamilyAddressAdded == false)">
-                              <AddAddress AddressModel="@AddressModel" ConnectedId="@familyGuid" @OnSave="@(OnAddressSaved)" />
+                                   <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
                          </MudStep>
                          <MudStep Title="Step 3" SecondaryText="Add RL 24" HasError="@(isExtendedInfoAdded == false)">
-                              <AddExtendedInfo FamilyId="@familyGuid" AddessId="@HomeAddressId" UserId="@userId" @OnSave="@(OnExtendedInfoSaved)" />
+                                   <AddExtendedInfo FamilyId="@userInfo.FamilyId" AddessId="@homeAddressId" UserId="@userId" OnSave="@(OnExtendedInfoSaved)" />
                          </MudStep>
                          <MudStep Title="Step 4" SecondaryText="Add Child" HasError="@(isChildAdded == false)">
-                              <ChildList />
+                                   <ChildList Children="@children" FamilyId="@userInfo.FamilyId"  />
                          </MudStep>
                     </MudStepper>
                
@@ -52,11 +56,11 @@
 @code {
 
      Guid userId = Guid.Empty;
-     Guid familyGuid = Guid.Empty;
-     Guid HomeAddressId = Guid.Empty;
+     Guid homeAddressId = Guid.Empty;
+     IList<ChildResponse> children = null;
 
-     MaktabDataContracts.Responses.Users.UserInformationResponse userInfo = null;
-     MaktabDataContracts.Requests.Addresses.AddAddress AddressModel = new();
+     UserInformationResponse userInfo = null;
+     MaktabDataContracts.Requests.Addresses.AddAddress parentAddress = new();
      bool? isInitialized;
      bool isSpouseAdded;
      bool isFamilyAddressAdded;
@@ -76,9 +80,11 @@
           username = await SessionService.GetUserNameAsync();
           userId = await SessionService.GetLoggedInUserIdAsync();
           userInfo = await UserService.GetUserByIdAsync(userId);
-          familyGuid = userInfo.FamilyId;
+          children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
+
           isInitialized = true;
-          AddressModel.ConnectedId = userId;
+          parentAddress.ConnectedId = userInfo.UserId;
+          parentAddress.HomeAddress = true;
           RequestRender();
      }
 
@@ -114,6 +120,20 @@
                          arg.Cancel = true;
                     }
                     break;
+               case 2:
+                    if (!isExtendedInfoAdded)
+                    {
+                         await DialogService.ShowMessageBox("Error", "Please add RL 24 info");
+                         arg.Cancel = true;
+                    }
+                    break;
+               case 3:
+                    if (!isChildAdded)
+                    {
+                         await DialogService.ShowMessageBox("Error", "Please add child");
+                         arg.Cancel = true;
+                    }
+                    break;
           }
      }
 
@@ -122,16 +142,30 @@
           switch (arg.StepIndex)
           {
                case 1:
-                    if (isSpouseAdded != true)
+                    if (!isSpouseAdded )
                     {
                          await DialogService.ShowMessageBox("Error", "Finish step 1 first");
                          arg.Cancel = true;
                     }
                     break;
                case 2:
-                    if (!isSpouseAdded || !isFamilyAddressAdded)
+                    if (!isFamilyAddressAdded)
                     {
-                         await DialogService.ShowMessageBox("Error", "Finish step 1 and 2 first");
+                         await DialogService.ShowMessageBox("Error", "Finish step 2");
+                         arg.Cancel = true;
+                    }
+                    break;
+               case 3:
+                    if (!isExtendedInfoAdded)
+                    {
+                         await DialogService.ShowMessageBox("Error", "Finish step 3");
+                         arg.Cancel = true;
+                    }
+                    break;
+               case 4:
+                    if (!isChildAdded)
+                    {
+                         await DialogService.ShowMessageBox("Error", "Finish step 4");
                          arg.Cancel = true;
                     }
                     break;
@@ -146,16 +180,24 @@
           }
      }
 
-     private void OnAddressSaved(MaktabDataContracts.Responses.Addresses.AddressResponse addressInfo)
+     private void OnFamilyAddressSaved(MaktabDataContracts.Responses.Addresses.AddressResponse addressInfo)
      {
           if (addressInfo != null)
           {
                isFamilyAddressAdded = true;
-               this.HomeAddressId = addressInfo.AddressId;
+               this.homeAddressId = addressInfo.AddressId;
           }
      }
 
      private void OnExtendedInfoSaved(MaktabDataContracts.Responses.Users.ExtendedUserInformationResponse extendednInfo)
+     {
+          if (extendednInfo != null)
+          {
+               isExtendedInfoAdded = true;
+          }
+     }
+
+     private void OnChildSaved(MaktabDataContracts.Responses.Users.ExtendedUserInformationResponse extendednInfo)
      {
           if (extendednInfo != null)
           {

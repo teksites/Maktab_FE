@@ -1,6 +1,7 @@
 ﻿@inherits BaseFormComponent<AddAddress>
 @using System.ComponentModel.DataAnnotations
 @using MaktabDataContracts.Enums
+@using MaktabDataContracts.Responses.Addresses
 
 @inject IAddressService AddressService
 
@@ -73,7 +74,7 @@
                                Color="Color.Primary" />
                </MudItem>
 
-               <MudItem xs="12" sm="12">
+               @* <MudItem xs="12" sm="12">
                     <MudSelect T="AddressType"
                                @bind-Value="AddressModel.AddressType"
                                Label="Address Type"
@@ -81,8 +82,8 @@
                                Required="true"
                                For="@(() => AddressModel.AddressType)">
                          <MudSelectItem Value="@AddressType">@AddressType</MudSelectItem>
-                    </MudSelect>
-               </MudItem>
+                    </MudSelect> 
+               </MudItem>*@
           </MudGrid>
 
           @if (!string.IsNullOrWhiteSpace(_errorMessage))
@@ -115,7 +116,7 @@
      [Parameter, EditorRequired]
      public MaktabDataContracts.Requests.Addresses.AddAddress AddressModel { get; set; } = new();
 
-     [Parameter] public EventCallback<MaktabDataContracts.Responses.Addresses.AddressResponse> OnSave { get; set; }
+     [Parameter] public EventCallback<AddressResponse> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }
      [Parameter] public AddressType AddressType { get; set; }
      [Parameter] public Guid ConnectedId { get; set; } = Guid.Empty;
@@ -169,13 +170,18 @@
                return;
           }
 
-
-          await OnSave.InvokeAsync(savedAddress);
+          if (OnSave.HasDelegate)
+          {
+               await OnSave.InvokeAsync(savedAddress);
+          }
      }
 
 
      private async Task OnCancelClickedHandler()
      {
-          await OnCancel.InvokeAsync();
+          if (OnCancel.HasDelegate)
+          {
+               await OnCancel.InvokeAsync();
+          }
      }
 }
