@@ -4,9 +4,12 @@
 @using MudBlazor
 @inject IDialogService DialogService
 
-<MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
-     Add Child
-</MudButton>
+<MudStack Row="true">
+     <MudSpacer />
+     <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
+          Add Child
+     </MudButton>
+</MudStack>
 
 <MudTable Items="Children" Elevation="1" Dense="true" Bordered="true" Hover="true">
      <HeaderContent>

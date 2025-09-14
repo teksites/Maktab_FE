@@ -2,12 +2,17 @@
 @using MaktabDataContracts.Enums
 @using MaktabDataContracts.Responses.Children
 @using MudBlazor
-@using System.ComponentModel.DataAnnotations
+@* @using System.ComponentModel.DataAnnotations *@
 
-<EditForm Model="@ChildModel" OnValidSubmit="HandleValidSubmit">
+@inherits BaseFormComponent<AddSpouse>
+
+@inject IChildrenService ChildrenService
+
+
+@* <EditForm Model="@ChildModel" OnValidSubmit="HandleValidSubmit"> *@
      <MudPaper Class="pa-4">
-          <MudText Typo="Typo.h5" Class="mb-4">Add Child</MudText>
-
+         @*  <MudText Typo="Typo.h5" Class="mb-4">Add Child</MudText> *@
+         <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)" Spacing="2">
           <MudGrid Container="true" Spacing="3">
                <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="ChildModel.FirstName"
@@ -72,44 +77,107 @@
                </MudItem>
 
                <MudItem xs="12" sm="6" Class="d-flex align-center">
-                    <MudSwitch @bind-Checked="ChildModel.WillUseDayCareServices"
+                    <MudSwitch @bind-Checked="@(ChildModel.WillUseDayCareServices)"
                                T="bool"
                                Label="Will Use Daycare Services"
                                Color="Color.Primary" />
                </MudItem>
           </MudGrid>
 
-          <MudStack Direction="Row" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
-               <MudButton Type="Submit" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Check">Save</MudButton>
+          <MudStack Justify="Justify.FlexEnd" Row="true" Spacing="2" Class="mt-4">
+               <MudButton Type="Submit" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Check" OnClick="@(HandleSaving)">
+                    @if (isSaving)
+                    {
+                         <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                         <span>Processing...</span>
+                    }
+                    else
+                    {
+                         <span>Save</span>
+                    }
+                    
+               </MudButton>
                <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
           </MudStack>
+          </MudForm>
      </MudPaper>
-</EditForm>
+@* </EditForm> *@
 
 @code {
      [Parameter, EditorRequired]
      public AddChildRequest ChildModel { get; set; } = new();
 
+     [Parameter]
+     public Guid FamilyId { get; set; } = Guid.Empty;
+
      [Parameter] public EventCallback<ChildResponse> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }
 
-     public DateTime? RAMQExpiry { get; set; }
-     public DateTime? DateOfBirth { get; set; }
+     private DateTime? RAMQExpiry { get; set; }
+     private DateTime? DateOfBirth { get; set; }
+     private bool isInitilized = false;
+     private bool isSaving = false;
 
-     private async Task HandleValidSubmit()
+     private async Task HandleSaving()
      {
+          isSaving = true;
+          RequestRender();
+
+          try
+          {
+               isSaving = true;
+               RequestRender();
+               await InvokeUserAction(RequestSaving);
+          }
+          finally
+          {
+               isSaving = false;
+               RequestRender();
+          }
+     }
+
+     private async Task RequestSaving()
+     {
+          if (FamilyId == Guid.Empty)
+          {
+               _errorMessage = "Please provide valid family id to connect.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          var isAlreadyExists = await ChildrenService.IsChildExistWithRamQNumberAsync(FamilyId, ChildModel.RAMQNumber);
+          if (isAlreadyExists)
+          {
+               _errorMessage = "Child is already registered with system. Please contact support";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
           ChildModel.RAMQExpiry = RAMQExpiry.Value;
           ChildModel.DateOfBirth = DateOfBirth.Value;
+          ChildModel.FamilyId = FamilyId;
 
+          var result = await ChildrenService.AddChildToFamilyAsync(FamilyId, ChildModel);
+          if (result == null || result.ChildId == Guid.Empty)
+          {
+               _errorMessage = "Child can not be registered with system. Please try again in few minutes";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
 
+          Snackbar.Add("Child has been linked.", Severity.Success);
 
-          ChildResponse childResponse = null;
-
-          await OnSave.InvokeAsync(childResponse);
+          if (OnSave.HasDelegate)
+          {
+               await OnSave.InvokeAsync(result);
+          }
      }
 
      private async Task OnCancelClickedHandler()
      {
-          await OnCancel.InvokeAsync();
+          if (OnCancel.HasDelegate)
+          {
+               await OnCancel.InvokeAsync();
+          }
      }
 }
