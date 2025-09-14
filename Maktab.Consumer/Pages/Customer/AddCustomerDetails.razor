@@ -24,21 +24,27 @@
                <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
 
                     <MudStepper OnPreviewInteraction="OnPreviewInteraction">
-                         <MudStep Title="Step 1" SecondaryText="Add Spouse" HasError="@(isSpouseAdded == false)" >
+                              <MudStep Title="Add Spouse" SecondaryText="Step 1" HasError="@(isSpouseAdded == false)">
                              <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
                               <AddSpouse FamilyId="@userInfo.FamilyId" OnSave="@(OnSpouseSaved)"/>
                               </MudStack>
                               @* <MudSwitch @bind-Value="_step1Complete" Color="Color.Primary">Flip the switch to be able to advance to step 2</MudSwitch> *@
                          </MudStep>
-                         <MudStep Title="Step 2" SecondaryText="Add Address" HasError="@(isFamilyAddressAdded == false)">
+                              <MudStep Title="Add home address" SecondaryText="Step 2" HasError="@(isFamilyAddressAdded == false)">
                                    <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
                          </MudStep>
-                         <MudStep Title="Step 3" SecondaryText="Add RL 24" HasError="@(isExtendedInfoAdded == false)">
+                              <MudStep Title="Add RL 24" SecondaryText="Step 3" HasError="@(isExtendedInfoAdded == false)">
                                    <AddExtendedInfo FamilyId="@userInfo.FamilyId" AddessId="@homeAddressId" UserId="@userId" OnSave="@(OnExtendedInfoSaved)" />
                          </MudStep>
-                         <MudStep Title="Step 4" SecondaryText="Add Child" HasError="@(isChildAdded == false)">
+@*                               <MudStep Title="Add Emergency address" SecondaryText="Add Address" HasError="@(isFamilyAddressAdded == false)">
+                                   <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
+                              </MudStep>
+                              <MudStep Title="Step 2" SecondaryText="Add Address" HasError="@(isFamilyAddressAdded == false)">
+                                   <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
+                              </MudStep> *@
+                         @* <MudStep Title="Step 4" SecondaryText="Add Child" HasError="@(isChildAdded == false)">
                                    <ChildList Children="@children" FamilyId="@userInfo.FamilyId"  />
-                         </MudStep>
+                         </MudStep> *@
                     </MudStepper>
                
                </MudStack>
@@ -194,6 +200,7 @@
           if (extendednInfo != null)
           {
                isExtendedInfoAdded = true;
+               NavigationManager.NavigateTo("/customer/dashboard");
           }
      }
 
