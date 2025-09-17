@@ -21,33 +21,35 @@
           <MudPaper Class="pa-4">
                @if (isInitialized.HasValue && isInitialized.Value)
                {
-               <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
+                    <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
 
-                    <MudStepper OnPreviewInteraction="OnPreviewInteraction">
-                              <MudStep Title="Add Spouse" SecondaryText="Step 1" HasError="@(isSpouseAdded == false)">
-                             <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
-                              <AddSpouse FamilyId="@userInfo.FamilyId" OnSave="@(OnSpouseSaved)"/>
-                              </MudStack>
-                              @* <MudSwitch @bind-Value="_step1Complete" Color="Color.Primary">Flip the switch to be able to advance to step 2</MudSwitch> *@
-                         </MudStep>
-                              <MudStep Title="Add home address" SecondaryText="Step 2" HasError="@(isFamilyAddressAdded == false)">
+                         <MudStepper OnPreviewInteraction="OnPreviewInteraction">
+                              <MudStep Title="Add home address" SecondaryText="Step 1" HasError="@(isFamilyAddressAdded == false)">
                                    <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
-                         </MudStep>
-                              <MudStep Title="Add RL 24" SecondaryText="Step 3" HasError="@(isExtendedInfoAdded == false)">
+                              </MudStep>
+
+                              <MudStep Title="Add Spouse" SecondaryText="Step 2" Skippable="true" HasError="@(isSpouseAdded == false)">
+                                   <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
+                                        <AddSpouse FamilyId="@userInfo.FamilyId" OnSave="@(OnSpouseSaved)" />
+                                   </MudStack>
+                                   @* <MudSwitch @bind-Value="_step1Complete" Color="Color.Primary">Flip the switch to be able to advance to step 2</MudSwitch> *@
+                              </MudStep>
+
+                              <MudStep Title="Add RL 24" SecondaryText="Step 3" Skippable="true" HasError="@(isExtendedInfoAdded == false)">
                                    <AddExtendedInfo FamilyId="@userInfo.FamilyId" AddessId="@homeAddressId" UserId="@userId" OnSave="@(OnExtendedInfoSaved)" />
-                         </MudStep>
-@*                               <MudStep Title="Add Emergency address" SecondaryText="Add Address" HasError="@(isFamilyAddressAdded == false)">
+                              </MudStep>
+                              @*                               <MudStep Title="Add Emergency address" SecondaryText="Add Address" HasError="@(isFamilyAddressAdded == false)">
                                    <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
                               </MudStep>
                               <MudStep Title="Step 2" SecondaryText="Add Address" HasError="@(isFamilyAddressAdded == false)">
                                    <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
                               </MudStep> *@
-                         @* <MudStep Title="Step 4" SecondaryText="Add Child" HasError="@(isChildAdded == false)">
+                              @* <MudStep Title="Step 4" SecondaryText="Add Child" HasError="@(isChildAdded == false)">
                                    <ChildList Children="@children" FamilyId="@userInfo.FamilyId"  />
                          </MudStep> *@
-                    </MudStepper>
-               
-               </MudStack>
+                         </MudStepper>
+
+                    </MudStack>
                }
                else
                {
@@ -112,34 +114,35 @@
      {
           switch (arg.StepIndex)
           {
+
                case 0:
-                    if (!isSpouseAdded)
-                    {
-                         await DialogService.ShowMessageBox("Error", "Please enter spouse details.");
-                         arg.Cancel = true;
-                    }
-                    break;
-               case 1:
                     if (!isFamilyAddressAdded)
                     {
                          await DialogService.ShowMessageBox("Error", "Please add family address");
                          arg.Cancel = true;
                     }
                     break;
-               case 2:
-                    if (!isExtendedInfoAdded)
-                    {
-                         await DialogService.ShowMessageBox("Error", "Please add RL 24 info");
-                         arg.Cancel = true;
-                    }
-                    break;
-               case 3:
-                    if (!isChildAdded)
-                    {
-                         await DialogService.ShowMessageBox("Error", "Please add child");
-                         arg.Cancel = true;
-                    }
-                    break;
+                    // case 1:
+                    //      if (!isSpouseAdded)
+                    //      {
+                    //           await DialogService.ShowMessageBox("Error", "Please enter spouse details.");
+                    //           arg.Cancel = true;
+                    //      }
+                    //      break;
+                    // case 2:
+                    //      if (!isExtendedInfoAdded)
+                    //      {
+                    //           await DialogService.ShowMessageBox("Error", "Please add RL 24 info");
+                    //           arg.Cancel = true;
+                    //      }
+                    //      break;
+                    // case 3:
+                    //      if (!isChildAdded)
+                    //      {
+                    //           await DialogService.ShowMessageBox("Error", "Please add child");
+                    //           arg.Cancel = true;
+                    //      }
+                    //      break;
           }
      }
 
@@ -148,33 +151,34 @@
           switch (arg.StepIndex)
           {
                case 1:
-                    if (!isSpouseAdded )
-                    {
-                         await DialogService.ShowMessageBox("Error", "Finish step 1 first");
-                         arg.Cancel = true;
-                    }
-                    break;
-               case 2:
                     if (!isFamilyAddressAdded)
                     {
                          await DialogService.ShowMessageBox("Error", "Finish step 2");
                          arg.Cancel = true;
                     }
                     break;
-               case 3:
-                    if (!isExtendedInfoAdded)
-                    {
-                         await DialogService.ShowMessageBox("Error", "Finish step 3");
-                         arg.Cancel = true;
-                    }
-                    break;
-               case 4:
-                    if (!isChildAdded)
-                    {
-                         await DialogService.ShowMessageBox("Error", "Finish step 4");
-                         arg.Cancel = true;
-                    }
-                    break;
+                    // // case 2:
+                    // //      if (!isSpouseAdded )
+                    // //      {
+                    // //           await DialogService.ShowMessageBox("Error", "Finish step 1 first");
+                    // //           arg.Cancel = true;
+                    // //      }
+                    // //      break;
+
+                    // // case 3:
+                    // //      if (!isExtendedInfoAdded)
+                    // //      {
+                    // //           await DialogService.ShowMessageBox("Error", "Finish step 3");
+                    // //           arg.Cancel = true;
+                    // //      }
+                    // //      break;
+                    // // case 4:
+                    // //      if (!isChildAdded)
+                    // //      {
+                    // //           await DialogService.ShowMessageBox("Error", "Finish step 4");
+                    // //           arg.Cancel = true;
+                    // //      }
+                    // //      break;
           }
      }
 
