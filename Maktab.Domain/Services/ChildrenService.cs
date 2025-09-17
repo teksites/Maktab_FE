@@ -40,8 +40,8 @@ namespace Maktab.Domain.Services
           public async Task<ChildResponse> AddChildToFamilyAsync(Guid familyId, AddChildRequest addChildRequest)
           {
                var formatedUrl = string.Format(addChildByFamilyId, familyId);
-               var result = await _httpService.Post<ChildResponse>(formatedUrl, addChildRequest);
-               return result;
+               var result = await _httpService.Post<MaktabApiResult<ChildResponse>>(formatedUrl, addChildRequest);
+               return result.Result;
           }
 
           public async Task<bool> IsChildExistWithRamQNumberAsync(Guid familyId, string ramqNumber)
