@@ -8,11 +8,13 @@
 </MudDialog>
 
 @code {
-     // [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+     [CascadingParameter]
+     IMudDialogInstance MudDialog { get; set; } = default!;
+
      [Parameter] public AddOtherContact? Contact { get; set; }
 
-     // private void HandleSubmit(AddOtherContact contact)
-     // {
-     //      MudDialog.Close(DialogResult.Ok(contact));
-     // }
+     private void HandleSubmit(AddOtherContact contact)
+     {
+          MudDialog.Close(DialogResult.Ok(contact));
+     }
 }

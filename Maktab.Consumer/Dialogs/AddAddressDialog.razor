@@ -9,7 +9,7 @@
 
 @code {
      [CascadingParameter]
-     MudDialog MudDialog { get; set; }
+     IMudDialogInstance MudDialog { get; set; } = default!;
 
 
      [Parameter] public AddressType AddressType { get; set; }
@@ -24,11 +24,11 @@
 
      private async Task SaveAddress(MaktabDataContracts.Responses.Addresses.AddressResponse address)
      {
-          await MudDialog.CloseAsync(DialogResult.Ok(address));
+          MudDialog.Close(DialogResult.Ok(address));
      }
 
      private async void CancelDialog()
      {
-          await MudDialog.CloseAsync(DialogResult.Cancel());
+          MudDialog.Cancel();
      }
 }

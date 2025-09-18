@@ -11,8 +11,8 @@
 </MudDialog>
 
 @code {
-    [CascadingParameter]
-    MudDialog MudDialog { get; set; }
+     [CascadingParameter]
+     IMudDialogInstance MudDialog { get; set; } = default!;
 
     [Parameter]
     public Guid FamilyId { get; set; }
@@ -24,13 +24,13 @@
         child.FamilyId = FamilyId;
     }
 
-     private async void SaveChild(ChildResponse child)
+     private void SaveChild(ChildResponse child)
     {
-        await MudDialog.CloseAsync(DialogResult.Ok(child));
+        MudDialog.Close(DialogResult.Ok(child));
     }
 
-     private async void CancelDialog()
+     private void CancelDialog()
     {
-          await MudDialog.CloseAsync(DialogResult.Cancel());
+          MudDialog.Close(DialogResult.Cancel());
     }
 }
