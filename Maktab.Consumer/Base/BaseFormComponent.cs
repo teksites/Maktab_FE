@@ -1,6 +1,6 @@
 ﻿using MudBlazor;
 
-namespace Maktab.Consumer.Component
+namespace Maktab.Consumer.Base
 {
      public class BaseFormComponent<T> : BaseComponent<T> where T : class
      {

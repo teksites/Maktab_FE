@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 
-namespace Maktab.Consumer.Component
+namespace Maktab.Consumer.Base
 {
      public class LocalizeableBaseComponent<T> : BaseComponent<T> where T : class
      {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using System.Text.RegularExpressions;
 
-namespace Maktab.Consumer.Component
+namespace Maktab.Consumer.Base
 {
      public abstract class BaseComponent<T> : ComponentBase, IDisposable where T : class
      {
