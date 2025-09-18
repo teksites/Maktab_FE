@@ -1,9 +1,11 @@
 ﻿@page "/courses/{CourseId:guid}"
+@using Maktab.Consumer.Base
 @using Maktab.Models.Models
 
 @inherits BaseComponent<CourseDetails>
 
 
+@inject ISessionService SessionService
 @inject IInstitutionService InstitutionService
 @inject NavigationManager Navigation
 
@@ -47,7 +49,7 @@
                     @_course.Category
                </MudChip> *@
 
-               <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large">
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" OnClick="@EnrollChild">
                     Enroll Now
                </MudButton>
         </MudPaper>
@@ -55,13 +57,60 @@
 </MudContainer>
 
 @code {
-    [Parameter] public Guid CourseId { get; set; }
-    private Course? _course;
+     [Inject] private IDialogService DialogService { get; set; } = default!;
 
-    protected override async Task OnInitializedAsync()
-    {
+     [Parameter] public Guid CourseId { get; set; }
+     private Course? _course;
+
+     protected override async Task OnInitializedAsync()
+     {
           _course = await InstitutionService.GetCourseByIdAsync(CourseId);
-    }
+     }
+
+     protected async void EnrollChild()
+     {
+          bool isAuthorized = await SessionService.IsAuthenticatedAsync();
+          if (isAuthorized)
+          {
+              await OpenAssignmentDialog(CourseId);
+               //NavigationManager.NavigateTo("/account/usercodevalidation");
+               //Navigation.NavigateTo("/customer/dashboard");
+          }
+          else
+          {
+               NavigationManager.NavigateTo("/account/login");
+          }
+
+     }
+     
 
     private void BackToCourses() => Navigation.NavigateTo("/");
+
+     private async Task OpenAssignmentDialog(Guid courseId)
+     {
+          var parameters = new DialogParameters { ["CourseId"] = courseId };
+          var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+
+          var dialog = DialogService.Show<Dialogs.AssignChildrenToCourseDialog>( "Assign children to course" , parameters, options);
+          var result = await dialog.Result;
+
+          if (!result.Canceled )//&& result.Data is ChildResponse savedChild)
+          {
+               Snackbar.Add("Course assigned!", Severity.Success);
+
+               // if (child == null)
+               // {
+               //      //Parent.Children.Add(savedChild);
+               //      Snackbar.Add("Child added successfully!", Severity.Success);
+               // }
+               // else
+               // {
+               //      // var index = Parent.Children.FindIndex(c => c.Id == savedChild.Id);
+               //      // if (index >= 0) Parent.Children[index] = savedChild;
+               //      Snackbar.Add("Child updated successfully!", Severity.Success);
+               // }
+          }
+     }
+
+
 }

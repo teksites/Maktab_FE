@@ -1,0 +1,80 @@
+@using Maktab.Consumer.Base
+@using Maktab.Domain.Services
+@using Maktab.Models.Models
+@using MaktabDataContracts.Responses.Children
+
+@inherits BaseComponent<AssignChildrenToCourseDialog>
+
+@inject IChildrenService ChildrenService
+@inject IInstitutionService InstitutionService
+@inject IUserService UserService
+
+
+<MudPaper Class="pa-4">
+     <MudStack>
+          <MudText Typo="Typo.h5">@SelectedCourse?.Title</MudText>
+          @if (isInitialized.HasValue && isInitialized.Value)
+          {
+               <MudTable T="ChildResponse" Items="@Children" Hover="true">
+                    <HeaderContent>
+                         <MudTh>Enroll</MudTh>
+                         <MudTh>Name</MudTh>
+                         <MudTh>Age</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                         <MudTd>
+                               <MudCheckBox T="bool"  Checked="SelectedChildIds.Contains(context.ChildId)"
+                             CheckedChanged="checked => OnChildChecked(context.ChildId, checked)" />
+                         </MudTd>
+                         <MudTd>@context.FirstName</MudTd>
+                         <MudTd>@context.Gender</MudTd>
+                    </RowTemplate>
+               </MudTable>
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="EnrollSelectedChildren">
+                    Enroll Selected Children
+               </MudButton>
+
+          }
+          else
+          {
+               <BusyContent DisplayText="Initializing" />
+          }
+     </MudStack>
+</MudPaper>
+
+@code {
+     [Parameter] public Guid CourseId { get; set; }
+     bool? isInitialized;
+     private Course? SelectedCourse;
+     private IEnumerable<ChildResponse> Children = Array.Empty<ChildResponse>();
+     private List<Guid> SelectedChildIds = new List<Guid>();
+
+     protected override async Task  OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          // Load course details (implement GetCourseById in your service)
+          SelectedCourse = await InstitutionService.GetCourseByIdAsync(CourseId);
+          var userId = await SessionService.GetLoggedInUserIdAsync();
+          var userInfo = await UserService.GetUserByIdAsync(userId);
+          // Load children for the logged-in parent
+          Children = await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId);
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private async Task EnrollSelectedChildren()
+     {
+          //await InstitutionService.EnrollChildrenInCourseAsync(SelectedChildIds.ToList(), CourseId);
+          // Optionally show a MudSnackbar or navigate away
+          //NavigationManager.NavigateTo($"/courses/{CourseId}");
+     }
+
+     private void OnChildChecked(Guid childId, bool isChecked)
+    {
+        if (isChecked)
+            SelectedChildIds.Add(childId);
+        else
+            SelectedChildIds.Remove(childId);
+    }
+}
