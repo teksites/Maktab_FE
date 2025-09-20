@@ -17,7 +17,7 @@ namespace Maktab.Consumer.Base
           [Parameter] public string CancelText { get; set; } = "Cancel";
           [Parameter] public bool ShowActions { get; set; } = true;
 
-          protected async Task OnSaveClicked()
+          protected virtual async Task OnSaveClickedAsync()
           {
                if (OnSave.HasDelegate)
                     await OnSave.InvokeAsync();
@@ -25,7 +25,7 @@ namespace Maktab.Consumer.Base
                MudDialog.Close(DialogResult.Ok(true));
           }
 
-          protected async Task OnCancelClicked()
+          protected virtual async Task OnCancelClickedAsync()
           {
                if (OnCancel.HasDelegate)
                     await OnCancel.InvokeAsync();

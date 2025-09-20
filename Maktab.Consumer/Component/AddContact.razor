@@ -1,0 +1,153 @@
+﻿@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Requests.OtherContacts
+@using MaktabDataContracts.Responses.OtherContacts
+@inherits BaseFormComponent<ContactForm>
+
+@inject IContactService ContactService
+
+
+<MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)">
+     @if(isInitialized)
+               {
+     <MudStack Spacing="2">
+          <MudTextField @bind-Value="Contact.FirstName" Label="First Name" Required="true" />
+          <MudTextField @bind-Value="Contact.LastName" Label="Last Name" Required="true" />
+          <MudTextField @bind-Value="Contact.Phone" Label="Phone" Required="true" />
+
+          <MudSelect T="ContactType" Label="Contact Type" @bind-Value="Contact.ContactType" Required="true">
+               @foreach (var type in Enum.GetValues<ContactType>())
+               {
+                    <MudSelectItem Value="@type">@type</MudSelectItem>
+               }
+          </MudSelect>
+
+          <MudSelect T="Relationship" Label="Relationship" @bind-Value="Contact.Relationship" Required="true">
+               @foreach (var rel in Enum.GetValues<Relationship>())
+               {
+                    <MudSelectItem Value="@rel">@rel</MudSelectItem>
+               }
+          </MudSelect>
+
+          <MudStack Row="true" JustifyContent="flex-end" Class="mt-4">
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isSaving)" OnClick="@HandleSaving">
+                         @if (isSaving)
+                         {
+                              <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                              <span>Processing...</span>
+                         }
+                         else
+                         {
+                              <span>Save</span>
+                         }
+               </MudButton>
+          </MudStack>
+     </MudStack>
+     }
+     else
+     {
+          <BusyContent DisplayText="Initializing" />
+     }
+</MudForm>
+
+@code {
+     private MudForm _form = default!;
+
+     [Parameter] public AddOtherContact? Contact { get; set; } = new();
+     [Parameter, EditorRequired] public Guid FamilyId { get; set; } = Guid.Empty;
+     [Parameter] public ContactType ContactType { get; set; } = ContactType.Unknown;
+
+     [Parameter] public EventCallback<OtherContactResponse> OnSave { get; set; }
+     [Parameter] public EventCallback OnCancel { get; set; }
+
+     private bool isSaving = false;
+     private bool isInitialized = false;
+
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+          isInitialized = true;
+          RequestRender();
+     }
+
+     protected override async Task OnParametersSetAsync()
+     {
+          await base.OnParametersSetAsync();
+
+          if(ContactType != ContactType.Unknown)
+          {
+               Contact.ContactType = ContactType;
+          }
+
+          if (ContactType != ContactType.Unknown)
+          {
+               Contact.ContactType = ContactType;
+          }
+
+          if(FamilyId != Guid.Empty)
+          {
+               Contact.FamilyId = FamilyId;
+          }
+     }
+
+
+
+
+     private async Task HandleSaving()
+     {
+          try
+          {
+               isSaving = true;
+               RequestRender();
+               await InvokeUserAction(RequestSaving);
+          }
+          finally
+          {
+               isSaving = false;
+               RequestRender();
+          }
+     }
+
+     // private async Task Save()
+     // {
+     //      await _form.Validate();
+     //      if (_form.IsValid)
+     //      {
+     //           await OnValidSubmit.InvokeAsync(_contact);
+     //      }
+     // }
+
+     private async Task RequestSaving()
+     {
+          if (FamilyId == Guid.Empty)
+          {
+               _errorMessage = "Please provide valid family id to connect.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          var addedContact = await ContactService.SaveContactAsync(Contact);
+          if(addedContact.ContactId == Guid.Empty)
+          {
+               _errorMessage = "Contact can not be added with system. Please try again in few minutes";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+          else
+          {
+               Snackbar.Add("Contact has been added.", Severity.Success);
+          }
+
+
+          if(OnSave.HasDelegate)
+          {
+               await OnSave.InvokeAsync(addedContact);
+          }
+
+     }
+
+     private async Task OnCancelClickedHandler()
+     {
+          await OnCancel.InvokeAsync();
+     }
+}
