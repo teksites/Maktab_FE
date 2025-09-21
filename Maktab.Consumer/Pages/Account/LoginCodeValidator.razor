@@ -12,7 +12,7 @@
      <MudItem xs="12" sm="7" md="5">
           <MudPaper Class="pa-6" Elevation="8">
 
-               @if(isInitialized.HasValue && isInitialized.Value)
+               @if(isInitialized)
                {
                     <MudText Typo="Typo.h4" Class="mb-6 text-center">Validate Code</MudText>
                          <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleCodeValidation)" Validated="@(OnFormValidated)">
@@ -87,7 +87,7 @@
      bool success;
      bool isCodeValidating = false;
      bool isSendingCodeAgain = false;
-     bool? isInitialized = false;
+     bool isInitialized = false;
      string emailValidationCode =string.Empty;
 
      protected override async Task OnInitializedAsync()
