@@ -1,7 +1,9 @@
 ﻿@page "/customer/adddetails"
 @using MaktabDataContracts.Enums
 @using MaktabDataContracts.Responses;
+@using MaktabDataContracts.Responses.Addresses
 @using MaktabDataContracts.Responses.Children
+@using MaktabDataContracts.Responses.OtherContacts
 @using MaktabDataContracts.Responses.Users
 
 @inherits BaseComponent<AddCustomerDetails>
@@ -23,12 +25,12 @@
                {
                     <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
 
-                         <MudStepper OnPreviewInteraction="OnPreviewInteraction">
-                              <MudStep Title="Add home address" SecondaryText="Step 1" HasError="@(isFamilyAddressAdded == false)">
+                         <MudStepper @ref=@stepper OnPreviewInteraction="OnPreviewInteraction">
+                              <MudStep Title="Add home address" SecondaryText="Step 1" HasError="@(!isFamilyAddressAdded)">
                                    <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
                               </MudStep>
 
-                              <MudStep Title="Add Spouse" SecondaryText="Step 2" Skippable="true" HasError="@(isSpouseAdded == false)">
+                              <MudStep Title="Add Spouse" SecondaryText="Step 2" Skippable="true" HasError="@(!isSpouseAdded)">
                                    <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
                                         <AddSpouse FamilyId="@userInfo.FamilyId" OnSave="@(OnSpouseSaved)" />
                                    </MudStack>
@@ -38,15 +40,12 @@
                               <MudStep Title="Add RL 24" SecondaryText="Step 3" Skippable="true" HasError="@(isExtendedInfoAdded == false)">
                                    <AddExtendedInfo FamilyId="@userInfo.FamilyId" AddessId="@homeAddressId" UserId="@userId" OnSave="@(OnExtendedInfoSaved)" />
                               </MudStep>
-                              @*                               <MudStep Title="Add Emergency address" SecondaryText="Add Address" HasError="@(isFamilyAddressAdded == false)">
-                                   <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
+                              <MudStep Title="Add Emergency Contact" SecondaryText="Step 4" Skippable="true" HasError="@(!isEmergencyContactAdded)">
+                                   <AddContact  ContactType="ContactType.Emergency" FamilyId="@userInfo.FamilyId" OnSave="@(OnEmergencyContactSaved)" />
                               </MudStep>
-                              <MudStep Title="Step 2" SecondaryText="Add Address" HasError="@(isFamilyAddressAdded == false)">
-                                   <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
-                              </MudStep> *@
-                              @* <MudStep Title="Step 4" SecondaryText="Add Child" HasError="@(isChildAdded == false)">
-                                   <ChildList Children="@children" FamilyId="@userInfo.FamilyId"  />
-                         </MudStep> *@
+@*                               <MudStep Title="Add Pickup Contact" SecondaryText="Step 5" Skippable="true"  HasError="@(!isPickupContactAdded)">
+                                   <AddContact ContactType="ContactType.Pickup"  FamilyId="@userInfo.FamilyId" OnSave="@(OnPickupContactSaved)" />
+                              </MudStep>  *@
                          </MudStepper>
 
                     </MudStack>
@@ -65,30 +64,27 @@
 
      Guid userId = Guid.Empty;
      Guid homeAddressId = Guid.Empty;
-     IList<ChildResponse> children = null;
 
      UserInformationResponse userInfo = null;
      MaktabDataContracts.Requests.Addresses.AddAddress parentAddress = new();
      bool? isInitialized;
      bool isSpouseAdded;
      bool isFamilyAddressAdded;
-     bool isChildAdded = false;
      bool isExtendedInfoAdded = false;
      bool isEmergencyContactAdded = false;
-     bool isOtherContactAdded;
+     bool isPickupContactAdded;
      string username = string.Empty;
+     MudStepper stepper;
 
 
 
      protected override async Task OnInitializedAsync()
      {
           await base.OnInitializedAsync();
-          //isInitialized = true;
 
           username = await SessionService.GetUserNameAsync();
           userId = await SessionService.GetLoggedInUserIdAsync();
           userInfo = await UserService.GetUserByIdAsync(userId);
-          children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
 
           isInitialized = true;
           parentAddress.ConnectedId = userInfo.UserId;
@@ -107,6 +103,10 @@
           {
                // occurrs when clicking a step header with the mouse
                await ControlStepNavigation(arg);
+          }
+          if(arg.Action == StepAction.Skip)
+          {
+               await ControlStepSkip(arg);
           }
      }
 
@@ -153,7 +153,7 @@
                case 1:
                     if (!isFamilyAddressAdded)
                     {
-                         await DialogService.ShowMessageBox("Error", "Finish step 2");
+                         await DialogService.ShowMessageBox("Error", "Finish step 1");
                          arg.Cancel = true;
                     }
                     break;
@@ -182,37 +182,75 @@
           }
      }
 
-     private void OnSpouseSaved(MaktabDataContracts.Responses.Users.UserInformationResponse spouseInfo)
+     private async Task ControlStepSkip(StepperInteractionEventArgs arg)
+     {
+          switch (arg.StepIndex)
+          {
+               case 3: //Last step
+                    NavigationManager.NavigateTo("/customer/dashboard");
+                    break;
+          }
+     }
+
+
+     private async void OnSpouseSaved(UserInformationResponse spouseInfo)
      {
           if (spouseInfo != null)
           {
                isSpouseAdded = true;
+               if (stepper.CanGoToNextStep)
+               {
+                    await stepper.NextStepAsync();
+               }
           }
      }
 
-     private void OnFamilyAddressSaved(MaktabDataContracts.Responses.Addresses.AddressResponse addressInfo)
+     private async void OnFamilyAddressSaved(AddressResponse addressInfo)
      {
           if (addressInfo != null)
           {
                isFamilyAddressAdded = true;
                this.homeAddressId = addressInfo.AddressId;
+               if(stepper.CanGoToNextStep)
+               {
+                    await stepper.NextStepAsync();
+               }
           }
      }
 
-     private void OnExtendedInfoSaved(MaktabDataContracts.Responses.Users.ExtendedUserInformationResponse extendednInfo)
+     private async void OnExtendedInfoSaved(ExtendedUserInformationResponse extendednInfo)
      {
           if (extendednInfo != null)
           {
                isExtendedInfoAdded = true;
+               if (stepper.CanGoToNextStep)
+               {
+                    await stepper.NextStepAsync();
+               }
+          }
+     }
+
+     private async void OnEmergencyContactSaved(OtherContactResponse emergencyContact)
+     {
+          if (emergencyContact != null)
+          {
+               isEmergencyContactAdded = true;
                NavigationManager.NavigateTo("/customer/dashboard");
+               // if (stepper.CanGoToNextStep)
+               // {
+               //      await stepper.NextStepAsync();
+               // }
           }
      }
 
-     private void OnChildSaved(MaktabDataContracts.Responses.Users.ExtendedUserInformationResponse extendednInfo)
+     private void OnPickupContactSaved(OtherContactResponse pickupContact)
      {
-          if (extendednInfo != null)
+          if (pickupContact != null)
           {
-               isExtendedInfoAdded = true;
+               isPickupContactAdded = true;
+               
           }
      }
+
+     
 }

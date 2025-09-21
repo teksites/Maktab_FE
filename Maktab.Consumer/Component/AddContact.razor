@@ -7,29 +7,29 @@
 
 
 <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)">
-     @if(isInitialized)
-               {
-     <MudStack Spacing="2">
-          <MudTextField @bind-Value="Contact.FirstName" Label="First Name" Required="true" />
-          <MudTextField @bind-Value="Contact.LastName" Label="Last Name" Required="true" />
-          <MudTextField @bind-Value="Contact.Phone" Label="Phone" Required="true" />
+     @if (isInitialized)
+     {
+          <MudStack Spacing="2">
+               <MudTextField @bind-Value="Contact.FirstName" Label="First Name" Required="true" />
+               <MudTextField @bind-Value="Contact.LastName" Label="Last Name" Required="true" />
+               <MudTextField @bind-Value="Contact.Phone" Label="Phone" Required="true" />
 
-          <MudSelect T="ContactType" Label="Contact Type" @bind-Value="Contact.ContactType" Required="true">
-               @foreach (var type in Enum.GetValues<ContactType>())
-               {
-                    <MudSelectItem Value="@type">@type</MudSelectItem>
-               }
-          </MudSelect>
+               <MudSelect T="ContactType" Label="Contact Type" @bind-Value="Contact.ContactType" Required="true">
+                    @foreach (var type in Enum.GetValues<ContactType>())
+                    {
+                         <MudSelectItem Value="@type">@type</MudSelectItem>
+                    }
+               </MudSelect>
 
-          <MudSelect T="Relationship" Label="Relationship" @bind-Value="Contact.Relationship" Required="true">
-               @foreach (var rel in Enum.GetValues<Relationship>())
-               {
-                    <MudSelectItem Value="@rel">@rel</MudSelectItem>
-               }
-          </MudSelect>
+               <MudSelect T="Relationship" Label="Relationship" @bind-Value="Contact.Relationship" Required="true">
+                    @foreach (var rel in Enum.GetValues<Relationship>())
+                    {
+                         <MudSelectItem Value="@rel">@rel</MudSelectItem>
+                    }
+               </MudSelect>
 
-          <MudStack Row="true" JustifyContent="flex-end" Class="mt-4">
-               <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isSaving)" OnClick="@HandleSaving">
+               <MudStack Row="true" JustifyContent="flex-end" Class="mt-4">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isSaving)" OnClick="@HandleSaving">
                          @if (isSaving)
                          {
                               <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
@@ -39,9 +39,9 @@
                          {
                               <span>Save</span>
                          }
-               </MudButton>
+                    </MudButton>
+               </MudStack>
           </MudStack>
-     </MudStack>
      }
      else
      {
@@ -74,7 +74,7 @@
      {
           await base.OnParametersSetAsync();
 
-          if(ContactType != ContactType.Unknown)
+          if (ContactType != ContactType.Unknown)
           {
                Contact.ContactType = ContactType;
           }
@@ -84,14 +84,11 @@
                Contact.ContactType = ContactType;
           }
 
-          if(FamilyId != Guid.Empty)
+          if (FamilyId != Guid.Empty)
           {
                Contact.FamilyId = FamilyId;
           }
      }
-
-
-
 
      private async Task HandleSaving()
      {
@@ -126,8 +123,8 @@
                return;
           }
 
-          var addedContact = await ContactService.SaveContactAsync(Contact);
-          if(addedContact.ContactId == Guid.Empty)
+          var addedContact = await ContactService.SaveContactAsync(FamilyId, Contact);
+          if (addedContact.ContactId == Guid.Empty)
           {
                _errorMessage = "Contact can not be added with system. Please try again in few minutes";
                Snackbar.Add(_errorMessage, Severity.Error);
@@ -138,12 +135,10 @@
                Snackbar.Add("Contact has been added.", Severity.Success);
           }
 
-
-          if(OnSave.HasDelegate)
+          if (OnSave.HasDelegate)
           {
                await OnSave.InvokeAsync(addedContact);
           }
-
      }
 
      private async Task OnCancelClickedHandler()

@@ -34,9 +34,10 @@ namespace Maktab.Domain.Services
                return result;
           }
 
-          public async Task<OtherContactResponse> SaveContactAsync(AddOtherContact contact)
+          public async Task<OtherContactResponse> SaveContactAsync(Guid familyId, AddOtherContact contact)
           {
-               var result = await _httpService.Post<OtherContactResponse>(saveContact, contact);
+               var formatedUrl = string.Format(saveContact, familyId);
+               var result = await _httpService.Post<OtherContactResponse>(formatedUrl, contact);
                return result;
           }
 
