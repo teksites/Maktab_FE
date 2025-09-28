@@ -1,12 +1,13 @@
 ﻿@page "/landing/mainpage"
 @using Maktab.Consumer.Helpers
-@using Maktab.Models.Models
+@using MaktabDataContracts.Responses.Course
 
 @inherits BaseComponent<MainPage>
 
 @inject IAccountService AccountService
 @inject IUserService UserService
 @inject IInstitutionService InstitutionService
+@inject ICourseService CourseService
 
 
 @* @inject IAlertService AlertService *@
@@ -57,14 +58,14 @@
      bool? isInitialized = false;
      // string emailValidationCode = string.Empty;
 
-     private IEnumerable<Course> _courses = Enumerable.Empty<Course>();
+     private IEnumerable<CourseResponse> _courses = Enumerable.Empty<CourseResponse>();
 
      protected override async Task OnInitializedAsync()
      {
           //isInitialized = true;
           await base.OnInitializedAsync();
 
-          _courses = await InstitutionService.GeCoursesByInstitutionIdAsync(Guid.NewGuid());
+          _courses = await CourseService.GetCoursesByInstitutionIdAsync(Guid.NewGuid());
 
           isInitialized = true;
           RequestRender();

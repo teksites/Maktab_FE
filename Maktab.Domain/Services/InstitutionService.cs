@@ -1,119 +1,74 @@
 ﻿using Maktab.Core.Interfaces.Services;
-using Maktab.Models.Models;
-using MaktabDataContracts.Models;
-using MaktabDataContracts.Responses.Children;
-using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MaktabDataContracts.Responses.Institute;
+using MaktabDataContracts.Requests.Institute;
 
 namespace Maktab.Domain.Services
 {
      public class InstitutionService : BaseService, IInstitutionService
      {
-          private readonly List<Course> _Courses;
+          private Guid iccSchoolId = new Guid("FDCA4C86-DF0E-4CCC-BCE7-D4AE62F6E337");
+          private Guid iccSchool2Id = new Guid("5AE84751-B58B-44D8-AC30-08F28E32BF15");
 
+          private IList<InstituteReponse> _institutes;
 
           public InstitutionService(
                    IHttpService httpService,
                    ILocalStorageService localStorageService)
                : base(httpService, localStorageService)
           {
-               _Courses = GetCourses();
+               _institutes = GetAllInstitutions();
           }
 
-          public async Task<IEnumerable<Institution>> GeInstitutionByIdAsync(Guid institutionId)
+          public async Task<InstituteReponse> GetInstitutionByIdAsync(Guid institutionId)
           {
-               var institutions = new List<Institution>()
+               return _institutes.FirstOrDefault(x => x.InstituteId == institutionId);
+
+          }
+
+          public async Task<IEnumerable<InstituteReponse>> GetAllInstitutionsAsync()
+          {
+               return _institutes;
+          }
+
+          private IList<InstituteReponse> GetAllInstitutions()
+          { 
+               var institutions = new List<InstituteReponse>()
                {
-                    new Institution { Id = institutionId, Name = "ICC", Type="School" },
+                    new InstituteReponse
+                    { 
+                         InstituteId = iccSchoolId, Name = "ICC Brossard",
+                         IsActive = true,
+                         
+                         
+                    },
+                    new InstituteReponse
+                    {
+                         InstituteId = iccSchool2Id, Name = "Qobaa Arabic",
+                         IsActive = true,
+                    },
                };
 
                return institutions;
           }
 
-          public async Task<IEnumerable<Course>> GeCoursesByInstitutionIdAsync(Guid institutionId)
+          public Task<InstituteReponse> AddInstitutionAsync(AddInstitute addInstitute)
           {
-               return  await Task.FromResult(_Courses);
+               throw new NotImplementedException();
           }
 
-          public async Task<Course> GetCourseByIdAsync(Guid courseId)
+          public Task<bool> IsInstituteExistAsync(string instituteName)
           {
-               return _Courses.Find(x => x.Id == courseId);
+               throw new NotImplementedException();
           }
 
-          private List<Course> GetCourses()
+          public Task<bool> RemoveInstituteAsync(Guid instituteId)
           {
-               var courses = new List<Course>()
-               {
-               new Course
-            {
-                Id = Guid.NewGuid(),
-                Title = "Introduction to Islamic Studies",
-                Category = "Islamic Studies",
-                Description = "Learn the foundations of Islamic beliefs, practices, and history.",
-                ImageUrl = "images/courses/islamic-studies.jpg",
-                Instructor = "Dr. Abdullah Al-Hassan",
-                Modules = new List<string>
-                {
-                    "Overview of Islamic Beliefs",
-                    "Pillars of Islam",
-                    "Islamic History & Civilization",
-                    "Contemporary Issues in Islam"
-                }
-            },
-            new Course
-            {
-                Id = Guid.NewGuid(),
-                Title = "Quran Recitation (Tajweed)",
-                Category = "Quran",
-                Description = "Master the art of Qur’an recitation with Tajweed rules.",
-                ImageUrl = "images/courses/quran-recitation.jpg",
-                Instructor = "Shaykh Ahmad Khan",
-                Modules = new List<string>
-                {
-                    "Introduction to Tajweed",
-                    "Makhaarij (Articulation Points)",
-                    "Rules of Noon and Meem",
-                    "Practice & Recitation Sessions"
-                }
-            },
-            new Course
-            {
-                Id = Guid.NewGuid(),
-                Title = "Quran Tafseer (Interpretation)",
-                Category = "Quran",
-                Description = "Study selected Surahs with detailed Tafseer and context.",
-                ImageUrl = "images/courses/quran-tafseer.jpg",
-                Instructor = "Ustadh Fatimah Ali",
-                Modules = new List<string>
-                {
-                    "Introduction to Tafseer",
-                    "Tafseer of Surah Al-Fatiha",
-                    "Themes of Surah Al-Baqarah",
-                    "Understanding Makki vs Madani Surahs"
-                }
-            },
-            new Course
-            {
-                Id = Guid.NewGuid(),
-                Title = "Seerah of Prophet Muhammad (PBUH)",
-                Category = "Islamic Studies",
-                Description = "Explore the life, character, and mission of Prophet Muhammad (peace be upon him).",
-                ImageUrl = "images/courses/seerah.jpg",
-                Instructor = "Mufti Kareem Siddiqui",
-                Modules = new List<string>
-                {
-                    "Early Life in Makkah",
-                    "Prophethood & Revelation",
-                    "Migration to Madinah",
-                    "Key Battles and Lessons"
-                }
-            }
-               };
-               return courses;
+               throw new NotImplementedException();
+          }
+
+          public Task<bool> DeactivateInstituteAsync(Guid instituteId)
+          {
+               throw new NotImplementedException();
           }
      }
 }

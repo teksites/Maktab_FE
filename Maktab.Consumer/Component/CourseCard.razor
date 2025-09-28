@@ -1,13 +1,14 @@
-﻿@using Maktab.Models.Models
+﻿@using MaktabDataContracts.Responses.Course
+
 @inherits BaseComponent<CourseCard>
 
 @inject NavigationManager Navigation
 
 <MudCard Class="mb-4">
-    <MudCardMedia Image="@Course.ImageUrl" Height="180" />
+    @* <MudCardMedia Image="@Course.ImageUrl" Height="180" /> *@
     <MudCardContent>
-        <MudText Typo="Typo.h6">@Course.Title</MudText>
-        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@Course.Instructor</MudText>
+        <MudText Typo="Typo.h6">@Course.Name</MudText>
+        @* <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@Course.Instructor</MudText> *@
           <MudText Typo="Typo.body2" Class="truncate-2">@Course.Description</MudText>
     </MudCardContent>
     <MudCardActions>
@@ -18,10 +19,10 @@
 </MudCard>
 
 @code {
-    [Parameter] public Course Course { get; set; } = new();
+    [Parameter] public CourseResponse Course { get; set; } = new();
 
     private void NavigateToDetails()
     {
-        Navigation.NavigateTo($"/courses/{Course.Id}");
+        Navigation.NavigateTo($"/courses/{Course.CourseId}");
     }
 }

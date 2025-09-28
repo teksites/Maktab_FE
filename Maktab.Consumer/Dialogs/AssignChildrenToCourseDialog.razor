@@ -1,18 +1,20 @@
 @using Maktab.Consumer.Base
 @using Maktab.Domain.Services
-@using Maktab.Models.Models
+@using MaktabDataContracts.Responses.Course
 @using MaktabDataContracts.Responses.Children
 
 @inherits BaseComponent<AssignChildrenToCourseDialog>
 
 @inject IChildrenService ChildrenService
 @inject IInstitutionService InstitutionService
+@inject ICourseService CourseService
+
 @inject IUserService UserService
 
 
 <MudPaper Class="pa-4">
      <MudStack>
-          <MudText Typo="Typo.h5">@SelectedCourse?.Title</MudText>
+          <MudText Typo="Typo.h5">@SelectedCourse?.Description</MudText>
           @if (isInitialized.HasValue && isInitialized.Value)
           {
                <MudTable T="ChildResponse" Items="@Children" Hover="true">
@@ -45,7 +47,7 @@
 @code {
      [Parameter] public Guid CourseId { get; set; }
      bool? isInitialized;
-     private Course? SelectedCourse;
+     private CourseResponse? SelectedCourse;
      private IEnumerable<ChildResponse> Children = Array.Empty<ChildResponse>();
      private List<Guid> SelectedChildIds = new List<Guid>();
 
@@ -54,7 +56,7 @@
           await base.OnInitializedAsync();
 
           // Load course details (implement GetCourseById in your service)
-          SelectedCourse = await InstitutionService.GetCourseByIdAsync(CourseId);
+          SelectedCourse = await CourseService.GetCourseByIdAsync(CourseId);
           var userId = await SessionService.GetLoggedInUserIdAsync();
           var userInfo = await UserService.GetUserByIdAsync(userId);
           // Load children for the logged-in parent
