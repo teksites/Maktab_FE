@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Models\Course.cs" />
+    <Compile Remove="Models\Institution.cs" />
+  </ItemGroup>
+
 </Project>
