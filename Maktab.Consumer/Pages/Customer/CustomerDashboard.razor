@@ -19,7 +19,7 @@
 <MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
 
 
-     @if (isInitialized.HasValue && isInitialized.Value)
+     @if (isInitialized)
      {
 
           <!-- Header -->
@@ -125,7 +125,7 @@
      [Inject] private IDialogService DialogService { get; set; } = default!;
 
 
-     bool? isInitialized;
+     bool isInitialized;
      string userFullName = string.Empty;
      Guid userId = Guid.Empty;
      UserInformationResponse userInfo = null;
@@ -146,7 +146,6 @@
           // _courses = await InstitutionService.GetCoursesByInstitutionIdAsync(Guid.NewGuid());
 
           isInitialized = true;
-
           RequestRender();
      }
 

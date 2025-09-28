@@ -9,9 +9,8 @@
      <MudItem xs="12" sm="7" md="5">
           <MudPaper Class="pa-6" Elevation="8">
 
-               @if (isInitialized.HasValue && isInitialized.Value)
+               @if (isInitialized)
                {
-
                     <MudText Typo="Typo.h4" Class="mb-6 text-center">Login</MudText>
 
                     <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleLogin)" Validated="@(OnFormValidated)">
@@ -70,7 +69,7 @@
 
 @code {
 
-     bool? isInitialized = false;
+     bool isInitialized = false;
      private string username = string.Empty;
      private string password = string.Empty;
      private bool authenticating = false;

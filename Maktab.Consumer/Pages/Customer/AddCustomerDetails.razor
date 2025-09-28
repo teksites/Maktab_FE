@@ -21,7 +21,7 @@
 <MudGrid>
      <MudItem xs="12" sm="7">
           <MudPaper Class="pa-4">
-               @if (isInitialized.HasValue && isInitialized.Value)
+               @if (isInitialized)
                {
                     <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
 
@@ -67,7 +67,7 @@
 
      UserInformationResponse userInfo = null;
      MaktabDataContracts.Requests.Addresses.AddAddress parentAddress = new();
-     bool? isInitialized;
+     bool isInitialized;
      bool isSpouseAdded;
      bool isFamilyAddressAdded;
      bool isExtendedInfoAdded = false;
