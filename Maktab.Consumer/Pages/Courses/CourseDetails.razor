@@ -8,6 +8,7 @@
 @inject ISessionService SessionService
 @inject IInstitutionService InstitutionService
 @inject ICourseService CourseService
+@inject ICourseGroupService CourseGroupService
 
 @inject NavigationManager Navigation
 
@@ -44,6 +45,8 @@
             <!-- Modules -->
            @*  <CourseModules Modules="@_course.Modules" /> *@
 
+                    <CourseGroupList CourseGroups="@_couseGroups"/>
+
             <MudDivider Class="my-4" />
 
             
@@ -67,9 +70,13 @@
      [Parameter] public Guid CourseId { get; set; }
      private CourseResponse? _course;
 
+     private IEnumerable<CourseEnrollmentGroupResponse> _couseGroups;
+
+
      protected override async Task OnInitializedAsync()
      {
           _course = await CourseService.GetCourseByIdAsync(CourseId);
+          _couseGroups = await CourseGroupService.GetEnrollmentGroupsByCourseIdAsync(CourseId);
      }
 
      protected async void EnrollChild()
