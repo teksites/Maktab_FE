@@ -28,6 +28,7 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddScoped<IRoleMenuService, RoleMenuService>()
                 .AddScoped<IInstitutionService, InstitutionService>()
                 .AddScoped<ICourseService, CourseService>()
+                .AddScoped<ICourseGroupService, CourseGroupService>()
                 .AddScoped<INotificationService, NotificationService>()
                 .AddScoped<ThemeService>()
 
