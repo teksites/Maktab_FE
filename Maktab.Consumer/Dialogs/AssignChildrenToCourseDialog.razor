@@ -1,5 +1,6 @@
 @using Maktab.Consumer.Base
 @using Maktab.Domain.Services
+@using MaktabDataContracts.Requests.Course
 @using MaktabDataContracts.Responses.Course
 @using MaktabDataContracts.Responses.Children
 
@@ -8,8 +9,10 @@
 @inject IChildrenService ChildrenService
 @inject IInstitutionService InstitutionService
 @inject ICourseService CourseService
-
+@inject ICourseGroupService CourseGroupService
+@inject ICourseEnrollmentService CourseEnrollmentService
 @inject IUserService UserService
+@inject IDialogService DialogService
 
 
 <MudPaper Class="pa-4">
@@ -17,22 +20,30 @@
           <MudText Typo="Typo.h5">@SelectedCourse?.Description</MudText>
           @if (isInitialized.HasValue && isInitialized.Value)
           {
-               <MudTable T="ChildResponse" Items="@Children" Hover="true">
+               <MudTable T="ChildEnrollmentDetails" Items="@_enrollmentDetails" Hover="true">
                     <HeaderContent>
                          <MudTh>Enroll</MudTh>
                          <MudTh>Name</MudTh>
                          <MudTh>Age</MudTh>
+                         <MudTh>Group</MudTh>
                     </HeaderContent>
                     <RowTemplate>
                          <MudTd>
-                               <MudCheckBox T="bool"  Checked="SelectedChildIds.Contains(context.ChildId)"
-                             CheckedChanged="checked => OnChildChecked(context.ChildId, checked)" />
+                               <MudSwitch T="bool" @bind-Value="context.IsEnrolled"  />
                          </MudTd>
-                         <MudTd>@context.FirstName</MudTd>
-                         <MudTd>@context.Gender</MudTd>
+                         <MudTd>@context.Child.FirstName</MudTd>
+                         <MudTd>@context.Child.Gender</MudTd>
+                         <MudTd>
+                              <MudSelect T="CourseEnrollmentGroupResponse" @bind-Value="context.GroupResponse">
+                                   @foreach(var group in _couseGroups)
+                                   {
+                                        <MudSelectItem Value="group" >@group.GroupTitle</MudSelectItem>
+                                   }
+                              </MudSelect>
+                         </MudTd>
                     </RowTemplate>
                </MudTable>
-               <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="EnrollSelectedChildren">
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@EnrollSelectedChildren">
                     Enroll Selected Children
                </MudButton>
 
@@ -45,38 +56,102 @@
 </MudPaper>
 
 @code {
+     [CascadingParameter]
+     IMudDialogInstance MudDialog { get; set; } = default!;
+
      [Parameter] public Guid CourseId { get; set; }
      bool? isInitialized;
      private CourseResponse? SelectedCourse;
+
      private IEnumerable<ChildResponse> Children = Array.Empty<ChildResponse>();
+     private IEnumerable<CourseEnrollmentGroupResponse> _couseGroups;
+     private List<ChildEnrollmentDetails> _enrollmentDetails;
+     private Guid familyId;
+
+
      private List<Guid> SelectedChildIds = new List<Guid>();
 
      protected override async Task  OnInitializedAsync()
      {
           await base.OnInitializedAsync();
 
+          //MaktabDataContracts.Requests.Course.AddStudentCourseTransaction
+
           // Load course details (implement GetCourseById in your service)
           SelectedCourse = await CourseService.GetCourseByIdAsync(CourseId);
+          _couseGroups = await CourseGroupService.GetEnrollmentGroupsByCourseIdAsync(CourseId);
           var userId = await SessionService.GetLoggedInUserIdAsync();
           var userInfo = await UserService.GetUserByIdAsync(userId);
+          familyId = userInfo.FamilyId;
           // Load children for the logged-in parent
           Children = await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId);
+          _enrollmentDetails = new List<ChildEnrollmentDetails>();
+
+          foreach(var child in Children)
+          {
+               _enrollmentDetails.Add(new ChildEnrollmentDetails()
+                    {
+                         IsEnrolled = false,
+                         Child = child,
+                    });
+          }
+
+
           isInitialized = true;
           RequestRender();
      }
 
      private async Task EnrollSelectedChildren()
      {
-          //await InstitutionService.EnrollChildrenInCourseAsync(SelectedChildIds.ToList(), CourseId);
-          // Optionally show a MudSnackbar or navigate away
-          //NavigationManager.NavigateTo($"/courses/{CourseId}");
+          var enrolledChildsInfo = _enrollmentDetails.Where(x => x.IsEnrolled);
+          if(enrolledChildsInfo?.Any() != true)
+          {
+               Snackbar.Add("Please select a child with selected group.", Severity.Warning);
+          }
+
+          if(enrolledChildsInfo?.Any(y => y.GroupResponse == null) == true)
+          {
+               await DialogService.ShowMessageBox(
+                    "Warning", 
+                    "Not all child have valid group assigned.","OK");
+               return;    
+          }
+
+          var addEnrollments = new List<AddStudentCourseEnrollment>();
+
+          foreach (var enrolledChild in enrolledChildsInfo)
+          {
+               var studentEnrollment = new AddStudentCourseEnrollment()
+                    {
+                         ChildId = enrolledChild.Child.ChildId,
+                         FamilyId = familyId,
+                         GroupId = enrolledChild.GroupResponse.GroupId
+                    };
+
+               addEnrollments.Add(studentEnrollment);
+          }
+
+          var items = await CourseEnrollmentService.AddCourseEnrollmentsAsync(familyId, addEnrollments);
+
+          Snackbar.Add("Enrollments have been added.", Severity.Success);
+
+          MudDialog.Close(DialogResult.Ok(items));
+
      }
 
      private void OnChildChecked(Guid childId, bool isChecked)
-    {
-        if (isChecked)
-            SelectedChildIds.Add(childId);
-        else
-            SelectedChildIds.Remove(childId);
-    }
+     {
+          if (isChecked)
+               SelectedChildIds.Add(childId);
+          else
+               SelectedChildIds.Remove(childId);
+     }
+
+
+     private class ChildEnrollmentDetails
+     {
+          public bool IsEnrolled { get; set; }
+          public ChildResponse Child { get; set; }
+          public CourseEnrollmentGroupResponse? GroupResponse { get; set; }
+     }
 }
