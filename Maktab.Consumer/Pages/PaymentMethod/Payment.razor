@@ -1,0 +1,51 @@
+@page "/PaymentMethod/Payment"
+
+@inject NavigationManager NavigationManager
+
+<h1>Fee Payment</h1>
+
+@if (!string.IsNullOrEmpty(PaymentCode))
+{
+    <p style="font-size: 48px; font-weight: bold; color: red;">Code: @PaymentCode</p>
+}
+
+@if (!string.IsNullOrEmpty(UserEmail))
+{
+    <p>Email: @UserEmail</p>
+}
+
+<!-- Zeffy iframe -->
+<div style="position:relative;overflow:hidden;height:450px;width:100%; margin-bottom: 40px;">
+    <iframe title="Donation form powered by Zeffy"
+            style="position: absolute; border: 0; top:0;left:0;bottom:0;right:0;width:100%;height:100%"
+            src="https://www.zeffy.com/embed/donation-form/school-fees-system"
+            allowpaymentrequest 
+            allowTransparency="true">
+    </iframe>
+</div>
+
+<!-- Back button -->
+<button style="margin-top: 20px; width: 100%; padding: 15px; background-color: rgb(4, 160, 232); color: white; font-size: 20px; font-weight: bold; border: none; cursor: pointer;"
+        @onclick="GoBackHome">
+    Back to Home
+</button>
+
+@code {
+    private string PaymentCode { get; set; } = "";
+    private string UserEmail { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        // Parse query string
+        var uri = new Uri(NavigationManager.Uri);
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+        PaymentCode = query.Get("code") ?? "";
+        UserEmail = query.Get("email") ?? "";
+    }
+
+    private void GoBackHome()
+    {
+        NavigationManager.NavigateTo("/customer/dashboard", forceLoad: false);
+    }
+}
