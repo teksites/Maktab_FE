@@ -26,6 +26,7 @@
                          <MudTh>Name</MudTh>
                          <MudTh>Age</MudTh>
                          <MudTh>Group</MudTh>
+                         <MudTh>Will use day Care</MudTh>
                     </HeaderContent>
                     <RowTemplate>
                          <MudTd>
@@ -40,6 +41,9 @@
                                         <MudSelectItem Value="group" >@group.GroupTitle</MudSelectItem>
                                    }
                               </MudSelect>
+                         </MudTd>
+                         <MudTd>
+                              <MudSwitch T="bool" @bind-Value="context.UseDayCare" />
                          </MudTd>
                     </RowTemplate>
                </MudTable>
@@ -152,6 +156,8 @@
      {
           public bool IsEnrolled { get; set; }
           public ChildResponse Child { get; set; }
+          //Need to modify this to user multiple groups
           public CourseEnrollmentGroupResponse? GroupResponse { get; set; }
+          public bool UseDayCare { get; set; }
      }
 }

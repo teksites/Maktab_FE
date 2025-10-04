@@ -16,6 +16,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 //var baseUri = builder.Configuration["apiUrl"]; //builder.HostEnvironment.BaseAddress
 
+builder.Services.AddAuthorizationCore();
 
 
 builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUri) })
