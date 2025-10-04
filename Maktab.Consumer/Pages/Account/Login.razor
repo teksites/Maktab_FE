@@ -31,7 +31,7 @@
                                             RequiredError="Password is required"
                                             Immediate="true" />
                               <MudText Class="mt-2" Align="Align.End">
-                                   <MudLink Href="/account/forgotpassword" Color="Color.Default">Forgot password</MudLink>
+                                   <MudLink Href="@Constants.ForgotPasswordRoute" Color="Color.Default">Forgot password</MudLink>
                               </MudText>
                          </MudStack>
 
@@ -55,7 +55,7 @@
                                    }
                               </MudButton>
 
-                              <MudButton Href="/register/customer" Variant="Variant.Outlined" Color="Color.Primary" Disabled="@authenticating">Create new account</MudButton>
+                              <MudButton Href="@Constants.RegisterParentRoute" Variant="Variant.Outlined" Color="Color.Primary" Disabled="@authenticating">Create new account</MudButton>
                          </MudStack>
 
                     </MudForm>
@@ -82,8 +82,7 @@
           bool isAuthorized = await SessionService.IsAuthenticatedAsync();
           if (isAuthorized)
           {
-               NavigationManager.NavigateTo("/account/usercodevalidation");
-               //Navigation.NavigateTo("/customer/dashboard");
+               NavigationManager.NavigateTo(Constants.CodeValidationRoute);
           }
 
           isInitialized = true;
@@ -116,7 +115,7 @@
                     asp.NotifyUserAuthentication();
                }
                // Redirect after successful login
-               NavigationManager.NavigateTo("/account/usercodevalidation");
+               NavigationManager.NavigateTo(Constants.CodeValidationRoute);
           }
           else
           {

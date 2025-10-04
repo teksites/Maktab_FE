@@ -1,18 +1,19 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+﻿@using Maktab.Consumer.Helpers
+@using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthStateProvider
 @inject ISessionService SessionService
 
 <MudNavMenu>
-     <MudNavLink Href="/landing/mainpage" Icon="@Icons.Material.Filled.Home" Match="NavLinkMatch.All">Home</MudNavLink>
+     <MudNavLink Href="@Constants.AppLandingPage" Icon="@Icons.Material.Filled.Home" Match="NavLinkMatch.All">Home</MudNavLink>
 
      @if (isAuthenticated)
      {
-          <MudNavLink Href="/customer/dashboard" Icon="@Icons.Material.Filled.Dashboard">Parent</MudNavLink>
+          <MudNavLink Href="@Constants.ParentDashboardRoute" Icon="@Icons.Material.Filled.Dashboard">Parent</MudNavLink>
           @* <MudNavLink Href="profile" Icon="@Icons.Material.Filled.AccountCircle">Profile</MudNavLink> *@
 
           <MudDivider />
 
-          <MudNavLink Href="/account/logout" Icon="@Icons.Material.Filled.Logout">Logout</MudNavLink>
+          <MudNavLink Href="@Constants.LogoutRoute" Icon="@Icons.Material.Filled.Logout">Logout</MudNavLink>
      }
 
      @* <MudNavGroup Title="Settings" Expanded="true">

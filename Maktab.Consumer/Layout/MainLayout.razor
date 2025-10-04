@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims
+@using Maktab.Consumer.Helpers
 @using Microsoft.AspNetCore.Components.Authorization
 @inherits LayoutComponentBase
 
@@ -42,7 +43,7 @@
 
                     <MudDivider />*@
 
-                    <MudMenuItem Href="/account/login"
+                    <MudMenuItem Href="@Constants.LoginRoute"
                                  ForceLoad
                                  Icon="@Icons.Material.TwoTone.Login"
                                  IconColor="Color.Primary"
@@ -63,7 +64,7 @@
                          <MudAvatar Color="Color.Inherit" Variant="Variant.Outlined">@_userInitials</MudAvatar>
                     </ActivatorContent>
                     <ChildContent>
-                         <MudMenuItem Href="/account/logout"
+                              <MudMenuItem Href="@Constants.LogoutRoute"
                                       ForceLoad
                                       Icon="@Icons.Material.TwoTone.Logout"
                                       IconColor="Color.Primary"
@@ -74,8 +75,8 @@
                else
                {
                     <MudStack Row="true">
-                         <MudButton Href="/register/customer" Variant="Variant.Outlined" Color="Color.Inherit" >Signup</MudButton>
-                         <MudButton Href="/account/login" Variant="Variant.Outlined" Color="Color.Inherit" >Login</MudButton>
+                         <MudButton Href="@Constants.RegisterParentRoute" Variant="Variant.Outlined" Color="Color.Inherit" >Signup</MudButton>
+                         <MudButton Href="@Constants.LoginRoute" Variant="Variant.Outlined" Color="Color.Inherit" >Login</MudButton>
                     </MudStack>
                }
           </MudToolBar>

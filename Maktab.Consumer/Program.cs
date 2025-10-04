@@ -21,7 +21,6 @@ builder.Services.AddAuthorizationCore();
 
 builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUri) })
                 .AddScoped<ISessionService, SessionService>()
-                .AddScoped<IAccountService, AccountService>()
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IAddressService, AddressService>()
                 .AddScoped<IChildrenService, ChildrenService>()

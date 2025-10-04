@@ -4,8 +4,8 @@
 
 @inherits BaseComponent<MainPage>
 
-@inject IAccountService AccountService
-@inject IUserService UserService
+@* @inject IAccountService AccountService *@
+@* @inject IUserService UserService *@
 @inject IInstitutionService InstitutionService
 @inject ICourseService CourseService
 
@@ -18,7 +18,7 @@
      <MudPaper Class="pa-8 d-flex flex-column align-center justify-center text-center" Elevation="0">
           <MudText Typo="Typo.h3" GutterBottom="true">Welcome to Our Institution</MudText>
           <MudText Typo="Typo.subtitle1" Class="mb-6">Explore our wide range of courses and programs.</MudText>
-          <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/courses/search">View All Courses</MudButton>
+          <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@Constants.CourseSearchRoute">View All Courses</MudButton>
      </MudPaper>
 
      <!-- Courses Section -->

@@ -194,7 +194,7 @@ namespace Maktab.Consumer.Base
                {
                     _errorMessage = "Please provide valid credentials.";
                     Snackbar.Add(_errorMessage, Severity.Error);
-                    NavigationManager.NavigateTo("/account/logout");
+                    NavigationManager.NavigateTo(Constants.LogoutRoute);
                }
                catch (Exception)
                {

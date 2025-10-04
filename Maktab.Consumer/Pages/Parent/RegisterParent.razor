@@ -1,6 +1,6 @@
-﻿@page "/register/customer"
+﻿@page "/parent/register"
 
-@inherits BaseFormComponent<RegisterCustomer>
+@inherits BaseFormComponent<RegisterParent>
 
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
@@ -63,7 +63,7 @@
                               }
                          </MudButton>
 
-                         <MudButton Href="/account/login" Variant="Variant.Outlined" Color="Color.Primary" Disabled="@(IsRegistering)">LogIn</MudButton>
+                         <MudButton Href="@Constants.LoginRoute" Variant="Variant.Outlined" Color="Color.Primary" Disabled="@(IsRegistering)">LogIn</MudButton>
 
                     </MudStack>
 
@@ -155,7 +155,7 @@
           {
                Snackbar.Add("User has been created.", Severity.Success);
                // Redirect after successful login
-               NavigationManager.NavigateTo("/account/login");
+               NavigationManager.NavigateTo(Constants.LoginRoute);
           }
      }
 }

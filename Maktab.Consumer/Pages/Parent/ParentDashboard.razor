@@ -1,13 +1,13 @@
-﻿@page "/customer/dashboard"
+﻿@page "/parent/dashboard"
 
 @using Maktab.Consumer.Helpers
 @using Maktab.Models.Models
 @using MaktabDataContracts.Responses.Children
 @using MaktabDataContracts.Responses.Users
 
-@inherits BaseComponent<CustomerDashboard>
+@inherits BaseComponent<ParentDashboard>
 
-@inject IAccountService AccountService
+@* @inject IAccountService AccountService *@
 @inject IUserService UserService
 @* @inject IInstitutionService InstitutionService *@
 @inject IChildrenService ChildrenService

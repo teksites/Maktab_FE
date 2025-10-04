@@ -3,7 +3,7 @@
 
 @inherits BaseFormComponent<LoginCodeValidator>
 
-@inject IAccountService AccountService
+@* @inject IAccountService AccountService *@
 @inject IUserService UserService
 @inject IAddressService AddressService
 
@@ -109,11 +109,11 @@
                var userAddress = await AddressService.GetAddressByConnectedId(userInfo.UserId);
                if (userAddress != null && userAddress.HomeAddress)
                {
-                    NavigationManager.NavigateTo(Constants.CustomerDashboardRoute);
+                    NavigationManager.NavigateTo(Constants.ParentDashboardRoute);
                }
                else
                {
-                    NavigationManager.NavigateTo(Constants.CustomerAddProfileDetailRoute);
+                    NavigationManager.NavigateTo(Constants.AddParentProfileDetailRoute);
                }
           }
 
@@ -149,7 +149,7 @@
 
           if(activated)
           {
-               NavigationManager.NavigateTo(Constants.CustomerAddProfileDetailRoute);
+               NavigationManager.NavigateTo(Constants.AddParentProfileDetailRoute);
           }
           else
           {

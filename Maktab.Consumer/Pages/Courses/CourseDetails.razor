@@ -5,7 +5,6 @@
 @inherits BaseComponent<CourseDetails>
 
 
-@inject ISessionService SessionService
 @inject IInstitutionService InstitutionService
 @inject ICourseService CourseService
 @inject ICourseGroupService CourseGroupService
@@ -85,12 +84,10 @@
           if (isAuthorized)
           {
               await OpenAssignmentDialog(CourseId);
-               //NavigationManager.NavigateTo("/account/usercodevalidation");
-               //Navigation.NavigateTo("/customer/dashboard");
           }
           else
           {
-               NavigationManager.NavigateTo("/account/login");
+               NavigationManager.NavigateTo(Constants.LoginRoute);
           }
 
      }

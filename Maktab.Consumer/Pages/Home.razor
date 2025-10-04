@@ -9,17 +9,14 @@
 @code {
      protected async override void OnInitialized()
      {
-          // bool isAuthorized = await SessionService.IsAuthenticatedAsync();
-          // if (isAuthorized)
-          // {
-          //      Navigation.NavigateTo("/account/usercodevalidation");
-          //      //Navigation.NavigateTo("/customer/dashboard");
-          // }
-          // else
-          // {
-          //      Navigation.NavigateTo("/account/login");
-          // }
-
-          Navigation.NavigateTo("/landing/mainpage");
+          bool isAuthorized = await SessionService.IsAuthenticatedAsync();
+          if (isAuthorized)
+          {
+               Navigation.NavigateTo( Constants.CodeValidationRoute);
+          }
+          else
+          {
+               Navigation.NavigateTo(Constants.AppLandingPage);
+          }
      }
 }

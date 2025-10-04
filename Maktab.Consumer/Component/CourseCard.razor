@@ -1,4 +1,5 @@
-﻿@using MaktabDataContracts.Responses.Course
+﻿@using Maktab.Consumer.Helpers
+@using MaktabDataContracts.Responses.Course
 
 @inherits BaseComponent<CourseCard>
 
@@ -19,10 +20,10 @@
 </MudCard>
 
 @code {
-    [Parameter] public CourseResponse Course { get; set; } = new();
+     [Parameter] public CourseResponse Course { get; set; } = new();
 
-    private void NavigateToDetails()
-    {
-        Navigation.NavigateTo($"/courses/{Course.CourseId}");
-    }
+     private void NavigateToDetails()
+     {
+          Navigation.NavigateTo(string.Format(Constants.CourseDetailsRoute, Course.CourseId));
+     }
 }
