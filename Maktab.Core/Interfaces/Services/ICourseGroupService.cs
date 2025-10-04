@@ -10,7 +10,7 @@ namespace Maktab.Core.Interfaces.Services
           Task<IEnumerable<CourseEnrollmentGroupResponse>> GetEnrollmentGroupsByCourseIdAsync(Guid courseId);
           Task<CourseEnrollmentGroupResponse> GetCourseEnrollmentGroupByIdAsync(Guid courseEnrollmentGroupId);
 
-          Task<CourseResponse> AddCourseEnrollmentGroupAsync(Guid courseId, AddCouseEnrollmentGroup addGroup);
+          Task<CourseResponse> AddCourseEnrollmentGroupAsync(Guid courseId, AddCourseEnrollmentGroup addGroup);
           //Task<bool> IsCourseEnrollmentGroupExistAsync(Guid instituteId, string courseGroupName);
           //Task<bool> RemoveCourseEnrollmentGroupAsync(Guid courseEnrollmentGroupId);
 

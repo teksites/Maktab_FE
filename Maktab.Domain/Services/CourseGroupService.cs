@@ -7,7 +7,7 @@ namespace Maktab.Domain.Services
 {
      public class CourseGroupService : ICourseGroupService
      {
-          public Task<CourseResponse> AddCourseEnrollmentGroupAsync(Guid courseId, AddCouseEnrollmentGroup addGroup)
+          public Task<CourseResponse> AddCourseEnrollmentGroupAsync(Guid courseId, AddCourseEnrollmentGroup addGroup)
           {
                throw new NotImplementedException();
           }
@@ -30,7 +30,7 @@ namespace Maktab.Domain.Services
                          GroupTitle = "11:00 am = 11:30 am",
                          Fee = 100,
                          InstituteId = Guid.Empty,
-                         AcedemicGroups = new List<string>{ AcedemicGroupType.Elementry.ToString(), AcedemicGroupType.Kindergarden.ToString() },
+                         AcedemicGroups = new List<string>{ AcedemicGroupType.Kindergarten.ToString() },
                          MaxStudents = 50,
                          IsActive = true,
                     },
@@ -43,7 +43,7 @@ namespace Maktab.Domain.Services
                          GroupTitle = "11:30 am - 12:00 pm",
                          Fee = 100,
                          InstituteId = Guid.Empty,
-                         AcedemicGroups = new List<string>{ AcedemicGroupType.PreK.ToString(), AcedemicGroupType.Kindergarden.ToString() },
+                         AcedemicGroups = new List<string>{ AcedemicGroupType.PreK.ToString() },
                          MaxStudents = 50,
                          IsActive = true,
                     },
