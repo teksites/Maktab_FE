@@ -1,7 +1,10 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
 
 @inject IStringLocalizer<Shared_MainLayout> l
 @inject ThemeService ThemeService
+@inject AuthenticationStateProvider AuthStateProvider
 
 @* Required *@
 <MudThemeProvider Theme="IccBrossardTheme" IsDarkMode="ThemeService.IsDarkMode" />
@@ -20,7 +23,10 @@
           <MudSpacer />
           <MudToolBar Edge="Edge.End">
                @* <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" /> *@
+               <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="@ToggleTheme" />
 
+               @if (_isAuthenticated)
+               {
                <MudMenu Dense
                         Variant="Variant.Text"
                         Color="Color.Inherit"
@@ -45,15 +51,16 @@
 
 
                </MudMenu>
-               <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="@ToggleTheme" />
+               
                <MudTooltip Text="Notification">
                     <MudBadge Dot="true" Visible="false" Class="mx-6 my-4" Overlap="true" Bordered="true">
                          <MudIconButton Icon="@Icons.Material.Outlined.Notifications" Color="Color.Inherit" Edge="Edge.End" />
                     </MudBadge>
                </MudTooltip>
-               <MudMenu Dense>
-                    <ActivatorContent>
-                         <MudAvatar Color="Color.Inherit" Variant="Variant.Outlined">M</MudAvatar>
+               
+                    <MudMenu Dense>
+                         <ActivatorContent>
+                         <MudAvatar Color="Color.Inherit" Variant="Variant.Outlined">@_userInitials</MudAvatar>
                     </ActivatorContent>
                     <ChildContent>
                          <MudMenuItem Href="/account/logout"
@@ -62,7 +69,15 @@
                                       IconColor="Color.Primary"
                                       Label="Sign Out" />
                     </ChildContent>
-               </MudMenu>
+                    </MudMenu>
+               }
+               else
+               {
+                    <MudStack Row="true">
+                         <MudButton Href="/register/customer" Variant="Variant.Outlined" Color="Color.Inherit" >Signup</MudButton>
+                         <MudButton Href="/account/login" Variant="Variant.Outlined" Color="Color.Inherit" >Login</MudButton>
+                    </MudStack>
+               }
           </MudToolBar>
 
      </MudAppBar>
@@ -85,6 +100,41 @@
 
 @code {
      bool _drawerOpen = false;
+     private bool _isAuthenticated;
+     private string? _userName;
+     private string? _userRole;
+     private string _userInitials = "?";
+
+     protected override async Task OnInitializedAsync()
+     {
+          var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+          var user = authState.User;
+
+          _isAuthenticated = user?.Identity?.IsAuthenticated ?? false;
+
+          if (_isAuthenticated)
+          {
+               _userName = user.Identity?.Name ?? "User";
+               _userRole = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Unknown";
+               _userInitials = new string(_userName
+                   .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                   .Select(n => n[0])
+                   .ToArray()).ToUpper();
+          }
+
+          AuthStateProvider.AuthenticationStateChanged += async task =>
+         {
+              var state = await task;
+              _isAuthenticated = state.User.Identity?.IsAuthenticated ?? false;
+              _userName = user.Identity?.Name ?? "User";
+               _userRole = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Unknown";
+               _userInitials = new string(_userName
+                   .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                   .Select(n => n[0])
+                   .ToArray()).ToUpper();
+              StateHasChanged();
+         };
+     }
 
      void DrawerToggle()
      {

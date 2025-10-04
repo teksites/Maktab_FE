@@ -3,7 +3,9 @@
 @inherits BaseFormComponent<Login>
 
 @using System.ComponentModel.DataAnnotations
-
+@using Maktab.Consumer.Helpers
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthProvider
 
 <MudGrid Justify="Justify.Center">
      <MudItem xs="12" sm="7" md="5">
@@ -109,6 +111,10 @@
           var result = await SessionService.Login(logInfo);
           if (result)
           {
+               if (AuthProvider is AuthStateProvider asp)
+               {
+                    asp.NotifyUserAuthentication();
+               }
                // Redirect after successful login
                NavigationManager.NavigateTo("/account/usercodevalidation");
           }

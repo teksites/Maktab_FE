@@ -1,8 +1,10 @@
 using Maktab.Consumer;
+using Maktab.Consumer.Helpers;
 using Maktab.Consumer.Services;
 using Maktab.Core.Interfaces.Services;
 using Maktab.Domain.Services;
 using Maktab.Infrastructure.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
@@ -29,9 +31,10 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddScoped<IInstitutionService, InstitutionService>()
                 .AddScoped<ICourseService, CourseService>()
                 .AddScoped<ICourseGroupService, CourseGroupService>()
+                .AddScoped<ICourseEnrollmentService, CourseEnrollmentService>()
                 .AddScoped<INotificationService, NotificationService>()
                 .AddScoped<ThemeService>()
-
+                .AddScoped<AuthenticationStateProvider, AuthStateProvider>()
                 .AddSingleton<ISystemService, SystemService>();
 builder.Services.AddMudServices();
 builder.Services.AddLocalization();// options => options.ResourcesPath = "Resources");

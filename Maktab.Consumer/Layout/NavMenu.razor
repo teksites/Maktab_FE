@@ -1,6 +1,20 @@
-﻿
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ISessionService SessionService
+
 <MudNavMenu>
      <MudNavLink Href="/landing/mainpage" Icon="@Icons.Material.Filled.Home" Match="NavLinkMatch.All">Home</MudNavLink>
+
+     @if (isAuthenticated)
+     {
+          <MudNavLink Href="/customer/dashboard" Icon="@Icons.Material.Filled.Dashboard">Parent</MudNavLink>
+          @* <MudNavLink Href="profile" Icon="@Icons.Material.Filled.AccountCircle">Profile</MudNavLink> *@
+
+          <MudDivider />
+
+          <MudNavLink Href="/account/logout" Icon="@Icons.Material.Filled.Logout">Logout</MudNavLink>
+     }
+
      @* <MudNavGroup Title="Settings" Expanded="true">
           <MudNavLink Href="/users" Match="NavLinkMatch.Prefix">Users</MudNavLink>
           <MudNavLink Href="/security" Match="NavLinkMatch.Prefix">Security</MudNavLink>
@@ -11,3 +25,24 @@
 
      @* <MudNavLink Href="/about" Match="NavLinkMatch.Prefix">About</MudNavLink> *@
 </MudNavMenu>
+
+@code{
+     private bool isAuthenticated;
+
+     protected override async Task OnInitializedAsync()
+     {
+          var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        isAuthenticated = authState.User.Identity?.IsAuthenticated ?? false;
+
+
+          AuthStateProvider.AuthenticationStateChanged += async task =>
+          {
+               var state = await task;
+               isAuthenticated = state.User.Identity?.IsAuthenticated ?? false;
+               StateHasChanged();
+          };
+
+     }
+
+
+}
