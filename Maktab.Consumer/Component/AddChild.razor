@@ -12,6 +12,9 @@
 @* <EditForm Model="@ChildModel" OnValidSubmit="HandleValidSubmit"> *@
      <MudPaper Class="pa-4">
          @*  <MudText Typo="Typo.h5" Class="mb-4">Add Child</MudText> *@
+
+         @if(isInitilized)
+         {
          <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)" Spacing="2">
           <MudGrid Container="true" Spacing="3">
                <MudItem xs="12" sm="6">
@@ -76,12 +79,18 @@
                                   For="@(() => ChildModel.OtherHealthConditions)" />
                </MudItem>
 
-               @* <MudItem xs="12" sm="6" Class="d-flex align-center">
-                    <MudSwitch @bind-Checked="@(ChildModel.WillUseDayCareServices)"
+               <MudItem xs="12" sm="6" Class="d-flex align-center">
+                    <MudSelect T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
+                         @foreach (var group in acedemicGroups)
+                         {
+                              <MudSelectItem Value="group">@group.ToString()</MudSelectItem>
+                         }
+                    </MudSelect>
+                    @* <MudSwitch @bind-Checked="@(ChildModel.WillUseDayCareServices)"
                                T="bool"
                                Label="Will Use Daycare Services"
-                               Color="Color.Primary" />
-               </MudItem> *@
+                               Color="Color.Primary" /> *@
+               </MudItem>
           </MudGrid>
 
           <MudStack Justify="Justify.FlexEnd" Row="true" Spacing="2" Class="mt-4">
@@ -100,7 +109,12 @@
                <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
           </MudStack>
           </MudForm>
-     </MudPaper>
+     }
+     else
+     {
+          <BusyContent DisplayText="Initializing" />
+     }
+</MudPaper>
 @* </EditForm> *@
 
 @code {
@@ -117,6 +131,14 @@
      private DateTime? DateOfBirth { get; set; }
      private bool isInitilized = false;
      private bool isSaving = false;
+     private IEnumerable<AcedemicGroupType> acedemicGroups;
+
+     protected async override Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+          acedemicGroups = Enum.GetValues(typeof(AcedemicGroupType)).Cast<AcedemicGroupType>();
+          isInitilized = true;
+     }
 
      private async Task HandleSaving()
      {
