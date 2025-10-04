@@ -36,64 +36,16 @@ namespace Maktab.Domain.Services
             {
                 CourseId = Guid.NewGuid(),
                 InstituteId = institutionIds.First(),
-                Name = "Introduction to Islamic Studies",
-                NameFr = "Introduction aux études islamiques",
+                Name = "ICC Brossard Winter Camp",
+                NameFr = "Camp d'hiver du ICC Brossard",
                 IsActive = true,
                 
-                //Category = "Islamic Studies",
-                Description = "Learn the foundations of Islamic beliefs, practices, and history.",
-                DescriptionFr = "Apprenez les fondements des croyances, des pratiques et de l'histoire islamiques.",
-                //ImageUrl = "images/courses/islamic-studies.jpg",
-                //Instructor = "Dr. Abdullah Al-Hassan",
-                //Modules = new List<string>
-                //{
-                //    "Overview of Islamic Beliefs",
-                //    "Pillars of Islam",
-                //    "Islamic History & Civilization",
-                //    "Contemporary Issues in Islam"
-                //}
+                //Category = "winter camp",
+                Description = "The day camp offers many fun activities that are suitable for children aged 4 to 13.  Every weekday, from December 23 to January 3, from 9 a.m. to 4 p.m., your child will have a great time doing empowering, educational and fun activities with our dynamic team leads!  The daycare will be open from 7 a.m. to 9 p.m. and from 4 pm to 5h30 pm. It is MANDATORY to read the policies and procedures document available here.  If you have any additional questions, we will be more than happy to answer you. When visiting the camp, please abide by the mosque dress code. We're looking forward to meeting you and your child soon, in shaa Allah!",
+                DescriptionFr = "Offert durant les vacances hivernales, du 23 décembre au 3 janvier, de 09h00 à 16h00, en compagnie d'animateurs reconnus pour leur dynamisme, le camp d'hiver fait vivre aux enfants de 4 à 13 ans des expériences fort enrichissantes à travers des activités de loisir variées qui favorisent la vie de groupe et qui sont adaptées aux enfants.  Le service de garde sera disponible de 7h00 à 9h00 et de 16h00 à 17h30. Il est OBLIGATOIRE de lire attentivement le document accessible ici car il contient toutes les réponses aux questions que vous pourriez avoir. Si, après sa lecture, vous avez d'autres questions, il nous fera plaisir d'y répondre. Lors de vos visites au camp de jour, nous vous demandons de bien vouloir respecter le code vestimentaire de la mosquée, SVP. Au plaisir de vous voir bientôt avec votre enfant, in shaa Allah!",
+             
             },
-            new CourseResponse
-            {
-                  CourseId = Guid.NewGuid(),
-                InstituteId = institutionIds.First(),
-                Name = "Quran Recitation (Tajweed)",
-                NameFr = "Récitation du Coran (Tajwid)",
-                IsActive = true,
-                //Category = "Quran",
-                Description = "Master the art of Qur’an recitation with Tajweed rules.",
-                DescriptionFr = "Maîtrisez l'art de la récitation du Coran avec les règles de Tajweed.",
-                //ImageUrl = "images/courses/quran-recitation.jpg",
-                //Instructor = "Shaykh Ahmad Khan",
-                //Modules = new List<string>
-                //{
-                //    "Introduction to Tajweed",
-                //    "Makhaarij (Articulation Points)",
-                //    "Rules of Noon and Meem",
-                //    "Practice & Recitation Sessions"
-                //}
-                
-            },
-            new CourseResponse
-            {
-                  CourseId = Guid.NewGuid(),
-                InstituteId = institutionIds.Last(),
-                Name = "Quran Tafseer (Interpretation)",
-                NameFr = "Tafseer du Coran (Interprétation)",
-                IsActive = true,
-                //Category = "Quran",
-                Description = "Study selected Surahs with detailed Tafseer and context.",
-                DescriptionFr = "Étudiez les sourates sélectionnées avec un Tafseer détaillé et un contexte.",
-                //ImageUrl = "images/courses/quran-tafseer.jpg",
-                //Instructor = "Ustadh Fatimah Ali",
-                //Modules = new List<string>
-                //{
-                //    "Introduction to Tafseer",
-                //    "Tafseer of Surah Al-Fatiha",
-                //    "Themes of Surah Al-Baqarah",
-                //    "Understanding Makki vs Madani Surahs"
-                //}
-            },
+          
             new CourseResponse
             {
                   CourseId = Guid.NewGuid(),
