@@ -5,6 +5,7 @@
 
 @inject IAccountService AccountService
 @inject IUserService UserService
+@inject IAddressService AddressService
 
 @* @inject IAlertService AlertService *@
 
@@ -105,14 +106,14 @@
           }
           else if (!userInfo.IfTempUser)
           {
-               var extendedInfo = await UserService.GetExtendedInfoByUserIdAsync(userInfo.UserId);
-               if (extendedInfo == null)
+               var userAddress = await AddressService.GetAddressByConnectedId(userInfo.UserId);
+               if (userAddress != null && userAddress.HomeAddress)
                {
-                    NavigationManager.NavigateTo(Constants.CustomerAddProfileDetailRoute);
+                    NavigationManager.NavigateTo(Constants.CustomerDashboardRoute);
                }
                else
                {
-                    NavigationManager.NavigateTo(Constants.CustomerDashboardRoute);
+                    NavigationManager.NavigateTo(Constants.CustomerAddProfileDetailRoute);
                }
           }
 
