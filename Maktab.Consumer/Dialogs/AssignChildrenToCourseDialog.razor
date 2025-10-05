@@ -17,7 +17,7 @@
 
 <MudPaper Class="pa-4">
      <MudStack>
-          <MudText Typo="Typo.h5">@SelectedCourse?.Description</MudText>
+          <MudText Typo="Typo.h5">@SelectedCourse?.Name</MudText>
           @if (isInitialized.HasValue && isInitialized.Value)
           {
                <MudTable T="ChildEnrollmentDetails" Items="@_enrollmentDetails" Hover="true">
@@ -30,12 +30,12 @@
                     </HeaderContent>
                     <RowTemplate>
                          <MudTd>
-                               <MudSwitch T="bool" @bind-Value="context.IsEnrolled"  />
+                               <MudCheckBox T="bool" @bind-Value="context.IsEnrolled"  />
                          </MudTd>
                          <MudTd>@context.Child.FirstName</MudTd>
                          <MudTd>@context.Child.Gender</MudTd>
                          <MudTd>
-                              <MudSelect T="CourseEnrollmentGroupResponse" @bind-Value="context.GroupResponse">
+                              <MudSelect T="CourseEnrollmentGroupResponse" @bind-Value="context.GroupResponse" MultiSelection="@SelectedCourse.CanSelectMultipleEnrollmentGroups">
                                    @foreach(var group in _couseGroups)
                                    {
                                         <MudSelectItem Value="group" >@group.GroupTitle</MudSelectItem>
@@ -43,7 +43,7 @@
                               </MudSelect>
                          </MudTd>
                          <MudTd>
-                              <MudSwitch T="bool" @bind-Value="context.UseDayCare" />
+                              <MudCheckBox T="bool" @bind-Value="context.UseDayCare" />
                          </MudTd>
                     </RowTemplate>
                </MudTable>
@@ -65,7 +65,7 @@
 
      [Parameter] public Guid CourseId { get; set; }
      bool? isInitialized;
-     private CourseResponse? SelectedCourse;
+     private CourseResponseDetailed? SelectedCourse;
 
      private IEnumerable<ChildResponse> Children = Array.Empty<ChildResponse>();
      private IEnumerable<CourseEnrollmentGroupResponse> _couseGroups;
@@ -97,6 +97,7 @@
                     {
                          IsEnrolled = false,
                          Child = child,
+                         UseDayCare = false,
                     });
           }
 
@@ -129,7 +130,9 @@
                     {
                          ChildId = enrolledChild.Child.ChildId,
                          FamilyId = familyId,
-                         GroupId = enrolledChild.GroupResponse.GroupId
+                         GroupId = enrolledChild.GroupResponse.GroupId,
+                         WillUseDayCare = enrolledChild.UseDayCare,
+                         DayCareDays = 5,
                     };
 
                addEnrollments.Add(studentEnrollment);
