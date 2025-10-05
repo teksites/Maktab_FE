@@ -67,7 +67,7 @@
      [Inject] private IDialogService DialogService { get; set; } = default!;
 
      [Parameter] public Guid CourseId { get; set; }
-     private CourseResponse? _course;
+     private CourseResponseDetailed? _course;
 
      private IEnumerable<CourseEnrollmentGroupResponse> _couseGroups;
 

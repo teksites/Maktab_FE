@@ -6,7 +6,7 @@ namespace Maktab.Domain.Services
 {
      public class CourseService : BaseService, ICourseService
      {
-          private readonly List<CourseResponse> _Courses;
+          private readonly List<CourseResponseDetailed> _Courses;
           private Guid iccSchoolId = new Guid("FDCA4C86-DF0E-4CCC-BCE7-D4AE62F6E337");
           private Guid iccSchool2Id = new Guid("5AE84751-B58B-44D8-AC30-08F28E32BF15");
 
@@ -18,21 +18,21 @@ namespace Maktab.Domain.Services
 
           }
 
-          public async Task<IEnumerable<CourseResponse>> GetCoursesByInstitutionIdAsync(Guid institutionId)
+          public async Task<IEnumerable<CourseResponseDetailed>> GetCoursesByInstitutionIdAsync(Guid institutionId)
           {
-               return await Task.FromResult(_Courses);
+               return _Courses.Where(x => x.InstituteId == institutionId);
           }
 
-          public async Task<CourseResponse> GetCourseByIdAsync(Guid courseId)
+          public async Task<CourseResponseDetailed> GetCourseByIdAsync(Guid courseId)
           {
                return _Courses.Find(x => x.CourseId == courseId);
           }
 
-          private List<CourseResponse> GetCourses(IEnumerable<Guid> institutionIds)
+          private List<CourseResponseDetailed> GetCourses(IEnumerable<Guid> institutionIds)
           {
-               var courses = new List<CourseResponse>()
+               var courses = new List<CourseResponseDetailed>()
                {
-               new CourseResponse
+               new CourseResponseDetailed
             {
                 CourseId = Guid.NewGuid(),
                 InstituteId = institutionIds.First(),
@@ -43,10 +43,13 @@ namespace Maktab.Domain.Services
                 //Category = "winter camp",
                 Description = "The day camp offers many fun activities that are suitable for children aged 4 to 13.  Every weekday, from December 23 to January 3, from 9 a.m. to 4 p.m., your child will have a great time doing empowering, educational and fun activities with our dynamic team leads!  The daycare will be open from 7 a.m. to 9 p.m. and from 4 pm to 5h30 pm. It is MANDATORY to read the policies and procedures document available here.  If you have any additional questions, we will be more than happy to answer you. When visiting the camp, please abide by the mosque dress code. We're looking forward to meeting you and your child soon, in shaa Allah!",
                 DescriptionFr = "Offert durant les vacances hivernales, du 23 décembre au 3 janvier, de 09h00 à 16h00, en compagnie d'animateurs reconnus pour leur dynamisme, le camp d'hiver fait vivre aux enfants de 4 à 13 ans des expériences fort enrichissantes à travers des activités de loisir variées qui favorisent la vie de groupe et qui sont adaptées aux enfants.  Le service de garde sera disponible de 7h00 à 9h00 et de 16h00 à 17h30. Il est OBLIGATOIRE de lire attentivement le document accessible ici car il contient toutes les réponses aux questions que vous pourriez avoir. Si, après sa lecture, vous avez d'autres questions, il nous fera plaisir d'y répondre. Lors de vos visites au camp de jour, nous vous demandons de bien vouloir respecter le code vestimentaire de la mosquée, SVP. Au plaisir de vous voir bientôt avec votre enfant, in shaa Allah!",
-             
+               StartDate = DateTime.Now,
+               EndDate = DateTime.Now.AddMonths(5),
+               CanSelectMultipleEnrollmentGroups = true,
+               
             },
           
-            new CourseResponse
+            new CourseResponseDetailed
             {
                   CourseId = Guid.NewGuid(),
                 InstituteId = institutionIds.Last(),
@@ -56,6 +59,8 @@ namespace Maktab.Domain.Services
                 //Category = "Islamic Studies",
                 Description = "Explore the life, character, and mission of Prophet Muhammad (peace be upon him).",
                 DescriptionFr = "Explorez la vie, le caractère et la mission du Prophète Muhammad (paix soit sur lui).",
+                StartDate = DateTime.Now,
+               EndDate = DateTime.Now.AddMonths(2),
                 //ImageUrl = "images/courses/seerah.jpg",
                 //Instructor = "Mufti Kareem Siddiqui",
                 //Modules = new List<string>
@@ -70,12 +75,12 @@ namespace Maktab.Domain.Services
                return courses;
           }
 
-          public Task<IEnumerable<CourseResponse>> GetAllCoursesAsync()
+          public async Task<IEnumerable<CourseResponseDetailed>> GetAllCoursesAsync()
           {
-               throw new NotImplementedException();
+               return _Courses;
           }
 
-          public Task<CourseResponse> AddInstitutionAsync(AddCourse addInstitute)
+          public Task<CourseResponseDetailed> AddCourseAsync(AddCourse addInstitute)
           {
                throw new NotImplementedException();
           }

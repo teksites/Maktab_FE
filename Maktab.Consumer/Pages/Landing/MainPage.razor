@@ -58,14 +58,14 @@
      bool? isInitialized = false;
      // string emailValidationCode = string.Empty;
 
-     private IEnumerable<CourseResponse> _courses = Enumerable.Empty<CourseResponse>();
+     private IEnumerable<CourseResponseDetailed> _courses = Enumerable.Empty<CourseResponseDetailed>();
 
      protected override async Task OnInitializedAsync()
      {
           //isInitialized = true;
           await base.OnInitializedAsync();
 
-          _courses = await CourseService.GetCoursesByInstitutionIdAsync(Guid.NewGuid());
+          _courses = await CourseService.GetAllCoursesAsync();
 
           isInitialized = true;
           RequestRender();
