@@ -1,4 +1,6 @@
 ﻿@using Maktab.Consumer.Helpers
+@using Maktab.Domain.Extensions
+
 @using MaktabDataContracts.Responses.Course
 
 @inherits BaseComponent<CourseCard>
@@ -6,21 +8,49 @@
 @inject NavigationManager Navigation
 
 <MudCard Class="mb-4">
-    @* <MudCardMedia Image="@Course.ImageUrl" Height="180" /> *@
-    <MudCardContent>
-        <MudText Typo="Typo.h6">@Course.Name</MudText>
-        @* <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@Course.Instructor</MudText> *@
+     @* <MudCardMedia Image="@Course.ImageUrl" Height="180" /> *@
+     <MudCardContent>
+          <MudText Typo="Typo.h6">@Course.Name</MudText>
+          @* <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@Course.Instructor</MudText> *@
           <MudText Typo="Typo.body2" Class="truncate-2">@Course.Description</MudText>
-    </MudCardContent>
-    <MudCardActions>
-        <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="NavigateToDetails">
-            View Details
-        </MudButton>
-    </MudCardActions>
+
+          @if (ShowProgress)
+          {
+               <CourseProgress Course="@Course" />
+               @* <MudStack>
+                    <MudText Typo="Typo.subtitle2" Color="Color.Secondary">
+                         Progress: @Course.GetProgress().ToString("0")%
+                    </MudText>
+
+                    <MudProgressLinear Value="@Course.GetProgress()" Color="Color.Primary"
+                                       Rounded="true" Class="my-1" />
+
+                    @if (Course.GetProgress() >= 100)
+                    {
+                         <MudChip T="string" Color="Color.Success" Variant="Variant.Filled">Completed</MudChip>
+                    }
+                    else
+                    {
+                         <MudText Typo="Typo.caption" Color="Color.Secondary">
+                              Ends on @Course.EndDate.ToString("dd MMM yyyy")
+                         </MudText>
+                    }
+               </MudStack> *@
+          }
+
+
+
+     </MudCardContent>
+     <MudCardActions>
+          <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="NavigateToDetails">
+               View Details
+          </MudButton>
+     </MudCardActions>
 </MudCard>
 
 @code {
      [Parameter] public CourseResponseDetailed Course { get; set; } = new();
+     [Parameter] public bool ShowProgress { get; set; } = false;
 
      private void NavigateToDetails()
      {

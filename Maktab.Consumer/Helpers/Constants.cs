@@ -10,6 +10,9 @@
           public const string ParentDashboardRoute = "/parent/dashboard";
           public const string AddParentProfileDetailRoute = "/parent/adddetails";
           public const string RegisterParentRoute = "/parent/register";
+          public const string ParentProfileRoute = "/parent/profile";
+          
+          
 
           public const string AppLandingPage = "/landing/mainpage";
 

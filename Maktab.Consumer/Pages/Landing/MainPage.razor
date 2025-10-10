@@ -23,8 +23,11 @@
 
      <!-- Courses Section -->
      <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
-     <CourseList Courses=@_courses />
-        @*  <MudGrid GutterSize="3">
+     @if (isInitialized)
+     {
+          <CourseList Courses=@_courses ShowProgress="true"
+          />
+          @*  <MudGrid GutterSize="3">
         @foreach (var course in _courses)
         {
             <MudItem xs="12" sm="6" md="4" lg="3">
@@ -44,6 +47,11 @@
             </MudItem>
         }
     </MudGrid> *@
+     }
+     else
+     {
+          <BusyContent DisplayText="Initializing" />
+     }
 
 
 
@@ -55,7 +63,7 @@
      // bool success;
      // bool isCodeValidating = false;
      // bool isSendingCodeAgain = false;
-     bool? isInitialized = false;
+     bool isInitialized = false;
      // string emailValidationCode = string.Empty;
 
      private IEnumerable<CourseResponseDetailed> _courses = Enumerable.Empty<CourseResponseDetailed>();
@@ -65,7 +73,7 @@
           //isInitialized = true;
           await base.OnInitializedAsync();
 
-          _courses = await CourseService.GetAllCoursesAsync();
+          _courses = await CourseService.GetCurrentActiveCoursesAsync();
 
           isInitialized = true;
           RequestRender();

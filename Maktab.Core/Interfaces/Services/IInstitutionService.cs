@@ -1,16 +1,15 @@
-﻿using Maktab.Models.Models;
-using MaktabDataContracts.Responses.Institute;
+﻿using MaktabDataContracts.Responses.Institute;
 using MaktabDataContracts.Requests.Institute;
 
 namespace Maktab.Core.Interfaces.Services
 {
      public interface IInstitutionService : IDomainService
      {
-          Task<IEnumerable<InstituteReponse>> GetAllInstitutionsAsync();
+          Task<IEnumerable<InstituteResponse>> GetAllInstitutionsAsync();
 
-          Task<InstituteReponse> GetInstitutionByIdAsync(Guid institutionId);
+          Task<InstituteResponse> GetInstitutionByIdAsync(Guid institutionId);
 
-          Task<InstituteReponse> AddInstitutionAsync(AddInstitute addInstitute);
+          Task<InstituteResponse> AddInstitutionAsync(AddInstitute addInstitute);
           Task<bool> IsInstituteExistAsync(string instituteName);
           Task<bool> RemoveInstituteAsync(Guid instituteId);
 

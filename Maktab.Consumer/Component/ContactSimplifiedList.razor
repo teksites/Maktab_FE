@@ -1,0 +1,23 @@
+﻿@using MaktabDataContracts.Responses.OtherContacts
+@inherits BaseComponent<ContactSimplifiedList>
+
+<MudExpansionPanel Text="Contacts">
+     <MudList T="OtherContactResponse">
+        @foreach (var contact in Contacts)
+        {
+            <MudListItem>
+                <MudIcon Icon="@Icons.Material.Filled.ContactPhone" />
+                <MudText>@contact.FirstName @contact.LastName - @contact.Phone</MudText>
+            </MudListItem>
+        }
+    </MudList>
+    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add"
+               OnClick="OnAddContact">
+        Add Contact
+    </MudButton>
+</MudExpansionPanel>
+
+@code {
+     [Parameter] public IEnumerable<OtherContactResponse> Contacts { get; set; }
+     [Parameter] public EventCallback OnAddContact { get; set; }
+}

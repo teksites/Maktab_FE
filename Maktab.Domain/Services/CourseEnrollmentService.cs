@@ -26,7 +26,8 @@ namespace Maktab.Domain.Services
                return new MaktabDataContracts.Responses.Course.StudentCourseEnrollmentResponse()
                {
                     StudentCourseEnrollmentId = Guid.NewGuid(),
-                    GroupId = studentCourseEnrollment.GroupId,
+                    CourseId = studentCourseEnrollment.CourseId,
+                    CourseEnrollmentGroupId = studentCourseEnrollment.CourseEnrollmentGroupId,
                     ChildId = studentCourseEnrollment.ChildId,
                     FamilyId = familyId,
                     CreatedAt = DateTime.Now,
@@ -96,7 +97,7 @@ namespace Maktab.Domain.Services
 
           public async Task<IEnumerable<StudentCourseEnrollmentResponse>> GetCourseEnrollmentsByFamilyIdAsync(Guid familyId)
           {
-               if (courseResponses[familyId]?.Any() == true)
+               if (courseResponses.ContainsKey(familyId) && courseResponses[familyId]?.Any() == true)
                {
                     return courseResponses[familyId];
                }

@@ -1,103 +1,145 @@
 ﻿using Maktab.Core.Interfaces.Services;
 using MaktabDataContracts.Requests.Course;
 using MaktabDataContracts.Responses.Course;
+using System.Text;
 
 namespace Maktab.Domain.Services
 {
      public class CourseService : BaseService, ICourseService
      {
-          private readonly List<CourseResponseDetailed> _Courses;
-          private Guid iccSchoolId = new Guid("FDCA4C86-DF0E-4CCC-BCE7-D4AE62F6E337");
-          private Guid iccSchool2Id = new Guid("5AE84751-B58B-44D8-AC30-08F28E32BF15");
+          private const string getCoursesById = @"/api/courses/{0}";
+          private const string getCourses = @"/api/courses";
+          private const string addCoursesUrl = @"/api/courses";
+          private const string updateCourseById = @"/api/courses/{0}";
+          private const string removeCourseById = @"/api/courses/{0}";
 
+          private const string getCourseGroupByCourseId = @"/api/courses/{0}/groups";
+          private const string getCourseGroupById = @"/api/courses/groups/{0}";
+          private const string addCourseGroupUrl = @"/api/courses/groups/{0}";
+          private const string updateCourseGroupById = @"/api/courses/groups/{0}";
+          private const string removeCourseGroupById = @"/api/courses/groups/{0}";
+
+          private const string institureIdString = "InstituteIds={0}";
+          private const string offeredFromDateString = "OfferedFromDate={0}";
+          private const string offeredToDateString = "OfferedToDate={0}";
+          private const string isActiveString = "IsActive={0}";
+          private const string acedemicGroupString = "AcedemicGroups={0}";
 
           public CourseService(IHttpService httpService, ILocalStorageService localStorageService)
           : base(httpService, localStorageService)
           {
-               _Courses = GetCourses( new List<Guid>() { iccSchoolId, iccSchool2Id });
-
           }
 
-          public async Task<IEnumerable<CourseResponseDetailed>> GetCoursesByInstitutionIdAsync(Guid institutionId)
+          public async Task<IEnumerable<CourseResponseDetailed>> GetCoursesAsync(DateTime offeredFromDate, DateTime offeredToDate, bool isActive = true, IEnumerable<Guid> instituteIds = null, IEnumerable<string> achedemicGroups = null)
           {
-               return _Courses.Where(x => x.InstituteId == institutionId);
+               var sb = new StringBuilder(getCourses);
+               sb.Append('?')
+               //.Append(string.Format(offeredFromDateString, offeredFromDate));
+               //sb.Append('&').Append(string.Format(offeredToDateString, offeredFromDate));
+               //sb.Append('&')
+               .Append(string.Format(isActiveString, isActive));
+
+               if (instituteIds != null)
+               {
+                    foreach (var institute in instituteIds)
+                    {
+                         sb.Append('&').Append(string.Format(institureIdString, institute));
+                    }
+               }
+
+               if (achedemicGroups != null)
+               {
+                    foreach (var group in achedemicGroups)
+                    {
+                         sb.Append('&').Append(string.Format(acedemicGroupString, group));
+                    }
+               }
+
+               var result = await _httpService.Get<IEnumerable<CourseResponseDetailed>>(sb.ToString());
+               return result;
+          }
+
+          public async Task<IEnumerable<CourseResponseDetailed>> GetCoursesByInstitutionIdAsync(DateTime offeredFromDate, DateTime offeredToDate, Guid institutionId)
+          {
+               return await this.GetCoursesAsync(offeredFromDate, offeredToDate, true, [institutionId]);
           }
 
           public async Task<CourseResponseDetailed> GetCourseByIdAsync(Guid courseId)
           {
-               return _Courses.Find(x => x.CourseId == courseId);
+               var formatedUrl = string.Format(getCoursesById, courseId);
+               var result = await _httpService.Get<CourseResponseDetailed>(formatedUrl);
+               return result;
           }
 
-          private List<CourseResponseDetailed> GetCourses(IEnumerable<Guid> institutionIds)
+          public async Task<IEnumerable<CourseResponseDetailed>> GetAllCoursesAsync(DateTime offeredFromDate, DateTime offeredToDate)
           {
-               var courses = new List<CourseResponseDetailed>()
-               {
-               new CourseResponseDetailed
-            {
-                CourseId = Guid.NewGuid(),
-                InstituteId = institutionIds.First(),
-                Name = "ICC Brossard Winter Camp",
-                NameFr = "Camp d'hiver du ICC Brossard",
-                IsActive = true,
-                
-                //Category = "winter camp",
-                Description = "The day camp offers many fun activities that are suitable for children aged 4 to 13.  Every weekday, from December 23 to January 3, from 9 a.m. to 4 p.m., your child will have a great time doing empowering, educational and fun activities with our dynamic team leads!  The daycare will be open from 7 a.m. to 9 p.m. and from 4 pm to 5h30 pm. It is MANDATORY to read the policies and procedures document available here.  If you have any additional questions, we will be more than happy to answer you. When visiting the camp, please abide by the mosque dress code. We're looking forward to meeting you and your child soon, in shaa Allah!",
-                DescriptionFr = "Offert durant les vacances hivernales, du 23 décembre au 3 janvier, de 09h00 à 16h00, en compagnie d'animateurs reconnus pour leur dynamisme, le camp d'hiver fait vivre aux enfants de 4 à 13 ans des expériences fort enrichissantes à travers des activités de loisir variées qui favorisent la vie de groupe et qui sont adaptées aux enfants.  Le service de garde sera disponible de 7h00 à 9h00 et de 16h00 à 17h30. Il est OBLIGATOIRE de lire attentivement le document accessible ici car il contient toutes les réponses aux questions que vous pourriez avoir. Si, après sa lecture, vous avez d'autres questions, il nous fera plaisir d'y répondre. Lors de vos visites au camp de jour, nous vous demandons de bien vouloir respecter le code vestimentaire de la mosquée, SVP. Au plaisir de vous voir bientôt avec votre enfant, in shaa Allah!",
-               StartDate = DateTime.Now,
-               EndDate = DateTime.Now.AddMonths(5),
-               CanSelectMultipleEnrollmentGroups = true,
-               
-            },
-          
-            new CourseResponseDetailed
-            {
-                  CourseId = Guid.NewGuid(),
-                InstituteId = institutionIds.Last(),
-                Name = "Seerah of Prophet Muhammad (PBUH)",
-                NameFr = "La Sira du Prophète Muhammad (PSL)",
-                IsActive = true,
-                //Category = "Islamic Studies",
-                Description = "Explore the life, character, and mission of Prophet Muhammad (peace be upon him).",
-                DescriptionFr = "Explorez la vie, le caractère et la mission du Prophète Muhammad (paix soit sur lui).",
-                StartDate = DateTime.Now,
-               EndDate = DateTime.Now.AddMonths(2),
-                //ImageUrl = "images/courses/seerah.jpg",
-                //Instructor = "Mufti Kareem Siddiqui",
-                //Modules = new List<string>
-                //{
-                //    "Early Life in Makkah",
-                //    "Prophethood & Revelation",
-                //    "Migration to Madinah",
-                //    "Key Battles and Lessons"
-                //}
-            }
-               };
-               return courses;
+               return await this.GetCoursesAsync(offeredFromDate, offeredToDate, true);
           }
 
-          public async Task<IEnumerable<CourseResponseDetailed>> GetAllCoursesAsync()
+          public async Task<IEnumerable<CourseResponseDetailed>> GetCurrentActiveCoursesAsync()
           {
-               return _Courses;
+               return await this.GetCoursesAsync(DateTime.UtcNow.AddMonths(-1), DateTime.UtcNow.AddMonths(4), true);
           }
 
-          public Task<CourseResponseDetailed> AddCourseAsync(AddCourse addInstitute)
+          public async Task<CourseResponseDetailed> AddCourseAsync(AddCourse addCourse)
           {
-               throw new NotImplementedException();
+               var result = await _httpService.Post<CourseResponseDetailed>(addCoursesUrl, addCourse);
+               return result;
           }
 
-          public Task<bool> IsCourseExistAsync(Guid instituteId, string courseName)
+          public async Task<CourseResponseDetailed> UpdateCourseAsync(Guid courseId, CourseResponseDetailed course)
           {
-               throw new NotImplementedException();
+               var formatedUrl = string.Format(updateCourseById, courseId);
+               var result = await _httpService.Put<CourseResponseDetailed>(formatedUrl, course);
+               return result;
           }
 
-          public Task<bool> RemoveCourseAsync(Guid instituteId)
+          public async Task<bool> RemoveCourseAsync(Guid courseId)
           {
-               throw new NotImplementedException();
+               var formatedUrl = string.Format(removeCourseById, courseId);
+               var result = await _httpService.Delete<bool>(formatedUrl);
+               return result;
           }
 
           public Task<bool> DeactivateCourseAsync(Guid instituteId)
           {
                throw new NotImplementedException();
           }
+
+
+          public async Task<IEnumerable<CourseEnrollmentGroupResponse>> GetCourseGroupsByCourseIdAsync(Guid courseId)
+          {
+               var formatedUrl = string.Format(getCourseGroupByCourseId, courseId);
+               var result = await _httpService.Get<IEnumerable<CourseEnrollmentGroupResponse>>(formatedUrl);
+               return result;
+          }
+
+          public async Task<CourseEnrollmentGroupResponse> GetCourseGroupsByIdAsync(Guid courseGroupId)
+          {
+               var formatedUrl = string.Format(getCourseGroupById, courseGroupId);
+               var result = await _httpService.Get<CourseEnrollmentGroupResponse>(formatedUrl);
+               return result;
+          }
+
+          public async Task<CourseEnrollmentGroupResponse> AddCourseGroupAsync(AddCourseEnrollmentGroup addInstitute)
+          {
+               var result = await _httpService.Post<CourseEnrollmentGroupResponse>(addCourseGroupUrl, addInstitute);
+               return result;
+          }
+
+          public async Task<CourseEnrollmentGroupResponse> UpdateCourseGroupAsync(Guid courseGroupId, CourseEnrollmentGroupResponse courseGroup)
+          {
+               var formatedUrl = string.Format(updateCourseGroupById, courseGroupId);
+               var result = await _httpService.Put<CourseEnrollmentGroupResponse>(formatedUrl, courseGroup);
+               return result;
+          }
+
+          public async Task<bool> RemoveCourseGroupAsync(Guid courseGroupId)
+          {
+               var formatedUrl = string.Format(removeCourseGroupById, courseGroupId);
+               var result = await _httpService.Delete<bool>(formatedUrl);
+               return result;
+          }
+
      }
 }

@@ -1,59 +1,53 @@
 ﻿using Maktab.Core.Interfaces.Services;
-using MaktabDataContracts.Responses.Institute;
+using MaktabDataContracts.Models;
 using MaktabDataContracts.Requests.Institute;
+using MaktabDataContracts.Responses.Children;
+using MaktabDataContracts.Responses.Institute;
+using System.Collections.Generic;
 
 namespace Maktab.Domain.Services
 {
      public class InstitutionService : BaseService, IInstitutionService
      {
-          private Guid iccSchoolId = new Guid("FDCA4C86-DF0E-4CCC-BCE7-D4AE62F6E337");
-          private Guid iccSchool2Id = new Guid("5AE84751-B58B-44D8-AC30-08F28E32BF15");
+          private const string getInstituteById = @"/api/institutes/{0}";
+          private const string getInstitutes = @"/api/institutes";
+          private const string addInstituteUrl = @"/api/institutes";
 
-          private IList<InstituteReponse> _institutes;
+          private const string removeInstituteById = @"/api/institutes/{0}?hardDelete={1}";
+          private const string getInstitutePolicies = @"/api/institutes/{0}/policies";
+          private const string getInstitutePolicyById = @"/api/institutes/policies/{0}";
+
+          private const string addChildByFamilyId = @"/api/families/{0}/children/add";
+          private const string removeChildByFamilyId = @"/api/families/{0}/children/delete?ifHardDelete=false";
+          private const string isChildrenExistByRamQNumber = @"/api/children/check";
+
+         
 
           public InstitutionService(
                    IHttpService httpService,
                    ILocalStorageService localStorageService)
                : base(httpService, localStorageService)
           {
-               _institutes = GetAllInstitutions();
           }
 
-          public async Task<InstituteReponse> GetInstitutionByIdAsync(Guid institutionId)
+          public async Task<InstituteResponse> GetInstitutionByIdAsync(Guid institutionId)
           {
-               return _institutes.FirstOrDefault(x => x.InstituteId == institutionId);
+               var formatedUrl = string.Format(getInstituteById, institutionId);
+               var result = await _httpService.Get<InstituteResponse>(formatedUrl);
+               return result;
 
           }
 
-          public async Task<IEnumerable<InstituteReponse>> GetAllInstitutionsAsync()
+          public async Task<IEnumerable<InstituteResponse>> GetAllInstitutionsAsync()
           {
-               return _institutes;
+               var result = await _httpService.Get<IEnumerable<InstituteResponse>>(getInstitutes);
+               return result;
           }
 
-          private IList<InstituteReponse> GetAllInstitutions()
-          { 
-               var institutions = new List<InstituteReponse>()
-               {
-                    new InstituteReponse
-                    { 
-                         InstituteId = iccSchoolId, Name = "ICC Brossard",
-                         IsActive = true,
-                         
-                         
-                    },
-                    new InstituteReponse
-                    {
-                         InstituteId = iccSchool2Id, Name = "Qobaa Arabic",
-                         IsActive = true,
-                    },
-               };
-
-               return institutions;
-          }
-
-          public Task<InstituteReponse> AddInstitutionAsync(AddInstitute addInstitute)
+          public async Task<InstituteResponse> AddInstitutionAsync(AddInstitute addInstitute)
           {
-               throw new NotImplementedException();
+               var result = await _httpService.Post<InstituteResponse>(addInstituteUrl, addInstitute);
+               return result;
           }
 
           public Task<bool> IsInstituteExistAsync(string instituteName)
@@ -61,14 +55,30 @@ namespace Maktab.Domain.Services
                throw new NotImplementedException();
           }
 
-          public Task<bool> RemoveInstituteAsync(Guid instituteId)
+          public async Task<bool> RemoveInstituteAsync(Guid instituteId)
           {
-               throw new NotImplementedException();
+               var formatedUrl = string.Format(removeInstituteById, instituteId, false);
+               var result = await _httpService.Delete<bool>(formatedUrl);
+               return result;
           }
 
           public Task<bool> DeactivateInstituteAsync(Guid instituteId)
           {
                throw new NotImplementedException();
+          }
+
+          public async Task<IEnumerable<InstitutePolicyResponse>> GetInstitutePoliciesByInstitureIdAsync(Guid institutionId)
+          {
+               var formatedUrl = string.Format(getInstitutePolicies, institutionId);
+               var result = await _httpService.Get<IEnumerable<InstitutePolicyResponse>>(formatedUrl);
+               return result;
+          }
+
+          public async Task<InstitutePolicyResponse> GetInstitutePolicyByIdAsync(Guid policyId)
+          {
+               var formatedUrl = string.Format(getInstitutePolicyById, policyId);
+               var result = await _httpService.Get<InstitutePolicyResponse>(formatedUrl);
+               return result;
           }
      }
 }

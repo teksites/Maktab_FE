@@ -1,0 +1,72 @@
+﻿@page "/parent/profile"
+@attribute [Authorize]
+
+@using MaktabDataContracts.Responses.Children
+@using MaktabDataContracts.Responses.Course
+@using MaktabDataContracts.Responses.OtherContacts
+@using MaktabDataContracts.Responses.Users
+@using Microsoft.AspNetCore.Authorization
+
+
+@inherits BaseComponent<ParentProfile>
+
+@inject IUserService UserService
+@* @inject IInstitutionService InstitutionService *@
+@inject IChildrenService ChildrenService
+@inject ICourseService CourseService
+@* @inject INotificationService NotificationService *@
+@inject ICourseEnrollmentService CourseEnrollmentService
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
+     @if(isInitialized)
+     {
+    <ParentInfoCard Parent="@userInfo" OnEdit="EditProfile" />
+    <ChildSimplifiedList Children="@Children" OnViewCourses="ViewCourses" OnAddChild="AddChild" />
+    <CourseSimplifiedTable Courses="@Courses" />
+          <ContactSimplifiedList Contacts="@OtherContacts" OnAddContact="AddContact" />
+     }
+     else
+     {
+          <BusyContent DisplayText="Initializing" />
+     }
+</MudContainer>
+
+@code {
+     private UserInformationResponse userInfo = null;
+     private IEnumerable<ChildResponse> Children = Enumerable.Empty<ChildResponse>();
+     private IEnumerable<CourseResponseDetailed> Courses = Enumerable.Empty<CourseResponseDetailed>();
+     private IEnumerable<OtherContactResponse> OtherContacts = Enumerable.Empty<OtherContactResponse>();
+     //private IEnumerable<StudentCourseEnrollmentResponse> _enrolledCourses = Enumerable.Empty<StudentCourseEnrollmentResponse>();
+
+     bool isInitialized;
+     string userFullName = string.Empty;
+     Guid userId = Guid.Empty;
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          userId = await SessionService.GetLoggedInUserIdAsync();
+          userInfo = await UserService.GetUserByIdAsync(userId);
+          userFullName = $"{userInfo.FirstName} {userInfo.LastName}";
+          Children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
+          //notifications = await NotificationService.GetNotificationsByUserIdAsync(userInfo.UserId);
+          var _courses = await CourseService.GetCurrentActiveCoursesAsync();
+          var _enrolledCourses = await CourseEnrollmentService.GetCourseEnrollmentsByFamilyIdAsync(userInfo.FamilyId);
+
+          var enrolledCourseIds = _enrolledCourses?.Select(x => x.CourseId);
+
+          Courses = _courses.Where(x => enrolledCourseIds.Contains(x.CourseId)).ToList();
+
+
+
+          //studentCourseTransaction = await CourseEnrollmentService.GetCoursePaymentDetailsForFamily(userInfo.FamilyId);
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private void EditProfile(UserInformationResponse parent) { }
+    private void AddChild() { }
+    private void ViewCourses(Guid id) { }
+    private void AddContact() { }
+}

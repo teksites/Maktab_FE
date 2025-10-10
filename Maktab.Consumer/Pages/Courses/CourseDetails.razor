@@ -7,7 +7,6 @@
 
 @inject IInstitutionService InstitutionService
 @inject ICourseService CourseService
-@inject ICourseGroupService CourseGroupService
 
 @inject NavigationManager Navigation
 
@@ -41,10 +40,29 @@
             <!-- Description -->
             <MudText Typo="Typo.body1" Class="mb-4">@_course.Description</MudText>
 
+            <MudDivider />
+
+             <!-- Dates -->
+            <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
+                <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Color="Color.Info" />
+                <MudText Typo="Typo.subtitle1">
+                              <b>Start Date:</b> @_course.StartDate.ToString("dd MMM yyyy")
+                </MudText>
+                    <MudText Typo="Typo.subtitle1">
+                                   <b>End Date:</b> @_course.EndDate.ToString("dd MMM yyyy")
+                    </MudText>
+
+                         @if(_course.IsRegistrationOpened)
+                {
+                    <MudChip T="string" Color="Color.Info" Variant="Variant.Outlined">Registration Open</MudChip>
+                }
+            </MudStack>
+
+
             <!-- Modules -->
            @*  <CourseModules Modules="@_course.Modules" /> *@
 
-                    <CourseGroupList CourseGroups="@_couseGroups"/>
+                    <CourseGroupList CourseGroups="@_course.CourseEnrollmentGroups" />
 
             <MudDivider Class="my-4" />
 
@@ -52,9 +70,20 @@
                </MudStack>
                <!-- CTA -->
 
-               @* <MudChip T="string" Color="Color.Secondary" Variant="Variant.Outlined">
+               <MudChipSet T="string">
+                    @* <MudChip T="string" Selected="@(_selectedCategory == null)">All</MudChip> *@
+                    @foreach (var cat in _course.AcedemicGroups)
+                    {
+                         <MudChip Color="Color.Secondary" Variant="Variant.Outlined">@cat</MudChip>
+                    }
+               </MudChipSet>
+
+@*                <MudChip T="string" Color="Color.Secondary" Variant="Variant.Outlined">
                     @_course.Category
                </MudChip> *@
+
+               <!-- Actions -->
+               <MudDivider />
 
                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" OnClick="@EnrollChild">
                     Enroll Now
@@ -69,13 +98,14 @@
      [Parameter] public Guid CourseId { get; set; }
      private CourseResponseDetailed? _course;
 
-     private IEnumerable<CourseEnrollmentGroupResponse> _couseGroups;
+     //private IEnumerable<CourseEnrollmentGroupResponse> _couseGroups;
 
 
      protected override async Task OnInitializedAsync()
      {
           _course = await CourseService.GetCourseByIdAsync(CourseId);
-          _couseGroups = await CourseGroupService.GetEnrollmentGroupsByCourseIdAsync(CourseId);
+          RequestRender();
+          //_couseGroups = await CourseGroupService.GetEnrollmentGroupsByCourseIdAsync(CourseId);
      }
 
      protected async void EnrollChild()

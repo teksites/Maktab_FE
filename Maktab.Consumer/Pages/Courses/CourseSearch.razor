@@ -10,6 +10,8 @@
 @inject IUserService UserService
 @inject IInstitutionService InstitutionService
 @inject ICourseService CourseService
+@inject ISystemService SystemService
+
 
 
 @* @inject IAlertService AlertService *@
@@ -31,7 +33,7 @@
                                   OnKeyUp="@((_) => ApplyFilters())" />
                </MudItem>
                <MudItem xs="12" sm="6" Class="d-flex justify-end">
-                    <MudChipSet T="InstituteReponse"
+                    <MudChipSet T="InstituteResponse"
                                 @bind-SelectedValue="@_selectedCategory"
                                 SelectionMode="SelectionMode.ToggleSelection"
                          CheckMark="true" 
@@ -40,7 +42,7 @@
                          @* <MudChip T="string" Selected="@(_selectedCategory == null)">All</MudChip> *@
                          @foreach (var cat in _institutes)
                          {
-                              <MudChip T="InstituteReponse">@cat.Name</MudChip>
+                              <MudChip T="InstituteResponse">@cat.Name</MudChip>
                          }
                     </MudChipSet>
                </MudItem>
@@ -57,19 +59,19 @@
 </MudContainer>
 
 @code {
-     private IEnumerable<InstituteReponse> _institutes = Array.Empty<InstituteReponse>();
+     private IEnumerable<InstituteResponse> _institutes = Array.Empty<InstituteResponse>();
 
      private IEnumerable<CourseResponseDetailed> _courses = Array.Empty<CourseResponseDetailed>();
      private List<CourseResponseDetailed> _filteredCourses = new();
      // private IEnumerable<InstituteReponse> _categories = new();
-     private InstituteReponse? _selectedCategory;// = "All";
+     private InstituteResponse? _selectedCategory;// = "All";
      private string _searchText = string.Empty;
      private bool isInitialized = false;
 
      protected override async Task OnInitializedAsync()
      {
           _institutes = await InstitutionService.GetAllInstitutionsAsync();
-          _courses = await CourseService.GetAllCoursesAsync();
+          _courses = await CourseService.GetCurrentActiveCoursesAsync();
           // _categories = _institutes; //_courses.Select(c => c.Category).Distinct().ToList();
           ApplyFilters();
           isInitialized = true;
@@ -78,7 +80,7 @@
           //_selectedCategory = "All";
      }
 
-     private void OnCategoryChanged(InstituteReponse? category)
+     private void OnCategoryChanged(InstituteResponse? category)
      {
           //_selectedCategory = chip.Text == "All" ? null : chip.Text;
           ApplyFilters();

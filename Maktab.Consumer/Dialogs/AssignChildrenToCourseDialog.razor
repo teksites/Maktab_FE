@@ -9,7 +9,6 @@
 @inject IChildrenService ChildrenService
 @inject IInstitutionService InstitutionService
 @inject ICourseService CourseService
-@inject ICourseGroupService CourseGroupService
 @inject ICourseEnrollmentService CourseEnrollmentService
 @inject IUserService UserService
 @inject IDialogService DialogService
@@ -36,7 +35,7 @@
                          <MudTd>@context.Child.Gender</MudTd>
                          <MudTd>
                               <MudSelect T="CourseEnrollmentGroupResponse" @bind-Value="context.GroupResponse" MultiSelection="@SelectedCourse.CanSelectMultipleEnrollmentGroups">
-                                   @foreach(var group in _couseGroups)
+                                   @foreach (var group in SelectedCourse.CourseEnrollmentGroups)
                                    {
                                         <MudSelectItem Value="group" >@group.GroupTitle</MudSelectItem>
                                    }
@@ -68,7 +67,7 @@
      private CourseResponseDetailed? SelectedCourse;
 
      private IEnumerable<ChildResponse> Children = Array.Empty<ChildResponse>();
-     private IEnumerable<CourseEnrollmentGroupResponse> _couseGroups;
+     //private IEnumerable<CourseEnrollmentGroupResponse> _couseGroups;
      private List<ChildEnrollmentDetails> _enrollmentDetails;
      private Guid familyId;
 
@@ -83,7 +82,7 @@
 
           // Load course details (implement GetCourseById in your service)
           SelectedCourse = await CourseService.GetCourseByIdAsync(CourseId);
-          _couseGroups = await CourseGroupService.GetEnrollmentGroupsByCourseIdAsync(CourseId);
+          //_couseGroups = await CourseGroupService.GetEnrollmentGroupsByCourseIdAsync(CourseId);
           var userId = await SessionService.GetLoggedInUserIdAsync();
           var userInfo = await UserService.GetUserByIdAsync(userId);
           familyId = userInfo.FamilyId;
@@ -130,7 +129,8 @@
                     {
                          ChildId = enrolledChild.Child.ChildId,
                          FamilyId = familyId,
-                         GroupId = enrolledChild.GroupResponse.GroupId,
+                         CourseId = SelectedCourse.CourseId,
+                         CourseEnrollmentGroupId = enrolledChild.GroupResponse.CourseEnrollmentGroupId,
                          WillUseDayCare = enrolledChild.UseDayCare,
                          DayCareDays = 5,
                     };

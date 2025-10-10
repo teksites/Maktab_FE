@@ -5,15 +5,21 @@ namespace Maktab.Core.Interfaces.Services
 {
      public interface ICourseService : IDomainService
      {
-          Task<IEnumerable<CourseResponseDetailed>> GetAllCoursesAsync();
 
-          Task<IEnumerable<CourseResponseDetailed>> GetCoursesByInstitutionIdAsync(Guid institutionId);
           Task<CourseResponseDetailed> GetCourseByIdAsync(Guid courseId);
 
-          Task<CourseResponseDetailed> AddCourseAsync(AddCourse addInstitute);
-          Task<bool> IsCourseExistAsync(Guid instituteId, string courseName);
-          Task<bool> RemoveCourseAsync(Guid instituteId);
-
-          Task<bool> DeactivateCourseAsync(Guid instituteId);
+          Task<CourseResponseDetailed> AddCourseAsync(AddCourse course);
+          Task<bool> RemoveCourseAsync(Guid courseId);
+          Task<bool> DeactivateCourseAsync(Guid courseId);
+          Task<IEnumerable<CourseResponseDetailed>> GetCoursesAsync(DateTime offeredFromDate, DateTime offeredToDate, bool isActive = true, IEnumerable<Guid> instituteIds = null, IEnumerable<string> achedemicGroups = null);
+          Task<IEnumerable<CourseResponseDetailed>> GetCoursesByInstitutionIdAsync(DateTime offeredFromDate, DateTime offeredToDate, Guid institutionId);
+          Task<IEnumerable<CourseResponseDetailed>> GetAllCoursesAsync(DateTime offeredFromDate, DateTime offeredToDate);
+          Task<CourseResponseDetailed> UpdateCourseAsync(Guid courseId, CourseResponseDetailed course);
+          Task<IEnumerable<CourseEnrollmentGroupResponse>> GetCourseGroupsByCourseIdAsync(Guid courseId);
+          Task<CourseEnrollmentGroupResponse> GetCourseGroupsByIdAsync(Guid courseGroupId);
+          Task<CourseEnrollmentGroupResponse> AddCourseGroupAsync(AddCourseEnrollmentGroup addInstitute);
+          Task<CourseEnrollmentGroupResponse> UpdateCourseGroupAsync(Guid courseGroupId, CourseEnrollmentGroupResponse courseGroup);
+          Task<bool> RemoveCourseGroupAsync(Guid courseGroupId);
+          Task<IEnumerable<CourseResponseDetailed>> GetCurrentActiveCoursesAsync();
      }
 }

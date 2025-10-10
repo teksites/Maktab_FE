@@ -20,6 +20,7 @@ builder.Services.AddAuthorizationCore();
 
 
 builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUri) })
+                .AddScoped<ISystemService, SystemService>()
                 .AddScoped<ISessionService, SessionService>()
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IAddressService, AddressService>()
@@ -30,7 +31,6 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddScoped<IRoleMenuService, RoleMenuService>()
                 .AddScoped<IInstitutionService, InstitutionService>()
                 .AddScoped<ICourseService, CourseService>()
-                .AddScoped<ICourseGroupService, CourseGroupService>()
                 .AddScoped<ICourseEnrollmentService, CourseEnrollmentService>()
                 .AddScoped<INotificationService, NotificationService>()
                 .AddScoped<ThemeService>()

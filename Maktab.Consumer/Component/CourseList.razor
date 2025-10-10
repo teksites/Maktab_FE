@@ -7,7 +7,7 @@
           @foreach (var course in Courses)
           {
                <MudItem xs="12" sm="6" md="4" lg="3">
-                    <CourseCard Course="@course" />
+                    <CourseCard Course="@course" ShowProgress="@ShowProgress" />
                </MudItem>
           }
      }
@@ -25,4 +25,5 @@
 
 @code {
      [Parameter] public IEnumerable<CourseResponseDetailed> Courses { get; set; }
+     [Parameter] public bool ShowProgress { get; set; } = false;
 }
