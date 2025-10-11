@@ -1,5 +1,6 @@
 @using Maktab.Consumer.Base
 @using Maktab.Domain.Services
+@using Maktab.Domain.Extensions
 @using MaktabDataContracts.Requests.Course
 @using MaktabDataContracts.Responses.Course
 @using MaktabDataContracts.Responses.Children
@@ -25,21 +26,33 @@
                          <MudTh>Name</MudTh>
                          <MudTh>Age</MudTh>
                          <MudTh>Group</MudTh>
-                         <MudTh>Will use day Care</MudTh>
+                         <MudTh>Use day care</MudTh>
                     </HeaderContent>
                     <RowTemplate>
                          <MudTd>
                                <MudCheckBox T="bool" @bind-Value="context.IsEnrolled"  />
                          </MudTd>
                          <MudTd>@context.Child.FirstName</MudTd>
-                         <MudTd>@context.Child.Gender</MudTd>
+                         <MudTd>@context.Child.GetAge()</MudTd>
                          <MudTd>
-                              <MudSelect T="CourseEnrollmentGroupResponse" @bind-Value="context.GroupResponse" MultiSelection="@SelectedCourse.CanSelectMultipleEnrollmentGroups">
+                              @if (SelectedCourse.CanSelectMultipleEnrollmentGroups)
+                              {
+                                   <MudSelect ToStringFunc="g => g.GroupTitle" MultiSelection="true" Dense="true" MaxHeight="300" @bind-SelectedValues="context.GroupResponses" T="CourseEnrollmentGroupResponse">
                                    @foreach (var group in SelectedCourse.CourseEnrollmentGroups)
                                    {
-                                        <MudSelectItem Value="group" >@group.GroupTitle</MudSelectItem>
+                                             <MudSelectItem T="CourseEnrollmentGroupResponse" Value="@group">@group.GroupTitle</MudSelectItem>
                                    }
-                              </MudSelect>
+                                   </MudSelect>
+                              }
+                              else
+                              {
+                                   <MudSelect T="CourseEnrollmentGroupResponse" @bind-Value="context.GroupResponse" MultiSelection="false">
+                                   @foreach (var group in SelectedCourse.CourseEnrollmentGroups)
+                                   {
+                                             <MudSelectItem Value="@group"  >@group.GroupTitle</MudSelectItem>
+                                   }
+                                   </MudSelect>
+                              }
                          </MudTd>
                          <MudTd>
                               <MudCheckBox T="bool" @bind-Value="context.UseDayCare" />
@@ -90,13 +103,15 @@
           Children = await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId);
           _enrollmentDetails = new List<ChildEnrollmentDetails>();
 
-          foreach(var child in Children)
+          foreach (var child in Children)
           {
                _enrollmentDetails.Add(new ChildEnrollmentDetails()
                     {
+                         Id = Guid.NewGuid(),
                          IsEnrolled = false,
                          Child = child,
                          UseDayCare = false,
+                         GroupResponses = new List<CourseEnrollmentGroupResponse>(),
                     });
           }
 
@@ -111,39 +126,84 @@
           if(enrolledChildsInfo?.Any() != true)
           {
                Snackbar.Add("Please select a child with selected group.", Severity.Warning);
+               return;
           }
 
-          if(enrolledChildsInfo?.Any(y => y.GroupResponse == null) == true)
-          {
-               await DialogService.ShowMessageBox(
-                    "Warning", 
-                    "Not all child have valid group assigned.","OK");
-               return;    
-          }
 
-          var addEnrollments = new List<AddStudentCourseEnrollment>();
+          IList<AddStudentCourseEnrollment> addEnrollments = null;
 
-          foreach (var enrolledChild in enrolledChildsInfo)
+          if (SelectedCourse.CanSelectMultipleEnrollmentGroups)
           {
-               var studentEnrollment = new AddStudentCourseEnrollment()
+               if (enrolledChildsInfo?.Any(x => x.GroupResponses.Any()) != true)
+               {
+                    await DialogService.ShowMessageBox(
+                   "Warning",
+                   "Not all child have valid group assigned.", "OK");
+                    return;
+               }
+
+               addEnrollments = new List<AddStudentCourseEnrollment>();
+               foreach (var enrolledChild in enrolledChildsInfo)
+               {
+
+                    foreach (var enrollmentgroup in enrolledChild.GroupResponses)
                     {
-                         ChildId = enrolledChild.Child.ChildId,
-                         FamilyId = familyId,
-                         CourseId = SelectedCourse.CourseId,
-                         CourseEnrollmentGroupId = enrolledChild.GroupResponse.CourseEnrollmentGroupId,
-                         WillUseDayCare = enrolledChild.UseDayCare,
-                         DayCareDays = 5,
-                    };
+                         var studentEnrollment = new AddStudentCourseEnrollment()
+                              {
 
-               addEnrollments.Add(studentEnrollment);
+                                   ChildId = enrolledChild.Child.ChildId,
+                                   FamilyId = familyId,
+                                   CourseId = SelectedCourse.CourseId,
+                                   CourseEnrollmentGroupId = enrollmentgroup.CourseEnrollmentGroupId,
+                                   WillUseDayCare = enrolledChild.UseDayCare,
+                                   DayCareDays = 5,
+                                   IsActive = true,
+                              };
+                         addEnrollments.Add(studentEnrollment);
+                    }
+               }
+          }
+          else
+          {
+               if (enrolledChildsInfo?.Any(y => y.GroupResponse != null) == true)
+               {
+                    await DialogService.ShowMessageBox(
+                         "Warning",
+                         "Not all child have valid group assigned.", "OK");
+                    return;
+               }
+
+               addEnrollments = new List<AddStudentCourseEnrollment>();
+               foreach (var enrolledChild in enrolledChildsInfo)
+               {
+
+                    var studentEnrollment = new AddStudentCourseEnrollment()
+                         {
+
+                              ChildId = enrolledChild.Child.ChildId,
+                              FamilyId = familyId,
+                              CourseId = SelectedCourse.CourseId,
+                              CourseEnrollmentGroupId = enrolledChild.GroupResponse.CourseEnrollmentGroupId,
+                              WillUseDayCare = enrolledChild.UseDayCare,
+                              DayCareDays = 5,
+                              IsActive = true,
+                         };
+
+                    addEnrollments.Add(studentEnrollment);
+               }
           }
 
+          //Add enrollments.
           var items = await CourseEnrollmentService.AddCourseEnrollmentsAsync(familyId, addEnrollments);
-
-          Snackbar.Add("Enrollments have been added.", Severity.Success);
-
-          MudDialog.Close(DialogResult.Ok(items));
-
+          if (items?.Any() == true)
+          {
+               Snackbar.Add("Enrollments have been added.", Severity.Success);
+               MudDialog.Close(DialogResult.Ok(items));
+          }
+          else
+          {
+               Snackbar.Add("Enrollments can not be added for family. Please try in a moment or contact support.", Severity.Error);
+          }
      }
 
      private void OnChildChecked(Guid childId, bool isChecked)
@@ -157,10 +217,21 @@
 
      private class ChildEnrollmentDetails
      {
+          public Guid Id { get; set; }
           public bool IsEnrolled { get; set; }
           public ChildResponse Child { get; set; }
           //Need to modify this to user multiple groups
-          public CourseEnrollmentGroupResponse? GroupResponse { get; set; }
+          public IEnumerable<CourseEnrollmentGroupResponse> GroupResponses { get; set; } = new HashSet<CourseEnrollmentGroupResponse>();
+          public CourseEnrollmentGroupResponse GroupResponse { get; set; }
           public bool UseDayCare { get; set; }
+
+          public override int GetHashCode() => Id.GetHashCode();
+
+          public override bool Equals(object? obj)
+          {
+               if (obj is not ChildEnrollmentDetails other)
+                    return false;
+               return Id == other.Id;
+          }
      }
 }
