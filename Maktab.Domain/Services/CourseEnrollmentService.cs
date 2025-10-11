@@ -1,6 +1,7 @@
 ﻿using Maktab.Core.Interfaces.Services;
 using MaktabDataContracts.Requests.Course;
 using MaktabDataContracts.Responses.Course;
+using MaktabDataContracts.Responses.Transactions;
 
 namespace Maktab.Domain.Services
 {
@@ -80,7 +81,7 @@ namespace Maktab.Domain.Services
                          FamilyId = familyId,
                          CreatedAt = DateTime.UtcNow,
                          PayableFee = 75 * list.Count,
-                         StudentCourseEnrollmentId = list.Select(x => x.StudentCourseEnrollmentId).ToList(),
+                         Enrollments = list,
                          StudentCourseTransactionId = Guid.NewGuid(),
                          PaymentCode = $"ABCD-{familyId.ToString()}",
                          AmountDiscounted = (list.Count> 1)? 10 : 0,
