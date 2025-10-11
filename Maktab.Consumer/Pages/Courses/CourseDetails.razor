@@ -26,19 +26,24 @@
             <MudStack>
             <!-- Title + Category -->
             <MudText Typo="Typo.h4" GutterBottom="true">@_course.Name</MudText>
-                    <MudText Typo="Typo.subtitle1" Color="Color.Secondary" Class="mb-2">
+                    <MudText Typo="Typo.subtitle1" Color="Color.Info" Class="mb-2">
                          @_course.Details
                     </MudText>
                     @* <MudText Typo="Typo.subtitle1" Color="Color.Secondary" Class="mb-2">
                     @_course.Instructor
                </MudText> *@
-           
 
-            <!-- Image -->
-            @* <MudImage Src="@_course.ImageUrl" Alt="@_course.Title" Width="300" Class="mb-4 rounded-lg" Elevation="2" /> *@
+
+                    <!-- Image -->
+                    <MudImage Src="images/courses/quran-recitation.jpg" Alt="@_course.Name" Width="300" Class="mb-4 rounded-lg" Elevation="2" />
 
             <!-- Description -->
             <MudText Typo="Typo.body1" Class="mb-4">@_course.Description</MudText>
+
+                    @if (!string.IsNullOrEmpty(_course.PolicyHyperLink))
+                    {
+                         <MudLink Target=""  Href="@_course.PolicyHyperLink">Policy</MudLink>
+                    }
 
             <MudDivider />
 
@@ -70,13 +75,12 @@
                </MudStack>
                <!-- CTA -->
 
-               <MudChipSet T="string">
-                    @* <MudChip T="string" Selected="@(_selectedCategory == null)">All</MudChip> *@
+@*                <MudChipSet T="string">
                     @foreach (var cat in _course.AcedemicGroups)
                     {
                          <MudChip Color="Color.Secondary" Variant="Variant.Outlined">@cat</MudChip>
                     }
-               </MudChipSet>
+               </MudChipSet> *@
 
 @*                <MudChip T="string" Color="Color.Secondary" Variant="Variant.Outlined">
                     @_course.Category
