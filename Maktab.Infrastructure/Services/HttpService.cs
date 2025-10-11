@@ -159,22 +159,17 @@ namespace Maktab.Infrastructure.Services
                          //     return default!;
                          //}
 
+                         try
+                         {
+                              return await response.Content.ReadFromJsonAsync<T>(_serializerOptions, cancellationToken);
+                         }
+                         catch (Exception ex)
+                         {
+                              return default;
+                         }
                     }
-                    //else
-                    //{
-                    try
-                    {
-                         return await response.Content.ReadFromJsonAsync<T>(_serializerOptions, cancellationToken);
-                    }
-                    catch (Exception ex)
-                    {
-                         return default;
-                    }
-                    //}
-                    //}
 
-                    //response.EnsureSuccessStatusCode();
-                    //return default;
+                    return default;
                }
           }
 
