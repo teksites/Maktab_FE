@@ -16,5 +16,6 @@ namespace Maktab.Core.Interfaces.Services
           Task<Guid> GetFamilyIdByUserInfoAsync(string userEmail, string userPhone);
           Task<ExtendedUserInformationResponse> GetExtendedInfoByUserIdAsync(Guid userId);
           Task<ExtendedUserInformationResponse> SaveExtendedInfoAsync(Guid userId, AddExtendedUserInformationRequest request);
+          Task<IEnumerable<UserInformationResponse>> GetFamilyByFamilyId(Guid familyId);
      }
 }

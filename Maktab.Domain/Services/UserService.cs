@@ -19,13 +19,15 @@ namespace Maktab.Domain.Services
           private const string getFamilIdByUserInfo = @"/api/users/familyinfo";
           private const string getExtendedInfoByUserId = @"/api/users/{0}/extendedinfo";
           private const string saveExtendedInfo = @"/api/users/{0}/extendedinfo";
+          private const string getFamilyDetails = @"/api/users/family/{0}";
 
 
 
 
 
 
-          public UserService(IHttpService httpService, ILocalStorageService localStorageService) 
+
+          public UserService(IHttpService httpService, ILocalStorageService localStorageService)
           : base(httpService, localStorageService)
           {
           }
@@ -92,7 +94,7 @@ namespace Maktab.Domain.Services
                     Email = userEmail,
                };
 
-               if(string.IsNullOrEmpty(userPhone))
+               if (string.IsNullOrEmpty(userPhone))
                {
                     formatedUrl.Phone = userPhone;
                }
@@ -118,6 +120,13 @@ namespace Maktab.Domain.Services
           {
                var formatedUrl = string.Format(saveExtendedInfo, userId);
                var result = await _httpService.Post<ExtendedUserInformationResponse>(formatedUrl, request);
+               return result;
+          }
+
+          public async Task<IEnumerable<UserInformationResponse>> GetFamilyByFamilyId(Guid familyId)
+          {
+               var formatedUrl = string.Format(getFamilyDetails, familyId);
+               var result = await _httpService.Get<IEnumerable<UserInformationResponse>>(formatedUrl);
                return result;
           }
      }

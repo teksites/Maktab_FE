@@ -21,8 +21,30 @@
      @if(isInitialized)
      {
     <ParentInfoCard Parent="@userInfo" OnEdit="EditProfile" />
-    <ChildSimplifiedList Children="@Children" OnViewCourses="ViewCourses" OnAddChild="AddChild" />
-    <CourseSimplifiedTable Courses="@Courses" />
+
+          <!-- Spouse Section -->
+          <MudText Typo="Typo.h5" Class="mt-10 mb-6">Spouse</MudText>
+          @if (_SpouseInfo != null)
+          {
+               <ParentInfoCard Parent="@_SpouseInfo" OnEdit="EditProfile" />
+          }
+          else
+          {
+               <MudSpacer />
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="AddSpouseDialog" Class="mb-4">
+                    Add Spouse
+               </MudButton>
+          }
+
+
+
+
+          <!-- Children Overview via reusable component -->
+           <MudText Typo="Typo.h5" Class="mb-4"> Children</MudText>
+          <ChildList Children="@Children" FamilyId="@userInfo.FamilyId" />
+          @* <CourseList Courses=@_courses />
+    @* <ChildSimplifiedList Children="@Children" OnViewCourses="ViewCourses" OnAddChild="AddChild" /> *@
+    @* <CourseSimplifiedTable Courses="@Courses" /> *@
           <ContactSimplifiedList Contacts="@OtherContacts" OnAddContact="AddContact" />
      }
      else
@@ -33,9 +55,13 @@
 
 @code {
      private UserInformationResponse userInfo = null;
-     private IEnumerable<ChildResponse> Children = Enumerable.Empty<ChildResponse>();
+     private UserInformationResponse _SpouseInfo = null;
+
+     private IList<ChildResponse> Children = Array.Empty<ChildResponse>();
      private IEnumerable<CourseResponseDetailed> Courses = Enumerable.Empty<CourseResponseDetailed>();
      private IEnumerable<OtherContactResponse> OtherContacts = Enumerable.Empty<OtherContactResponse>();
+     private IEnumerable<UserInformationResponse> _FamilyDetails = Enumerable.Empty<UserInformationResponse>();
+
      //private IEnumerable<StudentCourseEnrollmentResponse> _enrolledCourses = Enumerable.Empty<StudentCourseEnrollmentResponse>();
 
      bool isInitialized;
@@ -58,6 +84,10 @@
 
           Courses = _courses.Where(x => enrolledCourseIds.Contains(x.CourseId)).ToList();
 
+          _FamilyDetails = await UserService.GetFamilyByFamilyId(userInfo.FamilyId);
+
+          _SpouseInfo = _FamilyDetails?.Where(x => x.UserId != this.userId).FirstOrDefault();
+
 
 
           //studentCourseTransaction = await CourseEnrollmentService.GetCoursePaymentDetailsForFamily(userInfo.FamilyId);
@@ -66,7 +96,12 @@
      }
 
      private void EditProfile(UserInformationResponse parent) { }
-    private void AddChild() { }
-    private void ViewCourses(Guid id) { }
-    private void AddContact() { }
+     private void AddChild() { }
+     private void ViewCourses(Guid id) { }
+     private void AddContact() { }
+
+     private void AddSpouseDialog()
+     {
+          
+     }
 }
