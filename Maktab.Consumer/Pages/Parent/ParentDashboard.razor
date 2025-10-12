@@ -17,6 +17,7 @@
 @inject IChildrenService ChildrenService
 @inject INotificationService NotificationService
 @inject ICourseEnrollmentService CourseEnrollmentService
+@inject ICourseService CourseService
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
 
@@ -44,26 +45,58 @@
           <MudGrid Class="mb-6">
                <MudItem xs="12" sm="6" md="3">
                     <MudCard Class="pa-4">
-                         <MudText Typo="Typo.h6">Children</MudText>
-                         <MudText Typo="Typo.h4">@(children.Count())</MudText>
+                         <MudCardHeader>
+                              <CardHeaderContent>
+                                   <MudText Typo="Typo.h6">Children</MudText>
+                              </CardHeaderContent>
+                         </MudCardHeader>
+                         <MudCardContent>
+                              <MudText Typo="Typo.h4">@(children.Count())</MudText>
+                         </MudCardContent>
                     </MudCard>
                </MudItem>
                <MudItem xs="12" sm="6" md="3">
                     <MudCard Class="pa-4">
-                         <MudText Typo="Typo.h6">Registered Courses</MudText>
-                         <MudText Typo="Typo.h4">0</MudText>
+                         <MudCardHeader>
+                              <CardHeaderContent>
+                                   <MudText Typo="Typo.h6">Registered Courses</MudText>
+                              </CardHeaderContent>
+                         </MudCardHeader>
+                         <MudCardContent>
+
+                              <MudText Typo="Typo.h4">0</MudText>
+                         </MudCardContent>
                     </MudCard>
                </MudItem>
                <MudItem xs="12" sm="6" md="3">
                     <MudCard Class="pa-4">
-                         <MudText Typo="Typo.h6">Upcoming Classes</MudText>
-                         <MudText Typo="Typo.h4">2</MudText>
+                         <MudCardHeader>
+                              <CardHeaderContent>
+                                   <MudText Typo="Typo.h6">Upcoming Classes</MudText>
+                              </CardHeaderContent>
+                         </MudCardHeader>
+                         <MudCardContent>
+                              <MudText Typo="Typo.h4">2</MudText>
+                         </MudCardContent>
                     </MudCard>
                </MudItem>
                <MudItem xs="12" sm="6" md="3">
                     <MudCard Class="pa-4">
-                         <MudText Typo="Typo.h6">Amount Due</MudText>
-                         <MudText Typo="Typo.h4">@AmountPayable</MudText>
+                         <MudCardHeader>
+                              <CardHeaderContent>
+                                   <MudText Typo="Typo.h6">Amount Due</MudText>
+
+                              </CardHeaderContent>
+                              <CardHeaderActions>
+                                   @if (this.AmountPayable > 0)
+                                   {
+                                        <MudIconButton Icon="@Icons.Material.Filled.Payment" Color="Color.Default" />
+                                   }
+                              </CardHeaderActions>
+                         </MudCardHeader>
+                         <MudCardContent>
+                              <MudText Typo="Typo.h4">@AmountPayable</MudText>
+                         </MudCardContent>
                     </MudCard>
                </MudItem>
           </MudGrid>
@@ -71,23 +104,50 @@
 
           @if (studentCourseEnrollments?.Any() == true)
           {
-               <MudPaper Class="pa-4">
+               @* <MudPaper Class="pa-4">
                     <MudStack Row="true">
                          <MudText Typo="Typo.h5" Class="mb-4 mt-6">You have some enrollments</MudText>
                          <MudSpacer/>
                          <MudFab Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ShoppingCart"  />
                     </MudStack>
-               </MudPaper>
-               
+               </MudPaper> *@
+               <MudContainer xs="12" sm="6" md="4">
+                    <EnrollmentNotification Enrollments="studentCourseEnrollments"
+                                            Children="children"
+                                            Courses="_enrolledCourses"
+                                            OnViewDetails="ShowEnrollmentDetails"
+                                            OnViewAll="GoToAllEnrollments" />
+               </MudContainer>
+
+
+@*                <MudGrid>
+                    @foreach (var e in studentCourseEnrollments)
+                    {
+                         <MudItem xs="12" sm="6" md="4">
+                              <EnrollmentCard Enrollment="@e"
+                                              CourseTitle="@GetCourseTitle(e.CourseId)"
+                                              ChildName="@GetChildName(e.ChildId)"
+                                              OnView="ShowEnrollmentDetails"
+                                              OnEdit="EditEnrollment" />
+                         </MudItem>
+                    }
+               </MudGrid> *@
+
+          }
+          else
+          {
+                         <!-- Courses Section -->
+               <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
+               <CourseList Courses="_enrolledCourses" />
           }
 
 
           <!-- Children Overview via reusable component -->
-          <MudText Typo="Typo.h5" Class="mb-4">Your Children</MudText>
-          <ChildList Children="@children" FamilyId="@userInfo.FamilyId" />
+         @*  <MudText Typo="Typo.h5" Class="mb-4">Your Children</MudText>
+          <ChildList Children="@children" FamilyId="@userInfo.FamilyId" /> *@
 
           <!-- Notifications -->
-          <MudText Typo="Typo.h5" Class="mb-4 mt-6">Recent Notifications</MudText>
+          @* <MudText Typo="Typo.h5" Class="mb-4 mt-6">Recent Notifications</MudText>
           <MudPaper Class="pa-4">
                <MudList T="Notification" Dense="true">
                     @foreach (var note in notifications)
@@ -95,15 +155,15 @@
                          <MudListItem>
                               <MudStack Row="true">
                                    <MudIcon Icon="@Icons.Material.Filled.Event" Color="Color.Primary" Class="me-2" />
-                                   <MudStack AlignItems="AlignItems.Start" Justify="Justify.FlexStart" Spacing="0"  >
+                                   <MudStack AlignItems="AlignItems.Start" Justify="Justify.FlexStart" Spacing="0">
                                         <MudText>@note.Message</MudText>
-                                        <MudText Typo="Typo.subtitle2" >@note.Timestamp.ToShortDateString()</MudText>
+                                        <MudText Typo="Typo.subtitle2">@note.Timestamp.ToShortDateString()</MudText>
                                    </MudStack>
                               </MudStack>
                          </MudListItem>
                     }
                </MudList>
-          </MudPaper>
+          </MudPaper> *@
 
           <!-- Courses Section -->
           @* <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
@@ -149,6 +209,7 @@
      // IEnumerable<Course> _courses = Enumerable.Empty<Course>();
      IEnumerable<StudentCourseEnrollmentResponse> studentCourseEnrollments;
      StudentCourseTransactionResponse studentCourseTransaction;
+     IEnumerable<CourseResponseDetailed> _enrolledCourses;
 
      protected decimal AmountPayable
      {
@@ -178,7 +239,18 @@
           // _courses = await InstitutionService.GetCoursesByInstitutionIdAsync(Guid.NewGuid());
 
           studentCourseEnrollments = await CourseEnrollmentService.GetCourseEnrollmentsByFamilyIdAsync(userInfo.FamilyId);
-          studentCourseTransaction = await CourseEnrollmentService.GetCoursePaymentDetailsForFamily(userInfo.FamilyId);
+          if (studentCourseEnrollments?.Any() == true)
+          {
+               var enrolledCoursesIds = studentCourseEnrollments.Select(x => x.CourseId).ToList();
+               _enrolledCourses = await CourseService.GetCurrentActiveCoursesAsync();
+               //await CourseService.GetCoursesByIdsAsync(enrolledCoursesIds?.Distinct());
+               studentCourseTransaction = await CourseEnrollmentService.GetCoursePaymentDetailsForFamily(userInfo.FamilyId);
+          }
+          else
+          {
+               _enrolledCourses = await CourseService.GetCurrentActiveCoursesAsync();
+          }
+
           isInitialized = true;
           RequestRender();
      }
@@ -208,4 +280,58 @@
      }
 
      private Task EditChild(ChildResponse child) => OpenChildDialog(child);
+
+     private Task ShowEnrollmentDetails(StudentCourseEnrollmentResponse e)
+     {
+          var parameters = new DialogParameters
+          {
+               ["Enrollment"] = e,
+               ["CourseTitle"] = GetCourseTitle(e.CourseId),
+               ["ChildName"] = GetChildName(e.ChildId)
+          };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Small, CloseButton = true};
+          var dialog = DialogService.Show<EnrollmentDetailsDialog>("Enrollment Details", parameters, options);
+          return dialog.Result.ContinueWith(_ => Snackbar.Add($"Viewed {GetCourseTitle(e.CourseId)}", Severity.Info));
+     }
+
+     private Task EditEnrollment(StudentCourseEnrollmentResponse e)
+     {
+          Snackbar.Add($"Editing enrollment for {GetChildName(e.ChildId)}", Severity.Success);
+          return Task.CompletedTask;
+     }
+
+     private Task GoToAllEnrollments()
+     {
+          Snackbar.Add("Navigate to enrollments list", Severity.Info);
+          return Task.CompletedTask;
+     }
+
+     //private string GetCourseTitle(Guid id) => $"Course {id.ToString()[..5]}";
+     //private string GetChildName(Guid id) => $"Child {id.ToString()[..5]}";
+
+     private string GetCourseTitle(Guid courseId)
+     {
+          string courseName = _enrolledCourses?.FirstOrDefault(x => x.CourseId == courseId)?.Name;
+
+          if (string.IsNullOrEmpty(courseName))
+          {
+               return $"Course {courseId.ToString()[..5]}";
+          }
+
+          return courseName;
+
+     }
+
+     private string GetChildName(Guid childId)
+     {
+          var child = children?.FirstOrDefault(x => x.ChildId == childId);
+
+          if (child == null)
+          {
+               return $"Child {childId.ToString()[..5]}";
+          }
+
+          return $"{child.FirstName} {child.LastName}";
+     }
+
 }

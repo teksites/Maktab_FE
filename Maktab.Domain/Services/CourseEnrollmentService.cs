@@ -32,6 +32,9 @@ namespace Maktab.Domain.Services
                     ChildId = studentCourseEnrollment.ChildId,
                     FamilyId = familyId,
                     CreatedAt = DateTime.Now,
+                    DayCareDays = studentCourseEnrollment.DayCareDays,
+                    WillUseDayCare = studentCourseEnrollment.WillUseDayCare,
+                    IsActive = studentCourseEnrollment.IsActive,
                };
           }
 

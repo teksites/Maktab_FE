@@ -1,0 +1,56 @@
+﻿@inherits BaseComponent<EnrollmentDetailsDialog>
+@using MaktabDataContracts.Responses.Course
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        @* <MudStack Spacing="2"> *@
+            @* <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between">
+                <MudText Typo="Typo.h6">Enrollment Details</MudText>
+                <MudIconButton Icon="@Icons.Material.Filled.Close" OnClick="Close" />
+            </MudStack>
+
+            <MudDivider /> *@
+
+            <MudGrid>
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.subtitle2">Course</MudText>
+                    <MudText Typo="Typo.body2">@CourseTitle</MudText>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.subtitle2">Child</MudText>
+                    <MudText Typo="Typo.body2">@ChildName</MudText>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.subtitle2">Daycare</MudText>
+                    <MudText Typo="Typo.body2">@DayCareText</MudText>
+                </MudItem>
+                <MudItem xs="12" sm="6">
+                    <MudText Typo="Typo.subtitle2">Status</MudText>
+                    <MudChip T="string" Color="@GetStatusColor()" Variant="Variant.Filled" Size="Size.Small">@StatusText</MudChip>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Created: @Enrollment.CreatedAt:</MudText>
+                    @* <br />
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Updated: @Enrollment.UpdatedOn:f</MudText> *@
+                </MudItem>
+            </MudGrid>
+        @* </MudStack> *@
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" Variant="Variant.Text" OnClick="Close">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public StudentCourseEnrollmentResponse Enrollment { get; set; } = default!;
+    [Parameter] public string CourseTitle { get; set; } = string.Empty;
+    [Parameter] public string ChildName { get; set; } = string.Empty;
+
+    private string DayCareText => Enrollment.WillUseDayCare ? $"{Enrollment.DayCareDays} days" : "No";
+    private string StatusText => Enrollment.IsActive ? "Active" : "Inactive";
+    private Color GetStatusColor() => Enrollment.IsActive ? Color.Success : Color.Warning;
+
+    private void Close() => MudDialog.Close();
+}

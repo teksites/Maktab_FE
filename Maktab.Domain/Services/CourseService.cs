@@ -30,14 +30,20 @@ namespace Maktab.Domain.Services
           {
           }
 
-          public async Task<IEnumerable<CourseResponseDetailed>> GetCoursesAsync(DateTime offeredFromDate, DateTime offeredToDate, bool isActive = true, IEnumerable<Guid> instituteIds = null, IEnumerable<string> achedemicGroups = null)
+          public async Task<IEnumerable<CourseResponseDetailed>> GetCoursesAsync(DateTime? offeredFromDate = null, DateTime? offeredToDate = null, bool isActive = true, IEnumerable<Guid> instituteIds = null, IEnumerable<string> achedemicGroups = null)
           {
                var sb = new StringBuilder(getCourses);
-               sb.Append('?')
-               //.Append(string.Format(offeredFromDateString, offeredFromDate));
-               //sb.Append('&').Append(string.Format(offeredToDateString, offeredFromDate));
-               //sb.Append('&')
-               .Append(string.Format(isActiveString, isActive));
+               sb.Append('?').Append(string.Format(isActiveString, isActive));
+
+               //if(offeredFromDate.HasValue)
+               //{
+               //     sb.Append('&').Append(string.Format(offeredFromDateString, offeredFromDate));
+               //}
+
+               //if (offeredToDate.HasValue)
+               //{
+               //     sb.Append('&').Append(string.Format(offeredToDateString, offeredFromDate));
+               //}
 
                if (instituteIds != null)
                {
@@ -57,6 +63,11 @@ namespace Maktab.Domain.Services
 
                var result = await _httpService.Get<IEnumerable<CourseResponseDetailed>>(sb.ToString());
                return result;
+          }
+
+          public async Task<IEnumerable<CourseResponseDetailed>> GetCoursesByIdsAsync(IEnumerable<Guid> instituteIds)
+          {
+               return await GetCoursesAsync( isActive:false, instituteIds: instituteIds);
           }
 
           public async Task<IEnumerable<CourseResponseDetailed>> GetCoursesByInstitutionIdAsync(DateTime offeredFromDate, DateTime offeredToDate, Guid institutionId)

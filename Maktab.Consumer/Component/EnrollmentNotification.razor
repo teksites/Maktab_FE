@@ -1,54 +1,125 @@
 ﻿@inherits BaseComponent<EnrollmentNotification>
+@using MaktabDataContracts.Responses.Children
 @using MaktabDataContracts.Responses.Course
 @using MudBlazor
 
 @* @typeparam TEnrollment *@
 
 <MudPaper Class="pa-4 rounded-lg" Elevation="2">
-    <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">
-        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-            <MudIcon Icon="@Icons.Material.Filled.NotificationsActive" Color="Color.Primary" Size="Size.Large" />
-            <MudText Typo="Typo.h6">Enrollment Notifications</MudText>
-        </MudStack>
-        <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="ViewAll">View All</MudButton>
-    </MudStack>
-
-    @if (Enrollments?.Any() == true)
-    {
-          <MudList T="StudentCourseEnrollmentResponse" Dense="true">
-            @foreach (var enrollment in Enrollments.Take(MaxItems))
-            {
-                <MudListItem Class="py-2">
-                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width:100%">
-                        <MudAvatar Size="Size.Small" Color="Color.Info" Icon="@Icons.Material.Filled.School" />
-                        <div style="flex:1; min-width:0">
-                            <MudText Typo="Typo.subtitle2" Class="text-truncate">@GetCourseTitle(enrollment.CourseId)</MudText>
-                            <MudText Typo="Typo.caption" Color="Color.Secondary">@($"Enrolled on {enrollment.CreatedAt:d}")</MudText>
-                        </div>
-
-                        <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowRight" OnClick="@(() => ViewDetails(enrollment))" Edge="Edge.End" Color="Color.Default" />
+     <MudExpansionPanel>
+          <TitleContent>
+               <MudContainer>
+                    @* <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">*@
+                    <MudStack Row="true" AlignItems="AlignItems.Center">
+                         <MudText Typo="Typo.h6">Enrollments</MudText>
+                         <MudSpacer />
+                         <MudIcon Icon="@Icons.Material.Filled.NotificationsActive" Color="Color.Warning" Size="Size.Medium" />
                     </MudStack>
-                </MudListItem>
-            }
-        </MudList>
-    }
-    else
-    {
-        <MudText Typo="Typo.body2" Color="Color.Secondary">No recent enrollments.</MudText>
-    }
+
+                    @* <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="ViewAll">View All</MudButton>
+    </MudStack> *@
+               </MudContainer>
+          </TitleContent>
+
+          <ChildContent>
+               @if (Enrollments?.Any() == true)
+               {
+                    <MudList T="StudentCourseEnrollmentResponse" Dense="true" ReadOnly="true" >
+                         @foreach (var enrollment in Enrollments.Take(MaxItems))
+                         {
+                              <MudListItem Class="py-2">
+                                   <AvatarContent>
+                                        <MudChip>@GetChildName(enrollment.ChildId)</MudChip>
+                                   </AvatarContent>
+                                   <ChildContent>
+                                        <MudGrid Justify="Justify.Center">
+                                             <MudItem xs="6" sm="3">
+                                                  <MudText  Align="Align.Center" Class="text-truncate">@GetCourseTitle(enrollment.CourseId)</MudText>
+                                             </MudItem>
+
+                                             <MudItem xs="6" sm="3">
+                                                  @if (enrollment.WillUseDayCare)
+                                                  {
+                                                       <MudChip Variant="Variant.Outlined" Size="Size.Small">Day Care</MudChip>
+                                                  }
+                                             </MudItem>
+
+                                             <MudItem xs="6" sm="3">
+                                                  <MudIconButton Icon="@Icons.Material.Filled.Pageview" OnClick="@(() => ViewDetails(enrollment))" Edge="Edge.End" Color="Color.Default" />
+                                             </MudItem>
+
+                                        </MudGrid>
+                                        @* <MudStack Row="false"> *@
+                                       @*  <MudContainer>
+                                             <MudText Typo="Typo.caption" Color="Color.Default">@($"Enrolled on {enrollment.CreatedAt:d}")</MudText>
+                                        </MudContainer> *@
+
+                                        @* <MudSpacer/> *@
+                                                
+                                   @* </MudStack> *@
+                                   </ChildContent>
+
+                                 @*   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width:100%">
+                                        <MudAvatar Size="Size.Small" Color="Color.Inherit">@GetChildName(enrollment.ChildId)[0]</MudAvatar>
+                                        <div style="flex:1; min-width:0">
+                                             <MudText Typo="Typo.subtitle1" Class="text-truncate">@GetChildName(enrollment.ChildId)</MudText>
+                                             <MudText Typo="Typo.subtitle2" Class="text-truncate">@GetCourseTitle(enrollment.CourseId)</MudText>
+                                             <MudText Typo="Typo.caption" Color="Color.Default">@($"Enrolled on {enrollment.CreatedAt:d}")</MudText>
+                                        </div>
+
+                                        <MudIconButton Icon="@Icons.Material.Filled.Pageview" OnClick="@(() => ViewDetails(enrollment))" Edge="Edge.End" Color="Color.Default" />
+                                   </MudStack> *@
+                              </MudListItem>
+                         }
+                    </MudList>
+               }
+               else
+               {
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">No recent enrollments.</MudText>
+               }
+          </ChildContent>
+     </MudExpansionPanel>
 </MudPaper>
 
 @code {
      [Parameter] public IEnumerable<StudentCourseEnrollmentResponse>? Enrollments { get; set; }
+     [Parameter] public IEnumerable<ChildResponse>? Children { get; set; }
+     [Parameter] public IEnumerable<CourseResponseDetailed>? Courses { get; set; }
+
+
      [Parameter] public EventCallback<StudentCourseEnrollmentResponse> OnViewDetails { get; set; }
-    [Parameter] public EventCallback OnViewAll { get; set; }
-    [Parameter] public int MaxItems { get; set; } = 5;
+     [Parameter] public EventCallback OnViewAll { get; set; }
+     [Parameter] public int MaxItems { get; set; } = 5;
 
      private Task ViewDetails(StudentCourseEnrollmentResponse e) => OnViewDetails.InvokeAsync(e);
-    private Task ViewAll() => OnViewAll.InvokeAsync();
+     private Task ViewAll() => OnViewAll.InvokeAsync();
 
-    // placeholder - replace with a real resolver from services
-    private string GetCourseTitle(Guid courseId) => $"Course {courseId.ToString()[..5]}";
+     // placeholder - replace with a real resolver from services
+     private string GetCourseTitle(Guid courseId)
+     {
+          string courseName = Courses?.FirstOrDefault(x => x.CourseId == courseId)?.Name;
+
+          if(string.IsNullOrEmpty(courseName))
+          {
+               return $"Course {courseId.ToString()[..5]}";
+          }
+
+          return courseName;
+
+     }
+
+     private string GetChildName(Guid childId)
+     {
+          var child = Children?.FirstOrDefault(x => x.ChildId == childId);
+
+          if (child == null)
+          {
+               return $"Child {childId.ToString()[..5]}";
+          }
+
+          return $"{child.FirstName} {child.LastName}";
+     }
+
 }
 
 
