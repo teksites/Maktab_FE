@@ -1,39 +1,33 @@
-﻿@inherits BaseFormComponent<EnrollmentNotification>
+﻿@inherits BaseComponent<EnrollmentNotification>
 @using MaktabDataContracts.Responses.Course
 @using MudBlazor
 
-<MudPaper Class="pa-4 rounded-lg shadow-sm" Elevation="2">
-    <div class="d-flex justify-space-between align-center mb-2">
-        <div class="d-flex align-center gap-2">
+@* @typeparam TEnrollment *@
+
+<MudPaper Class="pa-4 rounded-lg" Elevation="2">
+    <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
             <MudIcon Icon="@Icons.Material.Filled.NotificationsActive" Color="Color.Primary" Size="Size.Large" />
             <MudText Typo="Typo.h6">Enrollment Notifications</MudText>
-        </div>
-        <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="ViewAll">
-            View All
-        </MudButton>
-    </div>
+        </MudStack>
+        <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="ViewAll">View All</MudButton>
+    </MudStack>
 
     @if (Enrollments?.Any() == true)
     {
-        <MudList T="StudentCourseEnrollmentResponse" Dense="true">
-            @foreach (var enrollment in Enrollments.Take(5))
+          <MudList T="StudentCourseEnrollmentResponse" Dense="true">
+            @foreach (var enrollment in Enrollments.Take(MaxItems))
             {
-                <MudListItem>
-                     <AvatarContent>
-                        <MudAvatar Color="Color.Info" Size="Size.Small" Icon="@Icons.Material.Filled.School" />
-                         </AvatarContent>
-                    <ChildContent>
-                        <div>
-                            <MudText Typo="Typo.subtitle2">@GetCourseTitle(enrollment.CourseId)</MudText>
-                            <MudText Typo="Typo.caption" Color="Color.Secondary">
-                                Enrolled on @enrollment.CreatedAt.ToShortDateString()
-                            </MudText>
+                <MudListItem Class="py-2">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width:100%">
+                        <MudAvatar Size="Size.Small" Color="Color.Info" Icon="@Icons.Material.Filled.School" />
+                        <div style="flex:1; min-width:0">
+                            <MudText Typo="Typo.subtitle2" Class="text-truncate">@GetCourseTitle(enrollment.CourseId)</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">@($"Enrolled on {enrollment.CreatedAt:d}")</MudText>
                         </div>
-                    </ChildContent>
-@*                     <MudListItemIcon>
-                        <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowRight" Size="Size.Small"
-                                       OnClick="() => ViewDetails(enrollment)" />
-                    </MudListItemIcon> *@
+
+                        <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowRight" OnClick="@(() => ViewDetails(enrollment))" Edge="Edge.End" Color="Color.Default" />
+                    </MudStack>
                 </MudListItem>
             }
         </MudList>
@@ -45,17 +39,16 @@
 </MudPaper>
 
 @code {
-    [Parameter] public IEnumerable<StudentCourseEnrollmentResponse>? Enrollments { get; set; }
-    [Parameter] public EventCallback<StudentCourseEnrollmentResponse> OnViewDetails { get; set; }
+     [Parameter] public IEnumerable<StudentCourseEnrollmentResponse>? Enrollments { get; set; }
+     [Parameter] public EventCallback<StudentCourseEnrollmentResponse> OnViewDetails { get; set; }
     [Parameter] public EventCallback OnViewAll { get; set; }
+    [Parameter] public int MaxItems { get; set; } = 5;
 
-    private void ViewDetails(StudentCourseEnrollmentResponse enrollment)
-        => OnViewDetails.InvokeAsync(enrollment);
+     private Task ViewDetails(StudentCourseEnrollmentResponse e) => OnViewDetails.InvokeAsync(e);
+    private Task ViewAll() => OnViewAll.InvokeAsync();
 
-    private void ViewAll()
-        => OnViewAll.InvokeAsync();
-
-    // In a real app this would come from a cache or injected service
-    private string GetCourseTitle(Guid courseId)
-        => $"Course #{courseId.ToString().Substring(0, 5)}";
+    // placeholder - replace with a real resolver from services
+    private string GetCourseTitle(Guid courseId) => $"Course {courseId.ToString()[..5]}";
 }
+
+
