@@ -194,7 +194,7 @@
           }
 
           //Add enrollments.
-          var items = await CourseEnrollmentService.AddCourseEnrollmentsAsync(familyId, addEnrollments);
+          var items = await CourseEnrollmentService.AddCourseEnrollmentsAsync(addEnrollments);
           if (items?.Any() == true)
           {
                Snackbar.Add("Enrollments have been added.", Severity.Success);
