@@ -43,7 +43,7 @@
      </MudCardContent>
      <MudCardActions>
           <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="NavigateToDetails">
-               View Details
+               @ViewDetailsButtonText
           </MudButton>
      </MudCardActions>
 </MudCard>
@@ -51,6 +51,7 @@
 @code {
      [Parameter] public CourseResponseDetailed Course { get; set; } = new();
      [Parameter] public bool ShowProgress { get; set; } = false;
+     [Parameter] public string ViewDetailsButtonText { get; set; } = "View Details";
 
      private void NavigateToDetails()
      {
