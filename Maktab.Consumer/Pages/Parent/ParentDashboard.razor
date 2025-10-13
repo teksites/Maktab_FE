@@ -1,13 +1,12 @@
 ﻿@page "/parent/dashboard"
 
+@using Maktab.Consumer.Dialogs
 @using Maktab.Consumer.Helpers
 @using Maktab.Models.Models
 @using MaktabDataContracts.Responses.Children
 @using MaktabDataContracts.Responses.Course
 @using MaktabDataContracts.Responses.Transactions
 @using MaktabDataContracts.Responses.Users
-
-
 
 @inherits BaseComponent<ParentDashboard>
 
@@ -17,6 +16,7 @@
 @inject IChildrenService ChildrenService
 @inject INotificationService NotificationService
 @inject ICourseEnrollmentService CourseEnrollmentService
+@inject ICourseEnrollmentTransactionService CourseEnrollmentTransactionService
 @inject ICourseService CourseService
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
@@ -51,7 +51,7 @@
                               </CardHeaderContent>
                          </MudCardHeader>
                          <MudCardContent>
-                              <MudText Typo="Typo.h4">@(children.Count())</MudText>
+                              <MudText Typo="Typo.h4">@(_Children.Count())</MudText>
                          </MudCardContent>
                     </MudCard>
                </MudItem>
@@ -59,12 +59,12 @@
                     <MudCard Class="pa-4">
                          <MudCardHeader>
                               <CardHeaderContent>
-                                   <MudText Typo="Typo.h6">Registered Courses</MudText>
+                                   <MudText Typo="Typo.h6">Enrolled Courses</MudText>
                               </CardHeaderContent>
                          </MudCardHeader>
                          <MudCardContent>
 
-                              <MudText Typo="Typo.h4">0</MudText>
+                              <MudText Typo="Typo.h4">@EnrolledCourses</MudText>
                          </MudCardContent>
                     </MudCard>
                </MudItem>
@@ -72,11 +72,11 @@
                     <MudCard Class="pa-4">
                          <MudCardHeader>
                               <CardHeaderContent>
-                                   <MudText Typo="Typo.h6">Upcoming Classes</MudText>
+                                   <MudText Typo="Typo.h6">Amount Paid</MudText>
                               </CardHeaderContent>
                          </MudCardHeader>
                          <MudCardContent>
-                              <MudText Typo="Typo.h4">2</MudText>
+                              <MudText Typo="Typo.h4">@AmountPaid</MudText>
                          </MudCardContent>
                     </MudCard>
                </MudItem>
@@ -88,10 +88,11 @@
 
                               </CardHeaderContent>
                               <CardHeaderActions>
-                                   @if (this.AmountPayable > 0)
-                                   {
-                                        <MudIconButton Icon="@Icons.Material.Filled.Payment" Color="Color.Default" />
-                                   }
+                                   @* @if (this.AmountPayable > 0)
+                                    { *@
+                                   <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenZeffyPaymentDialog">Pay Now</MudButton>
+                                       @* <MudIconButton Icon="@Icons.Material.Filled.Payment" Color="Color.Default" /> *@
+                                   @* } *@
                               </CardHeaderActions>
                          </MudCardHeader>
                          <MudCardContent>
@@ -102,7 +103,7 @@
           </MudGrid>
 
 
-          @if (studentCourseEnrollments?.Any() == true)
+          @if (_CourseEnrollments?.Any() == true)
           {
                @* <MudPaper Class="pa-4">
                     <MudStack Row="true">
@@ -112,9 +113,9 @@
                     </MudStack>
                </MudPaper> *@
                <MudContainer xs="12" sm="6" md="4">
-                    <EnrollmentNotification Enrollments="studentCourseEnrollments"
-                                            Children="children"
-                                            Courses="_enrolledCourses"
+                    <EnrollmentNotification Enrollments="_CourseEnrollments"
+                                            Children="_Children"
+                                            Courses="_Courses"
                                             OnViewDetails="ShowEnrollmentDetails"
                                             OnViewAll="GoToAllEnrollments" />
                </MudContainer>
@@ -134,12 +135,12 @@
                </MudGrid> *@
 
           }
-          else
-          {
+          //else
+          //{
                          <!-- Courses Section -->
                <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
-               <CourseList Courses="_enrolledCourses" />
-          }
+               <CourseList ViewDetailsButtonText="Enroll" Courses="_Courses" />
+          //}
 
 
           <!-- Children Overview via reusable component -->
@@ -204,27 +205,15 @@
      string userFullName = string.Empty;
      Guid userId = Guid.Empty;
      UserInformationResponse userInfo = null;
-     IList<ChildResponse> children = null;
+     IEnumerable<ChildResponse> _Children = null;
      IEnumerable<Notification> notifications = null;
-     // IEnumerable<Course> _courses = Enumerable.Empty<Course>();
-     IEnumerable<StudentCourseEnrollmentResponse> studentCourseEnrollments;
-     StudentCourseTransactionResponse studentCourseTransaction;
-     IEnumerable<CourseResponseDetailed> _enrolledCourses;
+     IEnumerable<StudentCourseEnrollmentResponse> _CourseEnrollments;
+     IList<StudentCourseTransactionResponse> _CourseTransactions;
+     IEnumerable<CourseResponseDetailed> _Courses;
 
-     protected decimal AmountPayable
-     {
-          get
-          {
-               if (studentCourseTransaction?.TotalPayable != null)
-               {
-                    return studentCourseTransaction.TotalPayable;
-               }
-               else
-               {
-                    return 0;
-               }
-          }
-     }
+     protected decimal AmountPayable { get; set; } = 0;
+     protected decimal AmountPaid { get; set; } = 0;
+     protected int EnrolledCourses { get; set; } = 0;
 
 
      protected override async Task OnInitializedAsync()
@@ -234,21 +223,46 @@
           userId = await SessionService.GetLoggedInUserIdAsync();
           userInfo = await UserService.GetUserByIdAsync(userId);
           userFullName = $"{userInfo.FirstName} {userInfo.LastName}";
-          children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
           notifications = await NotificationService.GetNotificationsByUserIdAsync(userInfo.UserId);
-          // _courses = await InstitutionService.GetCoursesByInstitutionIdAsync(Guid.NewGuid());
 
-          studentCourseEnrollments = await CourseEnrollmentService.GetCourseEnrollmentsByFamilyIdAsync(userInfo.FamilyId);
-          if (studentCourseEnrollments?.Any() == true)
+          _CourseEnrollments = await CourseEnrollmentService.GetCourseEnrollmentsByFamilyIdAsync(userInfo.FamilyId);
+          if (_CourseEnrollments?.Any() == true)
           {
-               var enrolledCoursesIds = studentCourseEnrollments.Select(x => x.CourseId).ToList();
-               _enrolledCourses = await CourseService.GetCurrentActiveCoursesAsync();
-               //await CourseService.GetCoursesByIdsAsync(enrolledCoursesIds?.Distinct());
-               studentCourseTransaction = await CourseEnrollmentService.GetCoursePaymentDetailsForFamily(userInfo.FamilyId);
+               _Children = await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId);
+
+               var enrolledCoursesIds = _CourseEnrollments.Select(x => x.CourseId).ToList();
+               if(enrolledCoursesIds?.Any() == true)
+               {
+                    this.EnrolledCourses = enrolledCoursesIds.Count();
+               }
+               else
+               {
+                    this.EnrolledCourses = 0;
+               }
+
+               _Courses = await CourseService.GetCurrentActiveCoursesAsync();
+               var enrolledInstitutes = _Courses.Where(x => enrolledCoursesIds.Contains(x.CourseId))?.Select(y => y.InstituteId).Distinct();
+
+               if (enrolledInstitutes?.Any() == true)
+               {
+                    _CourseTransactions = new List<StudentCourseTransactionResponse>();
+                    foreach (var instituteId in enrolledInstitutes)
+                    {
+                         var courseTransaction = await CourseEnrollmentTransactionService.GetCourseEnrollmentTranasctionByFamilyAndInstituteIdAsync(userInfo.FamilyId, instituteId);
+                         if (courseTransaction != null)
+                         {
+                              _CourseTransactions.Add(courseTransaction);
+                         }
+                    }
+
+                    this.AmountPaid = _CourseTransactions.Sum(x => x.TotalAmountPaid);
+                    this.AmountPayable = _CourseTransactions.Sum(x => x.TotalPayable);
+               }
+               //GetCoursePaymentDetailsForFamily(userInfo.FamilyId);
           }
           else
           {
-               _enrolledCourses = await CourseService.GetCurrentActiveCoursesAsync();
+               _Courses = await CourseService.GetCurrentActiveCoursesAsync();
           }
 
           isInitialized = true;
@@ -311,7 +325,7 @@
 
      private string GetCourseTitle(Guid courseId)
      {
-          string courseName = _enrolledCourses?.FirstOrDefault(x => x.CourseId == courseId)?.Name;
+          string courseName = _Courses?.FirstOrDefault(x => x.CourseId == courseId)?.Name;
 
           if (string.IsNullOrEmpty(courseName))
           {
@@ -324,7 +338,7 @@
 
      private string GetChildName(Guid childId)
      {
-          var child = children?.FirstOrDefault(x => x.ChildId == childId);
+          var child = _Children?.FirstOrDefault(x => x.ChildId == childId);
 
           if (child == null)
           {
@@ -332,6 +346,28 @@
           }
 
           return $"{child.FirstName} {child.LastName}";
+     }
+
+     private async Task OpenZeffyPaymentDialog()
+     {
+          const string url = "/PaymentMethod/Payment?amount={0}&code={1}&email={2}";
+
+          string paymentCode = _CourseTransactions.FirstOrDefault()?.PaymentCode;
+
+          var navigationUrl = string.Format(url, AmountPayable.ToString(), paymentCode, userInfo.Email);
+          NavigationManager.NavigateTo(navigationUrl, true);
+
+
+          // var parameters = new DialogParameters { ["PaymentCode"] = paymentCode, ["AmountDue"] = AmountPayable.ToString(), ["UserEmail"] = userInfo.Email };
+          // var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+
+          // var dialog = await DialogService.ShowAsync<ZeffyPaymentDialog>("Payment", parameters, options);
+          // var result = await dialog.Result;
+
+          // if (!result.Canceled && result.Data is ChildResponse child)
+          // {
+          //      Children.Add(child);
+          // }
      }
 
 }

@@ -33,6 +33,8 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddScoped<ICourseService, CourseService>()
                 .AddScoped<ICourseEnrollmentService, CourseEnrollmentService>()
                 .AddScoped<INotificationService, NotificationService>()
+                .AddScoped<IPaymentService, PaymentService>()
+                .AddScoped<ICourseEnrollmentTransactionService, CourseEnrollmentTransaction>()
                 .AddScoped<ThemeService>()
                 .AddScoped<AuthenticationStateProvider, AuthStateProvider>()
                 .AddSingleton<ISystemService, SystemService>();
