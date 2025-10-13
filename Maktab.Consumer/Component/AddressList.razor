@@ -1,0 +1,95 @@
+﻿@inherits BaseComponent<AddressList>
+
+@using MaktabDataContracts.Responses.Addresses
+@using MudBlazor
+@using System.Globalization
+@* @typeparam TAddress *@
+
+<MudPaper Class="pa-3 rounded-lg" Elevation="2">
+    <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">
+        <MudText Typo="Typo.h6">Addresses</MudText>
+        @if (ShowAddButton)
+        {
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="OnAddClicked">
+                Add Address
+            </MudButton>
+        }
+    </MudStack>
+
+    @if (Addresses is not null && Addresses.Any())
+    {
+          <MudList T="AddressResponse" Dense="false">
+            @foreach (var address in Addresses)
+            {
+                <MudListItem Class="pa-2 my-1 rounded-md" Style="border: 1px solid var(--mud-palette-divider);">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width: 100%;">
+                        <MudAvatar Color="@(address.HomeAddress ? Color.Success : Color.Info)" Icon="@Icons.Material.Filled.Home" Size="Size.Medium" />
+
+                        <MudStack Style="flex:1; min-width:0">
+                            <MudText Typo="Typo.subtitle1" Class="text-truncate">
+                                @GetAddressTitle(address)
+                            </MudText>
+
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                @GetFormattedAddress(address)
+                            </MudText>
+
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                Added on @address.CreatedAt.ToString("d", CultureInfo.InvariantCulture)
+                            </MudText>
+                        </MudStack>
+
+                      @*   <MudChip Color="@(address.IsActive ? Color.Success : Color.Warning)"
+                                 Variant="Variant.Filled"
+                                 Size="Size.Small"
+                                 Label="@(address.IsActive ? "Active" : "Inactive")" /> *@
+
+                        <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
+                            <MudMenuItem OnClick="() => OnEditClicked(address)">Edit</MudMenuItem>
+                            <MudMenuItem OnClick="() => OnDeleteClicked(address)">Delete</MudMenuItem>
+                        </MudMenu>
+                    </MudStack>
+                </MudListItem>
+            }
+        </MudList>
+    }
+    else
+    {
+        <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-2">
+            No addresses available.
+        </MudText>
+    }
+</MudPaper>
+
+@code {
+    [Parameter] public IEnumerable<AddressResponse>? Addresses { get; set; }
+    [Parameter] public EventCallback<AddressResponse> OnEdit { get; set; }
+    [Parameter] public EventCallback<AddressResponse> OnDelete { get; set; }
+    [Parameter] public EventCallback OnAdd { get; set; }
+    [Parameter] public bool ShowAddButton { get; set; } = true;
+
+    private Task OnEditClicked(AddressResponse address) => OnEdit.InvokeAsync(address);
+    private Task OnDeleteClicked(AddressResponse address) => OnDelete.InvokeAsync(address);
+    private Task OnAddClicked() => OnAdd.InvokeAsync();
+
+    private static string GetAddressTitle(AddressResponse address)
+        => address.HomeAddress ? "Home Address" : $"{address.AddressType} Address";
+
+    private static string GetFormattedAddress(AddressResponse address)
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrWhiteSpace(address.UnitNo)) parts.Add($"Unit {address.UnitNo}");
+        if (!string.IsNullOrWhiteSpace(address.ApartmentNo)) parts.Add($"Apt {address.ApartmentNo}");
+        if (!string.IsNullOrWhiteSpace(address.AddressLine1)) parts.Add(address.AddressLine1);
+        if (!string.IsNullOrWhiteSpace(address.AddressLine2)) parts.Add(address.AddressLine2);
+        if (!string.IsNullOrWhiteSpace(address.City)) parts.Add(address.City);
+        if (!string.IsNullOrWhiteSpace(address.Province)) parts.Add(address.Province);
+        if (!string.IsNullOrWhiteSpace(address.Country)) parts.Add(address.Country);
+        if (!string.IsNullOrWhiteSpace(address.PostalCode)) parts.Add(address.PostalCode);
+
+        return string.Join(", ", parts);
+    }
+}
