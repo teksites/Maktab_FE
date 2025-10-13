@@ -14,6 +14,11 @@
     <p>Email: @UserEmail</p>
 }
 
+@if (!string.IsNullOrEmpty(UserEmail))
+{
+     <p style="font-size: 48px; font-weight: bold;"> Amount: @AmountDue </p>
+}
+
 <!-- Zeffy iframe -->
 <div style="position:relative;overflow:hidden;height:450px;width:100%; margin-bottom: 40px;">
     <iframe title="Donation form powered by Zeffy"
@@ -27,21 +32,24 @@
 <!-- Back button -->
 <button style="margin-top: 20px; width: 100%; padding: 15px; background-color: rgb(4, 160, 232); color: white; font-size: 20px; font-weight: bold; border: none; cursor: pointer;"
         @onclick="GoBackHome">
-    Back to Home
+    Back to Dashboard
 </button>
 
 @code {
-    private string PaymentCode { get; set; } = "";
-    private string UserEmail { get; set; } = "";
+     [Parameter] public string PaymentCode { get; set; } = "";
+     [Parameter] public string UserEmail { get; set; } = "";
+     [Parameter] public string AmountDue { get; set; } = "0";
 
     protected override void OnInitialized()
     {
         // Parse query string
-        var uri = new Uri(NavigationManager.Uri);
+        //var uri = new Uri(NavigationManager.Uri);
+          var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
 
-        PaymentCode = query.Get("code") ?? "";
-        UserEmail = query.Get("email") ?? "";
+          PaymentCode = query.Get("code") ?? "NoCode";
+          UserEmail = query.Get("email") ?? "a@b.c";
+          AmountDue = query.Get("amount") ?? "-1";
     }
 
     private void GoBackHome()
