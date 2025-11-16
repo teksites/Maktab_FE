@@ -88,11 +88,11 @@
 
                               </CardHeaderContent>
                               <CardHeaderActions>
-                                   @* @if (this.AmountPayable > 0)
-                                    { *@
-                                   <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenZeffyPaymentDialog">Pay Now</MudButton>
-                                       @* <MudIconButton Icon="@Icons.Material.Filled.Payment" Color="Color.Default" /> *@
-                                   @* } *@
+                                   @if (this.AmountPayable > 0)
+                                   {
+                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenZeffyPaymentDialog">Pay Now</MudButton>
+                                        @* <MudIconButton Icon="@Icons.Material.Filled.Payment" Color="Color.Default" /> *@
+                                   }
                               </CardHeaderActions>
                          </MudCardHeader>
                          <MudCardContent>
