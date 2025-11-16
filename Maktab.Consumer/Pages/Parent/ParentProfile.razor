@@ -22,21 +22,23 @@
      {
     <ParentInfoCard Parent="@userInfo" OnEdit="EditProfile" />
 
-          <!-- Spouse Section -->
-          <MudText Typo="Typo.h5" Class="mt-10 mb-6">Spouse</MudText>
-          @if (_SpouseInfo != null)
-          {
-               <ParentInfoCard Parent="@_SpouseInfo" OnEdit="EditProfile" />
-          }
-          else
-          {
-               <MudSpacer />
-               <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="AddSpouseDialog" Class="mb-4">
-                    Add Spouse
-               </MudButton>
-          }
-
-
+          <MudCard Class="mb-4 pa-4">
+               <MudStack Row="true">
+                    <!-- Spouse Section -->
+                    <MudText Typo="Typo.h5" >Spouse</MudText>
+                    @if (_SpouseInfo != null)
+                    {
+                         <ParentInfoCard Parent="@_SpouseInfo" OnEdit="EditProfile" />
+                    }
+                    else
+                    {
+                         <MudSpacer />
+                         <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="AddSpouseDialog" Class="mb-4">
+                              Add Spouse
+                         </MudButton>
+                    }
+               </MudStack>
+          </MudCard>
 
 
           <!-- Children Overview via reusable component -->
