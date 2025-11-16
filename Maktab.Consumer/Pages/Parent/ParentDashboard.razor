@@ -51,7 +51,7 @@
                               </CardHeaderContent>
                          </MudCardHeader>
                          <MudCardContent>
-                              <MudText Typo="Typo.h4">@(_Children.Count())</MudText>
+                              <MudText Typo="Typo.h4">@(_Children?.Count())</MudText>
                          </MudCardContent>
                     </MudCard>
                </MudItem>
@@ -262,6 +262,7 @@
           }
           else
           {
+               _Children = Enumerable.Empty<ChildResponse>();
                _Courses = await CourseService.GetCurrentActiveCoursesAsync();
           }
 
