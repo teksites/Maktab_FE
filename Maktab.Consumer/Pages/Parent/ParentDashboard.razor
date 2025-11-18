@@ -10,9 +10,7 @@
 
 @inherits BaseComponent<ParentDashboard>
 
-@* @inject IAccountService AccountService *@
 @inject IUserService UserService
-@* @inject IInstitutionService InstitutionService *@
 @inject IChildrenService ChildrenService
 @inject INotificationService NotificationService
 @inject ICourseEnrollmentService CourseEnrollmentService
@@ -24,9 +22,14 @@
      @if (isInitialized)
      {
 
-          <!-- Header -->
-          <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-6">
-               <MudText Typo="Typo.h4">Welcome, @userInfo.FirstName</MudText>
+          <MudGrid>
+               <MudItem xs="12" md="12">
+                    <!-- Header -->
+                    @* <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-6"> *@
+                    <MudContainer AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-6">
+                         <MudText Typo="Typo.h4">Welcome, @userInfo.FirstName</MudText>
+                    </MudContainer>
+               </MudItem>
 
                @* <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
             <!-- Notifications -->
@@ -39,89 +42,95 @@
                          @userFullName.Substring(0, 1).ToUpper()
             </MudAvatar>
         </MudStack> *@
-          </MudStack>
+               @* </MudStack> *@
 
-          <!-- Summary Cards -->
-          <MudGrid Class="mb-6">
-               <MudItem xs="12" sm="6" md="3">
-                    <MudCard Class="pa-4">
-                         <MudCardHeader>
-                              <CardHeaderContent>
-                                   <MudText Typo="Typo.h6">Children</MudText>
-                              </CardHeaderContent>
-                         </MudCardHeader>
-                         <MudCardContent>
-                              <MudText Typo="Typo.h4">@(_Children?.Count())</MudText>
-                         </MudCardContent>
-                    </MudCard>
+               <MudItem xs="12" md="12">
+
+                    <!-- Summary Cards -->
+                    <MudGrid Class="mb-6">
+                         <MudItem xs="12" sm="6" md="3">
+                              <MudCard Class="pa-4">
+                                   <MudCardHeader>
+                                        <CardHeaderContent>
+                                             <MudText Typo="Typo.h6">Children</MudText>
+                                        </CardHeaderContent>
+                                   </MudCardHeader>
+                                   <MudCardContent>
+                                        <MudText Typo="Typo.h4">@(_Children?.Count())</MudText>
+                                   </MudCardContent>
+                              </MudCard>
+                         </MudItem>
+                         <MudItem xs="12" sm="6" md="3">
+                              <MudCard Class="pa-4">
+                                   <MudCardHeader>
+                                        <CardHeaderContent>
+                                             <MudText Typo="Typo.h6">Enrolled Courses</MudText>
+                                        </CardHeaderContent>
+                                   </MudCardHeader>
+                                   <MudCardContent>
+
+                                        <MudText Typo="Typo.h4">@EnrolledCourses</MudText>
+                                   </MudCardContent>
+                              </MudCard>
+                         </MudItem>
+                         <MudItem xs="12" sm="6" md="3">
+                              <MudCard Class="pa-4">
+                                   <MudCardHeader>
+                                        <CardHeaderContent>
+                                             <MudText Typo="Typo.h6">Amount Paid</MudText>
+                                        </CardHeaderContent>
+                                   </MudCardHeader>
+                                   <MudCardContent>
+                                        <MudText Typo="Typo.h4">@AmountPaid</MudText>
+                                   </MudCardContent>
+                              </MudCard>
+                         </MudItem>
+                         <MudItem xs="12" sm="6" md="3">
+                              <MudCard Class="pa-4">
+                                   <MudCardHeader>
+                                        <CardHeaderContent>
+                                             <MudText Typo="Typo.h6">Amount Due</MudText>
+
+                                        </CardHeaderContent>
+                                        <CardHeaderActions>
+                                             @if (this.AmountPayable > 0)
+                                             {
+                                                  <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenZeffyPaymentDialog">Pay Now</MudButton>
+                                                  @* <MudIconButton Icon="@Icons.Material.Filled.Payment" Color="Color.Default" /> *@
+                                             }
+                                        </CardHeaderActions>
+                                   </MudCardHeader>
+                                   <MudCardContent>
+                                        <MudText Typo="Typo.h4">@AmountPayable</MudText>
+                                   </MudCardContent>
+                              </MudCard>
+                         </MudItem>
+                    </MudGrid>
                </MudItem>
-               <MudItem xs="12" sm="6" md="3">
-                    <MudCard Class="pa-4">
-                         <MudCardHeader>
-                              <CardHeaderContent>
-                                   <MudText Typo="Typo.h6">Enrolled Courses</MudText>
-                              </CardHeaderContent>
-                         </MudCardHeader>
-                         <MudCardContent>
-
-                              <MudText Typo="Typo.h4">@EnrolledCourses</MudText>
-                         </MudCardContent>
-                    </MudCard>
-               </MudItem>
-               <MudItem xs="12" sm="6" md="3">
-                    <MudCard Class="pa-4">
-                         <MudCardHeader>
-                              <CardHeaderContent>
-                                   <MudText Typo="Typo.h6">Amount Paid</MudText>
-                              </CardHeaderContent>
-                         </MudCardHeader>
-                         <MudCardContent>
-                              <MudText Typo="Typo.h4">@AmountPaid</MudText>
-                         </MudCardContent>
-                    </MudCard>
-               </MudItem>
-               <MudItem xs="12" sm="6" md="3">
-                    <MudCard Class="pa-4">
-                         <MudCardHeader>
-                              <CardHeaderContent>
-                                   <MudText Typo="Typo.h6">Amount Due</MudText>
-
-                              </CardHeaderContent>
-                              <CardHeaderActions>
-                                   @if (this.AmountPayable > 0)
-                                   {
-                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenZeffyPaymentDialog">Pay Now</MudButton>
-                                        @* <MudIconButton Icon="@Icons.Material.Filled.Payment" Color="Color.Default" /> *@
-                                   }
-                              </CardHeaderActions>
-                         </MudCardHeader>
-                         <MudCardContent>
-                              <MudText Typo="Typo.h4">@AmountPayable</MudText>
-                         </MudCardContent>
-                    </MudCard>
-               </MudItem>
-          </MudGrid>
 
 
-          @if (_CourseEnrollments?.Any() == true)
-          {
-               @* <MudPaper Class="pa-4">
+
+               @if (_CourseEnrollments?.Any() == true)
+               {
+                    @* <MudPaper Class="pa-4">
                     <MudStack Row="true">
                          <MudText Typo="Typo.h5" Class="mb-4 mt-6">You have some enrollments</MudText>
                          <MudSpacer/>
                          <MudFab Color="Color.Tertiary" StartIcon="@Icons.Material.Filled.ShoppingCart"  />
                     </MudStack>
                </MudPaper> *@
-               <MudContainer xs="12" sm="6" md="4">
-                    <EnrollmentNotification Enrollments="_CourseEnrollments"
-                                            Children="_Children"
-                                            Courses="_Courses"
-                                            OnViewDetails="ShowEnrollmentDetails"
-                                            OnViewAll="GoToAllEnrollments" />
-               </MudContainer>
+                    <MudItem xs="12" md="12">
+                         @* <MudContainer > *@
+                         <EnrollmentNotification Enrollments="_CourseEnrollments"
+                                                 Children="_Children"
+                                                 Courses="_Courses"
+                                                 OnViewDetails="ShowEnrollmentDetails"
+                                                 OnViewAll="GoToAllEnrollments" />
+                         @* </MudContainer> *@
+                    </MudItem>
 
 
-@*                <MudGrid>
+                    @*                <MudGrid>
                     @foreach (var e in studentCourseEnrollments)
                     {
                          <MudItem xs="12" sm="6" md="4">
@@ -134,21 +143,22 @@
                     }
                </MudGrid> *@
 
-          }
-          //else
-          //{
-                         <!-- Courses Section -->
-               <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
-               <CourseList ViewDetailsButtonText="Enroll" Courses="_Courses" />
-          //}
+               }
+
+               <MudItem xs="12" md="12">
+                    <!-- Courses Section -->
+                    <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
+                    <CourseList ViewDetailsButtonText="Enroll" Courses="_Courses" />
+               </MudItem>
 
 
-          <!-- Children Overview via reusable component -->
-         @*  <MudText Typo="Typo.h5" Class="mb-4">Your Children</MudText>
+
+               <!-- Children Overview via reusable component -->
+               @*  <MudText Typo="Typo.h5" Class="mb-4">Your Children</MudText>
           <ChildList Children="@children" FamilyId="@userInfo.FamilyId" /> *@
 
-          <!-- Notifications -->
-          @* <MudText Typo="Typo.h5" Class="mb-4 mt-6">Recent Notifications</MudText>
+               <!-- Notifications -->
+               @* <MudText Typo="Typo.h5" Class="mb-4 mt-6">Recent Notifications</MudText>
           <MudPaper Class="pa-4">
                <MudList T="Notification" Dense="true">
                     @foreach (var note in notifications)
@@ -166,9 +176,10 @@
                </MudList>
           </MudPaper> *@
 
-          <!-- Courses Section -->
-          @* <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
+               <!-- Courses Section -->
+               @* <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
           <CourseList Courses=@_courses /> *@
+          </MudGrid>
 
      }
      else
@@ -231,7 +242,7 @@
                _Children = await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId);
 
                var enrolledCoursesIds = _CourseEnrollments.Select(x => x.CourseId).ToList();
-               if(enrolledCoursesIds?.Any() == true)
+               if (enrolledCoursesIds?.Any() == true)
                {
                     this.EnrolledCourses = enrolledCoursesIds.Count();
                }
@@ -304,7 +315,7 @@
                ["CourseTitle"] = GetCourseTitle(e.CourseId),
                ["ChildName"] = GetChildName(e.ChildId)
           };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Small, CloseButton = true};
+          var options = new DialogOptions { MaxWidth = MaxWidth.Small, CloseButton = true };
           var dialog = DialogService.Show<EnrollmentDetailsDialog>("Enrollment Details", parameters, options);
           return dialog.Result.ContinueWith(_ => Snackbar.Add($"Viewed {GetCourseTitle(e.CourseId)}", Severity.Info));
      }
