@@ -7,7 +7,7 @@ namespace Maktab.Core.Interfaces.Services
      {
           Task<bool> DeleteContactByFamilyId(Guid familyId);
           Task<bool> DeleteContactById(Guid contactId);
-          Task<OtherContactResponse> GetContactByFamilyId(Guid familyId);
+          Task<IEnumerable<OtherContactResponse>> GetContactsByFamilyId(Guid familyId);
           Task<OtherContactResponse> GetContactById(Guid contactId);
           Task<bool> HasContactAddedForFamily(Guid familyId);
           Task<OtherContactResponse> SaveContactAsync(Guid familyId, AddOtherContact contact);
