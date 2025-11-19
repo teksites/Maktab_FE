@@ -36,7 +36,7 @@
                               else
                               {
                                    <MudSpacer />
-                                   <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="AddSpouse" Class="mb-4">
+                                   <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddSpouseDialog" Class="mb-4">
                                         Add Spouse
                                    </MudButton>
                               }
@@ -146,9 +146,19 @@
      private void ViewCourses(Guid id) { }
      private void AddContact() { }
 
-     private void AddSpouse()
+     private async Task OpenAddSpouseDialog()
      {
+          var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
 
+          var dialog = await DialogService.ShowAsync<AddSpouseDialog>("Add Spouse", parameters, options);
+          var result = await dialog.Result;
+
+          if (!result.Canceled && result.Data is UserInformationResponse spouse)
+          {
+               this._SpouseInfo = spouse;
+               this.RequestRender();
+          }
      }
      private void OnAddAddress()
      {
