@@ -2,6 +2,7 @@
 @attribute [Authorize]
 
 @using Maktab.Consumer.Dialogs
+@using MaktabDataContracts.Responses.Addresses
 @using MaktabDataContracts.Responses.Children
 @using MaktabDataContracts.Responses.Course
 @using MaktabDataContracts.Responses.OtherContacts
@@ -15,13 +16,15 @@
 @inject ICourseService CourseService
 @inject ICourseEnrollmentService CourseEnrollmentService
 @inject IDialogService DialogService
+@inject IAddressService AddressService
+@inject IContactService ContactService
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
      @if (isInitialized)
      {
           <MudGrid>
                <MudItem xs="12" md="12">
-                    <ParentInfoCard Parent="@userInfo" OnEdit="EditProfile" />
+                    <ParentInfoCard Parent="@userInfo" OnEdit="OnEditUserProfile" />
                </MudItem>
 
                <MudItem xs="12" md="12">
@@ -31,7 +34,7 @@
                               <MudText Typo="Typo.h5">Spouse</MudText>
                               @if (_SpouseInfo != null)
                               {
-                                   <ParentInfoCard Parent="@_SpouseInfo" OnEdit="EditProfile" />
+                                   <ParentInfoCard Parent="@_SpouseInfo" ShowEditButton="false" />
                               }
                               else
                               {
@@ -54,7 +57,7 @@
                                    Add Child
                               </MudButton>
                          </MudStack>
-                         <ChildList Children="@Children" ShowHeader="false" FamilyId="@userInfo.FamilyId" />
+                         <ChildList Children="@_Children" ShowHeader="false" FamilyId="@userInfo.FamilyId" />
                     </MudCard>
                </MudItem>
 
@@ -69,13 +72,13 @@
                               <MudText Typo="Typo.h5" Class="mb-4"> Contacts</MudText>
                               <MudSpacer />
 
-                              <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="AddContact" Class="mb-4">
+                              <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddContactDialog" Class="mb-4">
                                    Add Contact
                               </MudButton>
 
                          </MudStack>
 
-                         <ContactSimplifiedList ShowHeader="false" Contacts="@OtherContacts" OnAddContact="AddContact" />
+                         <ContactSimplifiedList ShowHeader="false" Contacts="@_OtherContacts" OnAddContact="OpenAddContactDialog" />
                     </MudCard>
                </MudItem>
 
@@ -86,12 +89,12 @@
                               <MudText Typo="Typo.h5" Class="mb-4"> Address</MudText>
                               <MudSpacer />
 
-                              <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OnAddAddress" Class="mb-4">
+                              <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddAddressDialog" Class="mb-4">
                                    Add Address
                               </MudButton>
 
                          </MudStack>
-                         <AddressList ShowHeader="false" />
+                         <AddressList Addresses="@_Addresses" ShowHeader="false" />
                     </MudCard>
                </MudItem>
 
@@ -107,10 +110,12 @@
      private UserInformationResponse userInfo = null;
      private UserInformationResponse _SpouseInfo = null;
 
-     private IList<ChildResponse> Children = Array.Empty<ChildResponse>();
-     private IEnumerable<CourseResponseDetailed> Courses = Enumerable.Empty<CourseResponseDetailed>();
-     private IEnumerable<OtherContactResponse> OtherContacts = Enumerable.Empty<OtherContactResponse>();
+     private IList<ChildResponse> _Children = Array.Empty<ChildResponse>();
+     // private IEnumerable<CourseResponseDetailed> Courses = Enumerable.Empty<CourseResponseDetailed>();
+     private IList<OtherContactResponse> _OtherContacts = Array.Empty<OtherContactResponse>();
      private IEnumerable<UserInformationResponse> _FamilyDetails = Enumerable.Empty<UserInformationResponse>();
+     private IList<AddressResponse> _Addresses = Array.Empty<AddressResponse>();
+
 
      //private IEnumerable<StudentCourseEnrollmentResponse> _enrolledCourses = Enumerable.Empty<StudentCourseEnrollmentResponse>();
 
@@ -124,27 +129,65 @@
           var userId = await SessionService.GetLoggedInUserIdAsync();
           userInfo = await UserService.GetUserByIdAsync(userId);
           userFullName = $"{userInfo.FirstName} {userInfo.LastName}";
-          Children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
+          _Children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
           //notifications = await NotificationService.GetNotificationsByUserIdAsync(userInfo.UserId);
           var _courses = await CourseService.GetCurrentActiveCoursesAsync();
           var _enrolledCourses = await CourseEnrollmentService.GetCourseEnrollmentsByFamilyIdAsync(userInfo.FamilyId);
 
           var enrolledCourseIds = _enrolledCourses?.Select(x => x.CourseId);
 
-          Courses = _courses.Where(x => enrolledCourseIds.Contains(x.CourseId)).ToList();
+          //Courses = _courses.Where(x => enrolledCourseIds.Contains(x.CourseId))?.ToList();
 
           _FamilyDetails = await UserService.GetFamilyByFamilyId(userInfo.FamilyId);
 
           _SpouseInfo = _FamilyDetails?.Where(x => x.UserId != this.userInfo.UserId).FirstOrDefault();
+          _Addresses = new List<AddressResponse>();
+          var userAddress = await AddressService.GetAddressByConnectedId(userInfo.UserId);
+          if(userAddress != null)
+          {
+               _Addresses.Add(userAddress);
+          }
+
+          _OtherContacts = new List<OtherContactResponse>();
+          //(await ContactService.GetContactsByFamilyId(userInfo.FamilyId))?.ToList();
 
           //studentCourseTransaction = await CourseEnrollmentService.GetCoursePaymentDetailsForFamily(userInfo.FamilyId);
           isInitialized = true;
           RequestRender();
      }
 
-     private void EditProfile(UserInformationResponse parent) { }
+     private async Task OnEditUserProfile(UserInformationResponse parent)
+     {
+          var parameters = new DialogParameters { ["Profile"] = userInfo };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<EditUserInfoDialog>("Edit Profile", parameters, options);
+          var result = await dialog.Result;
+
+          if (!result.Canceled && result.Data is UserInformationResponse userResponse)
+          {
+               userInfo = userResponse;
+               this.RequestRender();
+          }
+          
+     }
+
      private void ViewCourses(Guid id) { }
-     private void AddContact() { }
+
+     private async Task OpenAddContactDialog()
+     {
+          var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<AddContactDialog>("Add Contact", parameters, options);
+          var result = await dialog.Result;
+
+          if (!result.Canceled && result.Data is OtherContactResponse contact)
+          {
+               _OtherContacts.Add(contact);
+               this.RequestRender();
+          }
+     }
 
      private async Task OpenAddSpouseDialog()
      {
@@ -154,15 +197,25 @@
           var dialog = await DialogService.ShowAsync<AddSpouseDialog>("Add Spouse", parameters, options);
           var result = await dialog.Result;
 
+          if (!result.Canceled && result.Data is AddressResponse address)
+          {
+               _Addresses.Add(address);
+               this.RequestRender();
+          }
+     }
+     private async Task OpenAddAddressDialog()
+     {
+          var parameters = new DialogParameters { ["ConnectedId"] = userInfo.FamilyId };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<AddAddressDialog>("Add Address", parameters, options);
+          var result = await dialog.Result;
+
           if (!result.Canceled && result.Data is UserInformationResponse spouse)
           {
                this._SpouseInfo = spouse;
                this.RequestRender();
           }
-     }
-     private void OnAddAddress()
-     {
-
      }
 
      private async Task OpenAddChildDialog()
@@ -175,7 +228,7 @@
 
           if (!result.Canceled && result.Data is ChildResponse child)
           {
-               Children.Add(child);
+               _Children.Add(child);
           }
      }
 }
