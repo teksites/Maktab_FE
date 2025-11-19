@@ -1,58 +1,101 @@
 ﻿@page "/parent/profile"
 @attribute [Authorize]
 
+@using Maktab.Consumer.Dialogs
 @using MaktabDataContracts.Responses.Children
 @using MaktabDataContracts.Responses.Course
 @using MaktabDataContracts.Responses.OtherContacts
 @using MaktabDataContracts.Responses.Users
 @using Microsoft.AspNetCore.Authorization
 
-
 @inherits BaseComponent<ParentProfile>
 
 @inject IUserService UserService
-@* @inject IInstitutionService InstitutionService *@
 @inject IChildrenService ChildrenService
 @inject ICourseService CourseService
-@* @inject INotificationService NotificationService *@
 @inject ICourseEnrollmentService CourseEnrollmentService
+@inject IDialogService DialogService
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
-     @if(isInitialized)
+     @if (isInitialized)
      {
-    <ParentInfoCard Parent="@userInfo" OnEdit="EditProfile" />
+          <MudGrid>
+               <MudItem xs="12" md="12">
+                    <ParentInfoCard Parent="@userInfo" OnEdit="EditProfile" />
+               </MudItem>
 
-          <MudCard Class="mb-4 pa-4">
-               <MudStack Row="true">
-                    <!-- Spouse Section -->
-                    <MudText Typo="Typo.h5" >Spouse</MudText>
-                    @if (_SpouseInfo != null)
-                    {
-                         <ParentInfoCard Parent="@_SpouseInfo" OnEdit="EditProfile" />
-                    }
-                    else
-                    {
-                         <MudSpacer />
-                         <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="AddSpouseDialog" Class="mb-4">
-                              Add Spouse
-                         </MudButton>
-                    }
-               </MudStack>
-          </MudCard>
+               <MudItem xs="12" md="12">
+                    <MudCard Class="mb-4 pa-4">
+                         <MudStack Row="true">
+                              <!-- Spouse Section -->
+                              <MudText Typo="Typo.h5">Spouse</MudText>
+                              @if (_SpouseInfo != null)
+                              {
+                                   <ParentInfoCard Parent="@_SpouseInfo" OnEdit="EditProfile" />
+                              }
+                              else
+                              {
+                                   <MudSpacer />
+                                   <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="AddSpouse" Class="mb-4">
+                                        Add Spouse
+                                   </MudButton>
+                              }
+                         </MudStack>
+                    </MudCard>
+               </MudItem>
 
+               <MudItem xs="12" md="12">
+                    <MudCard Class="mb-4 pa-4">
+                         <MudStack Row="true">
+                              <!-- Children Overview via reusable component -->
+                              <MudText Typo="Typo.h5" Class="mb-4"> Children</MudText>
+                              <MudSpacer />
+                              <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
+                                   Add Child
+                              </MudButton>
+                         </MudStack>
+                         <ChildList Children="@Children" ShowHeader="false" FamilyId="@userInfo.FamilyId" />
+                    </MudCard>
+               </MudItem>
 
-          <!-- Children Overview via reusable component -->
-           <MudText Typo="Typo.h5" Class="mb-4"> Children</MudText>
-          <ChildList Children="@Children" FamilyId="@userInfo.FamilyId" />
-          @* <CourseList Courses=@_courses />
+               @* <CourseList Courses=@_courses />
     @* <ChildSimplifiedList Children="@Children" OnViewCourses="ViewCourses" OnAddChild="AddChild" /> *@
-    @* <CourseSimplifiedTable Courses="@Courses" /> *@
-          <ContactSimplifiedList Contacts="@OtherContacts" OnAddContact="AddContact" />
+               @* <CourseSimplifiedTable Courses="@Courses" /> *@
 
-          <MudText Typo="Typo.h5" Class="mb-4"> Address</MudText>
-          <AddressList  />
+               <MudItem xs="12" md="12">
+                    <MudCard Class="mb-4 pa-4">
+                         <MudStack Row="true">
 
+                              <MudText Typo="Typo.h5" Class="mb-4"> Contacts</MudText>
+                              <MudSpacer />
 
+                              <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="AddContact" Class="mb-4">
+                                   Add Contact
+                              </MudButton>
+
+                         </MudStack>
+
+                         <ContactSimplifiedList ShowHeader="false" Contacts="@OtherContacts" OnAddContact="AddContact" />
+                    </MudCard>
+               </MudItem>
+
+               <MudItem xs="12" md="12">
+                    <MudCard Class="mb-4 pa-4">
+                         <MudStack Row="true">
+
+                              <MudText Typo="Typo.h5" Class="mb-4"> Address</MudText>
+                              <MudSpacer />
+
+                              <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OnAddAddress" Class="mb-4">
+                                   Add Address
+                              </MudButton>
+
+                         </MudStack>
+                         <AddressList ShowHeader="false" />
+                    </MudCard>
+               </MudItem>
+
+          </MudGrid>
      }
      else
      {
@@ -73,13 +116,12 @@
 
      bool isInitialized;
      string userFullName = string.Empty;
-     Guid userId = Guid.Empty;
 
      protected override async Task OnInitializedAsync()
      {
           await base.OnInitializedAsync();
 
-          userId = await SessionService.GetLoggedInUserIdAsync();
+          var userId = await SessionService.GetLoggedInUserIdAsync();
           userInfo = await UserService.GetUserByIdAsync(userId);
           userFullName = $"{userInfo.FirstName} {userInfo.LastName}";
           Children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
@@ -93,9 +135,7 @@
 
           _FamilyDetails = await UserService.GetFamilyByFamilyId(userInfo.FamilyId);
 
-          _SpouseInfo = _FamilyDetails?.Where(x => x.UserId != this.userId).FirstOrDefault();
-
-
+          _SpouseInfo = _FamilyDetails?.Where(x => x.UserId != this.userInfo.UserId).FirstOrDefault();
 
           //studentCourseTransaction = await CourseEnrollmentService.GetCoursePaymentDetailsForFamily(userInfo.FamilyId);
           isInitialized = true;
@@ -103,12 +143,29 @@
      }
 
      private void EditProfile(UserInformationResponse parent) { }
-     private void AddChild() { }
      private void ViewCourses(Guid id) { }
      private void AddContact() { }
 
-     private void AddSpouseDialog()
+     private void AddSpouse()
      {
-          
+
+     }
+     private void OnAddAddress()
+     {
+
+     }
+
+     private async Task OpenAddChildDialog()
+     {
+          var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<AddChildDialog>("Add Child", parameters, options);
+          var result = await dialog.Result;
+
+          if (!result.Canceled && result.Data is ChildResponse child)
+          {
+               Children.Add(child);
+          }
      }
 }
