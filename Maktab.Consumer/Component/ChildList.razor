@@ -27,8 +27,9 @@
           <MudTh>Gender</MudTh>
           <MudTh>RAMQ #</MudTh>
           <MudTh>RAMQ Expiry</MudTh>
-          <MudTh>Allergies</MudTh>
-          <MudTh>Other Health</MudTh>
+          @* <MudTh>Allergies</MudTh>
+          <MudTh>Other Health</MudTh> *@
+          <MudTh> </MudTh>
           @* <MudTh>Daycare</MudTh> *@
      </HeaderContent>
      <RowTemplate>
@@ -38,8 +39,15 @@
           <MudTd>@context.Gender</MudTd>
           <MudTd>@context.RAMQNumber</MudTd>
           <MudTd>@context.RAMQExpiry.ToShortDateString()</MudTd>
-          <MudTd>@context.Allergies</MudTd>
-          <MudTd>@context.OtherHealthConditions</MudTd>
+          @* <MudTd>@context.Allergies</MudTd>
+          <MudTd>@context.OtherHealthConditions</MudTd> *@
+          <MudTd>
+               <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
+                    <MudMenuItem >Edit</MudMenuItem>
+                    <MudMenuItem >Delete</MudMenuItem>
+               </MudMenu>
+
+          </MudTd>
           @* <MudTd>@(context.WillUseDayCareServices ? "Yes" : "No")</MudTd> *@
      </RowTemplate>
 </MudTable>
