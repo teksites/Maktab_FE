@@ -1,0 +1,26 @@
+﻿@inherits BaseDialog<EditUserInfoDialog>
+
+@using MaktabDataContracts.Responses.Users
+@using MudBlazor
+
+<MudDialog>
+     <DialogContent>
+          <EditUserInfo UserInformation="@Profile"
+                     OnSave="SaveProfile"
+                    OnCancel="CancelDialog" />
+     </DialogContent>
+</MudDialog>
+
+@code {
+     [Parameter, EditorRequired] public UserInformationResponse Profile { get; set; }
+
+     private void SaveProfile(UserInformationResponse profile)
+     {
+               MudDialog.Close(DialogResult.Ok(Profile));
+     }
+
+     private void CancelDialog()
+     {
+          MudDialog.Close(DialogResult.Cancel());
+     }
+}

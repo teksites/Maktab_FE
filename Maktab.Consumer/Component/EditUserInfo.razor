@@ -1,0 +1,130 @@
+﻿@inherits BaseFormComponent<EditUserInfo>
+
+
+@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Requests.Users
+@using System.ComponentModel.DataAnnotations
+@using MaktabDataContracts.Responses.Users
+
+@inject IUserService UserService
+
+@* <MudGrid> 
+     <MudItem xs="12" sm="8">*@
+<MudPaper Class="pa-12">
+     <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)" Spacing="2">
+          <MudTextField T="string" @bind-Value="UserInformation.FirstName" Label="First name" Required="true" RequiredError="First name is required!" />
+          <MudTextField T="string" @bind-Value="UserInformation.LastName" Label="Last name" Required="true" RequiredError="Last name is required!" />
+          <MudTextField T="string" ReadOnly="true" @bind-Value="UserInformation.Email" Label="Email" Required="true" RequiredError="Email is required!"
+                        Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
+          <MudTextField T="string" @bind-Value="UserInformation.Phone" Label="Phone" Required="true" RequiredError="Phone number is required!"
+                        Validation="@(new PhoneAttribute() { ErrorMessage = "The phone number is invalid"})" />
+
+          <MudSelect @bind-Value="UserInformation.Relationship" Label="Relationship">
+               @foreach (var margin in relationShips)
+               {
+                    <MudSelectItem Value="margin">@margin</MudSelectItem>
+               }
+          </MudSelect>
+
+
+          @if (!string.IsNullOrWhiteSpace(_errorMessage))
+          {
+               <MudAlert Severity="Severity.Error" Elevation="0" Class="my-4">
+                    @_errorMessage
+               </MudAlert>
+          }
+
+          <MudStack Direction="Row" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
+               <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isSaving)" StartIcon="@Icons.Material.Filled.Check" OnClick="@(HandleSaving)">
+                    @if (isSaving)
+                    {
+                         <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                         <span>Processing...</span>
+                    }
+                    else
+                    {
+                         <span>Save</span>
+                    }
+               </MudButton>
+
+               <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
+          </MudStack>
+
+
+     </MudForm>
+</MudPaper>
+
+@code {
+
+     [Parameter, EditorRequired] public UserInformationResponse UserInformation { get; set; }
+
+     [Parameter] public EventCallback<UserInformationResponse> OnSave { get; set; }
+     [Parameter] public EventCallback OnCancel { get; set; }
+
+     private bool isSaving = false;
+
+     IEnumerable<Relationship> relationShips;
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          relationShips = Enum.GetValues(typeof(Relationship)).Cast<Relationship>().Where(x=> x == Relationship.Mother || x== Relationship.Father);
+     }
+
+     private async Task HandleSaving()
+     {
+          try
+          {
+               isSaving = true;
+               RequestRender();
+               await InvokeUserAction(RequestSaving);
+          }
+          finally
+          {
+               isSaving = false;
+               RequestRender();
+          }
+     }
+
+     private async Task RequestSaving()
+     {
+           UserInformation.Email = UserInformation.Email.ToLowerInvariant();
+           UserInformation.UserName = UserInformation.Email;
+
+          // if (FamilyId == Guid.Empty)
+          // {
+          //      _errorMessage = "Please provide valid family id to connect.";
+          //      Snackbar.Add(_errorMessage, Severity.Error);
+          //      return;
+          // }
+
+          // var isUserExists = await UserService.ValidateUsernameAsync(userInformation.UserName);
+          // if (isUserExists)
+          // {
+          //      _errorMessage = "User is already registered with system. Please contact support";
+          //      Snackbar.Add(_errorMessage, Severity.Error);
+          //      return;
+          // }
+
+          // userInformation.FamilyId = FamilyId;
+          // userInformation.Password = "Test1234!";
+
+          //var result = await UserService.RegisterUserAsync(userInformation);
+          // if (result == null)
+          // {
+          //      _errorMessage = "User can not be registered with system. Please try again in few minutes";
+          //      Snackbar.Add(_errorMessage, Severity.Error);
+          //      return;
+          // }
+
+          // Snackbar.Add("User has been linked.", Severity.Success);
+          await OnSave.InvokeAsync(UserInformation);
+     }
+
+     private async Task OnCancelClickedHandler()
+     {
+          await OnCancel.InvokeAsync();
+     }
+     
+}
