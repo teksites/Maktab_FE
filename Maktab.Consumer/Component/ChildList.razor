@@ -4,12 +4,20 @@
 @using MudBlazor
 @inject IDialogService DialogService
 
-<MudStack Row="true">
-     <MudSpacer />
-     <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
-          Add Child
-     </MudButton>
-</MudStack>
+@if (ShowHeader)
+{
+     <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">
+          <MudText Typo="Typo.h6">Children</MudText>
+          @if (ShowAddButton)
+          {
+               <MudSpacer />
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
+                    Add Child
+               </MudButton>
+          }
+     </MudStack>
+
+}
 
 <MudTable Items="Children" Elevation="1" Dense="true" Bordered="true" Hover="true">
      <HeaderContent>
@@ -21,7 +29,7 @@
           <MudTh>RAMQ Expiry</MudTh>
           <MudTh>Allergies</MudTh>
           <MudTh>Other Health</MudTh>
-          <MudTh>Daycare</MudTh>
+          @* <MudTh>Daycare</MudTh> *@
      </HeaderContent>
      <RowTemplate>
           <MudTd>@context.FirstName</MudTd>
@@ -37,11 +45,10 @@
 </MudTable>
 
 @code {
-     [Parameter]
-     public Guid FamilyId { get; set; } = Guid.Empty;
-
-     [Parameter]
-     public IList<ChildResponse> Children { get; set; } = Array.Empty<ChildResponse>();
+     [Parameter] public Guid FamilyId { get; set; } = Guid.Empty;
+     [Parameter] public IList<ChildResponse> Children { get; set; } = Array.Empty<ChildResponse>();
+     [Parameter] public bool ShowAddButton { get; set; } = true;
+     [Parameter] public bool ShowHeader { get; set; } = true;
 
      private async Task OpenAddChildDialog()
      {
