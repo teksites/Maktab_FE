@@ -15,6 +15,11 @@ namespace Maktab.Consumer.Helpers
                _sessionService = sessionService;
           }
 
+          public string Username
+          {
+               get; private set;
+          }
+
           public async override Task<AuthenticationState> GetAuthenticationStateAsync()
           {
                var token = await _sessionService.GetAuthTokenAsync();
@@ -24,6 +29,7 @@ namespace Maktab.Consumer.Helpers
                var identity = ParseClaimsFromJwt(token);
                _currentUser = new ClaimsPrincipal(identity);
 
+               Username = await _sessionService.GetUserNameAsync();
                return new AuthenticationState(_currentUser);
           }
 
@@ -35,6 +41,8 @@ namespace Maktab.Consumer.Helpers
                {
                     var identity = ParseClaimsFromJwt(token);
                     _currentUser = new ClaimsPrincipal(identity);
+
+                    Username = await _sessionService.GetUserNameAsync();
                }
                else
                {
