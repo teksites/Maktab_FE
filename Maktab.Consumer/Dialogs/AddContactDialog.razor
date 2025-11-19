@@ -11,7 +11,7 @@
 
 @code {
 
-     [Parameter] public AddOtherContact? Contact { get; set; }
+     [Parameter] public AddOtherContact? Contact { get; set; } = new();
      [Parameter, EditorRequired] public Guid FamilyId { get; set; }
 
      private void ContactSaved(OtherContactResponse contact)
