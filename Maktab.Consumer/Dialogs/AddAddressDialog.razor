@@ -1,4 +1,5 @@
-﻿@using MaktabDataContracts.Enums
+﻿@inherits BaseDialog<AddAddressDialog>
+@using MaktabDataContracts.Enums
 @using MudBlazor
 
 <MudDialog>
@@ -8,9 +9,6 @@
 </MudDialog>
 
 @code {
-     [CascadingParameter]
-     IMudDialogInstance MudDialog { get; set; } = default!;
-
 
      [Parameter] public AddressType AddressType { get; set; }
      [Parameter] public Guid ConnectedId { get; set; } = Guid.Empty;
