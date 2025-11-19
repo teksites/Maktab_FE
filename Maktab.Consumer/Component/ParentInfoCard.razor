@@ -9,17 +9,21 @@
             <MudText Typo="Typo.body2">@Parent.Email</MudText>
             <MudText Typo="Typo.body2">@Parent.Phone</MudText>
         </MudStack>
-        <MudSpacer />
-        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Edit"
-                   OnClick="@(() => OnEdit.InvokeAsync(Parent))">
+
+          @if (ShowEditButton)
+          {
+               <MudSpacer />
+               <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Edit"
+               OnClick="@(() => OnEdit.InvokeAsync(Parent))">
             Edit Profile
         </MudButton>
+        }
     </MudStack>
 </MudCard>
 
 @code {
-
-    [Parameter] public UserInformationResponse Parent { get; set; } = default!;
+     [Parameter] public bool ShowEditButton { get; set; } = true;
+     [Parameter] public UserInformationResponse Parent { get; set; } = default!;
      [Parameter] public EventCallback<UserInformationResponse> OnEdit { get; set; }
 
      private bool isInitialized = false;
