@@ -28,10 +28,10 @@
 
                @if (_isAuthenticated)
                {
-               <MudMenu Dense
+                    @*  <MudMenu Dense
                         Variant="Variant.Text"
                         Color="Color.Inherit"
-                        Icon="@Icons.Material.TwoTone.MoreVert">
+                        Icon="@Icons.Material.TwoTone.MoreVert"> *@
 
                     @* <MudMenu StartIcon="@Icons.Material.TwoTone.Settings"
                              IconColor="Color.Primary"
@@ -43,7 +43,7 @@
 
                     <MudDivider />*@
 
-                    <MudMenuItem Href="@Constants.LoginRoute"
+                    @* <MudMenuItem Href="@Constants.LoginRoute"
                                  ForceLoad
                                  Icon="@Icons.Material.TwoTone.Login"
                                  IconColor="Color.Primary"
@@ -51,32 +51,36 @@
 
 
 
-               </MudMenu>
-               
-               <MudTooltip Text="Notification">
-                    <MudBadge Dot="true" Visible="false" Class="mx-6 my-4" Overlap="true" Bordered="true">
-                         <MudIconButton Icon="@Icons.Material.Outlined.Notifications" Color="Color.Inherit" Edge="Edge.End" />
-                    </MudBadge>
-               </MudTooltip>
-               
+               </MudMenu> *@
+
+                    <MudTooltip Text="Notification">
+                         <MudBadge Dot="true" Visible="false" Class="mx-6 my-4" Overlap="true" Bordered="true">
+                              <MudIconButton Icon="@Icons.Material.Outlined.Notifications" Color="Color.Inherit" Edge="Edge.End" />
+                         </MudBadge>
+                    </MudTooltip>
+
                     <MudMenu Dense>
                          <ActivatorContent>
                               <MudAvatar Color="Color.Tertiary" Variant="Variant.Outlined">@_userInitials</MudAvatar>
-                    </ActivatorContent>
-                    <ChildContent>
+                         </ActivatorContent>
+                         <ChildContent>
+                              <MudMenuItem Href="@Constants.ParentProfileRoute"
+                                           Icon="@Icons.Material.Filled.AccountCircle"
+                                           IconColor="Color.Primary"
+                                           Label="Profile" />
                               <MudMenuItem Href="@Constants.LogoutRoute"
-                                      ForceLoad
-                                      Icon="@Icons.Material.TwoTone.Logout"
-                                      IconColor="Color.Primary"
-                                      Label="Sign Out" />
-                    </ChildContent>
+                                           ForceLoad
+                                           Icon="@Icons.Material.Filled.Logout"
+                                           IconColor="Color.Primary"
+                                           Label="LogOut" />
+                         </ChildContent>
                     </MudMenu>
                }
                else
                {
                     <MudStack Row="true">
-                         <MudButton Href="@Constants.RegisterParentRoute" Variant="Variant.Outlined" Color="Color.Inherit" >Signup</MudButton>
-                         <MudButton Href="@Constants.LoginRoute" Variant="Variant.Outlined" Color="Color.Inherit" >Login</MudButton>
+                         <MudButton Href="@Constants.RegisterParentRoute" Variant="Variant.Outlined" Color="Color.Inherit">Signup</MudButton>
+                         <MudButton Href="@Constants.LoginRoute" Variant="Variant.Outlined" Color="Color.Inherit">Login</MudButton>
                     </MudStack>
                }
           </MudToolBar>
@@ -148,11 +152,11 @@
                    _userName = "?";
               }
 
-               _userRole = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Unknown";
-               _userInitials = new string(_userName
-                   .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                   .Select(n => n[0])
-                   .ToArray()).ToUpper();
+              _userRole = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Unknown";
+              _userInitials = new string(_userName
+                  .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                  .Select(n => n[0])
+                  .ToArray()).ToUpper();
               StateHasChanged();
          };
      }
