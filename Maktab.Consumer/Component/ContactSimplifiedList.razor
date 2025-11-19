@@ -1,23 +1,36 @@
 ﻿@using MaktabDataContracts.Responses.OtherContacts
 @inherits BaseComponent<ContactSimplifiedList>
 
-<MudExpansionPanel Text="Contacts">
-     <MudList T="OtherContactResponse">
-        @foreach (var contact in Contacts)
-        {
-            <MudListItem>
-                <MudIcon Icon="@Icons.Material.Filled.ContactPhone" />
-                <MudText>@contact.FirstName @contact.LastName - @contact.Phone</MudText>
-            </MudListItem>
-        }
-    </MudList>
-    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add"
-               OnClick="OnAddContact">
-        Add Contact
-    </MudButton>
-</MudExpansionPanel>
+@if (ShowHeader)
+{
+     <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">
+          <MudText Typo="Typo.h6">Contacts</MudText>
+          @if (ShowAddButton)
+          {
+               <MudButton Variant="Variant.Outlined"
+                          Color="Color.Primary"
+                          StartIcon="@Icons.Material.Filled.Add"
+                          OnClick="OnAddContact">
+                    Add Contact
+               </MudButton>
+          }
+     </MudStack>
+}
+
+<MudList T="OtherContactResponse">
+     @foreach (var contact in Contacts)
+     {
+          <MudListItem>
+               <MudIcon Icon="@Icons.Material.Filled.ContactPhone" />
+               <MudText>@contact.FirstName @contact.LastName - @contact.Phone</MudText>
+          </MudListItem>
+     }
+</MudList>
+
 
 @code {
+     [Parameter] public bool ShowAddButton { get; set; } = true;
+     [Parameter] public bool ShowHeader { get; set; } = true;
      [Parameter] public IEnumerable<OtherContactResponse> Contacts { get; set; }
      [Parameter] public EventCallback OnAddContact { get; set; }
 }
