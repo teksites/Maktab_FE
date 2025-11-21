@@ -1,8 +1,11 @@
 ﻿@using Maktab.Consumer.Dialogs
+@using Maktab.Consumer.Helpers
 @using MaktabDataContracts.Requests.Children
 @using MaktabDataContracts.Responses.Children
 @using MudBlazor
 @inject IDialogService DialogService
+
+@inherits BaseComponent<ChildList>
 
 @if (ShowHeader)
 {
@@ -44,6 +47,10 @@
           <MudTd>
                <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
                     <MudMenuItem >Edit</MudMenuItem>
+                    @if (ShowEnrollMenu)
+                    {
+                         <MudMenuItem OnClick="OpenAssignCourseDialog">Enroll</MudMenuItem>
+                    }
                     <MudMenuItem >Delete</MudMenuItem>
                </MudMenu>
 
@@ -57,6 +64,7 @@
      [Parameter] public IList<ChildResponse> Children { get; set; } = Array.Empty<ChildResponse>();
      [Parameter] public bool ShowAddButton { get; set; } = true;
      [Parameter] public bool ShowHeader { get; set; } = true;
+     [Parameter] public bool ShowEnrollMenu { get; set; } = false;
 
      private async Task OpenAddChildDialog()
      {
@@ -70,5 +78,10 @@
           {
                Children.Add(child);
           }
+     }
+
+     private async Task OpenAssignCourseDialog()
+     {
+          NavigationManager.NavigateTo(Constants.ChildCourseAssignmentRoute);
      }
 }
