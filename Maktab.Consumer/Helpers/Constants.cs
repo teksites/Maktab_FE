@@ -19,6 +19,7 @@
           public const string CourseDetailsRoute = "/courses/{0}";
           public const string CourseSearchRoute = "/courses/search";
 
+          public const string ChildCourseAssignmentRoute = "/child/assign-course";
 
      }
 }

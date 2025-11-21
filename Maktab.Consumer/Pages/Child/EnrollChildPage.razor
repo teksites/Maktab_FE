@@ -1,0 +1,180 @@
+﻿@page "/child/assign-course"
+@using MaktabDataContracts.Responses.Children
+@using MaktabDataContracts.Responses.Course
+@using MaktabDataContracts.Responses.Users
+
+@inherits BaseComponent<EnrollChildPage>
+
+@inject IChildrenService ChildrenService
+@inject ICourseService CourseService
+@inject IUserService UserService
+
+
+
+<MudPaper Class="p-6 mx-auto max-w-4xl" Elevation="3">
+
+    <MudText Typo="Typo.h5" Class="mb-4">Assign Course to a Child</MudText>
+
+    <!-- STEP 1: Select Child -->
+    <MudStack Spacing="2">
+        <MudText Typo="Typo.subtitle1">Step 1: Select Child</MudText>
+
+        <MudSelect T="ChildResponse"
+                   Label="Choose Child"
+                   @bind-Value="SelectedChild"
+                   Dense="true"
+                   Clearable="true">
+
+            @foreach (var c in Children)
+            {
+                <MudSelectItem Value="@c">@c.FirstName @c.LastName</MudSelectItem>
+            }
+        </MudSelect>
+    </MudStack>
+
+    <MudDivider Class="my-4" />
+
+    <!-- STEP 2: Select Course -->
+    @if (SelectedChild is not null)
+    {
+        <MudStack Spacing="2">
+            <MudText Typo="Typo.subtitle1">Step 2: Select Course</MudText>
+
+            <MudSelect T="CourseResponse"
+                       Label="Select Course"
+                       @bind-Value="SelectedCourse"
+                       Dense="true"
+                       Clearable="true"
+                       Disabled="@(Courses.Count == 0)">
+
+                @foreach (var course in Courses)
+                {
+                    <MudSelectItem Value="@course">@course.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </MudStack>
+    }
+
+    <MudDivider Class="my-4" />
+
+    <!-- STEP 3: Select Enrollment Group -->
+    @if (SelectedCourse is not null)
+    {
+        <MudStack Spacing="2">
+            <MudText Typo="Typo.subtitle1">Step 3: Select Enrollment Group(s)</MudText>
+
+           @*  <MudSelect T="CourseEnrollmentGroupResponse"
+                       MultiSelection="true"
+                       Label="Course Groups"
+                       @bind-SelectedValues="SelectedGroups"
+                       Dense="true"
+                       Clearable="true"> *@
+
+                @* @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
+                {
+                    <MudSelectItem Value="@g">
+                        @g.GroupTitle
+                    </MudSelectItem>
+                } *@
+            @* </MudSelect> *@
+        </MudStack>
+    }
+
+    <MudDivider Class="my-4" />
+
+    <!-- STEP 4: Enrollment Options -->
+    @if (SelectedGroups.Any())
+    {
+        <MudStack Spacing="3">
+            <MudText Typo="Typo.subtitle1">Step 4: Enrollment Options</MudText>
+
+            <MudSwitch T="bool" @bind-Checked="WillUseDayCare" Color="Color.Primary">
+                Use Daycare
+            </MudSwitch>
+
+            @if (WillUseDayCare)
+            {
+                <MudNumericField T="int" 
+                                 Label="No. of Daycare Days" 
+                                 @bind-Value="DayCareDays"
+                                 Min="1" Max="7" Dense="true" />
+            }
+
+            <MudSwitch T="bool" @bind-Checked="IsActive" Color="Color.Success">
+                Enrollment Active
+            </MudSwitch>
+        </MudStack>
+    }
+
+    <MudDivider Class="my-4" />
+
+    <!-- STEP 5: Submit -->
+    @if (SelectedGroups.Any())
+    {
+        <MudStack AlignItems="AlignItems.End">
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       OnClick="SubmitEnrollment"
+                       Disabled="IsSaving">
+                @(IsSaving ? "Saving..." : "Assign Course")
+            </MudButton>
+        </MudStack>
+    }
+
+</MudPaper>
+
+@code {
+
+
+     protected List<ChildResponse> Children = new();
+     protected List<CourseResponseDetailed> Courses = new();
+
+     protected ChildResponse? SelectedChild { get; set; }
+     protected CourseResponse? SelectedCourse { get; set; }
+     private UserInformationResponse userInfo = null;
+
+
+     protected HashSet<CourseEnrollmentGroupResponse> SelectedGroups { get; set; } = new();
+
+     protected bool WillUseDayCare { get; set; }
+     protected int DayCareDays { get; set; }
+     protected bool IsActive { get; set; } = true;
+     protected bool IsSaving { get; set; }
+
+     protected override async Task OnInitializedAsync()
+     {
+
+          await base.OnInitializedAsync();
+
+          var userId = await SessionService.GetLoggedInUserIdAsync();
+          userInfo = await UserService.GetUserByIdAsync(userId);
+          Children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
+
+          //Children = await ChildrenService.GetChildrenByFamilyIdAsync
+          Courses = (await CourseService.GetCurrentActiveCoursesAsync()).ToList();
+
+
+     }
+
+     protected async Task SubmitEnrollment()
+     {
+          IsSaving = true;
+
+
+          // var payloads = SelectedGroups.Select(g => new StudentCourseEnrollmentRequest
+          // {
+          //      ChildId = SelectedChild!.ChildId,
+          //      CourseId = SelectedCourse!.CourseId,
+          //      CourseEnrollmentGroupId = g.CourseEnrollmentGroupId,
+          //      IsActive = IsActive,
+          //      WillUseDayCare = WillUseDayCare,
+          //      DayCareDays = WillUseDayCare ? DayCareDays : 0
+          // }).ToList();
+
+          // await Api.AssignCourse(payloads);
+
+          IsSaving = false;
+     }
+
+
+}
