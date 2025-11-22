@@ -17,10 +17,10 @@
 
                     <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleLogin)" Validated="@(OnFormValidated)">
 
-                         <MudTextField T="string" Label="Username"
+                         <MudTextField T="string" Label="Email"
                                        @bind-Value="username"
                                        Required="true"
-                                       RequiredError="Username is required"
+                                       RequiredError="Email is required"
                                        Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})"
                                        Immediate="true" />
                          <MudStack Spacing="0">
