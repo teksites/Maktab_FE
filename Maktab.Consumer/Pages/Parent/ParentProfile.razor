@@ -220,13 +220,8 @@
 
      private async Task OpenAddChildDialog()
      {
-          var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
-
-          var dialog = await DialogService.ShowAsync<AddChildDialog>("Add Child", parameters, options);
-          var result = await dialog.Result;
-
-          if (!result.Canceled && result.Data is ChildResponse child)
+          var dialogResult = await this.OpenAddChildDialog(DialogService, userInfo.FamilyId);
+          if (!dialogResult.Canceled && dialogResult.Data is ChildResponse child)
           {
                _Children.Add(child);
           }

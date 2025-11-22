@@ -1,4 +1,5 @@
-﻿using Maktab.Consumer.Helpers;
+﻿using Maktab.Consumer.Dialogs;
+using Maktab.Consumer.Helpers;
 using Maktab.Core.Interfaces.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -243,8 +244,15 @@ namespace Maktab.Consumer.Base
                     yield return "Password must contain at least one digit.";
           }
 
-          
+          protected async Task<DialogResult?> OpenAddChildDialog(IDialogService dialogService, Guid familyId)
+          {
+               var parameters = new DialogParameters { ["FamilyId"] = familyId };
+               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
 
-          
+               var dialog = await dialogService.ShowAsync<AddChildDialog>("Add Child", parameters, options);
+               var result = await dialog.Result;
+               return result;
+          }
+
      }
 }

@@ -54,6 +54,9 @@
                                         <CardHeaderContent>
                                              <MudText Typo="Typo.h6">Children</MudText>
                                         </CardHeaderContent>
+                                        <CardHeaderActions>
+                                                  <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OpenAddChildDialog" >Add Child</MudButton>
+                                        </CardHeaderActions>
                                    </MudCardHeader>
                                    <MudCardContent>
                                         <MudText Typo="Typo.h4">@(_Children?.Count())</MudText>
@@ -216,7 +219,7 @@
      string userFullName = string.Empty;
      Guid userId = Guid.Empty;
      UserInformationResponse userInfo = null;
-     IEnumerable<ChildResponse> _Children = null;
+     IList<ChildResponse> _Children = null;
      IEnumerable<Notification> notifications = null;
      IEnumerable<StudentCourseEnrollmentResponse> _CourseEnrollments;
      IList<StudentCourseTransactionResponse> _CourseTransactions;
@@ -239,12 +242,12 @@
           _CourseEnrollments = await CourseEnrollmentService.GetCourseEnrollmentsByFamilyIdAsync(userInfo.FamilyId);
           if (_CourseEnrollments?.Any() == true)
           {
-               _Children = await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId);
+               _Children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
 
                var enrolledCoursesIds = _CourseEnrollments.Select(x => x.CourseId).ToList();
                if (enrolledCoursesIds?.Any() == true)
                {
-                    this.EnrolledCourses = enrolledCoursesIds.Count();
+                    this.EnrolledCourses = enrolledCoursesIds.Count;
                }
                else
                {
@@ -273,7 +276,7 @@
           }
           else
           {
-               _Children = Enumerable.Empty<ChildResponse>();
+               _Children = Array.Empty<ChildResponse>();
                _Courses = await CourseService.GetCurrentActiveCoursesAsync();
           }
 
@@ -382,4 +385,12 @@
           // }
      }
 
+     private async Task OpenAddChildDialog()
+     {
+          var dialogResult = await this.OpenAddChildDialog(DialogService, userInfo.FamilyId);
+          if (!dialogResult.Canceled && dialogResult.Data is ChildResponse child)
+          {
+               _Children.Add(child);
+          }
+     }
 }
