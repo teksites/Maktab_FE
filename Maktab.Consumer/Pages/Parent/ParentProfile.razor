@@ -221,7 +221,7 @@
      private async Task OpenAddChildDialog()
      {
           var dialogResult = await this.OpenAddChildDialog(DialogService, userInfo.FamilyId);
-          if (!dialogResult.Canceled && dialogResult.Data is ChildResponse child)
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
           {
                _Children.Add(child);
           }
