@@ -219,11 +219,11 @@
      string userFullName = string.Empty;
      Guid userId = Guid.Empty;
      UserInformationResponse userInfo = null;
-     IList<ChildResponse> _Children = null;
-     IEnumerable<Notification> notifications = null;
+     IList<ChildResponse> _Children = Array.Empty<ChildResponse>();
+     //IEnumerable<Notification> notifications = null;
      IEnumerable<StudentCourseEnrollmentResponse> _CourseEnrollments;
-     IList<StudentCourseTransactionResponse> _CourseTransactions;
-     IEnumerable<CourseResponseDetailed> _Courses;
+     IList<StudentCourseTransactionResponse> _CourseTransactions = Array.Empty<StudentCourseTransactionResponse>();
+     IList<CourseResponseDetailed> _Courses = Array.Empty<CourseResponseDetailed>();
 
      protected decimal AmountPayable { get; set; } = 0;
      protected decimal AmountPaid { get; set; } = 0;
@@ -237,7 +237,7 @@
           userId = await SessionService.GetLoggedInUserIdAsync();
           userInfo = await UserService.GetUserByIdAsync(userId);
           userFullName = $"{userInfo.FirstName} {userInfo.LastName}";
-          notifications = await NotificationService.GetNotificationsByUserIdAsync(userInfo.UserId);
+          //notifications = await NotificationService.GetNotificationsByUserIdAsync(userInfo.UserId);
 
           _CourseEnrollments = await CourseEnrollmentService.GetCourseEnrollmentsByFamilyIdAsync(userInfo.FamilyId);
           if (_CourseEnrollments?.Any() == true)
@@ -254,7 +254,7 @@
                     this.EnrolledCourses = 0;
                }
 
-               _Courses = await CourseService.GetCurrentActiveCoursesAsync();
+               _Courses = (await CourseService.GetCurrentActiveCoursesAsync()).ToList();
                var enrolledInstitutes = _Courses.Where(x => enrolledCoursesIds.Contains(x.CourseId))?.Select(y => y.InstituteId).Distinct();
 
                if (enrolledInstitutes?.Any() == true)
@@ -277,7 +277,7 @@
           else
           {
                _Children = Array.Empty<ChildResponse>();
-               _Courses = await CourseService.GetCurrentActiveCoursesAsync();
+               _Courses = (await CourseService.GetCurrentActiveCoursesAsync()).ToList();
           }
 
           isInitialized = true;
