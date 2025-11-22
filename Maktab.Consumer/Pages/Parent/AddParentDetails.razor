@@ -187,7 +187,7 @@
           switch (arg.StepIndex)
           {
                case 3: //Last step
-                    NavigationManager.NavigateTo("/customer/dashboard");
+                    NavigationManager.NavigateTo(Constants.ParentDashboardRoute);
                     break;
           }
      }
@@ -235,7 +235,7 @@
           if (emergencyContact != null)
           {
                isEmergencyContactAdded = true;
-               NavigationManager.NavigateTo("/customer/dashboard");
+               NavigationManager.NavigateTo(Constants.ParentDashboardRoute);
                // if (stepper.CanGoToNextStep)
                // {
                //      await stepper.NextStepAsync();
