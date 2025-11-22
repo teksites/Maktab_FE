@@ -11,126 +11,238 @@
 
 
 
-<MudPaper Class="p-6 mx-auto max-w-4xl" Elevation="3">
+<MudPaper Class="p-6 mx-auto max-w-3xl">
 
-    <MudText Typo="Typo.h5" Class="mb-4">Assign Course to a Child</MudText>
+     <!-- Success Screen -->
+     @if (@IsSuccess)
+     {
+          <MudPaper Class="p-6 text-center" Elevation="3">
+               <MudIcon Icon="@Icons.Material.Filled.CheckCircle"
+                        Color="Color.Success" Size="Size.Large" />
 
-    <!-- STEP 1: Select Child -->
-    <MudStack Spacing="2">
-        <MudText Typo="Typo.subtitle1">Step 1: Select Child</MudText>
+               <MudText Typo="Typo.h5" Class="mt-3">Enrollment Successful!</MudText>
+               <MudText Typo="Typo.body1" Color="Color.Secondary">
+                    @SelectedChild?.FirstName has been enrolled in @SelectedCourse?.Name
+               </MudText>
 
-        <MudSelect T="ChildResponse"
-                   Label="Choose Child"
-                   @bind-Value="SelectedChild"
-                   Dense="true"
-                   Clearable="true">
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4"
+                          OnClick="Reset">
+                    Enroll Another
+               </MudButton>
+          </MudPaper>
 
-            @foreach (var c in Children)
-            {
-                <MudSelectItem Value="@c">@c.FirstName @c.LastName</MudSelectItem>
-            }
-        </MudSelect>
-    </MudStack>
+     }
+     else
+     {
 
-    <MudDivider Class="my-4" />
 
-    <!-- STEP 2: Select Course -->
-    @if (SelectedChild is not null)
-    {
-        <MudStack Spacing="2">
-            <MudText Typo="Typo.subtitle1">Step 2: Select Course</MudText>
+          <!-- Loading Overlay -->
+          <LoadingOverlay  IsLoading="@IsLoadingData" />
 
-            <MudSelect T="CourseResponse"
-                       Label="Select Course"
-                       @bind-Value="SelectedCourse"
-                       Dense="true"
-                       Clearable="true"
-                       Disabled="@(Courses.Count == 0)">
+          <!-- Stepper -->
+          <MudStepper @bind-ActiveIndex="ActiveStep"
+                      Elevation="1"
+                      Rounded="Rounded.Small"
+                      Class="mb-6">
 
-                @foreach (var course in Courses)
-                {
-                    <MudSelectItem Value="@course">@course.Name</MudSelectItem>
-                }
-            </MudSelect>
-        </MudStack>
-    }
+               <MudStep Label="Child" Icon="@Icons.Material.Filled.Person" />
+               <MudStep Label="Course" Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedChild is null)" />
+               <MudStep Label="Groups" Icon="@Icons.Material.Filled.Groups" Disabled="@(SelectedCourse is null)" />
+               <MudStep Label="Review" Icon="@Icons.Material.Filled.CheckCircle" Disabled="@(!SelectedGroups.Any())" />
 
-    <MudDivider Class="my-4" />
+          </MudStepper>
 
-    <!-- STEP 3: Select Enrollment Group -->
-    @if (SelectedCourse is not null)
-    {
-        <MudStack Spacing="2">
-            <MudText Typo="Typo.subtitle1">Step 3: Select Enrollment Group(s)</MudText>
+          <!-- STEP CONTENT -->
+          @if (ActiveStep == 0)
+          {
+               <!-- STEP 1: Choose Child -->
+               <MudPaper Class="p-4" Elevation="1">
+                    <MudText Typo="Typo.h6">Select Child</MudText>
 
-           @*  <MudSelect T="CourseEnrollmentGroupResponse"
-                       MultiSelection="true"
-                       Label="Course Groups"
-                       @bind-SelectedValues="SelectedGroups"
-                       Dense="true"
-                       Clearable="true"> *@
+                    @if (Children == null)
+                    {
+                         <MudSkeleton Height="60px" Width="100%" Class="mb-2" />
+                         <MudSkeleton Height="60px" Width="100%" />
+                    }
+                    else
+                    {
+                         <MudSelect T="ChildResponse"
+                                    @bind-Value="SelectedChild"
+                                    Label="Child"
+                                    Dense="true"
+                                    Clearable="true">
 
-                @* @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
-                {
-                    <MudSelectItem Value="@g">
-                        @g.GroupTitle
-                    </MudSelectItem>
-                } *@
-            @* </MudSelect> *@
-        </MudStack>
-    }
+                              @foreach (var child in Children)
+                              {
+                                   <MudSelectItem Value="@child">
+                                        <MudAvatar Size="Size.Small" Class="mr-2" />
+                                        @child.FirstName @child.LastName
+                                   </MudSelectItem>
+                              }
+                         </MudSelect>
 
-    <MudDivider Class="my-4" />
+                         <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                    Disabled="@(SelectedChild is null)"
+                                    OnClick="@(()=> ActiveStep = 1)"
+                                    Class="mt-4">Next</MudButton>
+                    }
+               </MudPaper>
+          }
 
-    <!-- STEP 4: Enrollment Options -->
-    @if (SelectedGroups.Any())
-    {
-        <MudStack Spacing="3">
-            <MudText Typo="Typo.subtitle1">Step 4: Enrollment Options</MudText>
+          else if (ActiveStep == 1)
+          {
+               <!-- STEP 2: Choose Course -->
+               <MudPaper Class="p-4" Elevation="1">
+                    <MudText Typo="Typo.h6">Select Course</MudText>
 
-            <MudSwitch T="bool" @bind-Checked="WillUseDayCare" Color="Color.Primary">
-                Use Daycare
-            </MudSwitch>
+                    @if (Courses == null)
+                    {
+                         <MudSkeleton Height="50px" Width="100%" />
+                    }
+                    else
+                    {
+                         <MudSelect T="CourseResponseDetailed"
+                                    @bind-Value="SelectedCourse"
+                                    Label="Course"
+                                    Dense="true"
+                                    Clearable="true">
 
-            @if (WillUseDayCare)
-            {
-                <MudNumericField T="int" 
-                                 Label="No. of Daycare Days" 
-                                 @bind-Value="DayCareDays"
-                                 Min="1" Max="7" Dense="true" />
-            }
+                              @foreach (var c in Courses)
+                              {
+                                   <MudSelectItem Value="@c">
+                                        <MudIcon Icon="@Icons.Material.Filled.School" Class="mr-2" />
+                                        @c.Name
+                                   </MudSelectItem>
+                              }
+                         </MudSelect>
 
-            <MudSwitch T="bool" @bind-Checked="IsActive" Color="Color.Success">
-                Enrollment Active
-            </MudSwitch>
-        </MudStack>
-    }
+                         @if (SelectedCourse != null)
+                         {
+                              <MudPaper Class="p-3 mt-3" Elevation="1">
+                                   <MudText Typo="Typo.subtitle1">@SelectedCourse.Name</MudText>
+                                   <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                        @SelectedCourse.Description
+                                   </MudText>
+                              </MudPaper>
+                         }
 
-    <MudDivider Class="my-4" />
+                         <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                    Disabled="@(SelectedCourse is null)"
+                                    OnClick="@(()=> ActiveStep = 2)"
+                                    Class="mt-4">Next</MudButton>
+                    }
+               </MudPaper>
+          }
 
-    <!-- STEP 5: Submit -->
-    @if (SelectedGroups.Any())
-    {
-        <MudStack AlignItems="AlignItems.End">
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       OnClick="SubmitEnrollment"
-                       Disabled="IsSaving">
-                @(IsSaving ? "Saving..." : "Assign Course")
-            </MudButton>
-        </MudStack>
-    }
+          else if (ActiveStep == 2)
+          {
+               <!-- STEP 3: Choose Groups -->
+               <MudPaper Class="p-4" Elevation="1">
+                    <MudText Typo="Typo.h6">Select Enrollment Group(s)</MudText>
+
+                    @if (SelectedCourse?.CourseEnrollmentGroups is null)
+                    {
+                         <MudText>No groups found for this course.</MudText>
+                    }
+                    else
+                    {
+                         if (SelectedCourse.CanSelectMultipleEnrollmentGroups)
+                         {
+@*                               <MudSelect T="CourseEnrollmentGroupResponse"
+                                         MultiSelection="true"
+                                         @bind-SelectedValues="SelectedGroups"
+                                         Label="Groups"
+                                         Dense="true">
+
+                                   @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
+                                   {
+                                        <MudSelectItem Value="@g">
+                                             <MudIcon Icon="@Icons.Material.Filled.Schedule" Class="mr-2" />
+                                             <strong>@g.GroupTitle</strong>
+                                             <MudText Typo="Typo.caption" Class="ml-2">
+                                                  @* (@g.StartTime - @g.EndTime) *@
+                              @*@g.Fee
+                              </MudText>
+                                        </MudSelectItem>
+                                   }
+                              </MudSelect> *@
+                         }
+
+                         <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                    Disabled="@(!SelectedGroups.Any())"
+                                    OnClick="@(()=> ActiveStep = 3)"
+                                    Class="mt-4">Next</MudButton>
+                    }
+               </MudPaper>
+          }
+
+          else if (ActiveStep == 3)
+          {
+               <!-- STEP 4: Review -->
+               <MudGrid Class="p-4" Elevation="1">
+                    <MudItem>
+
+                         <MudText Typo="Typo.h6">Review Enrollment</MudText>
+                    </MudItem>
+
+
+                    <MudItem>
+                         @* <MudListItemIcon Icon="@Icons.Material.Filled.Person" /> *@
+                         <MudText>@SelectedChild.FirstName @SelectedChild.LastName</MudText>
+                    </MudItem>
+
+                    <MudItem>
+                         @* <MudListItemIcon Icon="@Icons.Material.Filled.School" /> *@
+                         <MudText>@SelectedCourse.Name</MudText>
+                    </MudItem>
+
+                    <MudItem>
+                         @* <MudListItemIcon Icon="@Icons.Material.Filled.Groups" /> *@
+                         <MudText>
+                              @string.Join(", ", SelectedGroups.Select(g => g.GroupTitle))
+                         </MudText>
+
+
+                    </MudItem>
+                    <MudItem>
+
+                         <MudSwitch T="bool" @bind-Checked="WillUseDayCare" Color="Color.Primary" Class="mt-3">
+                              Use Daycare
+                         </MudSwitch>
+
+
+                         @if (WillUseDayCare)
+                         {
+                              <MudNumericField T="int"
+                                               Label="Daycare Days"
+                                               @bind-Value="DayCareDays"
+                                               Min="1" Max="7"
+                                               Class="mt-2" />
+                         }
+                    </MudItem>
+                    <MudItem>
+                         <MudButton Color="Color.Success" Variant="Variant.Filled"
+                                    OnClick="SubmitEnrollment"
+                                    Class="mt-4">
+                              Confirm Enrollment
+                         </MudButton>
+                    </MudItem>
+
+               </MudGrid>
+          }
+     }
+
 
 </MudPaper>
 
 @code {
 
-
+     protected int ActiveStep { get; set; } = 0;
      protected List<ChildResponse> Children = new();
      protected List<CourseResponseDetailed> Courses = new();
 
      protected ChildResponse? SelectedChild { get; set; }
-     protected CourseResponse? SelectedCourse { get; set; }
+     protected CourseResponseDetailed? SelectedCourse { get; set; }
      private UserInformationResponse userInfo = null;
 
 
@@ -140,6 +252,9 @@
      protected int DayCareDays { get; set; }
      protected bool IsActive { get; set; } = true;
      protected bool IsSaving { get; set; }
+
+     protected bool IsLoadingData = false;
+     protected bool IsSuccess = false;
 
      protected override async Task OnInitializedAsync()
      {
@@ -154,6 +269,17 @@
           Courses = (await CourseService.GetCurrentActiveCoursesAsync()).ToList();
 
 
+     }
+
+     protected void Reset()
+     {
+          ActiveStep = 0;
+          SelectedChild = null;
+          SelectedCourse = null;
+          SelectedGroups.Clear();
+          WillUseDayCare = false;
+          DayCareDays = 0;
+          IsSuccess = false;
      }
 
      protected async Task SubmitEnrollment()
