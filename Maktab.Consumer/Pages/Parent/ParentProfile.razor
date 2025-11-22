@@ -176,13 +176,8 @@
 
      private async Task OpenAddContactDialog()
      {
-          var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
-
-          var dialog = await DialogService.ShowAsync<AddContactDialog>("Add Contact", parameters, options);
-          var result = await dialog.Result;
-
-          if (!result.Canceled && result.Data is OtherContactResponse contact)
+          var dialogResult = await this.OpenAddContactDialog(DialogService, userInfo.FamilyId);
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is OtherContactResponse contact)
           {
                _OtherContacts.Add(contact);
                this.RequestRender();
@@ -197,23 +192,18 @@
           var dialog = await DialogService.ShowAsync<AddSpouseDialog>("Add Spouse", parameters, options);
           var result = await dialog.Result;
 
-          if (!result.Canceled && result.Data is AddressResponse address)
+          if (!result.Canceled && result.Data is UserInformationResponse spouse)
           {
-               _Addresses.Add(address);
+               this._SpouseInfo = spouse;
                this.RequestRender();
           }
      }
      private async Task OpenAddAddressDialog()
      {
-          var parameters = new DialogParameters { ["ConnectedId"] = userInfo.FamilyId };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
-
-          var dialog = await DialogService.ShowAsync<AddAddressDialog>("Add Address", parameters, options);
-          var result = await dialog.Result;
-
-          if (!result.Canceled && result.Data is UserInformationResponse spouse)
+          var dialogResult = await this.OpenAddAddressDialog(DialogService, userInfo.UserId);
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is AddressResponse address)
           {
-               this._SpouseInfo = spouse;
+               _Addresses.Add(address);
                this.RequestRender();
           }
      }

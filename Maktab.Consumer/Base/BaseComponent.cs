@@ -254,5 +254,26 @@ namespace Maktab.Consumer.Base
                return result;
           }
 
+          protected async Task<DialogResult?> OpenAddAddressDialog(IDialogService dialogService, Guid connectedId)
+          {
+               var parameters = new DialogParameters { ["ConnectedId"] = connectedId };
+               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+               var dialog = await dialogService.ShowAsync<AddAddressDialog>("Add Address", parameters, options);
+               var result = await dialog.Result;
+
+               return result;
+          }
+
+          protected async Task<DialogResult?> OpenAddContactDialog(IDialogService dialogService, Guid familyId)
+          {
+               var parameters = new DialogParameters { ["FamilyId"] = familyId };
+               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+               var dialog = await dialogService.ShowAsync<AddContactDialog>("Add Contact", parameters, options);
+               var result = await dialog.Result;
+               return result;
+          }
+
      }
 }
