@@ -42,9 +42,18 @@
 
      </MudCardContent>
      <MudCardActions>
-          <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="NavigateToDetails">
-               @ViewDetailsButtonText
-          </MudButton>
+          @if (HighlightButton)
+          {
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToDetails">
+                    @ViewDetailsButtonText
+               </MudButton>
+          }
+          else
+          {
+               <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="NavigateToDetails">
+                    @ViewDetailsButtonText
+               </MudButton>
+          }
      </MudCardActions>
 </MudCard>
 
@@ -52,6 +61,8 @@
      [Parameter] public CourseResponseDetailed Course { get; set; } = new();
      [Parameter] public bool ShowProgress { get; set; } = false;
      [Parameter] public string ViewDetailsButtonText { get; set; } = "View Details";
+     [Parameter] public bool HighlightButton { get; set; } = false;
+
 
      private void NavigateToDetails()
      {
