@@ -37,7 +37,7 @@
 
 
           <!-- Loading Overlay -->
-          <LoadingOverlay  IsLoading="@IsLoadingData" />
+          <LoadingOverlay IsLoading="@IsLoadingData" />
 
           <!-- Stepper -->
           <MudStepper @bind-ActiveIndex="ActiveStep"
@@ -146,11 +146,13 @@
                     }
                     else
                     {
-                         if (SelectedCourse.CanSelectMultipleEnrollmentGroups)
+                         if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
                          {
-@*                               <MudSelect T="CourseEnrollmentGroupResponse"
+                              <MudSelect T="CourseEnrollmentGroupResponse"
+                                         ToStringFunc="g => g.GroupTitle"
                                          MultiSelection="true"
-                                         @bind-SelectedValues="SelectedGroups"
+                                         SelectedValues="@SelectedGroups"
+                                         SelectedValuesChanged="@((IEnumerable<CourseEnrollmentGroupResponse> v) => SelectedGroups = v.ToHashSet() )"
                                          Label="Groups"
                                          Dense="true">
 
@@ -161,11 +163,32 @@
                                              <strong>@g.GroupTitle</strong>
                                              <MudText Typo="Typo.caption" Class="ml-2">
                                                   @* (@g.StartTime - @g.EndTime) *@
-                              @*@g.Fee
-                              </MudText>
+                                                  @g.Fee
+                                             </MudText>
                                         </MudSelectItem>
                                    }
-                              </MudSelect> *@
+                              </MudSelect>
+                         }
+                         else
+                         {
+                              <MudSelect T="CourseEnrollmentGroupResponse"
+                                         MultiSelection="false"
+                                         @bind-Value="@SelectedGroup"
+                                         Label="Groups"
+                                         Dense="true">
+
+                                   @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
+                                   {
+                                        <MudSelectItem Value="@g">
+                                             <MudIcon Icon="@Icons.Material.Filled.Schedule" Class="mr-2" />
+                                             <strong>@g.GroupTitle</strong>
+                                             <MudText Typo="Typo.caption" Class="ml-2">
+                                                  @* (@g.StartTime - @g.EndTime) *@
+                                                  @g.Fee
+                                             </MudText>
+                                        </MudSelectItem>
+                                   }
+                              </MudSelect>
                          }
 
                          <MudButton Variant="Variant.Filled" Color="Color.Primary"
@@ -180,10 +203,10 @@
           {
                <!-- STEP 4: Review -->
                <MudGrid Class="p-4" Elevation="1">
-                    <MudItem>
+                    <MudItem xs="12">
 
                          <MudText Typo="Typo.h6">Review Enrollment</MudText>
-                    </MudItem>
+                    </MudItem xs="12">
 
 
                     <MudItem>
@@ -191,22 +214,29 @@
                          <MudText>@SelectedChild.FirstName @SelectedChild.LastName</MudText>
                     </MudItem>
 
-                    <MudItem>
+                    <MudItem xs="12">
                          @* <MudListItemIcon Icon="@Icons.Material.Filled.School" /> *@
                          <MudText>@SelectedCourse.Name</MudText>
                     </MudItem>
 
-                    <MudItem>
+                    <MudItem xs="12">
                          @* <MudListItemIcon Icon="@Icons.Material.Filled.Groups" /> *@
                          <MudText>
-                              @string.Join(", ", SelectedGroups.Select(g => g.GroupTitle))
+                              @if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
+                              {
+                                   @string.Join(", ", SelectedGroups.Select(g => g.GroupTitle))
+                              }
+                              else
+                              {
+                                   @SelectedGroup?.GroupTitle
+                              }
                          </MudText>
 
 
                     </MudItem>
-                    <MudItem>
+                    <MudItem xs="12">
 
-                         <MudSwitch T="bool" @bind-Checked="WillUseDayCare" Color="Color.Primary" Class="mt-3">
+                         <MudSwitch T="bool" @bind-Value="WillUseDayCare"  Color="Color.Primary" Class="mt-3">
                               Use Daycare
                          </MudSwitch>
 
@@ -220,7 +250,7 @@
                                                Class="mt-2" />
                          }
                     </MudItem>
-                    <MudItem>
+                    <MudItem xs="12">
                          <MudButton Color="Color.Success" Variant="Variant.Filled"
                                     OnClick="SubmitEnrollment"
                                     Class="mt-4">
@@ -244,6 +274,7 @@
      protected ChildResponse? SelectedChild { get; set; }
      protected CourseResponseDetailed? SelectedCourse { get; set; }
      private UserInformationResponse userInfo = null;
+     private CourseEnrollmentGroupResponse SelectedGroup { get; set; }
 
 
      protected HashSet<CourseEnrollmentGroupResponse> SelectedGroups { get; set; } = new();
@@ -301,6 +332,4 @@
 
           IsSaving = false;
      }
-
-
 }
