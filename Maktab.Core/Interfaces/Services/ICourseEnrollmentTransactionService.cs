@@ -7,7 +7,7 @@ namespace Maktab.Core.Interfaces.Services
      {
           Task<StudentCourseTransactionResponse> AddCourseEnrollmentTranasctionAsync(AddStudentCourseTransaction addCourseTransaction);
           Task<StudentCourseTransactionResponse> GetCourseEnrollmentTranasctionByCourseIdAsync(Guid courseId);
-          Task<StudentCourseTransactionResponse> GetCourseEnrollmentTranasctionByFamilyAndInstituteIdAsync(Guid familyId, Guid instituteId);
+          Task<IList<StudentCourseTransactionResponse>> GetCourseEnrollmentTranasctionByFamilyAndInstituteIdAsync(Guid familyId, Guid instituteId);
           Task<StudentCourseTransactionResponse> GetCourseEnrollmentTranasctionByIdAsync(Guid enrollmentId);
           Task<bool> RemoveCourseEnrollmentTranasctionByIdAsync(Guid enrollmentId);
           Task<StudentCourseTransactionResponse> UpdateCourseEnrollmentTranasctionByIdAsync(Guid enrollmentId, StudentCourseTransactionResponse enrollmentResponse);

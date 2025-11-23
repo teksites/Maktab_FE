@@ -47,10 +47,10 @@ namespace Maktab.Domain.Services
                return result;
           }
 
-          public async Task<StudentCourseTransactionResponse> GetCourseEnrollmentTranasctionByFamilyAndInstituteIdAsync(Guid familyId, Guid instituteId)
+          public async Task<IList<StudentCourseTransactionResponse>> GetCourseEnrollmentTranasctionByFamilyAndInstituteIdAsync(Guid familyId, Guid instituteId)
           {
                var formatedUrl = string.Format(getCourseEnrollmentTranasctionByFamilyAndInstitureIdUrl, familyId, instituteId);
-               var result = await _httpService.Get<StudentCourseTransactionResponse>(formatedUrl);
+               var result = await _httpService.Get<IList<StudentCourseTransactionResponse>>(formatedUrl);
                return result;
           }
 
