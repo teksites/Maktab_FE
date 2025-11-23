@@ -262,10 +262,13 @@
                     _CourseTransactions = new List<StudentCourseTransactionResponse>();
                     foreach (var instituteId in enrolledInstitutes)
                     {
-                         var courseTransaction = await CourseEnrollmentTransactionService.GetCourseEnrollmentTranasctionByFamilyAndInstituteIdAsync(userInfo.FamilyId, instituteId);
-                         if (courseTransaction != null)
+                         var courseTransactions = await CourseEnrollmentTransactionService.GetCourseEnrollmentTranasctionByFamilyAndInstituteIdAsync(userInfo.FamilyId, instituteId);
+                         if (courseTransactions?.Any() == true)
                          {
-                              _CourseTransactions.Add(courseTransaction);
+                              foreach (var courseTransaction in courseTransactions)
+                              {
+                                   _CourseTransactions.Add(courseTransaction);
+                              }
                          }
                     }
 
