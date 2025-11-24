@@ -22,7 +22,7 @@
                                         <MudAlert Severity="Severity.Info" Elevation="0" Class="mt-2">Please enter code sent in your email.</MudAlert>
                                    </MudItem>
                                    <MudItem xs="12">
-                                        <MudTextField T="string" Label="Code" @bind-Text="@emailValidationCode" Required="true" RequiredError="Please enter code!" />
+                                   <MudTextField Immediate="true" T="string" Label="Code" @bind-Text="@emailValidationCode" Required="true" RequiredError="Please enter code!" />
                                    </MudItem>
 
                                      <MudItem xs="12">
