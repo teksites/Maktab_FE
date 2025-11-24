@@ -27,10 +27,10 @@ namespace Maktab.Domain.Services
                return result;
           }
 
-          public async Task<IEnumerable<OtherContactResponse>> GetContactsByFamilyId(Guid familyId)
+          public async Task<IList<OtherContactResponse>> GetContactsByFamilyId(Guid familyId)
           {
                var formatedUrl = string.Format(getContactByFamilyId, familyId);
-               var result = await _httpService.Get<List<OtherContactResponse>>(formatedUrl);
+               var result = await _httpService.Get<IList<OtherContactResponse>>(formatedUrl);
                return result;
           }
 
