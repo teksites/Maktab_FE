@@ -55,7 +55,7 @@
                                              <MudText Typo="Typo.h6">Children</MudText>
                                         </CardHeaderContent>
                                         <CardHeaderActions>
-                                                  <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OpenAddChildDialog" >Add Child</MudButton>
+                                             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OpenAddChildDialog">Add Child</MudButton>
                                         </CardHeaderActions>
                                    </MudCardHeader>
                                    <MudCardContent>
@@ -285,7 +285,7 @@
           }
           else
           {
-               _Children = Array.Empty<ChildResponse>();
+               _Children = new List<ChildResponse>();
                _Courses = (await CourseService.GetCurrentActiveCoursesAsync()).ToList();
           }
 
