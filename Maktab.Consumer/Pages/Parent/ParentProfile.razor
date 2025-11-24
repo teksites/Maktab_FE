@@ -27,21 +27,28 @@
                     <ParentInfoCard Parent="@userInfo" OnEdit="OnEditUserProfile" />
                </MudItem>
 
+               <!-- Extended Info Section -->
                <MudItem xs="12" md="12">
                     <MudCard Class="mb-4 pa-4">
 
-                         <!-- Extended Info Section -->
                          <MudStack Row="true">
-                         <MudText Typo="Typo.h5" Class="mb-4">Extended Info</MudText>
-                         
-                              
-                                   <MudSpacer />
-                              <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
+                              <MudText Typo="Typo.h5" Class="mb-4">Extended Info</MudText>
+
+                              <MudSpacer />
+                              @if (_ExtendedInfoResponse == null)
+                              {
+                                   <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
+                                        Add
+                                   </MudButton>
+                              }
+                              else
+                              {
+                                   <MudButton Variant="Variant.Outlined" Disabled="true" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
                                         Edit
                                    </MudButton>
-                              
-                              </MudStack>
-                         
+                              }
+
+                         </MudStack>
 
                     </MudCard>
                </MudItem>
@@ -53,9 +60,8 @@
                          <MudStack Row="true">
                               <MudText Typo="Typo.h5" Class="mb-4">Password</MudText>
 
-
                               <MudSpacer />
-                              
+
                               <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="OpenChangePasswordDialog" Class="mb-4">
                                    Change Password
                               </MudButton>
@@ -149,13 +155,13 @@
 @code {
      private UserInformationResponse userInfo = null;
      private UserInformationResponse _SpouseInfo = null;
+     private ExtendedUserInformationResponse _ExtendedInfoResponse = null;
 
      private IList<ChildResponse> _Children = Array.Empty<ChildResponse>();
      // private IEnumerable<CourseResponseDetailed> Courses = Enumerable.Empty<CourseResponseDetailed>();
      private IList<OtherContactResponse> _OtherContacts = Array.Empty<OtherContactResponse>();
      private IEnumerable<UserInformationResponse> _FamilyDetails = Enumerable.Empty<UserInformationResponse>();
      private IList<AddressResponse> _Addresses = Array.Empty<AddressResponse>();
-
 
      //private IEnumerable<StudentCourseEnrollmentResponse> _enrolledCourses = Enumerable.Empty<StudentCourseEnrollmentResponse>();
 
@@ -181,14 +187,16 @@
           _FamilyDetails = await UserService.GetFamilyByFamilyId(userInfo.FamilyId);
 
           _SpouseInfo = _FamilyDetails?.Where(x => x.UserId != this.userInfo.UserId).FirstOrDefault();
+          _ExtendedInfoResponse = await UserService.GetExtendedInfoByUserIdAsync(userInfo.UserId);
           _Addresses = new List<AddressResponse>();
           var userAddress = await AddressService.GetAddressByConnectedId(userInfo.UserId);
-          if(userAddress != null)
+          if (userAddress != null)
           {
                _Addresses.Add(userAddress);
           }
 
           _OtherContacts = new List<OtherContactResponse>();
+          //(await ContactService.GetContactsByFamilyId(userInfo.FamilyId)).ToList();
           //(await ContactService.GetContactsByFamilyId(userInfo.FamilyId))?.ToList();
 
           //studentCourseTransaction = await CourseEnrollmentService.GetCoursePaymentDetailsForFamily(userInfo.FamilyId);
@@ -209,7 +217,6 @@
                userInfo = userResponse;
                this.RequestRender();
           }
-          
      }
 
      private void ViewCourses(Guid id) { }
@@ -262,27 +269,26 @@
           var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId, ["AddessId"] = userInfo.FamilyId };
           var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
 
-          var dialog = await DialogService.ShowAsync<AddExtendedInfo>("Add Extended Info", parameters, options);
+          var dialog = await DialogService.ShowAsync<AddExtendedInfoDialog>("Add Extended Info", parameters, options);
           var result = await dialog.Result;
 
-          if (!result.Canceled && result.Data is UserInformationResponse spouse)
+          if (!result.Canceled && result.Data is ExtendedUserInformationResponse spouse)
           {
-               this._SpouseInfo = spouse;
+               this._ExtendedInfoResponse = spouse;
                this.RequestRender();
           }
      }
 
      private async Task OpenChangePasswordDialog()
      {
-          var parameters = new DialogParameters { ["UserId"] = userInfo.UserId};
+          var parameters = new DialogParameters { ["UserId"] = userInfo.UserId };
           var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true };
 
-          var dialog = await DialogService.ShowAsync<ChangePassword>("Change Password", parameters, options);
+          var dialog = await DialogService.ShowAsync<ChangePasswordDialog>("Change Password", parameters, options);
           var result = await dialog.Result;
 
-          if (!result.Canceled && result.Data is UserInformationResponse spouse)
+          if (!result.Canceled && result.Data is bool passwordChanged)
           {
-               this._SpouseInfo = spouse;
                this.RequestRender();
           }
      }
