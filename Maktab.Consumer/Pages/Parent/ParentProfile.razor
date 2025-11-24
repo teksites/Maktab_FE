@@ -29,21 +29,61 @@
 
                <MudItem xs="12" md="12">
                     <MudCard Class="mb-4 pa-4">
+
+                         <!-- Extended Info Section -->
                          <MudStack Row="true">
-                              <!-- Spouse Section -->
-                              <MudText Typo="Typo.h5">Spouse</MudText>
-                              @if (_SpouseInfo != null)
-                              {
-                                   <ParentInfoCard Parent="@_SpouseInfo" ShowEditButton="false" />
-                              }
-                              else
-                              {
+                         <MudText Typo="Typo.h5" Class="mb-4">Extended Info</MudText>
+                         
+                              
+                                   <MudSpacer />
+                              <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
+                                        Edit
+                                   </MudButton>
+                              
+                              </MudStack>
+                         
+
+                    </MudCard>
+               </MudItem>
+
+               <MudItem xs="12" md="12">
+                    <MudCard Class="mb-4 pa-4">
+
+                         <!-- Password Section -->
+                         <MudStack Row="true">
+                              <MudText Typo="Typo.h5" Class="mb-4">Password</MudText>
+
+
+                              <MudSpacer />
+                              
+                              <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="OpenChangePasswordDialog" Class="mb-4">
+                                   Change Password
+                              </MudButton>
+                         </MudStack>
+
+
+                    </MudCard>
+               </MudItem>
+
+               <MudItem xs="12" md="12">
+                    <MudCard Class="mb-4 pa-4">
+
+                         <!-- Spouse Section -->
+                         <MudText Typo="Typo.h5" Class="mb-4">Spouse</MudText>
+                         @if (_SpouseInfo != null)
+                         {
+                              <ParentInfoCard Parent="@_SpouseInfo" ShowEditButton="false" />
+                         }
+                         else
+                         {
+                              <MudStack Row="true">
                                    <MudSpacer />
                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddSpouseDialog" Class="mb-4">
                                         Add Spouse
                                    </MudButton>
-                              }
-                         </MudStack>
+                              </MudStack>
+                         }
+
                     </MudCard>
                </MudItem>
 
@@ -214,6 +254,36 @@
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
           {
                _Children.Add(child);
+          }
+     }
+
+     private async Task OpenAddExtendedInfoDialog()
+     {
+          var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId, ["AddessId"] = userInfo.FamilyId };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<AddExtendedInfo>("Add Extended Info", parameters, options);
+          var result = await dialog.Result;
+
+          if (!result.Canceled && result.Data is UserInformationResponse spouse)
+          {
+               this._SpouseInfo = spouse;
+               this.RequestRender();
+          }
+     }
+
+     private async Task OpenChangePasswordDialog()
+     {
+          var parameters = new DialogParameters { ["UserId"] = userInfo.UserId};
+          var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<ChangePassword>("Change Password", parameters, options);
+          var result = await dialog.Result;
+
+          if (!result.Canceled && result.Data is UserInformationResponse spouse)
+          {
+               this._SpouseInfo = spouse;
+               this.RequestRender();
           }
      }
 }
