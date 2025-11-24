@@ -111,6 +111,12 @@
                     </MudGrid>
                </MudItem>
 
+               @if (_Children?.Any() != true)
+               {
+                    <MudItem xs="12" md="12">
+                         <MudAlert Severity="Severity.Warning" Elevation="0" Class="mt-2">Please Add child to start enrollments.</MudAlert>
+                    </MudItem>
+               }
 
 
                @if (_CourseEnrollments?.Any() == true)
