@@ -2,7 +2,9 @@
 
 @using MaktabDataContracts.Responses.Addresses
 @using MudBlazor
-@using System.Globalization
+
+@inject IDialogService DialogService
+@inject IAddressService AddressService
 @* @typeparam TAddress *@
 
 @* <MudPaper Class="pa-3 rounded-lg" Elevation="2"> *@
@@ -24,31 +26,34 @@
 
 @if (Addresses is not null && Addresses.Any())
 {
-     <MudList T="AddressResponse" Dense="false">
+     <MudList T="AddressResponse" ReadOnly="true" Dense="false">
           @foreach (var address in Addresses)
           {
-               <MudListItem Class="pa-2 my-1 rounded-md" Style="border: 1px solid var(--mud-palette-divider);">
+               <MudListItem Class="pa-2 my-1 rounded-md">
+                    @* Class="pa-2 my-1 rounded-md" Style="border: 1px solid var(--mud-palette-divider);"> *@
                     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width: 100%;">
-                         <MudAvatar Color="@(address.HomeAddress? Color.Success: Color.Info)" Icon="@Icons.Material.Filled.Home" Size="Size.Medium" />
+                         @* <MudAvatar Color="@(address.HomeAddress? Color.Success: Color.Info)" Icon="@Icons.Material.Filled.Home" Size="Size.Medium" /> *@
 
-                         <MudStack Style="flex:1; min-width:0">
+                         @* <MudStack Style="flex:1; min-width:0">
                               <MudText Typo="Typo.subtitle1" Class="text-truncate">
                                    @GetAddressTitle(address)
-                              </MudText>
+                              </MudText> *@
 
-                              <MudText Typo="Typo.body2" Color="Color.Secondary">
-                                   @GetFormattedAddress(address)
-                              </MudText>
+                         <MudText Typo="Typo.body2" Class="text-truncate">
+                              @GetFormattedAddress(address)
+                         </MudText>
 
-                              <MudText Typo="Typo.caption" Color="Color.Secondary">
+                         @* <MudText Typo="Typo.caption" Color="Color.Secondary">
                                    Added on @address.CreatedAt.ToString("d", CultureInfo.InvariantCulture)
-                              </MudText>
-                         </MudStack>
+                              </MudText> *@
+                         @* </MudStack> *@
 
                          @*   <MudChip Color="@(address.IsActive ? Color.Success : Color.Warning)"
                                  Variant="Variant.Filled"
                                  Size="Size.Small"
                                  Label="@(address.IsActive ? "Active" : "Inactive")" /> *@
+
+                         <MudSpacer />
 
                          <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
                               <MudMenuItem OnClick="() => OnEditClicked(address)">Edit</MudMenuItem>
@@ -77,7 +82,32 @@ else
 
 
      private Task OnEditClicked(AddressResponse address) => OnEdit.InvokeAsync(address);
-     private Task OnDeleteClicked(AddressResponse address) => OnDelete.InvokeAsync(address);
+     private async Task OnDeleteClicked(AddressResponse address)
+     {
+
+          bool? result = await DialogService.ShowMessageBox(
+                 "Warning",
+                 $"Would you like to remove address",
+                 yesText: "Delete", cancelText: "Cancel");
+          if (result.HasValue && result.Value)
+          {
+               var deleted = await AddressService.DeleteAddressByConnectedId(address.ConnectedId);
+               if (deleted)
+               {
+                    Snackbar.Add("Address Remove successfully!", Severity.Success);
+               }
+               else
+               {
+                    Snackbar.Add("Address can not be removed at the moment, please try in few minutes.", Severity.Error);
+               }
+          }
+
+          if (OnDelete.HasDelegate)
+          {
+               await OnDelete.InvokeAsync(address);
+          }
+     }
+
      private Task OnAddClicked() => OnAdd.InvokeAsync();
 
      private static string GetAddressTitle(AddressResponse address)
