@@ -9,6 +9,7 @@ namespace Maktab.Core.Interfaces.Services
           Task<IEnumerable<ChildResponse>> GetChildrenByFamilyIdAsync(Guid familyId);
           Task<ChildResponse> AddChildToFamilyAsync(Guid familyId, AddChildRequest addChildRequest);
           Task<bool> IsChildExistWithRamQNumberAsync(Guid familyId, string ramqNumber);
-          Task<bool> RemoveChildFromFamily(Guid familyId);
+          Task<bool> RemoveChildFromFamilyAsync(Guid familyId);
+          Task<bool> RemoveChildByIdAsync(Guid childId);
      }
 }

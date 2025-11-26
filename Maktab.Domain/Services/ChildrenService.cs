@@ -55,14 +55,14 @@ namespace Maktab.Domain.Services
                return result;
           }
 
-          public async Task<bool> RemoveChild(Guid childId)
+          public async Task<bool> RemoveChildByIdAsync(Guid childId)
           {
                var formatedUrl = string.Format(removeChildById, childId);
                var result = await _httpService.Post<bool>(formatedUrl);
                return result;
           }
 
-          public async Task<bool> RemoveChildFromFamily(Guid familyId)
+          public async Task<bool> RemoveChildFromFamilyAsync(Guid familyId)
           {
                var formatedUrl = string.Format(removeChildByFamilyId, familyId);
                var result = await _httpService.Post<bool>(formatedUrl);
