@@ -7,6 +7,7 @@ namespace Maktab.Domain.Services
      public class CourseEnrollmentTransaction : BaseService, ICourseEnrollmentTransactionService
      {
           private const string getCourseEnrollmentTranasctionByFamilyAndInstitureIdUrl = @"/api/student-course-transactions/family/{0}/institute/{1}";
+          private const string getCourseEnrollmentTranasctionByFamilyAndCourseIdUrl = @"/api/student-course-transactions/family/{0}/course/{1}";
           private const string getCourseEnrollmentTranasctionByCourseIdUrl = @"/api/student-course-transactions/course/{0}";
 
           private const string getCourseEnrollmentTranasctionByIdUrl = @"/api/student-course-transactions/{0}";
@@ -50,6 +51,13 @@ namespace Maktab.Domain.Services
           public async Task<IList<StudentCourseTransactionResponse>> GetCourseEnrollmentTranasctionByFamilyAndInstituteIdAsync(Guid familyId, Guid instituteId)
           {
                var formatedUrl = string.Format(getCourseEnrollmentTranasctionByFamilyAndInstitureIdUrl, familyId, instituteId);
+               var result = await _httpService.Get<IList<StudentCourseTransactionResponse>>(formatedUrl);
+               return result;
+          }
+
+          public async Task<IList<StudentCourseTransactionResponse>> GetCourseEnrollmentTranasctionByFamilyAndCourseIdAsync(Guid familyId, Guid courseId)
+          {
+               var formatedUrl = string.Format(getCourseEnrollmentTranasctionByFamilyAndCourseIdUrl, familyId, courseId);
                var result = await _httpService.Get<IList<StudentCourseTransactionResponse>>(formatedUrl);
                return result;
           }
