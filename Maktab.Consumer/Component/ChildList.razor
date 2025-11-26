@@ -1,11 +1,13 @@
-﻿@using Maktab.Consumer.Dialogs
+﻿@inherits BaseComponent<ChildList>
+
+@using Maktab.Consumer.Dialogs
 @using Maktab.Consumer.Helpers
 @using MaktabDataContracts.Requests.Children
 @using MaktabDataContracts.Responses.Children
 @using MudBlazor
-@inject IDialogService DialogService
 
-@inherits BaseComponent<ChildList>
+@inject IDialogService DialogService
+@inject IChildrenService ChildrenService
 
 @if (ShowHeader)
 {
@@ -22,7 +24,7 @@
 
 }
 
-<MudTable Items="Children" Elevation="1" Dense="true" Bordered="true" Hover="true">
+<MudTable Items="Children" Elevation="1" Dense="true" Bordered="false" Hover="false">
      <HeaderContent>
           <MudTh>First Name</MudTh>
           <MudTh>Last Name</MudTh>
@@ -51,7 +53,7 @@
                     {
                          <MudMenuItem OnClick="OpenAssignCourseDialog">Enroll</MudMenuItem>
                     }
-                    <MudMenuItem >Delete</MudMenuItem>
+                    <MudMenuItem OnClick="@(() => RemoveChild(context))">Delete</MudMenuItem>
                </MudMenu>
 
           </MudTd>
@@ -77,11 +79,34 @@
           if (!result.Canceled && result.Data is ChildResponse child)
           {
                Children.Add(child);
+               RequestRender();
           }
      }
 
      private async Task OpenAssignCourseDialog()
      {
           NavigationManager.NavigateTo(Constants.ChildCourseAssignmentRoute);
+     }
+
+     private async Task RemoveChild(ChildResponse child)
+     {
+          bool? result = await DialogService.ShowMessageBox(
+            "Warning",
+            $"Would you like to remove {child.FirstName}",
+            yesText: "Delete", cancelText: "Cancel");
+          if (result.HasValue && result.Value)
+          {
+               var deleted = await ChildrenService.RemoveChildByIdAsync(child.ChildId);
+               if (deleted)
+               {
+                    Snackbar.Add("Child Remove successfully!", Severity.Success);
+               }
+               else
+               {
+                    Snackbar.Add("Child can not be removed at the moment, please try in few minutes.", Severity.Error);
+               }
+          }
+
+          RequestRender();
      }
 }
