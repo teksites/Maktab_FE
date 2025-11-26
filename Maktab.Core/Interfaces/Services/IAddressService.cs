@@ -10,5 +10,6 @@ namespace Maktab.Core.Interfaces.Services
           Task<AddressResponse> GetAddressByConnectedId(Guid connectedId);
           Task<AddressResponse> GetAddressById(Guid addressId);
           Task<AddressResponse> SaveAddressAsync(AddAddress addAddress);
+          Task<AddressResponse> UpdateAddressAsync(AddAddress addAddress);
      }
 }
