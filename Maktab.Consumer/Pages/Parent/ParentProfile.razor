@@ -32,9 +32,28 @@
                     <MudCard Class="mb-4 pa-4">
 
                          <MudStack Row="true">
-                              <MudText Typo="Typo.h5" Class="mb-4">Extended Info</MudText>
+
+                              @if(_ExtendedInfoResponse != null)
+                              {
+                                   <MudStack>
+
+                                        <MudText Typo="Typo.h5" Class="mb-4">SIN Info</MudText>
+                                        <MudStack Row="true">
+                                             <MudText>SIN #</MudText>
+
+                                             <MudText>@_ExtendedInfoResponse.SIN</MudText>
+                                        </MudStack>
+                                        <MudSwitch @bind-Checked="_ExtendedInfoResponse.IsActiveTaxCreditRecipient"
+                                                   T="bool"
+                                                   Disabled="true"
+                                                   Label="Is active tax credit recipient"
+                                                   Color="Color.Primary" />
+                                   </MudStack>
+                              }
+
 
                               <MudSpacer />
+                              <MudStack>
                               @if (_ExtendedInfoResponse == null)
                               {
                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
@@ -47,6 +66,7 @@
                                         Edit
                                    </MudButton>
                               }
+                              </MudStack>
 
                          </MudStack>
 
