@@ -4,15 +4,21 @@
 
 <h1>Fee Payment</h1>
 
+<h4>Please use following payment code and email in mandatory fields on Zeffy payment</h4>
+
 @if (!string.IsNullOrEmpty(PaymentCode))
 {
-    <p style="font-size: 48px; font-weight: bold; color: red;">Code: @PaymentCode</p>
+     <p style="font-size: 36px; font-weight: bold; color: black;">Code: @PaymentCode</p>
 }
 
 @if (!string.IsNullOrEmpty(UserEmail))
 {
-    <p>Email: @UserEmail</p>
+     <p style="font-size: 36px; font-weight: bold; color: black;">Email: @UserEmail</p>
 }
+
+
+<h4>Please use zero percent in donation drop down.</h4>
+
 
 @if (!string.IsNullOrEmpty(UserEmail))
 {

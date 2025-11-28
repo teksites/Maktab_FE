@@ -1,5 +1,6 @@
 ﻿@page "/landing/mainpage"
 @using Maktab.Consumer.Helpers
+@using Maktab.Consumer.State
 @using MaktabDataContracts.Responses.Course
 
 @inherits BaseComponent<MainPage>
@@ -10,7 +11,7 @@
 @inject ICourseService CourseService
 
 
-@* @inject IAlertService AlertService *@
+@inject UserStateService StateService
 
 <MudContainer Class="mt-10 mb-10" >
 
@@ -23,7 +24,7 @@
 
      <!-- Courses Section -->
      <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
-     @if (isInitialized)
+     @if (isInitialized && !isDataLoading)
      {
           <CourseList Courses=@_courses ShowProgress="false"
           />
@@ -64,21 +65,54 @@
      // bool isCodeValidating = false;
      // bool isSendingCodeAgain = false;
      bool isInitialized = false;
+     bool isDataLoading;
      // string emailValidationCode = string.Empty;
 
-     private IEnumerable<CourseResponseDetailed> _courses = Enumerable.Empty<CourseResponseDetailed>();
+     //private IEnumerable<CourseResponseDetailed> _courses = Enumerable.Empty<CourseResponseDetailed>();
+     private IReadOnlyCollection<CourseResponseDetailed> _courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.InstituteState.OnChange += HandleStateChange;
+     }
 
      protected override async Task OnInitializedAsync()
      {
           //isInitialized = true;
           await base.OnInitializedAsync();
 
-          _courses = await CourseService.GetCurrentActiveCoursesAsync();
+          //_courses = await CourseService.GetCurrentActiveCoursesAsync();
+
+          await LoadData();
 
           isInitialized = true;
           RequestRender();
 
          
+     }
+
+     private async Task LoadData(bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          if (StateService.InstituteState.Courses == null || forceReload)
+          {
+               var courses = await CourseService.GetCurrentActiveCoursesAsync();
+               StateService.InstituteState.SetCourses(courses);
+          }
+
+          isDataLoading = false;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.InstituteState.OnChange -= HandleStateChange;
      }
 
      // private async void HandleCodeValidation()

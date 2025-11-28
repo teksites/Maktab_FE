@@ -1,4 +1,5 @@
 @using Maktab.Consumer.Base
+@using Maktab.Consumer.State
 @using Maktab.Domain.Services
 @using Maktab.Domain.Extensions
 @using MaktabDataContracts.Requests.Course
@@ -13,7 +14,7 @@
 @inject ICourseEnrollmentService CourseEnrollmentService
 @inject IUserService UserService
 @inject IDialogService DialogService
-
+@inject UserStateService StateService
 
 <MudPaper Class="pa-4">
      <MudStack>
@@ -197,6 +198,7 @@
           var items = await CourseEnrollmentService.AddCourseEnrollmentsAsync(addEnrollments);
           if (items?.Any() == true)
           {
+               StateService.ParentState.ClearCourseEnrollment();
                Snackbar.Add("Enrollments have been added.", Severity.Success);
                MudDialog.Close(DialogResult.Ok(items));
           }

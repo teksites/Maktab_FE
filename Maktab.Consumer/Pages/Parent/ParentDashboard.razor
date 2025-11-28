@@ -2,6 +2,7 @@
 
 @using Maktab.Consumer.Dialogs
 @using Maktab.Consumer.Helpers
+@using Maktab.Consumer.State
 @using Maktab.Models.Models
 @using MaktabDataContracts.Responses.Children
 @using MaktabDataContracts.Responses.Course
@@ -16,10 +17,11 @@
 @inject ICourseEnrollmentService CourseEnrollmentService
 @inject ICourseEnrollmentTransactionService CourseEnrollmentTransactionService
 @inject ICourseService CourseService
+@inject UserStateService StateService
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
 
-     @if (isInitialized)
+     @if (isInitialized && !isDataLoading)
      {
 
           <MudGrid>
@@ -222,75 +224,192 @@
 
 
      bool isInitialized;
-     string userFullName = string.Empty;
+     private bool isDataLoading;
      Guid userId = Guid.Empty;
-     UserInformationResponse userInfo = null;
-     IList<ChildResponse> _Children = Array.Empty<ChildResponse>();
-     //IEnumerable<Notification> notifications = null;
-     IEnumerable<StudentCourseEnrollmentResponse> _CourseEnrollments;
-     IList<StudentCourseTransactionResponse> _CourseTransactions = Array.Empty<StudentCourseTransactionResponse>();
-     IList<CourseResponseDetailed> _Courses = Array.Empty<CourseResponseDetailed>();
+     private UserInformationResponse userInfo => StateService.ParentState.Profile;
+     private IReadOnlyCollection<ChildResponse> _Children => StateService.ParentState.Children ?? Array.Empty<ChildResponse>();
+     IReadOnlyCollection<StudentCourseEnrollmentResponse> _CourseEnrollments => StateService.ParentState.CourseEnrollments ?? Array.Empty<StudentCourseEnrollmentResponse>();
+     IReadOnlyCollection<StudentCourseTransactionResponse> _CourseTransactions => StateService.ParentState.CourseTransactions ?? Array.Empty<StudentCourseTransactionResponse>();
+     IReadOnlyCollection<CourseResponseDetailed> _Courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
 
-     protected decimal AmountPayable { get; set; } = 0;
-     protected decimal AmountPaid { get; set; } = 0;
-     protected int EnrolledCourses { get; set; } = 0;
+     private decimal AmountPayable => _CourseTransactions?.Any() == true ? _CourseTransactions.Sum(x => x.TotalPayable) : 0;
+     private decimal AmountPaid => _CourseTransactions?.Any() == true ? _CourseTransactions.Sum(x => x.TotalAmountPaid) : 0;
+     protected int EnrolledCourses => _CourseEnrollments?.Any() == true ? _CourseEnrollments.Select(x=>x.CourseId).Distinct().Count() : 0;
 
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.ParentState.OnChange += HandleStateChange;
+          StateService.InstituteState.OnChange += HandleStateChange;
+     }
 
      protected override async Task OnInitializedAsync()
      {
           await base.OnInitializedAsync();
 
           userId = await SessionService.GetLoggedInUserIdAsync();
-          userInfo = await UserService.GetUserByIdAsync(userId);
-          userFullName = $"{userInfo.FirstName} {userInfo.LastName}";
-          //notifications = await NotificationService.GetNotificationsByUserIdAsync(userInfo.UserId);
+          await LoadData(userId);
 
-          _CourseEnrollments = await CourseEnrollmentService.GetCourseEnrollmentsByFamilyIdAsync(userInfo.FamilyId);
-          if (_CourseEnrollments?.Any() == true)
+          isInitialized = true;
+          RequestRender();
+
+     }
+
+     private async Task LoadChildrenData(Guid familyId, bool forceReload = false)
+     {
+          if (StateService.ParentState.Children == null || forceReload)
           {
-               _Children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
+               var children = await ChildrenService.GetChildrenByFamilyIdAsync(familyId);
+               StateService.ParentState.SetChildren(children);
+          }
+     }
 
-               var enrolledCoursesIds = _CourseEnrollments.Select(x => x.CourseId).ToList();
-               if (enrolledCoursesIds?.Any() == true)
-               {
-                    this.EnrolledCourses = enrolledCoursesIds.Count;
-               }
-               else
-               {
-                    this.EnrolledCourses = 0;
-               }
+     private async Task LoadUserProfileData(Guid familyId, bool forceReload = false)
+     {
+          if (StateService.ParentState.Profile == null || forceReload)
+          {
+               var profile = await UserService.GetUserByIdAsync(userId);
+               StateService.ParentState.SetProfile(profile);
+          }
+     }
 
-               _Courses = (await CourseService.GetCurrentActiveCoursesAsync()).ToList();
-               var enrolledInstitutes = _Courses.Where(x => enrolledCoursesIds.Contains(x.CourseId))?.Select(y => y.InstituteId).Distinct();
+     private async Task LoadCourseEnrollments(Guid familyId, bool forceReload = false)
+     {
+          if (StateService.ParentState.Profile == null || forceReload)
+          {
+               var profile = await UserService.GetUserByIdAsync(userId);
+               StateService.ParentState.SetProfile(profile);
+          }
+     }
+
+     private async Task LoadCourseTransactions(IEnumerable<StudentCourseEnrollmentResponse> studentCourseEnrollments, IEnumerable<CourseResponseDetailed> courses, Guid familyId, bool forceReload = false)
+     {
+          if (StateService.ParentState.CourseTransactions == null || forceReload)
+          {
+               var enrolledCoursesIds = studentCourseEnrollments.Select(x => x.CourseId).ToList();
+               var enrolledInstitutes = courses.Where(x => enrolledCoursesIds.Contains(x.CourseId))?.Select(y => y.InstituteId).Distinct();
 
                if (enrolledInstitutes?.Any() == true)
                {
-                    _CourseTransactions = new List<StudentCourseTransactionResponse>();
+                    //_CourseTransactions = new List<StudentCourseTransactionResponse>();
                     foreach (var instituteId in enrolledInstitutes)
                     {
-                         var courseTransactions = await CourseEnrollmentTransactionService.GetCourseEnrollmentTranasctionByFamilyAndInstituteIdAsync(userInfo.FamilyId, instituteId);
+                         var courseTransactions = await CourseEnrollmentTransactionService.GetCourseEnrollmentTranasctionByFamilyAndInstituteIdAsync(familyId, instituteId);
                          if (courseTransactions?.Any() == true)
                          {
                               foreach (var courseTransaction in courseTransactions)
                               {
-                                   _CourseTransactions.Add(courseTransaction);
+                                   StateService.ParentState.AddCourseTransactions(courseTransaction);
                               }
                          }
                     }
 
-                    this.AmountPaid = _CourseTransactions.Sum(x => x.TotalAmountPaid);
-                    this.AmountPayable = _CourseTransactions.Sum(x => x.TotalPayable);
+                    // this.AmountPaid = _CourseTransactions.Sum(x => x.TotalAmountPaid);
+                    // this.AmountPayable = _CourseTransactions.Sum(x => x.TotalPayable);
                }
-               //GetCoursePaymentDetailsForFamily(userInfo.FamilyId);
-          }
-          else
-          {
-               _Children = new List<ChildResponse>();
-               _Courses = (await CourseService.GetCurrentActiveCoursesAsync()).ToList();
-          }
 
-          isInitialized = true;
-          RequestRender();
+          }
+     }
+
+     private async Task LoadData(Guid userId, bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await LoadUserProfileData(userId, forceReload);
+
+          //userFullName = $"{userInfo.FirstName} {userInfo.LastName}";
+          //notifications = await NotificationService.GetNotificationsByUserIdAsync(userInfo.UserId);
+
+          Guid familyId = StateService.ParentState.Profile.FamilyId;
+
+          // if (StateService.ParentState.CourseEnrollments == null || forceReload)
+          // {
+          //      var courseEnrollments = await CourseEnrollmentService.GetCourseEnrollmentsByFamilyIdAsync(familyId);
+          //      if (courseEnrollments?.Any() == true)
+          //      {
+          //           StateService.ParentState.SetCourseEnrollment(courseEnrollments);
+          //      }
+          // }
+          await LoadCourseEnrollments(familyId, forceReload);
+          await LoadChildrenData(familyId, forceReload);
+          await LoadCourseTransactions(_CourseEnrollments, _Courses, familyId, forceReload);
+
+          // if (StateService.InstituteState.Courses == null || forceReload)
+          // {
+          //      var courses = await CourseService.GetCurrentActiveCoursesAsync();
+          //      StateService.InstituteState.SetCourses(courses);
+          // }
+
+          // if (StateService.ParentState.CourseTransactions == null || forceReload)
+          // {
+          //      var enrolledCoursesIds = _CourseEnrollments.Select(x => x.CourseId).ToList();
+          //      var enrolledInstitutes = _Courses.Where(x => enrolledCoursesIds.Contains(x.CourseId))?.Select(y => y.InstituteId).Distinct();
+
+          //      if (enrolledInstitutes?.Any() == true)
+          //      {
+          //           //_CourseTransactions = new List<StudentCourseTransactionResponse>();
+          //           foreach (var instituteId in enrolledInstitutes)
+          //           {
+          //                var courseTransactions = await CourseEnrollmentTransactionService.GetCourseEnrollmentTranasctionByFamilyAndInstituteIdAsync(userInfo.FamilyId, instituteId);
+          //                if (courseTransactions?.Any() == true)
+          //                {
+          //                     foreach (var courseTransaction in courseTransactions)
+          //                     {
+          //                          StateService.ParentState.AddCourseTransactions(courseTransaction);
+          //                     }
+          //                }
+          //           }
+
+          //           // this.AmountPaid = _CourseTransactions.Sum(x => x.TotalAmountPaid);
+          //           // this.AmountPayable = _CourseTransactions.Sum(x => x.TotalPayable);
+          //      }
+
+          // }
+
+          // if (_CourseEnrollments?.Any() == true)
+          // {
+          // _Children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
+
+          //var enrolledCoursesIds = _CourseEnrollments.Select(x => x.CourseId).ToList();
+          // if (enrolledCoursesIds?.Any() == true)
+          // {
+          //      this.EnrolledCourses = enrolledCoursesIds.Count;
+          // }
+          // else
+          // {
+          //      this.EnrolledCourses = 0;
+          // }
+
+          //_Courses = (await CourseService.GetCurrentActiveCoursesAsync()).ToList();
+          // var enrolledInstitutes = _Courses.Where(x => enrolledCoursesIds.Contains(x.CourseId))?.Select(y => y.InstituteId).Distinct();
+
+          // if (enrolledInstitutes?.Any() == true)
+          // {
+          //      _CourseTransactions = new List<StudentCourseTransactionResponse>();
+          //      foreach (var instituteId in enrolledInstitutes)
+          //      {
+          //           var courseTransactions = await CourseEnrollmentTransactionService.GetCourseEnrollmentTranasctionByFamilyAndInstituteIdAsync(userInfo.FamilyId, instituteId);
+          //           if (courseTransactions?.Any() == true)
+          //           {
+          //                foreach (var courseTransaction in courseTransactions)
+          //                {
+          //                     _CourseTransactions.Add(courseTransaction);
+          //                }
+          //           }
+          //      }
+
+          //      // this.AmountPaid = _CourseTransactions.Sum(x => x.TotalAmountPaid);
+          //      // this.AmountPayable = _CourseTransactions.Sum(x => x.TotalPayable);
+          // }
+          //GetCoursePaymentDetailsForFamily(userInfo.FamilyId);
+          // }
+          // else
+          // {
+          //      _Children = new List<ChildResponse>();
+          //      _Courses = (await CourseService.GetCurrentActiveCoursesAsync()).ToList();
+          // }
+
+          isDataLoading = false;
      }
 
      private async Task OpenChildDialog(ChildResponse? child = null)
@@ -399,7 +518,20 @@
           var dialogResult = await this.OpenAddChildDialog(DialogService, userInfo.FamilyId);
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
           {
-               _Children.Add(child);
+               await LoadChildrenData(userInfo.FamilyId, true);
+               RequestRender();
           }
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.ParentState.OnChange -= HandleStateChange;
+          StateService.InstituteState.OnChange -= HandleStateChange;
+
      }
 }

@@ -1,4 +1,5 @@
 ﻿@page "/child/assign-course"
+@using Maktab.Consumer.State
 @using MaktabDataContracts.Responses.Children
 @using MaktabDataContracts.Responses.Course
 @using MaktabDataContracts.Responses.Users
@@ -9,7 +10,7 @@
 @inject ICourseService CourseService
 @inject IUserService UserService
 
-
+@inject UserStateService StateService
 
 <MudPaper Class="p-6 mx-auto max-w-3xl">
 

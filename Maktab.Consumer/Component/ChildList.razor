@@ -2,12 +2,14 @@
 
 @using Maktab.Consumer.Dialogs
 @using Maktab.Consumer.Helpers
+@using Maktab.Consumer.State
 @using MaktabDataContracts.Requests.Children
 @using MaktabDataContracts.Responses.Children
 @using MudBlazor
 
 @inject IDialogService DialogService
 @inject IChildrenService ChildrenService
+@inject UserStateService StateService
 
 @if (ShowHeader)
 {
@@ -63,7 +65,7 @@
 
 @code {
      [Parameter] public Guid FamilyId { get; set; } = Guid.Empty;
-     [Parameter] public IList<ChildResponse> Children { get; set; } = Array.Empty<ChildResponse>();
+     [Parameter] public IReadOnlyCollection<ChildResponse> Children { get; set; } = Array.Empty<ChildResponse>();
      [Parameter] public bool ShowAddButton { get; set; } = true;
      [Parameter] public bool ShowHeader { get; set; } = true;
      [Parameter] public bool ShowEnrollMenu { get; set; } = false;
@@ -78,7 +80,7 @@
 
           if (!result.Canceled && result.Data is ChildResponse child)
           {
-               Children.Add(child);
+               StateService.ParentState.ClearChildren();
                RequestRender();
           }
      }

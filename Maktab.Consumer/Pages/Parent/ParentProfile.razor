@@ -2,6 +2,7 @@
 @attribute [Authorize]
 
 @using Maktab.Consumer.Dialogs
+@using Maktab.Consumer.State
 @using MaktabDataContracts.Responses.Addresses
 @using MaktabDataContracts.Responses.Children
 @using MaktabDataContracts.Responses.Course
@@ -18,9 +19,10 @@
 @inject IDialogService DialogService
 @inject IAddressService AddressService
 @inject IContactService ContactService
+@inject UserStateService StateService
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
-     @if (isInitialized)
+     @if (isInitialized && !isDataLoading)
      {
           <MudGrid>
                <MudItem xs="12" md="12">
@@ -173,55 +175,88 @@
 </MudContainer>
 
 @code {
-     private UserInformationResponse userInfo = null;
-     private UserInformationResponse _SpouseInfo = null;
-     private ExtendedUserInformationResponse _ExtendedInfoResponse = null;
+     private UserInformationResponse userInfo => StateService.ParentState.Profile;
+     private UserInformationResponse _SpouseInfo => StateService.ParentState.Spouse;
+     private ExtendedUserInformationResponse _ExtendedInfoResponse => StateService.ParentState.ExtendedProfileInfo;
 
-     private IList<ChildResponse> _Children = Array.Empty<ChildResponse>();
-     // private IEnumerable<CourseResponseDetailed> Courses = Enumerable.Empty<CourseResponseDetailed>();
-     private IList<OtherContactResponse> _OtherContacts = Array.Empty<OtherContactResponse>();
-     private IEnumerable<UserInformationResponse> _FamilyDetails = Enumerable.Empty<UserInformationResponse>();
-     private IList<AddressResponse> _Addresses = Array.Empty<AddressResponse>();
 
-     //private IEnumerable<StudentCourseEnrollmentResponse> _enrolledCourses = Enumerable.Empty<StudentCourseEnrollmentResponse>();
+     private IReadOnlyCollection<ChildResponse> _Children => StateService.ParentState.Children ?? Array.Empty<ChildResponse>();
+     private IReadOnlyCollection<OtherContactResponse> _OtherContacts => StateService.ParentState.Contacts ?? Array.Empty<OtherContactResponse>();
+     private IReadOnlyCollection<AddressResponse> _Addresses => StateService.ParentState.Addresses ?? Array.Empty<AddressResponse>();
+     private bool isInitialized;
+     private bool isDataLoading;
 
-     bool isInitialized;
-     string userFullName = string.Empty;
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.ParentState.OnChange += HandleStateChange;
+     }
 
      protected override async Task OnInitializedAsync()
      {
           await base.OnInitializedAsync();
 
           var userId = await SessionService.GetLoggedInUserIdAsync();
-          userInfo = await UserService.GetUserByIdAsync(userId);
-          userFullName = $"{userInfo.FirstName} {userInfo.LastName}";
-          _Children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
-          //notifications = await NotificationService.GetNotificationsByUserIdAsync(userInfo.UserId);
-          var _courses = await CourseService.GetCurrentActiveCoursesAsync();
-          var _enrolledCourses = await CourseEnrollmentService.GetCourseEnrollmentsByFamilyIdAsync(userInfo.FamilyId);
 
-          var enrolledCourseIds = _enrolledCourses?.Select(x => x.CourseId);
+          await LoadProfileData(userId);
 
-          //Courses = _courses.Where(x => enrolledCourseIds.Contains(x.CourseId))?.ToList();
-
-          _FamilyDetails = await UserService.GetFamilyByFamilyId(userInfo.FamilyId);
-
-          _SpouseInfo = _FamilyDetails?.Where(x => x.UserId != this.userInfo.UserId).FirstOrDefault();
-          _ExtendedInfoResponse = await UserService.GetExtendedInfoByUserIdAsync(userInfo.UserId);
-          _Addresses = new List<AddressResponse>();
-          var userAddress = await AddressService.GetAddressByConnectedId(userInfo.UserId);
-          if (userAddress != null)
-          {
-               _Addresses.Add(userAddress);
-          }
-
-          _OtherContacts = new List<OtherContactResponse>();
-          //(await ContactService.GetContactsByFamilyId(userInfo.FamilyId)).ToList();
-          //(await ContactService.GetContactsByFamilyId(userInfo.FamilyId))?.ToList();
-
-          //studentCourseTransaction = await CourseEnrollmentService.GetCoursePaymentDetailsForFamily(userInfo.FamilyId);
           isInitialized = true;
           RequestRender();
+     }
+
+     private async Task LoadProfileData(Guid userId, bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          if (StateService.ParentState.Profile == null || forceReload)
+          {
+               var profile = await UserService.GetUserByIdAsync(userId);
+               StateService.ParentState.SetProfile(profile);
+          }
+
+          Guid familyId = StateService.ParentState.Profile.FamilyId;
+
+          await LoadChildrenData(familyId, forceReload);
+
+          if (StateService.ParentState.Spouse == null || forceReload)
+          {
+               var familyDetails = await UserService.GetFamilyByFamilyId(familyId);
+               if (familyDetails?.Any() == true)
+               {
+                    var spouse = familyDetails.FirstOrDefault(x => x.UserId != userId);
+                    if (spouse != null)
+                    {
+                         StateService.ParentState.SetSpouse(spouse);
+                    }
+               }
+          }
+
+          if (StateService.ParentState.ExtendedProfileInfo == null || forceReload)
+          {
+               var info = await UserService.GetExtendedInfoByUserIdAsync(userInfo.UserId);
+               StateService.ParentState.SetExtendedInfo(info);
+          }
+
+
+          if (StateService.ParentState.Addresses == null || forceReload)
+          {
+               var familyAddress = await AddressService.GetAddressByConnectedId(userId);
+               if (familyAddress != null)
+               {
+                    StateService.ParentState.AddAddress(familyAddress);
+               }
+          }
+
+          isDataLoading = false;
+     }
+
+     private async Task LoadChildrenData(Guid familyId, bool forceReload = false)
+     {
+          if (StateService.ParentState.Children == null || forceReload)
+          {
+               var children = await ChildrenService.GetChildrenByFamilyIdAsync(familyId);
+               StateService.ParentState.SetChildren(children);
+          }
      }
 
      private async Task OnEditUserProfile(UserInformationResponse parent)
@@ -234,7 +269,7 @@
 
           if (!result.Canceled && result.Data is UserInformationResponse userResponse)
           {
-               userInfo = userResponse;
+               StateService.ParentState.SetProfile(userResponse);
                this.RequestRender();
           }
      }
@@ -246,7 +281,7 @@
           var dialogResult = await this.OpenAddContactDialog(DialogService, userInfo.FamilyId);
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is OtherContactResponse contact)
           {
-               _OtherContacts.Add(contact);
+               StateService.ParentState.AddContact(contact);
                this.RequestRender();
           }
      }
@@ -261,7 +296,7 @@
 
           if (!result.Canceled && result.Data is UserInformationResponse spouse)
           {
-               this._SpouseInfo = spouse;
+               StateService.ParentState.SetSpouse(spouse);
                this.RequestRender();
           }
      }
@@ -270,7 +305,7 @@
           var dialogResult = await this.OpenAddAddressDialog(DialogService, userInfo.UserId);
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is AddressResponse address)
           {
-               _Addresses.Add(address);
+               StateService.ParentState.AddAddress(address);
                this.RequestRender();
           }
      }
@@ -280,7 +315,8 @@
           var dialogResult = await this.OpenAddChildDialog(DialogService, userInfo.FamilyId);
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
           {
-               _Children.Add(child);
+               await LoadChildrenData(userInfo.FamilyId, true);
+               RequestRender();
           }
      }
 
@@ -294,7 +330,7 @@
 
           if (!result.Canceled && result.Data is ExtendedUserInformationResponse spouse)
           {
-               this._ExtendedInfoResponse = spouse;
+               StateService.ParentState.SetExtendedInfo(spouse);
                this.RequestRender();
           }
      }
@@ -311,5 +347,15 @@
           {
                this.RequestRender();
           }
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.ParentState.OnChange -= HandleStateChange;
      }
 }
