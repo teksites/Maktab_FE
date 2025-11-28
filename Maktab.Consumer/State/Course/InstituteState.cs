@@ -44,6 +44,12 @@ namespace Maktab.Consumer.State.Course
                return result;
           }
 
+          public void ClearInstitutes()
+          {
+               _institutes = null;
+               NotifyStateChanged();
+          }
+
           private List<CourseResponseDetailed>? _courses;
           public IReadOnlyList<CourseResponseDetailed> Courses
           {
@@ -80,6 +86,12 @@ namespace Maktab.Consumer.State.Course
                NotifyStateChanged();
 
                return result;
+          }
+
+          public void ClearCourses()
+          {
+               _courses = null;
+               NotifyStateChanged();
           }
      }
 }

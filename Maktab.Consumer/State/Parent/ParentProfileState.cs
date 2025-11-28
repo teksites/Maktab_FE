@@ -72,6 +72,7 @@ namespace Maktab.Consumer.State.Parent
           public void ClearChildren()
           {
                _children = null;
+               NotifyStateChanged();
           }
 
           private List<OtherContactResponse>? _contacts;
@@ -115,6 +116,7 @@ namespace Maktab.Consumer.State.Parent
           public void ClearContact()
           {
                _contacts = null;
+               NotifyStateChanged();
           }
 
           private List<AddressResponse>? _addresses;
@@ -158,6 +160,7 @@ namespace Maktab.Consumer.State.Parent
           public void ClearAddress()
           {
                _addresses = null;
+               NotifyStateChanged();
           }
 
 
@@ -202,6 +205,7 @@ namespace Maktab.Consumer.State.Parent
           public void ClearCourseEnrollment()
           {
                _courseEnrollments = null;
+               NotifyStateChanged();
           }
 
           private List<StudentCourseTransactionResponse>? _courseTransactions;
