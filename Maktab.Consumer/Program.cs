@@ -1,6 +1,7 @@
 using Maktab.Consumer;
 using Maktab.Consumer.Helpers;
 using Maktab.Consumer.Services;
+using Maktab.Consumer.State;
 using Maktab.Core.Interfaces.Services;
 using Maktab.Domain.Services;
 using Maktab.Infrastructure.Services;
@@ -37,6 +38,7 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddScoped<ICourseEnrollmentTransactionService, CourseEnrollmentTransaction>()
                 .AddScoped<ThemeService>()
                 .AddScoped<AuthenticationStateProvider, AuthStateProvider>()
+                .AddSingleton<UserStateService>()
                 .AddSingleton<ISystemService, SystemService>();
 builder.Services.AddMudServices();
 builder.Services.AddLocalization();// options => options.ResourcesPath = "Resources");
