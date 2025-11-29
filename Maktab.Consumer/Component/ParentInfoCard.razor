@@ -28,7 +28,6 @@
 
      private bool isInitialized = false;
 
-
      protected override async Task OnInitializedAsync()
      {
           await base.OnInitializedAsync();
@@ -36,6 +35,8 @@
           RequestRender();
      }
 
-
-     private string Initials => string.Join("", Parent.FirstName.Split(' ').Select(n => n[0])).ToUpper();
+     private string Initials =>  new string (Parent.UserName
+                  .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                  .Select(n => n[0])
+                  .ToArray()).ToUpper();
 }

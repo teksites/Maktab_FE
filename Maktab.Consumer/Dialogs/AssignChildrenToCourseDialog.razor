@@ -1,5 +1,6 @@
 @using Maktab.Consumer.Base
 @using Maktab.Consumer.State
+@using Maktab.Consumer.Extensions;
 @using Maktab.Domain.Services
 @using Maktab.Domain.Extensions
 @using MaktabDataContracts.Requests.Course
@@ -80,7 +81,7 @@
      bool? isInitialized;
      private CourseResponseDetailed? SelectedCourse;
 
-     private IEnumerable<ChildResponse> Children = Array.Empty<ChildResponse>();
+     private IReadOnlyCollection<ChildResponse> Children => StateService.ParentState.Children ?? Array.Empty<ChildResponse>();
      //private IEnumerable<CourseEnrollmentGroupResponse> _couseGroups;
      private List<ChildEnrollmentDetails> _enrollmentDetails;
      private Guid familyId;
@@ -98,10 +99,10 @@
           SelectedCourse = await CourseService.GetCourseByIdAsync(CourseId);
           //_couseGroups = await CourseGroupService.GetEnrollmentGroupsByCourseIdAsync(CourseId);
           var userId = await SessionService.GetLoggedInUserIdAsync();
-          var userInfo = await UserService.GetUserByIdAsync(userId);
+          var userInfo = StateService.ParentState.Profile;
           familyId = userInfo.FamilyId;
           // Load children for the logged-in parent
-          Children = await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId);
+          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId);
           _enrollmentDetails = new List<ChildEnrollmentDetails>();
 
           foreach (var child in Children)
@@ -198,7 +199,9 @@
           var items = await CourseEnrollmentService.AddCourseEnrollmentsAsync(addEnrollments);
           if (items?.Any() == true)
           {
-               StateService.ParentState.ClearCourseEnrollment();
+               //StateService.ParentState.ClearCourseEnrollment();
+               await StateService.LoadCourseEnrollments(CourseEnrollmentService, familyId, true);
+
                Snackbar.Add("Enrollments have been added.", Severity.Success);
                MudDialog.Close(DialogResult.Ok(items));
           }

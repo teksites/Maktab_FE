@@ -1,8 +1,9 @@
 ﻿@page "/courses/search"
 @using Maktab.Consumer.Helpers
+@using Maktab.Consumer.State
 @using MaktabDataContracts.Responses.Course
 @using MaktabDataContracts.Responses.Institute
-
+@using Maktab.Consumer.Extensions;
 
 @inherits BaseComponent<CourseSearch>
 
@@ -13,13 +14,13 @@
 @inject ISystemService SystemService
 
 
-
+@inject UserStateService StateService
 @* @inject IAlertService AlertService *@
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-8">
      <MudText Typo="Typo.h4" GutterBottom="true">Available Courses</MudText>
 
-     @if (isInitialized)
+     @if (isInitialized && !isDataLoading)
      {
           <!-- Search & Category Filter -->
           <MudGrid Class="mb-4">
@@ -59,25 +60,55 @@
 </MudContainer>
 
 @code {
-     private IEnumerable<InstituteResponse> _institutes = Array.Empty<InstituteResponse>();
+     private IEnumerable<InstituteResponse> _institutes => StateService.InstituteState.Institutes ?? Array.Empty<InstituteResponse>();
 
-     private IEnumerable<CourseResponseDetailed> _courses = Array.Empty<CourseResponseDetailed>();
+     private IEnumerable<CourseResponseDetailed> _courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
      private List<CourseResponseDetailed> _filteredCourses = new();
      // private IEnumerable<InstituteReponse> _categories = new();
      private InstituteResponse? _selectedCategory;// = "All";
      private string _searchText = string.Empty;
      private bool isInitialized = false;
+     private bool isDataLoading = false;
+
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.InstituteState.OnChange += HandleStateChange;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.InstituteState.OnChange -= HandleStateChange;
+     }
+
 
      protected override async Task OnInitializedAsync()
      {
-          _institutes = await InstitutionService.GetAllInstitutionsAsync();
-          _courses = await CourseService.GetCurrentActiveCoursesAsync();
-          // _categories = _institutes; //_courses.Select(c => c.Category).Distinct().ToList();
-          ApplyFilters();
+
+          await LoadData();
+
           isInitialized = true;
 
           RequestRender();
           //_selectedCategory = "All";
+     }
+
+     private async Task LoadData(bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadActiveInstitutesData(InstitutionService, forceReload);
+          await StateService.LoadActiveCoursesData(CourseService, forceReload);
+
+          ApplyFilters();
+
+          isDataLoading = false;
      }
 
      private void OnCategoryChanged(InstituteResponse? category)

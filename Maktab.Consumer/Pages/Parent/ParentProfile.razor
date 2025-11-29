@@ -3,6 +3,7 @@
 
 @using Maktab.Consumer.Dialogs
 @using Maktab.Consumer.State
+@using Maktab.Consumer.Extensions;
 @using MaktabDataContracts.Responses.Addresses
 @using MaktabDataContracts.Responses.Children
 @using MaktabDataContracts.Responses.Course
@@ -35,11 +36,11 @@
 
                          <MudStack Row="true">
 
-                              @if(_ExtendedInfoResponse != null)
-                              {
-                                   <MudStack>
+                              <MudStack>
 
-                                        <MudText Typo="Typo.h5" Class="mb-4">SIN Info</MudText>
+                                   <MudText Typo="Typo.h5" Class="mb-4">Tax Info</MudText>
+                                   @if (_ExtendedInfoResponse != null)
+                                   {
                                         <MudStack Row="true">
                                              <MudText>SIN #</MudText>
 
@@ -50,24 +51,24 @@
                                                    Disabled="true"
                                                    Label="Is active tax credit recipient"
                                                    Color="Color.Primary" />
-                                   </MudStack>
-                              }
+                                   }
 
+                              </MudStack>
 
                               <MudSpacer />
                               <MudStack>
-                              @if (_ExtendedInfoResponse == null)
-                              {
-                                   <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
-                                        Add
-                                   </MudButton>
-                              }
-                              else
-                              {
-                                   <MudButton Variant="Variant.Outlined" Disabled="true" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
-                                        Edit
-                                   </MudButton>
-                              }
+                                   @if (_ExtendedInfoResponse == null)
+                                   {
+                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
+                                             Add
+                                        </MudButton>
+                                   }
+                                   else
+                                   {
+                                        <MudButton Variant="Variant.Outlined" Disabled="true" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
+                                             Edit
+                                        </MudButton>
+                                   }
                               </MudStack>
 
                          </MudStack>
@@ -208,56 +209,28 @@
      {
           isDataLoading = true;
 
-          if (StateService.ParentState.Profile == null || forceReload)
-          {
-               var profile = await UserService.GetUserByIdAsync(userId);
-               StateService.ParentState.SetProfile(profile);
-          }
+          await StateService.LoadUserProfileData(UserService, userId, forceReload);
 
-          Guid familyId = StateService.ParentState.Profile.FamilyId;
+          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, forceReload);
 
-          await LoadChildrenData(familyId, forceReload);
+          await StateService.LoadUserSpouseData(UserService, userId, userInfo.FamilyId, forceReload);
 
-          if (StateService.ParentState.Spouse == null || forceReload)
-          {
-               var familyDetails = await UserService.GetFamilyByFamilyId(familyId);
-               if (familyDetails?.Any() == true)
-               {
-                    var spouse = familyDetails.FirstOrDefault(x => x.UserId != userId);
-                    if (spouse != null)
-                    {
-                         StateService.ParentState.SetSpouse(spouse);
-                    }
-               }
-          }
+          await StateService.LoadUserExtendedProfileData(UserService, userId, forceReload);
 
-          if (StateService.ParentState.ExtendedProfileInfo == null || forceReload)
-          {
-               var info = await UserService.GetExtendedInfoByUserIdAsync(userInfo.UserId);
-               StateService.ParentState.SetExtendedInfo(info);
-          }
-
-
-          if (StateService.ParentState.Addresses == null || forceReload)
-          {
-               var familyAddress = await AddressService.GetAddressByConnectedId(userId);
-               if (familyAddress != null)
-               {
-                    StateService.ParentState.AddAddress(familyAddress);
-               }
-          }
+          await StateService.LoadAddressesData(AddressService, userId, forceReload);
+          await StateService.LoadAddressesData(AddressService, userInfo.FamilyId, true);
 
           isDataLoading = false;
      }
 
-     private async Task LoadChildrenData(Guid familyId, bool forceReload = false)
-     {
-          if (StateService.ParentState.Children == null || forceReload)
-          {
-               var children = await ChildrenService.GetChildrenByFamilyIdAsync(familyId);
-               StateService.ParentState.SetChildren(children);
-          }
-     }
+     // private async Task LoadChildrenData(Guid familyId, bool forceReload = false)
+     // {
+     //      if (StateService.ParentState.Children == null || forceReload)
+     //      {
+     //           var children = await ChildrenService.GetChildrenByFamilyIdAsync(familyId);
+     //           StateService.ParentState.SetChildren(children);
+     //      }
+     // }
 
      private async Task OnEditUserProfile(UserInformationResponse parent)
      {
@@ -305,7 +278,11 @@
           var dialogResult = await this.OpenAddAddressDialog(DialogService, userInfo.FamilyId);
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is AddressResponse address)
           {
-               StateService.ParentState.AddAddress(address);
+               //StateService.ParentState.AddAddress(address);
+               StateService.ParentState.ClearAddress();
+               await StateService.LoadAddressesData(AddressService, userInfo.UserId, true);
+               await StateService.LoadAddressesData(AddressService, userInfo.FamilyId, true);
+
                this.RequestRender();
           }
      }
@@ -315,7 +292,8 @@
           var dialogResult = await this.OpenAddChildDialog(DialogService, userInfo.FamilyId);
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
           {
-               await LoadChildrenData(userInfo.FamilyId, true);
+               //await LoadChildrenData(userInfo.FamilyId, true);
+               await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, true);
                RequestRender();
           }
      }

@@ -1,11 +1,15 @@
 ﻿@inherits BaseComponent<EnrollmentNotification>
+@using Maktab.Consumer.State
+@using Maktab.Consumer.Extensions
 @using MaktabDataContracts.Responses.Children
 @using MaktabDataContracts.Responses.Course
+@using MaktabDataContracts.Responses.Users
 @using MudBlazor
 
 @* @typeparam TEnrollment *@
 @inject ICourseEnrollmentService CourseEnrollmentService
 @inject IDialogService DialogService
+@inject UserStateService StateService
 
 <MudPaper Class="pa-4 rounded-lg" Elevation="2">
      <MudExpansionPanel Expanded="true">
@@ -62,7 +66,7 @@
                                         {
                                              <MudMenuItem OnClick="OpenAssignCourseDialog">Enroll</MudMenuItem>
                                         } *@
-                                        <MudMenuItem OnClick="@(() => ViewDetails(context))">Delete</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => RemoveEnrollment(context))">Delete</MudMenuItem>
                                    </MudMenu>
 
                               </MudTd>
@@ -140,6 +144,8 @@
      [Parameter] public EventCallback OnViewAll { get; set; }
      [Parameter] public int MaxItems { get; set; } = 5;
 
+     private UserInformationResponse userInfo => StateService.ParentState.Profile;
+
      private Task ViewDetails(StudentCourseEnrollmentResponse e) => OnViewDetails.InvokeAsync(e);
 
      private Task ViewAll() => OnViewAll.InvokeAsync();
@@ -196,9 +202,9 @@
           if (result.HasValue && result.Value)
           {
                var enrollmentRemoved = await CourseEnrollmentService.RemoveCourseEnrollmentByIdAsync(e.StudentCourseEnrollmentId);
-
                if (enrollmentRemoved)
                {
+                    await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, true);
                     Snackbar.Add("Enrollment Remove successfully!", Severity.Success);
                }
                else

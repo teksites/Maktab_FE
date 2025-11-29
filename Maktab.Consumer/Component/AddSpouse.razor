@@ -78,11 +78,7 @@
                RequestRender();
                await InvokeUserAction(RequestSaving);
           }
-          catch(Exception ex)
-          {
-               _errorMessage = "Process can not be completed. Please try again in few minutes";
-               Snackbar.Add(_errorMessage, Severity.Error);
-          }
+          
           finally
           {
                isSaving = false;

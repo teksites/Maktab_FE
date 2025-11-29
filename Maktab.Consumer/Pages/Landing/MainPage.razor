@@ -2,6 +2,7 @@
 @using Maktab.Consumer.Helpers
 @using Maktab.Consumer.State
 @using MaktabDataContracts.Responses.Course
+@using Maktab.Consumer.Extensions;
 
 @inherits BaseComponent<MainPage>
 
@@ -89,18 +90,19 @@
           isInitialized = true;
           RequestRender();
 
-         
      }
 
      private async Task LoadData(bool forceReload = false)
      {
           isDataLoading = true;
 
-          if (StateService.InstituteState.Courses == null || forceReload)
-          {
-               var courses = await CourseService.GetCurrentActiveCoursesAsync();
-               StateService.InstituteState.SetCourses(courses);
-          }
+          await StateService.LoadActiveCoursesData(CourseService, forceReload);
+
+          // if (StateService.InstituteState.Courses == null || forceReload)
+          // {
+          //      var courses = await CourseService.GetCurrentActiveCoursesAsync();
+          //      StateService.InstituteState.SetCourses(courses);
+          // }
 
           isDataLoading = false;
      }

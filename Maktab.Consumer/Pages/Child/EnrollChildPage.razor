@@ -1,5 +1,7 @@
 ﻿@page "/child/assign-course"
 @using Maktab.Consumer.State
+@using Maktab.Consumer.Extensions
+@using MaktabDataContracts.Requests.Course
 @using MaktabDataContracts.Responses.Children
 @using MaktabDataContracts.Responses.Course
 @using MaktabDataContracts.Responses.Users
@@ -9,8 +11,11 @@
 @inject IChildrenService ChildrenService
 @inject ICourseService CourseService
 @inject IUserService UserService
+@inject ICourseEnrollmentService CourseEnrollmentService
+
 
 @inject UserStateService StateService
+@inject IDialogService DialogService 
 
 <MudPaper Class="p-6 mx-auto max-w-3xl">
 
@@ -39,6 +44,9 @@
 
           <!-- Loading Overlay -->
           <LoadingOverlay IsLoading="@IsLoadingData" />
+
+          @if (isInitialized && !IsLoadingData)
+          {
 
           <!-- Stepper -->
           <MudStepper @bind-ActiveIndex="ActiveStep"
@@ -261,6 +269,7 @@
 
                </MudGrid>
           }
+          }
      }
 
 
@@ -269,15 +278,13 @@
 @code {
 
      protected int ActiveStep { get; set; } = 0;
-     protected List<ChildResponse> Children = new();
-     protected List<CourseResponseDetailed> Courses = new();
+     private IReadOnlyCollection<ChildResponse> Children => StateService.ParentState.Children ?? Array.Empty<ChildResponse>();
+     private IReadOnlyCollection<CourseResponseDetailed> Courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
+     private UserInformationResponse userInfo => StateService.ParentState.Profile;
 
      protected ChildResponse? SelectedChild { get; set; }
      protected CourseResponseDetailed? SelectedCourse { get; set; }
-     private UserInformationResponse userInfo = null;
      private CourseEnrollmentGroupResponse SelectedGroup { get; set; }
-
-
      protected HashSet<CourseEnrollmentGroupResponse> SelectedGroups { get; set; } = new();
 
      protected bool WillUseDayCare { get; set; }
@@ -286,7 +293,31 @@
      protected bool IsSaving { get; set; }
 
      protected bool IsLoadingData = false;
+     protected bool isInitialized = false;
+
+
      protected bool IsSuccess = false;
+
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.ParentState.OnChange += HandleStateChange;
+          StateService.InstituteState.OnChange += HandleStateChange;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.ParentState.OnChange -= HandleStateChange;
+          StateService.InstituteState.OnChange -= HandleStateChange;
+
+     }
+
 
      protected override async Task OnInitializedAsync()
      {
@@ -294,11 +325,28 @@
           await base.OnInitializedAsync();
 
           var userId = await SessionService.GetLoggedInUserIdAsync();
-          userInfo = await UserService.GetUserByIdAsync(userId);
-          Children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
+
+          await LoadData(userId);
+
+          isInitialized = true;
+     }
+
+     protected async Task LoadData(Guid userId, bool forceLoad = false)
+     {
+          IsLoadingData = true;
+
+          await StateService.LoadUserProfileData(UserService, userId);
+          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId);
+          await StateService.LoadActiveCoursesData(CourseService);
+
+          IsLoadingData = false;
+
+
+          //userInfo = await UserService.GetUserByIdAsync(userId);
+          //Children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
 
           //Children = await ChildrenService.GetChildrenByFamilyIdAsync
-          Courses = (await CourseService.GetCurrentActiveCoursesAsync()).ToList();
+          //Courses = (await CourseService.GetCurrentActiveCoursesAsync()).ToList();
 
 
      }
@@ -316,21 +364,100 @@
 
      protected async Task SubmitEnrollment()
      {
-          IsSaving = true;
 
 
-          // var payloads = SelectedGroups.Select(g => new StudentCourseEnrollmentRequest
-          // {
-          //      ChildId = SelectedChild!.ChildId,
-          //      CourseId = SelectedCourse!.CourseId,
-          //      CourseEnrollmentGroupId = g.CourseEnrollmentGroupId,
-          //      IsActive = IsActive,
-          //      WillUseDayCare = WillUseDayCare,
-          //      DayCareDays = WillUseDayCare ? DayCareDays : 0
-          // }).ToList();
+          try
+          {
+               IsSaving = true;
+               RequestRender();
+               await InvokeUserAction(RequestEnrollment);
+          }
+          finally
+          {
+               IsSaving = false;
+               RequestRender();
+          }
 
-          // await Api.AssignCourse(payloads);
+     }
 
-          IsSaving = false;
+     protected async Task RequestEnrollment()
+     {
+
+          List<AddStudentCourseEnrollment> addEnrollments = new();
+
+
+          if (SelectedCourse.CanSelectMultipleEnrollmentGroups)
+          {
+               if (SelectedGroups?.Any() != true)
+               {
+                    await DialogService.ShowMessageBox(
+                   "Warning",
+                   "Not all child have valid group assigned.", "OK");
+                    return;
+               }
+
+               //var addEnrollments = new List<AddStudentCourseEnrollment>();
+
+               foreach (var enrollmentgroup in SelectedGroups)
+               {
+                    var studentEnrollment = new AddStudentCourseEnrollment()
+                              {
+
+                                   ChildId = SelectedChild.ChildId,
+                                   FamilyId = userInfo.FamilyId,
+                                   CourseId = SelectedCourse.CourseId,
+                                   CourseEnrollmentGroupId = enrollmentgroup.CourseEnrollmentGroupId,
+                                   WillUseDayCare = WillUseDayCare,
+                                   DayCareDays = DayCareDays,
+                              };
+                    addEnrollments.Add(studentEnrollment);
+               }
+          }
+          else
+          {
+               if (SelectedGroups == null)
+               {
+                    await DialogService.ShowMessageBox(
+                         "Warning",
+                         "Not all child have valid group assigned.", "OK");
+                    return;
+               }
+
+               //addEnrollments = new List<AddStudentCourseEnrollment>();
+               {
+
+                    var studentEnrollment = new AddStudentCourseEnrollment()
+                         {
+
+                              ChildId = SelectedChild.ChildId,
+                              FamilyId = userInfo.FamilyId,
+                              CourseId = SelectedCourse.CourseId,
+                              CourseEnrollmentGroupId = SelectedGroup.CourseEnrollmentGroupId,
+                             WillUseDayCare = WillUseDayCare,
+                                   DayCareDays = DayCareDays,
+                         };
+
+                    addEnrollments.Add(studentEnrollment);
+               }
+          }
+
+          //Add enrollments.
+          var items = await CourseEnrollmentService.AddCourseEnrollmentsAsync(addEnrollments);
+          if (items?.Any() == true)
+          {
+               //StateService.ParentState.ClearCourseEnrollment();
+               await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, true);
+               IsSuccess = true;
+
+               Snackbar.Add("Enrollments have been added.", Severity.Success);
+               //MudDialog.Close(DialogResult.Ok(items));
+          }
+          else
+          {
+               Snackbar.Add("Enrollments can not be added for family. Please try in a moment or contact support.", Severity.Error);
+          }
+     
+     
+     
      }
 }
