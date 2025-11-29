@@ -25,7 +25,6 @@
                }
           </MudSelect>
 
-
           @if (!string.IsNullOrWhiteSpace(_errorMessage))
           {
                <MudAlert Severity="Severity.Error" Elevation="0" Class="my-4">
@@ -62,7 +61,6 @@
 
      private bool isSaving = false;
 
-     
      IEnumerable<Relationship> relationShips;
 
      protected override async Task OnInitializedAsync()
@@ -79,6 +77,11 @@
                isSaving = true;
                RequestRender();
                await InvokeUserAction(RequestSaving);
+          }
+          catch(Exception ex)
+          {
+               _errorMessage = "Process can not be completed. Please try again in few minutes";
+               Snackbar.Add(_errorMessage, Severity.Error);
           }
           finally
           {
@@ -102,7 +105,7 @@
           var isUserExists = await UserService.ValidateUsernameAsync(Spouse.UserName);
           if (isUserExists)
           {
-               _errorMessage = "User is already registered with system. Please contact support";
+               _errorMessage = "Email provided is already registered with system. Please contact support";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
@@ -110,16 +113,18 @@
           Spouse.FamilyId = FamilyId;
           Spouse.Password = "Test1234!";
 
-          var result = await UserService.RegisterUserAsync(Spouse);
-          if (result == null)
+          var souseProfile = await UserService.RegisterUserAsync(Spouse);
+          if (souseProfile == null)
           {
                _errorMessage = "User can not be registered with system. Please try again in few minutes";
                Snackbar.Add(_errorMessage, Severity.Error);
-               return;
           }
-
-          Snackbar.Add("User has been linked.", Severity.Success);
-          await OnSave.InvokeAsync(result);
+          else
+          {
+               await UserService.ForgotUserPasswordAsync(souseProfile.Email);
+               Snackbar.Add("User has been linked.", Severity.Success);
+               await OnSave.InvokeAsync(souseProfile);
+          }
      }
 
      private async Task OnCancelClickedHandler()
