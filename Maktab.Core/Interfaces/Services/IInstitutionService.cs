@@ -14,5 +14,6 @@ namespace Maktab.Core.Interfaces.Services
           Task<bool> RemoveInstituteAsync(Guid instituteId);
 
           Task<bool> DeactivateInstituteAsync(Guid instituteId);
+          Task<IEnumerable<InstituteResponse>> GetAllActiveInstitutionsAsync();
      }
 }

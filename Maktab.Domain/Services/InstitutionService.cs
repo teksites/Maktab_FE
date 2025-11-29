@@ -10,7 +10,9 @@ namespace Maktab.Domain.Services
      public class InstitutionService : BaseService, IInstitutionService
      {
           private const string getInstituteById = @"/api/institutes/{0}";
-          private const string getInstitutes = @"/api/institutes";
+          private const string getActiveInstitutes = @"/api/institutes?onlyActive=true";
+          private const string getInstitutes = @"/api/institutes?onlyActive=false";
+
           private const string addInstituteUrl = @"/api/institutes";
 
           private const string removeInstituteById = @"/api/institutes/{0}?hardDelete={1}";
@@ -41,6 +43,12 @@ namespace Maktab.Domain.Services
           public async Task<IEnumerable<InstituteResponse>> GetAllInstitutionsAsync()
           {
                var result = await _httpService.Get<IEnumerable<InstituteResponse>>(getInstitutes);
+               return result;
+          }
+
+          public async Task<IEnumerable<InstituteResponse>> GetAllActiveInstitutionsAsync()
+          {
+               var result = await _httpService.Get<IEnumerable<InstituteResponse>>(getActiveInstitutes);
                return result;
           }
 
