@@ -5,6 +5,7 @@ namespace Maktab.Consumer.State.Course
 {
      public class InstituteState : BaseAppState
      {
+          public Lazy<object> InstituteSyncLock { get; private set; } = new Lazy<object>();
 
           private List<InstituteResponse>? _institutes;
           public IReadOnlyList<InstituteResponse> Institutes
@@ -20,17 +21,25 @@ namespace Maktab.Consumer.State.Course
                }
           }
 
-          public void SetInstitute(IEnumerable<InstituteResponse> items)
+          public void SetInstitutes(IEnumerable<InstituteResponse> items)
           {
-               _institutes = items.ToList();
+               lock (InstituteSyncLock)
+               {
+                    _institutes = items.ToList();
+               }
+
                NotifyStateChanged();
           }
 
           public void AddInstitute(InstituteResponse child)
           {
-               _institutes ??= new List<InstituteResponse>();
+               lock (InstituteSyncLock)
+               {
+                    _institutes ??= new List<InstituteResponse>();
 
-               _institutes.Add(child);
+                    _institutes.Add(child);
+               }
+
                NotifyStateChanged();
           }
 
@@ -38,17 +47,27 @@ namespace Maktab.Consumer.State.Course
           {
                if (_institutes == null) return false;
 
-               var result = _institutes.Remove(child);
-               NotifyStateChanged();
+               lock (InstituteSyncLock)
+               {
+                    var result = _institutes.Remove(child);
+                    NotifyStateChanged();
 
-               return result;
+                    return result;
+               }
           }
 
           public void ClearInstitutes()
           {
-               _institutes = null;
+               lock (InstituteSyncLock)
+               {
+                    _institutes = null;
+               }
+
                NotifyStateChanged();
           }
+
+          public Lazy<object> CourseSyncLock { get; private set; } = new Lazy<object>();
+
 
           private List<CourseResponseDetailed>? _courses;
           public IReadOnlyList<CourseResponseDetailed> Courses
@@ -66,15 +85,22 @@ namespace Maktab.Consumer.State.Course
 
           public void SetCourses(IEnumerable<CourseResponseDetailed> items)
           {
-               _courses = items.ToList();
-               NotifyStateChanged();
+               lock (CourseSyncLock)
+               {
+                    _courses = items.ToList();
+                    NotifyStateChanged();
+               }
           }
 
           public void AddCourse(CourseResponseDetailed course)
           {
-               _courses ??= new List<CourseResponseDetailed>();
+               lock (CourseSyncLock)
+               {
+                    _courses ??= new List<CourseResponseDetailed>();
 
-               _courses.Add(course);
+                    _courses.Add(course);
+               }
+
                NotifyStateChanged();
           }
 
@@ -82,15 +108,22 @@ namespace Maktab.Consumer.State.Course
           {
                if (_courses == null) return false;
 
-               var result = _courses.Remove(course);
-               NotifyStateChanged();
+               lock (CourseSyncLock)
+               {
+                    var result = _courses.Remove(course);
+                    NotifyStateChanged();
 
-               return result;
+                    return result;
+               }
           }
 
           public void ClearCourses()
           {
-               _courses = null;
+               lock (CourseSyncLock)
+               {
+                    _courses = null;
+               }
+
                NotifyStateChanged();
           }
      }

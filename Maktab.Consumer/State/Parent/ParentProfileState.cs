@@ -75,6 +75,8 @@ namespace Maktab.Consumer.State.Parent
                NotifyStateChanged();
           }
 
+          public Lazy<object> ContactSyncLock { get; private set; } = new Lazy<object>();
+
           private List<OtherContactResponse>? _contacts;
           public IReadOnlyList<OtherContactResponse> Contacts
           {
@@ -91,7 +93,11 @@ namespace Maktab.Consumer.State.Parent
 
           public void SetContact(IEnumerable<OtherContactResponse> items)
           {
-               _contacts = items.ToList();
+               lock (ContactSyncLock)
+               {
+                    _contacts = items.ToList();
+               }
+
                NotifyStateChanged();
           }
 
@@ -99,7 +105,11 @@ namespace Maktab.Consumer.State.Parent
           {
                _contacts ??= new List<OtherContactResponse>();
 
-               _contacts.Add(contact);
+               lock (ContactSyncLock)
+               {
+                    _contacts.Add(contact);
+               }
+
                NotifyStateChanged();
           }
 
@@ -107,17 +117,27 @@ namespace Maktab.Consumer.State.Parent
           {
                if (_contacts == null) return false;
 
-               var result = _contacts.Remove(contact);
-               NotifyStateChanged();
+               lock (ContactSyncLock)
+               {
 
-               return result;
+                    var result = _contacts.Remove(contact);
+                    NotifyStateChanged();
+
+                    return result;
+               }
           }
 
           public void ClearContact()
           {
-               _contacts = null;
+               lock (ContactSyncLock)
+               {
+                    _contacts = null;
+               }
+
                NotifyStateChanged();
           }
+
+          public Lazy<object> AddressSyncLock { get; private set; } = new Lazy<object>();
 
           private List<AddressResponse>? _addresses;
           public IReadOnlyList<AddressResponse> Addresses
@@ -135,33 +155,49 @@ namespace Maktab.Consumer.State.Parent
 
           public void SetAddress(IEnumerable<AddressResponse> items)
           {
-               _addresses = items.ToList();
-               NotifyStateChanged();
+               lock (AddressSyncLock)
+               {
+                    _addresses = items.ToList();
+                    NotifyStateChanged();
+               }
           }
 
           public void AddAddress(AddressResponse contact)
           {
                _addresses ??= new List<AddressResponse>();
 
-               _addresses.Add(contact);
-               NotifyStateChanged();
+               lock (AddressSyncLock)
+               {
+                    _addresses.Add(contact);
+                    NotifyStateChanged();
+               }
           }
 
           public bool RemoveAddress(AddressResponse contact)
           {
                if (_addresses == null) return false;
 
-               var result = _addresses.Remove(contact);
-               NotifyStateChanged();
+               lock (AddressSyncLock)
+               {
+                    var result = _addresses.Remove(contact);
+                    NotifyStateChanged();
 
-               return result;
+                    return result;
+               }
           }
 
           public void ClearAddress()
           {
-               _addresses = null;
+               lock (AddressSyncLock)
+               {
+                    _addresses = null;
+               }
+
                NotifyStateChanged();
           }
+
+
+          public Lazy<object> EnrollmentSyncLock { get; private set; } = new Lazy<object>();
 
 
           private List<StudentCourseEnrollmentResponse>? _courseEnrollments;
@@ -178,17 +214,26 @@ namespace Maktab.Consumer.State.Parent
                }
           }
 
+
           public void SetCourseEnrollment(IEnumerable<StudentCourseEnrollmentResponse> items)
           {
-               _courseEnrollments = items.ToList();
+               lock (EnrollmentSyncLock)
+               {
+                    _courseEnrollments = items.ToList();
+               }
+
                NotifyStateChanged();
           }
 
           public void AddCourseEnrollment(StudentCourseEnrollmentResponse enrollments)
           {
-               _courseEnrollments ??= new List<StudentCourseEnrollmentResponse>();
+               lock (EnrollmentSyncLock)
+               {
+                    _courseEnrollments ??= new List<StudentCourseEnrollmentResponse>();
 
-               _courseEnrollments.Add(enrollments);
+                    _courseEnrollments.Add(enrollments);
+               }
+
                NotifyStateChanged();
           }
 
@@ -196,17 +241,26 @@ namespace Maktab.Consumer.State.Parent
           {
                if (_courseEnrollments == null) return false;
 
-               var result = _courseEnrollments.Remove(enrollments);
-               NotifyStateChanged();
+               lock (EnrollmentSyncLock)
+               {
+                    var result = _courseEnrollments.Remove(enrollments);
+                    NotifyStateChanged();
 
-               return result;
+                    return result;
+               }
           }
 
           public void ClearCourseEnrollment()
           {
-               _courseEnrollments = null;
+               lock (EnrollmentSyncLock)
+               {
+                    _courseEnrollments = null;
+               }
+
                NotifyStateChanged();
           }
+
+          public Lazy<object> TransactionSyncLock { get; private set; } = new Lazy<object>();
 
           private List<StudentCourseTransactionResponse>? _courseTransactions;
           public IReadOnlyList<StudentCourseTransactionResponse> CourseTransactions
@@ -224,15 +278,23 @@ namespace Maktab.Consumer.State.Parent
 
           public void SetCourseTransactions(IEnumerable<StudentCourseTransactionResponse> items)
           {
-               _courseTransactions = items.ToList();
+               lock (TransactionSyncLock)
+               {
+                    _courseTransactions = items.ToList();
+               }
+               
                NotifyStateChanged();
           }
 
           public void AddCourseTransactions(StudentCourseTransactionResponse enrollments)
           {
-               _courseTransactions ??= new List<StudentCourseTransactionResponse>();
+               lock (TransactionSyncLock)
+               {
+                    _courseTransactions ??= new List<StudentCourseTransactionResponse>();
 
-               _courseTransactions.Add(enrollments);
+                    _courseTransactions.Add(enrollments);
+               }
+
                NotifyStateChanged();
           }
 
@@ -240,10 +302,13 @@ namespace Maktab.Consumer.State.Parent
           {
                if (_courseTransactions == null) return false;
 
-               var result = _courseTransactions.Remove(enrollments);
-               NotifyStateChanged();
+               lock (TransactionSyncLock)
+               {
 
-               return result;
+                    var result = _courseTransactions.Remove(enrollments);
+                    NotifyStateChanged();
+                    return result;
+               }
           }
      }
 }
