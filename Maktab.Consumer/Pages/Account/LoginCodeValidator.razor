@@ -106,7 +106,7 @@
           }
           else if (!userInfo.IfTempUser)
           {
-               var userAddress = await AddressService.GetAddressByConnectedId(userInfo.UserId);
+               var userAddress = await AddressService.GetAddressByConnectedId(userInfo.FamilyId);
                if (userAddress != null && userAddress.HomeAddress)
                {
                     NavigationManager.NavigateTo(Constants.ParentDashboardRoute);

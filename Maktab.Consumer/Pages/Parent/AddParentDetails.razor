@@ -28,7 +28,7 @@
                          <MudStepper @ref=@stepper OnPreviewInteraction="OnPreviewInteraction">
                               <ChildContent>
                               <MudStep Title="Add home address" SecondaryText="Step 1" HasError="@(!isFamilyAddressAdded)">
-                                   <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
+                                   <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.FamilyId" OnSave="@(OnFamilyAddressSaved)" />
                               </MudStep>
 
                               <MudStep Title="Add Spouse" SecondaryText="Step 2" Skippable="true" HasError="@(!isSpouseAdded)">

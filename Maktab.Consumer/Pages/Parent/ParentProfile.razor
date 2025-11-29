@@ -302,7 +302,7 @@
      }
      private async Task OpenAddAddressDialog()
      {
-          var dialogResult = await this.OpenAddAddressDialog(DialogService, userInfo.UserId);
+          var dialogResult = await this.OpenAddAddressDialog(DialogService, userInfo.FamilyId);
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is AddressResponse address)
           {
                StateService.ParentState.AddAddress(address);
