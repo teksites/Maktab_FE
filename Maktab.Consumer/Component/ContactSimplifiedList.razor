@@ -21,8 +21,10 @@
      @foreach (var contact in Contacts)
      {
           <MudListItem>
+               <MudStack Row="true"> 
                <MudIcon Icon="@Icons.Material.Filled.ContactPhone" />
                <MudText>@contact.FirstName @contact.LastName - @contact.Phone</MudText>
+               </MudStack>
           </MudListItem>
      }
 </MudList>

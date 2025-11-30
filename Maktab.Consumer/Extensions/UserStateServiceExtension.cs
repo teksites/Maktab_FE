@@ -103,6 +103,7 @@ namespace Maktab.Consumer.Extensions
           {
                if (userStateService.ParentState.CourseTransactions == null || forceReload)
                {
+                    userStateService.ParentState.ClearCourseTransactions();
                     var enrolledCourseIds = studentCourseEnrollments.Select(x => x.CourseId).Distinct();
                     if (enrolledCourseIds?.Any() == true)
                     {

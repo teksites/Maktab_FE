@@ -40,8 +40,8 @@
                               <MudTh>Group</MudTh>
                               <MudTh>Is Active</MudTh>
                               <MudTh>Fee</MudTh>
+                              <MudTh>Day Care Fee</MudTh>
                               <MudTh>Use Day Care</MudTh>
-                              <MudTh>Day Care Days</MudTh>
                               <MudTh> </MudTh>
                          </HeaderContent>
                          <RowTemplate>
@@ -54,9 +54,9 @@
                               
                               </MudTd>
                               <MudTd>@GetCourseEnrollmentGroup(context.CourseEnrollmentGroupId)?.Fee</MudTd>
-
+                              <MudTd>@GetCourseEnrollmentGroup(context.CourseEnrollmentGroupId)?.DayCareFee</MudTd>
                               <MudTd>@context.WillUseDayCare</MudTd>
-                              <MudTd>@context.DayCareDays</MudTd>
+                             @*  <MudTd>@context.DayCareDays</MudTd> *@
                              @*  <MudTd>@context.RAMQNumber</MudTd>
                               <MudTd>@context.RAMQExpiry.ToShortDateString()</MudTd> *@
                               @* <MudTd>@context.Allergies</MudTd>

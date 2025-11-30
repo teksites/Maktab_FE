@@ -277,14 +277,14 @@
                          </MudSwitch>
 
 
-                         @if (WillUseDayCare)
+                        @*  @if (WillUseDayCare)
                          {
                               <MudNumericField T="int"
                                                Label="Daycare Days"
                                                @bind-Value="DayCareDays"
                                                Min="1" Max="7"
                                                Class="mt-2" />
-                         }
+                         } *@
                     </MudItem>
                     <MudItem xs="12">
                          <MudButton Color="Color.Success" Variant="Variant.Filled"
@@ -317,7 +317,7 @@
      protected HashSet<CourseEnrollmentGroupResponse> SelectedGroups { get; set; } = new();
 
      protected bool WillUseDayCare { get; set; }
-     protected int DayCareDays { get; set; }
+     protected int DayCareDays { get; set; } = 5;
      protected bool IsActive { get; set; } = true;
      protected bool IsSaving { get; set; }
 

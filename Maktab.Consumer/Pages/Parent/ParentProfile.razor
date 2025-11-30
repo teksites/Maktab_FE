@@ -27,7 +27,7 @@
      {
           <MudGrid>
                <MudItem xs="12" md="12">
-                    <ParentInfoCard Parent="@userInfo" OnEdit="OnEditUserProfile" />
+                    <ParentInfoCard Parent="@userInfo" ShowEditButton="false" OnEdit="OnEditUserProfile" />
                </MudItem>
 
                <!-- Extended Info Section -->
@@ -158,7 +158,7 @@
                               <MudText Typo="Typo.h5" Class="mb-4"> Address</MudText>
                               <MudSpacer />
 
-                              <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddAddressDialog" Class="mb-4">
+                              <MudButton Variant="Variant.Outlined" Disabled="true" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddAddressDialog" Class="mb-4">
                                    Add Address
                               </MudButton>
 

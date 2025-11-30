@@ -310,5 +310,15 @@ namespace Maktab.Consumer.State.Parent
                     return result;
                }
           }
+
+          public void ClearCourseTransactions()
+          {
+               lock (TransactionSyncLock)
+               {
+                    _courseTransactions = null;
+               }
+
+               NotifyStateChanged();
+          }
      }
 }
