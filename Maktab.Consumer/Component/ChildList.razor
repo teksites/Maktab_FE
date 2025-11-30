@@ -3,6 +3,7 @@
 @using Maktab.Consumer.Dialogs
 @using Maktab.Consumer.Helpers
 @using Maktab.Consumer.State
+@using Maktab.Consumer.Extensions
 @using MaktabDataContracts.Requests.Children
 @using MaktabDataContracts.Responses.Children
 @using MudBlazor
@@ -65,10 +66,26 @@
 
 @code {
      [Parameter] public Guid FamilyId { get; set; } = Guid.Empty;
-     [Parameter] public IReadOnlyCollection<ChildResponse> Children { get; set; } = Array.Empty<ChildResponse>();
+     protected  IReadOnlyCollection<ChildResponse> Children => StateService.ParentState.Children ?? Array.Empty<ChildResponse>();
      [Parameter] public bool ShowAddButton { get; set; } = true;
      [Parameter] public bool ShowHeader { get; set; } = true;
      [Parameter] public bool ShowEnrollMenu { get; set; } = false;
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.ParentState.OnChange += HandleStateChange;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.ParentState.OnChange -= HandleStateChange;
+     }
 
      private async Task OpenAddChildDialog()
      {
@@ -80,7 +97,7 @@
 
           if (!result.Canceled && result.Data is ChildResponse child)
           {
-               StateService.ParentState.ClearChildren();
+               await StateService.LoadChildrenData(ChildrenService, FamilyId, true);
                RequestRender();
           }
      }
@@ -101,6 +118,7 @@
                var deleted = await ChildrenService.RemoveChildByIdAsync(child.ChildId);
                if (deleted)
                {
+                    await StateService.LoadChildrenData(ChildrenService, FamilyId, true);
                     Snackbar.Add("Child Remove successfully!", Severity.Success);
                }
                else

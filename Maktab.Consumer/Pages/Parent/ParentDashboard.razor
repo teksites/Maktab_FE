@@ -73,7 +73,7 @@
                                              <MudText Typo="Typo.h6">Enrolled Courses</MudText>
                                         </CardHeaderContent>
                                         <CardHeaderActions>
-                                             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OpenEnrollChildDialog">Enroll</MudButton>
+                                             <MudButton Disabled="(_Children?.Any() != true)" Variant="Variant.Filled" Color="Color.Primary" OnClick="@OpenEnrollChildDialog">Enroll</MudButton>
 
                                              @* <MudTooltip Text="Enroll in course">
                                                   <MudFab StartIcon="@Icons.Material.Filled.LibraryAdd" Color="Color.Success" OnClick="@OpenAddEnrollDialog" />
@@ -140,9 +140,7 @@
                </MudPaper> *@
                     <MudItem xs="12" md="12">
                          @* <MudContainer > *@
-                         <EnrollmentNotification Enrollments="_CourseEnrollments"
-                                                 Children="_Children"
-                                                 Courses="_Courses"
+                         <EnrollmentNotification 
                                                  OnViewDetails="ShowEnrollmentDetails"
                                                  OnViewAll="GoToAllEnrollments" />
                          @* </MudContainer> *@
@@ -556,11 +554,7 @@
           var dialog = await DialogService.ShowAsync<EnrollChildInCourseDialog>("Enroll Child", parameters, options);
           var result = await dialog.Result;
 
-          if (!result.Canceled )
-          {
-               await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, true);
-               RequestRender();
-          }
+          RequestRender();
      }
 
      protected virtual void HandleStateChange()

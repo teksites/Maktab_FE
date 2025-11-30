@@ -62,10 +62,13 @@ namespace Maktab.Domain.Services
                }
 
                var responses = new List<StudentCourseEnrollmentResponse>();
-               foreach(var studentEnrollment in studentCourseEnrollments)
+               foreach (var studentEnrollment in studentCourseEnrollments)
                {
                     var response = await AddCourseEnrollmentAsync(studentEnrollment);
-                    responses.Add(response);
+                    if (response != null)
+                    {
+                         responses.Add(response);
+                    }
                }
 
                return responses;

@@ -135,9 +135,9 @@
 </MudPaper>
 
 @code {
-     [Parameter] public IEnumerable<StudentCourseEnrollmentResponse>? Enrollments { get; set; }
-     [Parameter] public IEnumerable<ChildResponse>? Children { get; set; }
-     [Parameter] public IEnumerable<CourseResponseDetailed>? Courses { get; set; }
+     private IReadOnlyCollection<StudentCourseEnrollmentResponse>? Enrollments => StateService.ParentState.CourseEnrollments ?? Array.Empty<StudentCourseEnrollmentResponse>();
+     private IReadOnlyCollection<ChildResponse>? Children => StateService.ParentState.Children ?? Array.Empty<ChildResponse>();
+     private IReadOnlyCollection<CourseResponseDetailed>? Courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
 
 
      [Parameter] public EventCallback<StudentCourseEnrollmentResponse> OnViewDetails { get; set; }
@@ -145,6 +145,25 @@
      [Parameter] public int MaxItems { get; set; } = 5;
 
      private UserInformationResponse userInfo => StateService.ParentState.Profile;
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.ParentState.OnChange += HandleStateChange;
+          StateService.InstituteState.OnChange += HandleStateChange;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.ParentState.OnChange -= HandleStateChange;
+          StateService.InstituteState.OnChange -= HandleStateChange;
+
+     }
 
      private Task ViewDetails(StudentCourseEnrollmentResponse e) => OnViewDetails.InvokeAsync(e);
 
