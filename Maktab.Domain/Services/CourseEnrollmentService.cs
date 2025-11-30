@@ -10,7 +10,7 @@ namespace Maktab.Domain.Services
           private const string getCourseEnrollmentByIdUrl = @"/api/student-course-enrollments/{0}";
           private const string addCourseEnrollmentUrl = @"/api/student-course-enrollments";
           private const string updateCourseEnrollmentByIdUrl = @"/api/student-course-enrollments/{0}";
-          private const string removeCourseEnrollmentByIdUrl = @"/api/student-course-enrollments/{0}?hardDelete=false";
+          private const string removeCourseEnrollmentByIdUrl = @"/api/student-course-enrollments/{0}?hardDelete=true";
 
 
           //private IDictionary<Guid, List<StudentCourseEnrollmentResponse>> courseResponses = new Dictionary<Guid, List<StudentCourseEnrollmentResponse>>();
