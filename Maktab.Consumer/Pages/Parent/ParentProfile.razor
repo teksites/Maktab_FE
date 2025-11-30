@@ -300,7 +300,7 @@
 
      private async Task OpenAddExtendedInfoDialog()
      {
-          var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId, ["AddessId"] = userInfo.FamilyId };
+          var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId, ["AddessId"] = userInfo.FamilyId, ["UserId"] = userInfo.UserId };
           var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
 
           var dialog = await DialogService.ShowAsync<AddExtendedInfoDialog>("Add Extended Info", parameters, options);

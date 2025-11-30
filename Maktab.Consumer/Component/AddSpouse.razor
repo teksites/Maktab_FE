@@ -117,7 +117,7 @@
           }
           else
           {
-               await UserService.ForgotUserPasswordAsync(souseProfile.Email);
+               //await UserService.ForgotUserPasswordAsync(souseProfile.Email);
                Snackbar.Add("User has been linked.", Severity.Success);
                await OnSave.InvokeAsync(souseProfile);
           }

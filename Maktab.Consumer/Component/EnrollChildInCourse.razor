@@ -111,8 +111,11 @@
                               @foreach (var child in Children)
                               {
                                    <MudSelectItem Value="@child">
-                                        <MudAvatar Size="Size.Small" Class="mr-2" />
+                                        <MudStack Row="true">
+                                        @* <MudAvatar  Size="Size.Small" Class="mr-2"/> *@
+                                        <MudIcon Icon="@Icons.Material.Filled.Person" />
                                         @child.FirstName @child.LastName
+                                        </MudStack>
                                    </MudSelectItem>
                               }
                          </MudSelect>
@@ -195,12 +198,30 @@
                                    @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
                                    {
                                         <MudSelectItem Value="@g">
-                                             <MudIcon Icon="@Icons.Material.Filled.Schedule" Class="mr-2" />
+                                             <MudStack Row="true" AlignItems="AlignItems.Center">
+                                             <MudIcon Icon="@Icons.Material.Filled.Groups" Class="mr-2" />
                                              <strong>@g.GroupTitle</strong>
-                                             <MudText Typo="Typo.caption" Class="ml-2">
+                                              
+                                             @* <MudText Typo="Typo.caption" Class="ml-2">Fee: </MudText> *@
+                                             @* <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Class="mr-2" />*@
+                                             <MudText Typo="Typo.caption" Class="ml-2"> 
                                                   @* (@g.StartTime - @g.EndTime) *@
                                                   @g.Fee
                                              </MudText>
+                                             @* <MudIcon Icon="@Icons.Material.Filled.ChildCare" Class="mr-2" />
+                                              @* <MudText Typo="Typo.caption" Class="ml-2"> Day care Fee: </MudText> *@
+                                             @* <MudText Typo="Typo.caption" Class="ml-2"> *@
+                                                  @* (@g.StartTime - @g.EndTime) *@
+                                                  @* @g.DayCareFee
+                                             </MudText> *@
+
+                                              <MudChipSet  T="CourseEnrollmentGroupResponse" >
+                                                  @foreach( var chipSet in g.AcedemicGroups)
+                                                       {
+                                                          <MudChip T="String" Text="@chipSet"/>
+                                                       }
+                                              </MudChipSet>
+                                              </MudStack>
                                         </MudSelectItem>
                                    }
                               </MudSelect>
@@ -216,12 +237,30 @@
                                    @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
                                    {
                                         <MudSelectItem Value="@g">
-                                             <MudIcon Icon="@Icons.Material.Filled.Schedule" Class="mr-2" />
+                                            <MudStack Row="true" AlignItems="AlignItems.Center">
+                                             <MudIcon Icon="@Icons.Material.Filled.Groups" Class="mr-2" />
                                              <strong>@g.GroupTitle</strong>
-                                             <MudText Typo="Typo.caption" Class="ml-2">
+                                              
+                                             @* <MudText Typo="Typo.caption" Class="ml-2">Fee: </MudText> *@
+                                             @* <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Class="mr-2" />*@
+                                             <MudText Typo="Typo.caption" Class="ml-2"> 
                                                   @* (@g.StartTime - @g.EndTime) *@
                                                   @g.Fee
                                              </MudText>
+                                             @* <MudIcon Icon="@Icons.Material.Filled.ChildCare" Class="mr-2" />
+                                              @* <MudText Typo="Typo.caption" Class="ml-2"> Day care Fee: </MudText> *@
+                                             @* <MudText Typo="Typo.caption" Class="ml-2"> *@
+                                                  @* (@g.StartTime - @g.EndTime) *@
+                                                  @* @g.DayCareFee
+                                             </MudText> *@
+
+                                              <MudChipSet  T="CourseEnrollmentGroupResponse" >
+                                                  @foreach( var chipSet in g.AcedemicGroups)
+                                                       {
+                                                          <MudChip T="String" Text="@chipSet"/>
+                                                       }
+                                              </MudChipSet>
+                                              </MudStack>
                                         </MudSelectItem>
                                    }
                               </MudSelect>
@@ -246,17 +285,27 @@
 
 
                     <MudItem>
-                         @* <MudListItemIcon Icon="@Icons.Material.Filled.Person" /> *@
+                           <MudStack Row="true">
+                                @* <MudText Typo="Typo.caption">Child</MudText> *@
+                         <MudIcon Icon="@Icons.Material.Filled.Person" />
                          <MudText>@SelectedChild.FirstName @SelectedChild.LastName</MudText>
+                           </MudStack>
                     </MudItem>
 
                     <MudItem xs="12">
-                         @* <MudListItemIcon Icon="@Icons.Material.Filled.School" /> *@
+                         <MudStack  Row="true">
+
+                         <MudIcon Icon="@Icons.Material.Filled.School" />
+                                @* <MudText Typo="Typo.caption">Course</MudText> *@
+
                          <MudText>@SelectedCourse.Name</MudText>
+
+                         </MudStack>
                     </MudItem>
 
                     <MudItem xs="12">
-                         @* <MudListItemIcon Icon="@Icons.Material.Filled.Groups" /> *@
+                         <MudStack  Row="true">
+                         <MudIcon Icon="@Icons.Material.Filled.Groups" />
                          <MudText>
                               @if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
                               {
@@ -267,9 +316,28 @@
                                    @SelectedGroup?.GroupTitle
                               }
                          </MudText>
+                         </MudStack>
+                         </MudItem>
 
+@*                     <MudItem xs="12">
+                         <MudStack  Row="true">
 
-                    </MudItem>
+                         <MudIcon Icon="@Icons.Material.Filled.AttachMoney" />
+
+                         <MudText>
+                              @if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
+                              {
+                                   @SelectedGroups.Sum(x=>x.Fee)
+                                   @* @string.Join(", ", SelectedGroups.Select(g => g.GroupTitle)) *@
+                            @*  }
+                              else
+                              {
+                                   @SelectedGroup?.Fee
+                              }
+                         </MudText>
+                         </MudStack>
+
+                    </MudItem> *@
                     <MudItem xs="12">
 
                          <MudSwitch T="bool" @bind-Value="WillUseDayCare"  Color="Color.Primary" Class="mt-3">
@@ -277,9 +345,24 @@
                          </MudSwitch>
 
 
-                        @*  @if (WillUseDayCare)
+                         @*  @if (WillUseDayCare)
                          {
-                              <MudNumericField T="int"
+                              <MudStack Row="true">
+                         <MudIcon Icon="@Icons.Material.Filled.ChildCare" />
+                          <MudText>
+                              @if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
+                              {
+                                   @SelectedGroups.Sum(x=>x.DayCareFee) *@
+                                   @* @string.Join(", ", SelectedGroups.Select(g => g.GroupTitle)) *@
+                             @*  }
+                              else
+                              {
+                                   @SelectedGroup?.DayCareFee
+                              }
+                         </MudText>
+                              </MudStack> *@
+                              @* <MudText Typo="Typo.caption">Day care fee: @Sel</MudText> *@
+                              @*<MudNumericField T="int"
                                                Label="Daycare Days"
                                                @bind-Value="DayCareDays"
                                                Min="1" Max="7"
@@ -484,10 +567,9 @@
                IsError = true;
                Snackbar.Add("Enrollments can not be added for family. Please try in a moment or contact support.", Severity.Error);
           }
-     
      }
 
-      private async Task OnCompletedClickedHandler()
+     private async Task OnCompletedClickedHandler()
      {
           if (OnCompleted.HasDelegate)
           {

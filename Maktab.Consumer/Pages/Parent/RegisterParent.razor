@@ -22,7 +22,7 @@
                     <MudTextField T="string" @bind-Value="addUserInformation.Phone" Label="Phone" Required="true" RequiredError="Phone number is required!"
                                   Validation="@(new PhoneAttribute() { ErrorMessage = "The phone number is invalid"})" />
 
-                    <MudSelect @bind-Value="addUserInformation.Relationship" Label="Relationship">
+                    <MudSelect @bind-Value="addUserInformation.Relationship" Label="Relationship with children">
                          @foreach (var margin in relationShips)
                          {
                               <MudSelectItem Value="margin">@margin</MudSelectItem>
