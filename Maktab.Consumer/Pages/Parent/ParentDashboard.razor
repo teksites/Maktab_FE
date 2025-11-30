@@ -140,8 +140,7 @@
                </MudPaper> *@
                     <MudItem xs="12" md="12">
                          @* <MudContainer > *@
-                         <EnrollmentNotification 
-                                                 OnViewDetails="ShowEnrollmentDetails"
+                         <EnrollmentNotification OnViewDetails="ShowEnrollmentDetails"
                                                  OnViewAll="GoToAllEnrollments" />
                          @* </MudContainer> *@
                     </MudItem>
@@ -240,13 +239,24 @@
 
      private decimal AmountPayable => _CourseTransactions?.Any() == true ? _CourseTransactions.Sum(x => x.TotalPayable) : 0;
      private decimal AmountPaid => _CourseTransactions?.Any() == true ? _CourseTransactions.Sum(x => x.TotalAmountPaid) : 0;
-     protected int EnrolledCourses => _CourseEnrollments?.Any() == true ? _CourseEnrollments.Select(x=>x.CourseId).Distinct().Count() : 0;
+     protected int EnrolledCourses => _CourseEnrollments?.Any() == true ? _CourseEnrollments.Select(x => x.CourseId).Distinct().Count() : 0;
 
      protected override void OnInitialized()
      {
           base.OnInitialized();
           StateService.ParentState.OnChange += HandleStateChange;
           StateService.InstituteState.OnChange += HandleStateChange;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.ParentState.OnChange -= HandleStateChange;
+          StateService.InstituteState.OnChange -= HandleStateChange;
      }
 
      protected override async Task OnInitializedAsync()
@@ -330,7 +340,7 @@
 
           await StateService.LoadActiveCoursesData(CourseService, forceReload);
 
-          if(_CourseEnrollments?.Any() == true)
+          if (_CourseEnrollments?.Any() == true)
           {
                await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, forceReload);
                await StateService.LoadCourseTransactionsByCourse(CourseEnrollmentTransactionService, _CourseEnrollments, userInfo.FamilyId, forceReload);
@@ -520,7 +530,7 @@
           string paymentCode = _CourseTransactions.FirstOrDefault()?.PaymentCode;
 
           var navigationUrl = string.Format(url, AmountPayable.ToString(), paymentCode, userInfo.Email);
-          NavigationManager.NavigateTo(navigationUrl, true);
+          NavigationManager.NavigateTo(navigationUrl, false);
 
 
           // var parameters = new DialogParameters { ["PaymentCode"] = paymentCode, ["AmountDue"] = AmountPayable.ToString(), ["UserEmail"] = userInfo.Email };
@@ -548,13 +558,13 @@
 
      private async Task OpenEnrollChildDialog()
      {
-          var parameters = new DialogParameters {  };
+          var parameters = new DialogParameters { };
           var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
 
           var dialog = await DialogService.ShowAsync<EnrollChildInCourseDialog>("Enroll Child", parameters, options);
           var result = await dialog.Result;
 
-          if(!result.Canceled)
+          if (!result.Canceled)
           {
                await StateService.LoadCourseTransactionsByCourse(
                     CourseEnrollmentTransactionService,
@@ -566,15 +576,4 @@
           RequestRender();
      }
 
-     protected virtual void HandleStateChange()
-     {
-          RequestRender();
-     }
-
-     public void OnDispose()
-     {
-          StateService.ParentState.OnChange -= HandleStateChange;
-          StateService.InstituteState.OnChange -= HandleStateChange;
-
-     }
 }

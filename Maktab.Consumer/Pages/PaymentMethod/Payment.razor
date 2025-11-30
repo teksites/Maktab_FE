@@ -2,6 +2,8 @@
 @using Maktab.Consumer.State
 @using Maktab.Consumer.Extensions
 
+@inherits BaseComponent<Payment>
+
 @inject NavigationManager NavigationManager
 @inject ICourseEnrollmentService CourseEnrollmentService
 @inject ICourseEnrollmentTransactionService CourseEnrollmentTransactionService
@@ -51,8 +53,13 @@
      [Parameter] public string UserEmail { get; set; } = "";
      [Parameter] public string AmountDue { get; set; } = "0";
 
+     protected bool IsLoadingData = false;
+     protected bool isInitialized = false;
+
      protected override void OnInitialized()
      {
+
+          base.OnInitialized();
           // Parse query string
           //var uri = new Uri(NavigationManager.Uri);
           var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
@@ -61,6 +68,16 @@
           PaymentCode = query.Get("code") ?? "NoCode";
           UserEmail = query.Get("email") ?? "a@b.c";
           AmountDue = query.Get("amount") ?? "-1";
+     }
+
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          var userId = await SessionService.GetLoggedInUserIdAsync();
+
+          isInitialized = true;
      }
 
      private async Task GoBackHome()
