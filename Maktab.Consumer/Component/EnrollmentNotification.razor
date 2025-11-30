@@ -8,6 +8,8 @@
 
 @* @typeparam TEnrollment *@
 @inject ICourseEnrollmentService CourseEnrollmentService
+@inject ICourseEnrollmentTransactionService CourseEnrollmentTransactionService
+
 @inject IDialogService DialogService
 @inject UserStateService StateService
 
@@ -224,6 +226,11 @@
                if (enrollmentRemoved)
                {
                     await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, true);
+                    await StateService.LoadCourseTransactionsByCourse(
+                              CourseEnrollmentTransactionService,
+                              Enrollments,
+                              userInfo.FamilyId,
+                              true);
                     Snackbar.Add("Enrollment Remove successfully!", Severity.Success);
                }
                else

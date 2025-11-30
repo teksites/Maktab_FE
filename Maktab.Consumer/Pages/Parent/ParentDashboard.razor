@@ -165,7 +165,7 @@
                <MudItem xs="12" md="12">
                     <!-- Courses Section -->
                     <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
-                    <CourseList HighlightButton="true" ViewDetailsButtonText="Enroll" Courses="_Courses" />
+                    <CourseList Courses="_Courses" />
                </MudItem>
 
 
@@ -553,6 +553,15 @@
 
           var dialog = await DialogService.ShowAsync<EnrollChildInCourseDialog>("Enroll Child", parameters, options);
           var result = await dialog.Result;
+
+          if(!result.Canceled)
+          {
+               await StateService.LoadCourseTransactionsByCourse(
+                    CourseEnrollmentTransactionService,
+                    _CourseEnrollments,
+                    userInfo.FamilyId,
+                    true);
+          }
 
           RequestRender();
      }
