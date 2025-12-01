@@ -117,7 +117,8 @@
           bool isAuthorized = await SessionService.IsAuthenticatedAsync();
           if (isAuthorized)
           {
-              await OpenAssignmentDialog(CourseId);
+              //await OpenAssignmentDialog(CourseId);
+               NavigationManager.NavigateTo(Constants.AppLandingPage);
           }
           else
           {
