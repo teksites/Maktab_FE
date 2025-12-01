@@ -54,7 +54,7 @@
                               
                               </MudTd>
                               <MudTd Style="text-align:right">@GetCourseEnrollmentGroup(context.CourseEnrollmentGroupId)?.Fee</MudTd>
-                              <MudTd Style="text-align:right">@GetCourseEnrollmentGroup(context.CourseEnrollmentGroupId)?.DayCareFee</MudTd>
+                              <MudTd Style="text-align:right">@GetDayCareFee(context)</MudTd>
                               <MudTd Style="text-align:center">@GetUseDayCareStatusText(context)</MudTd>
                              @*  <MudTd>@context.DayCareDays</MudTd> *@
                              @*  <MudTd>@context.RAMQNumber</MudTd>
@@ -196,6 +196,22 @@
 
           return group;
 
+     }
+
+
+     private int GetDayCareFee(StudentCourseEnrollmentResponse enrollmentResponse)
+     {
+          if (!enrollmentResponse.WillUseDayCare)
+          {
+               return 0;
+          }
+          var group = Courses?.SelectMany(x => x.CourseEnrollmentGroups).FirstOrDefault(y => y.CourseEnrollmentGroupId == enrollmentResponse.CourseEnrollmentGroupId);
+          if (group != null)
+          {
+               return group.DayCareFee;
+          }
+
+          return 0;
      }
 
      private string GetChildName(Guid childId)
