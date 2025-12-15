@@ -1,6 +1,6 @@
 ﻿@using Maktab.Models.Models
 @using MaktabDataContracts.Responses.Course
-@inherits BaseComponent<CourseGroupList>
+@inherits LocalizeableBaseComponent<CourseGroupList>
 
 <MudPaper Class="pa-4 mt-4">
      @* <MudText Typo="Typo.h6" Class="mb-2">Course Groups</MudText> *@
@@ -34,7 +34,7 @@
                          <ChildContent>
                     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                          @* <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Primary" /> *@
-                         <MudText>@group.GroupTitle</MudText>
+                                   <MudText>@(GetCourseGroupTitle(group))</MudText>
                          @* <MudText>@group.Description</MudText> *@
                          <MudSpacer/> 
                          <MudChipSet  >
@@ -57,4 +57,29 @@
 
 @code {
      [Parameter] public IEnumerable<CourseEnrollmentGroupResponse> CourseGroups { get; set; }
+
+
+     private string GetCourseGroupTitle(CourseEnrollmentGroupResponse group)
+     {
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return group.GroupTitleFr;
+          }
+          else
+          {
+               return group.GroupTitle;
+          }
+     }
+
+     private string GetCourseDetails(CourseEnrollmentGroupResponse group)
+     {
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return group.DetailsFr;
+          }
+          else
+          {
+               return group.Details;
+          }
+     }
 }

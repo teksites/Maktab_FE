@@ -1,5 +1,5 @@
 ﻿@using MaktabDataContracts.Responses.Users
-@inherits BaseComponent<ParentInfoCard>
+@inherits LocalizeableBaseComponent<ParentInfoCard>
 
 <MudCard Class="mb-4 pa-4">
     <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
@@ -15,7 +15,7 @@
                <MudSpacer />
                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Edit"
                OnClick="@(() => OnEdit.InvokeAsync(Parent))">
-            Edit Profile
+            @L[MaktabResources.Edit]
         </MudButton>
         }
     </MudStack>

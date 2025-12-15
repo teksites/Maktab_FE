@@ -308,7 +308,7 @@
     <value>Warning</value>
   </data>
   <data name="Msg_Question_Remove_Address" xml:space="preserve">
-    <value>Would you like to remove address</value>
+    <value>Would you like to remove address?</value>
   </data>
   <data name="Msg_Success_Address_Removed" xml:space="preserve">
     <value>Address Remove successfully!</value>
@@ -348,5 +348,77 @@
   </data>
   <data name="Welcome_User" xml:space="preserve">
     <value>Welcome {0}</value>
+  </data>
+  <data name="Msg_Loading_Course_Details" xml:space="preserve">
+    <value>Loading course details...</value>
+  </data>
+  <data name="Date_Start" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="Date_End" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="Registration_Open" xml:space="preserve">
+    <value>Registration open</value>
+  </data>
+  <data name="Enroll_Now" xml:space="preserve">
+    <value>Enroll now</value>
+  </data>
+  <data name="Policy" xml:space="preserve">
+    <value>Policy</value>
+  </data>
+  <data name="Search_Courses" xml:space="preserve">
+    <value>Search courses</value>
+  </data>
+  <data name="Enrollments" xml:space="preserve">
+    <value>Enrollments</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Msg_Question_Remove_Enrollment" xml:space="preserve">
+    <value>Would you like to remove enrollment?</value>
+  </data>
+  <data name="Msg_Error_Remove_Enrollment" xml:space="preserve">
+    <value>Enrollment can not be removed at the moment, please try in few minutes</value>
+  </data>
+  <data name="Msg_Success_Remove_Enrollment" xml:space="preserve">
+    <value>Enrollment Remove successfully</value>
+  </data>
+  <data name="Course" xml:space="preserve">
+    <value>Course</value>
+  </data>
+  <data name="Child" xml:space="preserve">
+    <value>Child</value>
+  </data>
+  <data name="Fee" xml:space="preserve">
+    <value>Fee</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="Daycare" xml:space="preserve">
+    <value>Daycare</value>
+  </data>
+  <data name="Enrollment" xml:space="preserve">
+    <value>Enrollment</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Available_Courses" xml:space="preserve">
+    <value>Available courses</value>
+  </data>
+  <data name="Current_Password" xml:space="preserve">
+    <value>Current password</value>
   </data>
 </root>

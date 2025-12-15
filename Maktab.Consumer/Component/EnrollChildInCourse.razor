@@ -5,7 +5,7 @@
 @using MaktabDataContracts.Responses.Course
 @using MaktabDataContracts.Responses.Users
 
-@inherits BaseComponent<EnrollChildInCourse>
+@inherits LocalizeableBaseComponent<EnrollChildInCourse>
 
 @inject IChildrenService ChildrenService
 @inject ICourseService CourseService
@@ -37,7 +37,7 @@
 
                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4"
                           OnClick="OnCompletedClickedHandler">
-                    Close
+                    @L[MaktabResources.Close]
                </MudButton>
           </MudPaper>
 
@@ -60,7 +60,7 @@
 
                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4"
                           OnClick="OnCompletedClickedHandler">
-                    Close
+                    @L[MaktabResources.Close]
                </MudButton>
           </MudPaper>
 

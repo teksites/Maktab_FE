@@ -1,4 +1,4 @@
-﻿@inherits BaseComponent<EnrollmentDetailsDialog>
+﻿@inherits LocalizeableBaseComponent<EnrollmentDetailsDialog>
 @using Maktab.Consumer.State
 @using MaktabDataContracts.Responses.Course
 @using MudBlazor
@@ -17,19 +17,19 @@
 
             <MudGrid>
                 <MudItem xs="12" sm="6">
-                    <MudText Typo="Typo.subtitle2">Course</MudText>
+                    <MudText Typo="Typo.subtitle2">@L[MaktabResources.Course]</MudText>
                     <MudText Typo="Typo.body2">@CourseTitle</MudText>
                 </MudItem>
                 <MudItem xs="12" sm="6">
-                    <MudText Typo="Typo.subtitle2">Child</MudText>
+                    <MudText Typo="Typo.subtitle2">@L[MaktabResources.Child]</MudText>
                     <MudText Typo="Typo.body2">@ChildName</MudText>
                 </MudItem>
                 <MudItem xs="12" sm="6">
-                    <MudText Typo="Typo.subtitle2">Daycare</MudText>
+                    <MudText Typo="Typo.subtitle2">@L[MaktabResources.Daycare]</MudText>
                     <MudText Typo="Typo.body2">@DayCareText</MudText>
                 </MudItem>
                 <MudItem xs="12" sm="6">
-                    <MudText Typo="Typo.subtitle2">Status</MudText>
+                    <MudText Typo="Typo.subtitle2">@L[MaktabResources.Enrollment]</MudText>
                     <MudChip T="string" Color="@GetStatusColor()" Variant="Variant.Filled" Size="Size.Small">@StatusText</MudChip>
                 </MudItem>
                 @* <MudItem xs="12">
@@ -41,7 +41,7 @@
         @* </MudStack> *@
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Primary" Variant="Variant.Text" OnClick="Close">Close</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Text" OnClick="Close">@L[MaktabResources.Close]</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -51,8 +51,8 @@
     [Parameter] public string CourseTitle { get; set; } = string.Empty;
     [Parameter] public string ChildName { get; set; } = string.Empty;
 
-    private string DayCareText => Enrollment.WillUseDayCare ? $"{Enrollment.DayCareDays} days" : "No";
-    private string StatusText => Enrollment.IsActive ? "Active" : "Inactive";
+     private string DayCareText => Enrollment.WillUseDayCare ? $"{Enrollment.DayCareDays} days" : L[MaktabResources.No];
+     private string StatusText => Enrollment.IsActive ? L[MaktabResources.Active] : L[MaktabResources.Inactive];
     private Color GetStatusColor() => Enrollment.IsActive ? Color.Success : Color.Warning;
 
     private void Close() => MudDialog.Close();

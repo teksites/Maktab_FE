@@ -317,7 +317,7 @@
     <value>Avertissement</value>
   </data>
   <data name="Msg_Question_Remove_Address" xml:space="preserve">
-    <value>Souhaitez-vous supprimer l'adresse</value>
+    <value>Souhaitez-vous supprimer l'adresse?</value>
   </data>
   <data name="Msg_Success_Address_Removed" xml:space="preserve">
     <value>Adresse supprimée avec succès !</value>
@@ -357,5 +357,74 @@
   </data>
   <data name="Welcome_User" xml:space="preserve">
     <value>Bienvenue {0}</value>
+  </data>
+  <data name="Msg_Loading_Course_Details" xml:space="preserve">
+    <value>Chargement des détails du cours...</value>
+  </data>
+  <data name="Date_Start" xml:space="preserve">
+    <value>Date de début</value>
+  </data>
+  <data name="Date_End" xml:space="preserve">
+    <value>Date de fin</value>
+  </data>
+  <data name="Registration_Open" xml:space="preserve">
+    <value>Inscription ouverte</value>
+  </data>
+  <data name="Enroll_Now" xml:space="preserve">
+    <value>Inscrivez-vous maintenant</value>
+  </data>
+  <data name="Policy" xml:space="preserve">
+    <value>Politique</value>
+  </data>
+  <data name="Search_Courses" xml:space="preserve">
+    <value>Rechercher des cours</value>
+  </data>
+  <data name="Enrollments" xml:space="preserve">
+    <value>Inscriptions</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Actif</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactif</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Oui</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Non</value>
+  </data>
+  <data name="Msg_Question_Remove_Enrollment" xml:space="preserve">
+    <value>Souhaitez-vous supprimer une inscription ?</value>
+  </data>
+  <data name="Msg_Error_Remove_Enrollment" xml:space="preserve">
+    <value>L'inscription ne peut pas être supprimée pour le moment, veuillez essayer dans quelques minutes</value>
+  </data>
+  <data name="Msg_Success_Remove_Enrollment" xml:space="preserve">
+    <value>Inscription supprimée avec succès</value>
+  </data>
+  <data name="Course" xml:space="preserve">
+    <value>Cours</value>
+  </data>
+  <data name="Child" xml:space="preserve">
+    <value>Enfant</value>
+  </data>
+  <data name="Fee" xml:space="preserve">
+    <value>Frais</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Groupe</value>
+  </data>
+  <data name="Daycare" xml:space="preserve">
+    <value>Garderie</value>
+  </data>
+  <data name="Enrollment" xml:space="preserve">
+    <value>Inscription</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Fermer</value>
+  </data>
+  <data name="Available_Courses" xml:space="preserve">
+    <value>Cours disponibles</value>
   </data>
 </root>

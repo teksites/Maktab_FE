@@ -5,7 +5,7 @@
 @using MaktabDataContracts.Responses.Institute
 @using Maktab.Consumer.Extensions;
 
-@inherits BaseComponent<CourseSearch>
+@inherits LocalizeableBaseComponent<CourseSearch>
 
 @* @inject IAccountService AccountService *@
 @inject IUserService UserService
@@ -18,7 +18,7 @@
 @* @inject IAlertService AlertService *@
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-8">
-     <MudText Typo="Typo.h4" GutterBottom="true">Available Courses</MudText>
+     <MudText Typo="Typo.h4" GutterBottom="true">@L[MaktabResources.Available_Courses]</MudText>
 
      @if (isInitialized && !isDataLoading)
      {
@@ -26,7 +26,7 @@
           <MudGrid Class="mb-4">
                <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="_searchText"
-                                  Placeholder="Search courses..."
+                                  Placeholder=@L[MaktabResources.Search_Courses]
                                   Adornment="Adornment.Start"
                                   AdornmentIcon="@Icons.Material.Filled.Search"
                                   Immediate="true"
@@ -55,7 +55,7 @@
      }
      else
      {
-          <BusyContent DisplayText="Initializing" />
+          <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
      }
 </MudContainer>
 

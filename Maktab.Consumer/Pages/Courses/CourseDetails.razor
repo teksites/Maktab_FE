@@ -2,7 +2,7 @@
 @using Maktab.Consumer.Base
 @using MaktabDataContracts.Responses.Course
 
-@inherits BaseComponent<CourseDetails>
+@inherits LocalizeableBaseComponent<CourseDetails>
 
 
 @inject IInstitutionService InstitutionService
@@ -13,7 +13,7 @@
 <MudContainer  Class="mt-8 mb-8">
     @if (_course is null)
     {
-        <MudText Typo="Typo.h6">Loading course details...</MudText>
+        <MudText Typo="Typo.h6">@L[MaktabResources.Msg_Loading_Course_Details]</MudText>
     }
     else
     {
@@ -25,9 +25,9 @@
 
             <MudStack>
             <!-- Title + Category -->
-            <MudText Typo="Typo.h4" GutterBottom="true">@_course.Name</MudText>
+                    <MudText Typo="Typo.h4" GutterBottom="true">@(GetCourseName())</MudText>
                     <MudText Typo="Typo.subtitle1" Color="Color.Info" Class="mb-2">
-                         @_course.Details
+                         @(GetCourseDetails())
                     </MudText>
                     @* <MudText Typo="Typo.subtitle1" Color="Color.Secondary" Class="mb-2">
                     @_course.Instructor
@@ -38,11 +38,11 @@
                     <MudImage Src="images/courses/quran-recitation.jpg" Alt="@_course.Name" Width="300" Class="mb-4 rounded-lg" Elevation="2" />
 
             <!-- Description -->
-            <MudText Typo="Typo.body1" Class="mb-4">@_course.Description</MudText>
+                    <MudText Typo="Typo.body1" Class="mb-4">@(GetCourseDescription())</MudText>
 
                     @if (!string.IsNullOrEmpty(_course.PolicyHyperLink))
                     {
-                         <MudLink Target=""  Href="@_course.PolicyHyperLink">Policy</MudLink>
+                         <MudLink Target="" Href="@_course.PolicyHyperLink">@L[MaktabResources.Policy]</MudLink>
                     }
 
             <MudDivider />
@@ -51,15 +51,15 @@
             <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
                 <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Color="Color.Info" />
                 <MudText Typo="Typo.subtitle1">
-                              <b>Start Date:</b> @_course.StartDate.ToString("dd MMM yyyy")
+                              <b>@L[MaktabResources.Date_Start]</b> @_course.StartDate.ToString("dd MMM yyyy")
                 </MudText>
                     <MudText Typo="Typo.subtitle1">
-                                   <b>End Date:</b> @_course.EndDate.ToString("dd MMM yyyy")
+                              <b>@L[MaktabResources.Date_End]</b> @_course.EndDate.ToString("dd MMM yyyy")
                     </MudText>
 
                          @if(_course.IsRegistrationOpened)
                 {
-                    <MudChip T="string" Color="Color.Info" Variant="Variant.Outlined">Registration Open</MudChip>
+                              <MudChip T="string" Color="Color.Info" Variant="Variant.Outlined">@L[MaktabResources.Registration_Open]</MudChip>
                 }
             </MudStack>
 
@@ -90,7 +90,7 @@
                <MudDivider />
 
                <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" OnClick="@EnrollChild">
-                    Enroll Now
+                    @L[MaktabResources.Enroll_Now]
                </MudButton>
         </MudPaper>
     }
@@ -156,5 +156,40 @@
           }
      }
 
+     private string GetCourseName()
+     {
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return _course.NameFr;
+          }
+          else
+          {
+               return _course.Name;
+          }
+     }
+
+     private string GetCourseDetails()
+     {
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return _course.DetailsFr;
+          }
+          else
+          {
+               return _course.Details;
+          }
+     }
+
+     private string GetCourseDescription()
+     {
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return _course.DescriptionFr;
+          }
+          else
+          {
+               return _course.Description;
+          }
+     }
 
 }
