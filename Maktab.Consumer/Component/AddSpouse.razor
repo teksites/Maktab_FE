@@ -11,14 +11,14 @@
      <MudItem xs="12" sm="8">*@
 <MudPaper Class="pa-12">
      <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)" Spacing="2">
-          <MudTextField T="string" @bind-Value="Spouse.FirstName" Label="First name" Required="true" RequiredError="First name is required!" />
-          <MudTextField T="string" @bind-Value="Spouse.LastName" Label="Last name" Required="true" RequiredError="Last name is required!" />
-          <MudTextField T="string" @bind-Value="Spouse.Email" Label="Email" Required="true" RequiredError="Email is required!"
-                        Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
-          <MudTextField T="string" @bind-Value="Spouse.Phone" Label="Phone" Required="true" RequiredError="Phone number is required!"
-                        Validation="@(new PhoneAttribute() { ErrorMessage = "The phone number is invalid"})" />
+          <MudTextField T="string" @bind-Value="Spouse.FirstName" Label=@L[MaktabResources.First_Name] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.First_Name] />
+          <MudTextField T="string" @bind-Value="Spouse.LastName" Label=@L[MaktabResources.Last_Name] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Last_Name] />
+          <MudTextField T="string" @bind-Value="Spouse.Email" Label=@L[MaktabResources.Email] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Email]
+                        Validation="@(new EmailAddressAttribute() {ErrorMessage =  @L[MaktabResources.Msg_Error_Email_Address_Invalid]})" />
+          <MudTextField T="string" @bind-Value="Spouse.Phone" Label=@L[MaktabResources.Phone] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Phone]
+                        Validation="@(new PhoneAttribute() { ErrorMessage = @L[MaktabResources.Msg_Error_Phone_Number_Invalid]})" />
 
-          <MudSelect @bind-Value="Spouse.Relationship" Label="Relationship with children">
+          <MudSelect @bind-Value="Spouse.Relationship" Label=@L[MaktabResources.Relashion_With_Children]>
                @foreach (var margin in relationShips)
                {
                     <MudSelectItem Value="margin">@margin</MudSelectItem>
@@ -37,15 +37,15 @@
                     @if (isSaving)
                     {
                          <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
-                         <span>Processing...</span>
+                         <span>@L[MaktabResources.Msg_Processing]</span>
                     }
                     else
                     {
-                         <span>Save</span>
+                         <span>@L[MaktabResources.Save]</span>
                     }
                </MudButton>
 
-               <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
+               <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">@L[MaktabResources.Cancel]</MudButton>
           </MudStack>
 
 
@@ -78,7 +78,7 @@
                RequestRender();
                await InvokeUserAction(RequestSaving);
           }
-          
+
           finally
           {
                isSaving = false;
@@ -93,7 +93,7 @@
 
           if (FamilyId == Guid.Empty)
           {
-               _errorMessage = "Please provide valid family id to connect.";
+               _errorMessage = @L[MaktabResources.Msg_Error_No_Family_Id];
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
@@ -101,7 +101,7 @@
           var isUserExists = await UserService.ValidateUsernameAsync(Spouse.UserName);
           if (isUserExists)
           {
-               _errorMessage = "Email provided is already registered with system. Please contact support";
+               _errorMessage = L[MaktabResources.Msg_Error_Email_Already_Registered];//"Email provided is already registered with system. Please contact support";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
@@ -112,13 +112,13 @@
           var souseProfile = await UserService.RegisterUserAsync(Spouse);
           if (souseProfile == null)
           {
-               _errorMessage = "User can not be registered with system. Please try again in few minutes";
+               _errorMessage = L[MaktabResources.Msg_Error_Spouse_Save];//"User can not be registered with system. Please try again in few minutes";
                Snackbar.Add(_errorMessage, Severity.Error);
           }
           else
           {
                //await UserService.ForgotUserPasswordAsync(souseProfile.Email);
-               Snackbar.Add("User has been linked.", Severity.Success);
+               Snackbar.Add(L[MaktabResources.Msg_Success_Spouse_Save], Severity.Success);
                await OnSave.InvokeAsync(souseProfile);
           }
      }

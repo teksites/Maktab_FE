@@ -12,7 +12,7 @@
 
 @* <EditForm Model="@ExtendedModel" OnValidSubmit="HandleValidSubmit"> *@
      <MudPaper Class="pa-4">
-          <MudText Typo="Typo.h5" Class="mb-4">Add SIN</MudText>
+     <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Add_SIN]</MudText>
 
      <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleExtendedInfoSave)" Validated="@(OnFormValidated)">
 
@@ -26,7 +26,7 @@
 
                <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="ExtendedModel.SIN"
-                                  Label="SIN"
+                                  Label=@L[MaktabResources.SIN_Number]
                                   Required="true"
                                   For="@(() => ExtendedModel.SIN)" />
                </MudItem>
@@ -35,7 +35,7 @@
                <MudItem xs="12" sm="6" Class="d-flex align-center">
                     <MudSwitch @bind-Checked="ExtendedModel.IsActiveTaxCreditRecipient"
                                T="bool"
-                               Label="Is active tax payer"
+                               Label=@L[MaktabResources.Active_Tax_Payer]
                                Color="Color.Primary" />
                </MudItem>
           </MudGrid>
@@ -53,11 +53,11 @@
                     @if (isSaving)
                     {
                          <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
-                         <span>Processing...</span>
+                         <span>@L[MaktabResources.Msg_Processing]</span>
                     }
                     else
                     {
-                         <span>Save</span>
+                         <span>@L[MaktabResources.Save]</span>
                     }
                </MudButton>
 
@@ -103,14 +103,14 @@
      {
           if (FamilyId == Guid.Empty)
           {
-               _errorMessage = "Please provide valid Family.";
+               _errorMessage = @L[MaktabResources.Msg_Error_No_Family_Id];//"Please provide valid Family.";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
 
           if (AddessId == Guid.Empty)
           {
-               _errorMessage = "Please provide valid address Id.";
+               _errorMessage = @L[MaktabResources.Msg_Error_No_Address_Id];//"Please provide valid address Id.";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
@@ -121,7 +121,7 @@
           var result = await this.UserService.SaveExtendedInfoAsync(this.UserId, this.ExtendedModel);
           if (result == null)
           {
-               _errorMessage = "Error saving extended info. please try in few moments.";
+               _errorMessage = @L[MaktabResources.Msg_Error_Add_ExtendedInfo_Save];//"Error saving extended info. please try in few moments.";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }

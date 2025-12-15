@@ -10,7 +10,7 @@
 @using MaktabDataContracts.Responses.Transactions
 @using MaktabDataContracts.Responses.Users
 
-@inherits BaseComponent<ParentDashboard>
+@inherits LocalizeableBaseComponent<ParentDashboard>
 
 @inject IUserService UserService
 @inject IChildrenService ChildrenService
@@ -30,7 +30,7 @@
                     <!-- Header -->
                     @* <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-6"> *@
                     <MudContainer AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-6">
-                         <MudText Typo="Typo.h4">Welcome, @userInfo.FirstName</MudText>
+                         <MudText Typo="Typo.h4">@L[MaktabResources.Welcome_User, @userInfo.FirstName]</MudText>
                     </MudContainer>
                </MudItem>
 

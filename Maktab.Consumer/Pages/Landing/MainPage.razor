@@ -4,7 +4,7 @@
 @using MaktabDataContracts.Responses.Course
 @using Maktab.Consumer.Extensions;
 
-@inherits BaseComponent<MainPage>
+@inherits LocalizeableBaseComponent<MainPage>
 
 @* @inject IAccountService AccountService *@
 @* @inject IUserService UserService *@
@@ -18,13 +18,13 @@
 
      <!-- Hero Section -->
      <MudPaper Class="pa-8 d-flex flex-column align-center justify-center text-center" Elevation="0">
-          <MudText Typo="Typo.h3" GutterBottom="true">Welcome to Our Institution</MudText>
-          <MudText Typo="Typo.subtitle1" Class="mb-6">Explore our wide range of courses and programs.</MudText>
-          <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@Constants.CourseSearchRoute">View All Courses</MudButton>
+          <MudText Typo="Typo.h3" GutterBottom="true">@L[MaktabResources.MainPage_Title]</MudText>
+          <MudText Typo="Typo.subtitle1" Class="mb-6">@L[MaktabResources.MainPage_Description]</MudText>
+          <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@Constants.CourseSearchRoute">@L[MaktabResources.ViewAllCourses]</MudButton>
      </MudPaper>
 
      <!-- Courses Section -->
-     <MudText Typo="Typo.h5" Class="mt-10 mb-6">Featured Courses</MudText>
+     <MudText Typo="Typo.h5" Class="mt-10 mb-6">@L[MaktabResources.FeaturedCourses]</MudText>
      @if (isInitialized && !isDataLoading)
      {
           <CourseList Courses=@_courses ShowProgress="false"
@@ -52,7 +52,7 @@
      }
      else
      {
-          <BusyContent DisplayText="Initializing" />
+          <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
      }
 
 

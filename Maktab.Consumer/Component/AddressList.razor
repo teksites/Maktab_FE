@@ -1,4 +1,4 @@
-﻿@inherits BaseComponent<AddressList>
+﻿@inherits LocalizeableBaseComponent<AddressList>
 
 @using MaktabDataContracts.Responses.Addresses
 @using MudBlazor
@@ -11,14 +11,14 @@
 @if (ShowHeader)
 {
      <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">
-          <MudText Typo="Typo.h6">Addresses</MudText>
+          <MudText Typo="Typo.h6">@L[MaktabResources.Addresses]</MudText>
           @if (ShowAddButton)
           {
                <MudButton Variant="Variant.Outlined"
                           Color="Color.Primary"
                           StartIcon="@Icons.Material.Filled.Add"
                           OnClick="OnAddClicked">
-                    Add Address
+                    @L[MaktabResources.Add_Address]
                </MudButton>
           }
      </MudStack>
@@ -56,8 +56,8 @@
                          <MudSpacer />
 
                          <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
-                              <MudMenuItem OnClick="() => OnEditClicked(address)">Edit</MudMenuItem>
-                              <MudMenuItem Disabled="true" OnClick="() => OnDeleteClicked(address)">Delete</MudMenuItem>
+                              <MudMenuItem OnClick="() => OnEditClicked(address)">@L[MaktabResources.Edit]</MudMenuItem>
+                              <MudMenuItem Disabled="true" OnClick="() => OnDeleteClicked(address)">@L[MaktabResources.Remove]</MudMenuItem>
                          </MudMenu>
                     </MudStack>
                </MudListItem>
@@ -86,19 +86,19 @@ else
      {
 
           bool? result = await DialogService.ShowMessageBox(
-                 "Warning",
-                 $"Would you like to remove address",
-                 yesText: "Delete", cancelText: "Cancel");
+                 L[MaktabResources.Warning],
+                 L[MaktabResources.Msg_Question_Remove_Address],
+                 yesText: L[MaktabResources.Remove], cancelText: L[MaktabResources.Cancel]);
           if (result.HasValue && result.Value)
           {
                var deleted = await AddressService.DeleteAddressByConnectedId(address.ConnectedId);
                if (deleted)
                {
-                    Snackbar.Add("Address Remove successfully!", Severity.Success);
+                    Snackbar.Add(L[MaktabResources.Msg_Success_Address_Removed], Severity.Success);
                }
                else
                {
-                    Snackbar.Add("Address can not be removed at the moment, please try in few minutes.", Severity.Error);
+                    Snackbar.Add(L[MaktabResources.Msg_Error_Address_Removed], Severity.Error);
                }
           }
 
@@ -110,8 +110,8 @@ else
 
      private Task OnAddClicked() => OnAdd.InvokeAsync();
 
-     private static string GetAddressTitle(AddressResponse address)
-         => address.HomeAddress ? "Home Address" : $"{address.AddressType} Address";
+     private string GetAddressTitle(AddressResponse address)
+         => address.HomeAddress ? L[MaktabResources.Home_Address] : $"{address.AddressType} Address";
 
      private static string GetFormattedAddress(AddressResponse address)
      {

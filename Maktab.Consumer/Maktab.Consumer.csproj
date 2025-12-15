@@ -1,20 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
-       <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.20" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.20" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.20" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.20" />
-    <PackageReference Include="MudBlazor" Version="8.13.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+    <Compile Remove="MaktabResources.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.22" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.22" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.22" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.22" />
+    <PackageReference Include="MudBlazor" Version="8.15.0" />
+    <PackageReference Include="MudBlazor.Translations" Version="2.7.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,22 +39,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\Shared.MainLayout.Designer.cs">
+    <Folder Include="Pages\Register\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Localization\MaktabResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Shared.MainLayout.resx</DependentUpon>
+      <DependentUpon>MaktabResources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources\Shared.MainLayout.resx">
+    <EmbeddedResource Update="Localization\MaktabResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Shared.MainLayout.Designer.cs</LastGenOutput>
+      <LastGenOutput>MaktabResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\Register\" />
   </ItemGroup>
 
 </Project>

@@ -11,7 +11,7 @@
 @using MaktabDataContracts.Responses.Users
 @using Microsoft.AspNetCore.Authorization
 
-@inherits BaseComponent<ParentProfile>
+@inherits LocalizeableBaseComponent<ParentProfile>
 
 @inject IUserService UserService
 @inject IChildrenService ChildrenService
@@ -38,11 +38,11 @@
 
                               <MudStack>
 
-                                   <MudText Typo="Typo.h5" Class="mb-4">Tax Info</MudText>
+                                   <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Tax_Info]</MudText>
                                    @if (_ExtendedInfoResponse != null)
                                    {
                                         <MudStack Row="true">
-                                             <MudText>SIN #</MudText>
+                                             <MudText>@L[MaktabResources.SIN_Number]</MudText>
 
                                              <MudText>@_ExtendedInfoResponse.SIN</MudText>
                                         </MudStack>
@@ -60,13 +60,13 @@
                                    @if (_ExtendedInfoResponse == null)
                                    {
                                         <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
-                                             Add
+                                             @L[MaktabResources.Add]
                                         </MudButton>
                                    }
                                    else
                                    {
                                         <MudButton Variant="Variant.Outlined" Disabled="true" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
-                                             Edit
+                                             @L[MaktabResources.Edit]
                                         </MudButton>
                                    }
                               </MudStack>
@@ -81,7 +81,7 @@
 
                          <!-- Password Section -->
                          <MudStack Row="true">
-                              <MudText Typo="Typo.h5" Class="mb-4">Password</MudText>
+                              <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Password]</MudText>
 
                               <MudSpacer />
 
@@ -159,7 +159,7 @@
                               <MudSpacer />
 
                               <MudButton Variant="Variant.Outlined" Disabled="true" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddAddressDialog" Class="mb-4">
-                                   Add Address
+                                   @L[MaktabResources.Add]
                               </MudButton>
 
                          </MudStack>

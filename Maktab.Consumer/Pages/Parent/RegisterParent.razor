@@ -15,26 +15,26 @@
           <MudPaper Class="pa-4">
                <MudText Typo="Typo.h4" Class="mb-6 text-center">Register User</MudText>
                <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandlerRegisterUser)" Validated="@(OnFormValidated)">
-                    <MudTextField T="string" @bind-Value="addUserInformation.FirstName" Label="First name" Required="true" RequiredError="First name is required!" />
-                    <MudTextField T="string" @bind-Value="addUserInformation.LastName" Label="Last name" Required="true" RequiredError="Last name is required!" />
-                    <MudTextField T="string" @bind-Value="addUserInformation.Email" Label="Email" Required="true" RequiredError="Email is required!"
-                                  Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
-                    <MudTextField T="string" @bind-Value="addUserInformation.Phone" Label="Phone" Required="true" RequiredError="Phone number is required!"
-                                  Validation="@(new PhoneAttribute() { ErrorMessage = "The phone number is invalid"})" />
+                    <MudTextField T="string" @bind-Value="addUserInformation.FirstName" Label=@L[MaktabResources.First_Name] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.First_Name] />
+                    <MudTextField T="string" @bind-Value="addUserInformation.LastName" Label=@L[MaktabResources.Last_Name] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Last_Name] />
+                    <MudTextField T="string" @bind-Value="addUserInformation.Email" Label=@L[MaktabResources.Email] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Email]
+                                  Validation="@(new EmailAddressAttribute() {ErrorMessage = @L[MaktabResources.Msg_Error_Email_Address_Invalid]})" />
+                    <MudTextField T="string" @bind-Value="addUserInformation.Phone" Label=@L[MaktabResources.Phone] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Phone]
+                                  Validation="@(new PhoneAttribute() { ErrorMessage = @L[MaktabResources.Msg_Error_Phone_Number_Invalid]})" />
 
-                    <MudSelect @bind-Value="addUserInformation.Relationship" Label="Relationship with children">
+                    <MudSelect @bind-Value="addUserInformation.Relationship" Label=@L[MaktabResources.Relashion_With_Children]>
                          @foreach (var margin in relationShips)
                          {
                               <MudSelectItem Value="margin">@margin</MudSelectItem>
                          }
                     </MudSelect>
 
-                    <MudTextField T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
+                    <MudTextField T="string" Label=@L[MaktabResources.Password] HelperText="Choose a strong password" @ref="pwField1"
                                   InputType="InputType.Password"
                                   Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
-                                  RequiredError="Password is required!" />
+                                  RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Password]/>
                     <MudTextField T="string"
-                                  Label="Password" HelperText="Repeat the password" InputType="InputType.Password"
+                                  Label=@L[MaktabResources.Password] HelperText="Repeat the password" InputType="InputType.Password"
                                   Validation="@(new Func<string, string>(PasswordMatch))" />
 
                     @if (!string.IsNullOrWhiteSpace(_errorMessage))

@@ -19,28 +19,28 @@
           <MudGrid Container="true" Spacing="3">
                <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="ChildModel.FirstName"
-                                  Label="First Name"
+                                       Label=@L[MaktabResources.First_Name]
                                   Required="true"
                                   For="@(() => ChildModel.FirstName)" />
                </MudItem>
 
                <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="ChildModel.LastName"
-                                  Label="Last Name"
+                                       Label=@L[MaktabResources.Last_Name]
                                   Required="true"
                                   For="@(() => ChildModel.LastName)" />
                </MudItem>
 
                <MudItem xs="12" sm="6">
                     <MudDatePicker @bind-Date="DateOfBirth"
-                                   Label="Date of Birth"
+                                        Label=@L[MaktabResources.Date_Of_Birth]
                                    Required="true"
                                    For="@(() => DateOfBirth)" />
                </MudItem>
 
                <MudItem xs="12" sm="6">
                     <MudSelect T="Gender" @bind-Value="ChildModel.Gender"
-                               Label="Gender" Required="true"
+                               Label=@L[MaktabResources.Gender] Required="true"
                                For="@(() => ChildModel.Gender)">
                          <MudSelectItem Value="Gender.Male">Male</MudSelectItem>
                          <MudSelectItem Value="Gender.Female">Female</MudSelectItem>
@@ -49,38 +49,38 @@
 
                <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="ChildModel.RAMQNumber"
-                                  Label="RAMQ Number"
+                                       Label=@L[MaktabResources.RAMQ_Number]
                                   Required="true"
                                   For="@(() => ChildModel.RAMQNumber)" />
                </MudItem>
 
                <MudItem xs="12" sm="6">
                     <MudDatePicker @bind-Date="RAMQExpiry"
-                                   Label="RAMQ Expiry"
+                                        Label=@L[MaktabResources.RAMQ_Expiry]
                                    Required="true"
                                    For="@(() => RAMQExpiry)" />
                </MudItem>
 
-               <MudItem xs="12" sm="6">
+               @* <MudItem xs="12" sm="6">
                     <MudNumericField @bind-Value="ChildModel.RAMQSequenceNumber"
                                      Label="RAMQ Sequence #"
                                      Min="1"
                                      Required="true"
                                      For="@(() => ChildModel.RAMQSequenceNumber)" />
-               </MudItem>
+               </MudItem> *@
 
                <MudItem xs="12">
-                    <MudTextField @bind-Value="ChildModel.Allergies" Label="Allergies" For="@(() => ChildModel.Allergies)" />
+                         <MudTextField @bind-Value="ChildModel.Allergies" Label=@L[MaktabResources.Allergies] For="@(() => ChildModel.Allergies)" />
                </MudItem>
 
                <MudItem xs="12">
                     <MudTextField @bind-Value="ChildModel.OtherHealthConditions"
-                                  Label="Other Health Conditions"
+                                       Label=@L[MaktabResources.Other_Health__Conditions]
                                   For="@(() => ChildModel.OtherHealthConditions)" />
                </MudItem>
 
                <MudItem xs="12" sm="6" Class="d-flex align-center">
-                    <MudSelect Label="Academic Group" T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
+                         <MudSelect Label=@L[MaktabResources.Academic_Group] T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
                          @foreach (var group in acedemicGroups)
                          {
                               <MudSelectItem Value="group">@group.ToString()</MudSelectItem>
@@ -98,11 +98,11 @@
                     @if (isSaving)
                     {
                          <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
-                         <span>Processing...</span>
+                              <span>@L[MaktabResources.Msg_Processing]</span>
                     }
                     else
                     {
-                         <span>Save</span>
+                              <span>@L[MaktabResources.Save]</span>
                     }
                     
                </MudButton>
@@ -112,7 +112,7 @@
      }
      else
      {
-          <BusyContent DisplayText="Initializing" />
+          <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
      }
 </MudPaper>
 @* </EditForm> *@
@@ -162,7 +162,7 @@
      {
           if (FamilyId == Guid.Empty)
           {
-               _errorMessage = "Please provide valid family id to connect.";
+               _errorMessage = L[MaktabResources.Msg_Error_No_Family_Id];//"Please provide valid family id to connect.";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
@@ -170,7 +170,7 @@
           var isAlreadyExists = await ChildrenService.IsChildExistWithRamQNumberAsync(FamilyId, ChildModel.RAMQNumber);
           if (isAlreadyExists)
           {
-               _errorMessage = "Child is already registered with system. Please contact support";
+               _errorMessage = @L[MaktabResources.Msg_Error_Add_Child_RAMQ_Already_Added];//"Child is already registered with system. Please contact support";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
@@ -178,16 +178,17 @@
           ChildModel.RAMQExpiry = RAMQExpiry.Value;
           ChildModel.DateOfBirth = DateOfBirth.Value;
           ChildModel.FamilyId = FamilyId;
+          ChildModel.RAMQSequenceNumber = -1;
 
           var result = await ChildrenService.AddChildToFamilyAsync(FamilyId, ChildModel);
           if (result == null || result.ChildId == Guid.Empty)
           {
-               _errorMessage = "Child can not be registered with system. Please try again in few minutes";
+               _errorMessage = @L[MaktabResources.Msg_Error_Add_Child_Save];//"Child can not be registered with system. Please try again in few minutes";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
 
-          Snackbar.Add("Child has been linked.", Severity.Success);
+          Snackbar.Add(L[MaktabResources.Msg_Success_Child_Added], Severity.Success);
 
           if (OnSave.HasDelegate)
           {

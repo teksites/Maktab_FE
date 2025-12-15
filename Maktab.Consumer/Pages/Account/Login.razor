@@ -13,25 +13,25 @@
 
                @if (isInitialized)
                {
-                    <MudText Typo="Typo.h4" Class="mb-6 text-center">Login</MudText>
+                    <MudText Typo="Typo.h4" Class="mb-6 text-center">@L[MaktabResources.Login]</MudText>
 
                     <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleLogin)" Validated="@(OnFormValidated)">
 
-                         <MudTextField T="string" Label="Email"
+                         <MudTextField T="string" Label=@L[MaktabResources.Email]
                                        @bind-Value="username"
                                        Required="true"
-                                       RequiredError="Email is required"
-                                       Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})"
+                                       RequiredError=@L[MaktabResources.Email_Required]
+                                       Validation="@(new EmailAddressAttribute() {ErrorMessage = @L[MaktabResources.Email_Invalid]})"
                                        Immediate="true" />
                          <MudStack Spacing="0">
-                              <MudTextField T="string" Label="Password"
+                              <MudTextField T="string" Label=@L[MaktabResources.Password]
                                             @bind-Value="password"
                                             InputType="InputType.Password"
                                             Required="true"
-                                            RequiredError="Password is required"
+                                            RequiredError=@L[MaktabResources.Password_Required]
                                             Immediate="true" />
                               <MudText Class="mt-2" Align="Align.End">
-                                   <MudLink Href="@Constants.ForgotPasswordRoute" Color="Color.Default">Forgot password</MudLink>
+                                   <MudLink Href="@Constants.ForgotPasswordRoute" Color="Color.Default">@L[MaktabResources.Password_Forgot]</MudLink>
                               </MudText>
                          </MudStack>
 
@@ -47,22 +47,22 @@
                                    @if (authenticating)
                                    {
                                         <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
-                                        <span>Authenticating...</span>
+                                        <span>@L[MaktabResources.Authenticating]</span>
                                    }
                                    else
                                    {
-                                        <span>Login</span>
+                                        <span>@L[MaktabResources.Login]</span>
                                    }
                               </MudButton>
 
-                              <MudButton Href="@Constants.RegisterParentRoute" Variant="Variant.Outlined" Color="Color.Primary" Disabled="@authenticating">Create new account</MudButton>
+                              <MudButton Href="@Constants.RegisterParentRoute" Variant="Variant.Outlined" Color="Color.Primary" Disabled="@authenticating">@L[MaktabResources.Create_New_Account]</MudButton>
                          </MudStack>
 
                     </MudForm>
                }
                else
                {
-                    <BusyContent DisplayText="Initializing" />
+                    <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
                }
 
           </MudPaper>
@@ -119,7 +119,7 @@
           }
           else
           {
-               _errorMessage = "Please provide valid credentials.";
+               _errorMessage = L[MaktabResources.Provide_Valid_Credentials];
                RequestRender();
           }
      }

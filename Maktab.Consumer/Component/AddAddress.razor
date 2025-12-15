@@ -7,7 +7,7 @@
 
 @* <EditForm Model="@AddressModel" OnValidSubmit="HandleValidSubmit"> *@
      <MudPaper Class="pa-4">
-          <MudText Typo="Typo.h5" Class="mb-4">Add Address</MudText>
+          <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Add_Address]</MudText>
      <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleAddressSave)" Validated="@(OnFormValidated)">
 
           <MudGrid Container="true" Spacing="3">
@@ -15,54 +15,54 @@
 
                <MudItem xs="12" sm="12">
                     <MudTextField @bind-Value="AddressModel.AddressLine1"
-                                  Label="Address Line 1"
+                                  Label=@L[MaktabResources.Address_Line_1]
                                   Required="true"
                                   For="@(() => AddressModel.AddressLine1)" />
                </MudItem>
 
                <MudItem xs="12" sm="12">
                     <MudTextField @bind-Value="AddressModel.AddressLine2"
-                                  Label="Address Line 2"
+                                  Label=@L[MaktabResources.Address_Line_2]
                                   For="@(() => AddressModel.AddressLine2)" />
                </MudItem>
 
                <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="AddressModel.UnitNo"
-                                  Label="Unit No"
+                                  Label=@L[MaktabResources.Address_Unit_Number]
                                   Required="false"
                                   For="@(() => AddressModel.UnitNo)" />
                </MudItem>
 
                <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="AddressModel.ApartmentNo"
-                                  Label="Apartment No"
+                                  Label=@L[MaktabResources.Address_Apartment_Number]
                                   For="@(() => AddressModel.ApartmentNo)" />
                </MudItem>
 
                <MudItem xs="12" sm="4">
                     <MudTextField @bind-Value="AddressModel.PostalCode"
-                                  Label="Postal Code"
+                                  Label=@L[MaktabResources.Postal_Code]
                                   Required="true"
                                   For="@(() => AddressModel.PostalCode)" />
                </MudItem>
 
                <MudItem xs="12" sm="4">
                     <MudTextField @bind-Value="AddressModel.City"
-                                  Label="City"
+                                  Label=@L[MaktabResources.City]
                                   Required="true"
                                   For="@(() => AddressModel.City)" />
                </MudItem>
 
                <MudItem xs="12" sm="4">
                     <MudTextField @bind-Value="AddressModel.Province"
-                                  Label="Province"
+                                  Label=@L[MaktabResources.Province]
                                   Required="true"
                                   For="@(() => AddressModel.Province)" />
                </MudItem>
 
                <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="AddressModel.Country"
-                                  Label="Country"
+                                  Label=@L[MaktabResources.Country]
                                   Required="true"
                                   For="@(() => AddressModel.Country)" />
                </MudItem>
@@ -70,7 +70,7 @@
                <MudItem xs="12" sm="6" Class="d-flex align-center">
                     <MudSwitch @bind-Checked="AddressModel.HomeAddress"
                                T="bool"
-                               Label="Home Address"
+                               Label=@L[MaktabResources.Home_Address]
                                Color="Color.Primary" />
                </MudItem>
 
@@ -98,11 +98,11 @@
                     @if (isSaving)
                     {
                          <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
-                         <span>Processing...</span>
+                         <span>@L[MaktabResources.Msg_Processing]</span>
                     }
                     else
                     {
-                         <span>Save</span>
+                         <span>@L[MaktabResources.Save]</span>
                     }
                </MudButton>
                
@@ -143,14 +143,14 @@
      {
           if (ConnectedId == Guid.Empty)
           {
-               _errorMessage = "Please provide valid address assignee.";
+               _errorMessage = L[MaktabResources.Msg_Error_Address_No_Assignee];//"Please provide valid address assignee.";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
 
           if (AddressType == AddressType.Unknown)
           {
-               _errorMessage = "Please provide valid address type.";
+               _errorMessage = L[MaktabResources.Msg_Error_Address_No_AddressType];//"Please provide valid address type.";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
@@ -165,7 +165,7 @@
           var savedAddress = await AddressService.SaveAddressAsync(AddressModel);
           if (savedAddress == null)
           {
-               _errorMessage = "Error saving address please try in few moments.";
+               _errorMessage = L[MaktabResources.Msg_Error_Address_Save];//"Error saving address please try in few moments.";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }

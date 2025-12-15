@@ -10,18 +10,18 @@
      @if (isInitialized)
      {
           <MudStack Spacing="2">
-               <MudTextField @bind-Value="Contact.FirstName" Label="First Name" Required="true" />
-               <MudTextField @bind-Value="Contact.LastName" Label="Last Name" Required="true" />
-               <MudTextField @bind-Value="Contact.Phone" Label="Phone" Required="true" />
+               <MudTextField @bind-Value="Contact.FirstName" Label=@L[MaktabResources.First_Name] Required="true" />
+               <MudTextField @bind-Value="Contact.LastName" Label=@L[MaktabResources.Last_Name] Required="true" />
+               <MudTextField @bind-Value="Contact.Phone" Label=@L[MaktabResources.Phone] Required="true" />
 
-               <MudSelect T="ContactType" Label="Contact Type" @bind-Value="Contact.ContactType" Required="true">
+               <MudSelect T="ContactType" Label=@L[MaktabResources.Contact_Type] @bind-Value="Contact.ContactType" Required="true">
                     @foreach (var type in Enum.GetValues<ContactType>())
                     {
                          <MudSelectItem Value="@type">@type</MudSelectItem>
                     }
                </MudSelect>
 
-               <MudSelect T="Relationship" Label="Relationship" @bind-Value="Contact.Relationship" Required="true">
+               <MudSelect T="Relationship" Label=@L[MaktabResources.Relationship] @bind-Value="Contact.Relationship" Required="true">
                     @foreach (var rel in Enum.GetValues<Relationship>())
                     {
                          <MudSelectItem Value="@rel">@rel</MudSelectItem>
@@ -33,11 +33,11 @@
                          @if (isSaving)
                          {
                               <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
-                              <span>Processing...</span>
+                              <span>@L[MaktabResources.Msg_Processing] </span>
                          }
                          else
                          {
-                              <span>Save</span>
+                              <span>@L[MaktabResources.Save]</span>
                          }
                     </MudButton>
                </MudStack>
@@ -45,7 +45,7 @@
      }
      else
      {
-          <BusyContent DisplayText="Initializing" />
+          <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
      }
 </MudForm>
 
@@ -118,7 +118,7 @@
      {
           if (FamilyId == Guid.Empty)
           {
-               _errorMessage = "Please provide valid family id to connect.";
+               _errorMessage = L[MaktabResources.Msg_Error_No_Family_Id];
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
@@ -126,13 +126,13 @@
           var addedContact = await ContactService.SaveContactAsync(FamilyId, Contact);
           if (addedContact.ContactId == Guid.Empty)
           {
-               _errorMessage = "Contact can not be added with system. Please try again in few minutes";
+               _errorMessage = L[MaktabResources.Msg_Error_Add_Contact_Save];//"Contact can not be added with system. Please try again in few minutes";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
           else
           {
-               Snackbar.Add("Contact has been added.", Severity.Success);
+               Snackbar.Add(L[MaktabResources.Msg_Success_Contact_Added], Severity.Success);
           }
 
           if (OnSave.HasDelegate)

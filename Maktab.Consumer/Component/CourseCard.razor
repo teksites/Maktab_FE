@@ -3,16 +3,16 @@
 
 @using MaktabDataContracts.Responses.Course
 
-@inherits BaseComponent<CourseCard>
+@inherits LocalizeableBaseComponent<CourseCard>
 
 @inject NavigationManager Navigation
 
 <MudCard Class="mb-4">
      @* <MudCardMedia Image="@Course.ImageUrl" Height="180" /> *@
      <MudCardContent>
-          <MudText Typo="Typo.h6">@Course.Name</MudText>
+          <MudText Typo="Typo.h6">@(GetCourseName())</MudText>
           @* <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@Course.Instructor</MudText> *@
-          <MudText Typo="Typo.body2" Class="truncate-2">@Course.Description</MudText>
+          <MudText Typo="Typo.body2" Class="truncate-2">@(GetCourseDescription())</MudText>
 
           @if (ShowProgress)
           {
@@ -45,13 +45,13 @@
           @if (HighlightButton)
           {
                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToDetails">
-                    @ViewDetailsButtonText
+                    @L[MaktabResources.View_Details]
                </MudButton>
           }
           else
           {
                <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="NavigateToDetails">
-                    @ViewDetailsButtonText
+                    @L[MaktabResources.View_Details]
                </MudButton>
           }
      </MudCardActions>
@@ -60,12 +60,53 @@
 @code {
      [Parameter] public CourseResponseDetailed Course { get; set; } = new();
      [Parameter] public bool ShowProgress { get; set; } = false;
-     [Parameter] public string ViewDetailsButtonText { get; set; } = "View Details";
+     //[Parameter] public string ViewDetailsButtonText { get; set; }// = this.L[MaktabResources.View_Details];
      [Parameter] public bool HighlightButton { get; set; } = false;
 
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+     }
 
      private void NavigateToDetails()
      {
           Navigation.NavigateTo(string.Format(Constants.CourseDetailsRoute, Course.CourseId));
+     }
+
+     private string GetCourseName()
+     {
+          if(GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return Course.NameFr;
+          }
+          else
+          {
+               return Course.Name;
+          }
+     }
+
+     private string GetCourseDetails()
+     {
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return Course.DetailsFr;
+          }
+          else
+          {
+               return Course.Details;
+          }
+     }
+
+     private string GetCourseDescription()
+     {
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return Course.DescriptionFr;
+          }
+          else
+          {
+               return Course.Description;
+          }
      }
 }
