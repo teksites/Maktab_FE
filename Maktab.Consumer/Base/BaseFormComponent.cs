@@ -2,7 +2,7 @@
 
 namespace Maktab.Consumer.Base
 {
-     public class BaseFormComponent<T> : BaseComponent<T> where T : class
+     public abstract class BaseFormComponent<T> : LocalizeableBaseComponent<T> where T : class
      {
           protected MudForm _form;
           protected bool _isValid;

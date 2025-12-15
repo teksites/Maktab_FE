@@ -3,7 +3,7 @@ using MudBlazor;
 
 namespace Maktab.Consumer.Base
 {
-     public class BaseDialog<T> : BaseComponent<T> where T : class
+     public abstract class BaseDialog<T> : LocalizeableBaseComponent<T> where T : class
      {
           [CascadingParameter] protected IMudDialogInstance MudDialog { get; set; } = default!;
      }

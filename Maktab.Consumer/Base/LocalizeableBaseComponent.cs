@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Maktab.Consumer.Localization;
+using Maktab.Core.Interfaces.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 
 namespace Maktab.Consumer.Base
 {
-     public class LocalizeableBaseComponent<T> : BaseComponent<T> where T : class
+     public abstract class LocalizeableBaseComponent<T> : BaseComponent<T> where T : class
      {
-          [Inject] protected IStringLocalizer<T> L { get; set; } = default!;
+          [Inject] protected IStringLocalizer<MaktabResources> L { get; set; }
+          [Inject] protected IGlobalizationService GlobalizationService { get; set; }
      }
 }

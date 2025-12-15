@@ -33,7 +33,7 @@ namespace Maktab.Consumer.Base
           /// <summary>
           /// Request a throttled re-render of the component.
           /// </summary>
-          protected void RequestRender(int delayMs = 100)
+          protected void RequestRender(int delayMs = 250)
           {
                if (IsDisposed)
                {
@@ -197,10 +197,11 @@ namespace Maktab.Consumer.Base
                     Snackbar.Add(_errorMessage, Severity.Error);
                     NavigationManager.NavigateTo(Constants.LogoutRoute);
                }
-               catch (Exception)
+               catch (Exception ex)
                {
                     _errorMessage = "System was not able to complete your request. Please try again later in a moment.";
                     Snackbar.Add(_errorMessage, Severity.Error);
+                    Logger.LogError("Exception in {Component}: {Error}", typeof(T).Name, ex);
                }
                finally
                {
@@ -229,19 +230,12 @@ namespace Maktab.Consumer.Base
 
           protected virtual IEnumerable<string> PasswordStrength(string pw)
           {
-               if (string.IsNullOrWhiteSpace(pw))
-               {
-                    yield return "Password is required!";
-                    yield break;
-               }
-               if (pw.Length < 8)
-                    yield return "Password must be at least 8 characters long.";
-               if (!Regex.IsMatch(pw, @"[A-Z]"))
-                    yield return "Password must contain at least one uppercase letter.";
-               if (!Regex.IsMatch(pw, @"[a-z]"))
-                    yield return "Password must contain at least one lowercase letter.";
-               if (!Regex.IsMatch(pw, @"[0-9]"))
-                    yield return "Password must contain at least one digit.";
+               return ValidationHelper.PasswordStrength(pw);
+          }
+
+          protected virtual IEnumerable<string> ValidateCanadianIndividualTaxCode(string sin)
+          {
+               return ValidationHelper.ValidateCanadianIndividualTaxCode(sin);
           }
 
           protected async Task<DialogResult?> OpenAddChildDialog(IDialogService dialogService, Guid familyId)
