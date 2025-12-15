@@ -9,16 +9,20 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
-using System.Globalization;
+using MudBlazor.Translations;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+// Add MudBlazor
+builder.Services.AddMudServices();
+
 //var baseUri = builder.Configuration["apiUrl"]; //builder.HostEnvironment.BaseAddress
 
 builder.Services.AddAuthorizationCore();
-
+builder.Services.AddMudTranslations();
+builder.Services.AddLocalization();// options => options.ResourcesPath = "Properties");
 
 builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUri) })
                 .AddScoped<ISystemService, SystemService>()
@@ -39,17 +43,9 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddScoped<ThemeService>()
                 .AddScoped<AuthenticationStateProvider, AuthStateProvider>()
                 .AddSingleton<UserStateService>()
-                .AddSingleton<ISystemService, SystemService>();
-builder.Services.AddMudServices();
-builder.Services.AddLocalization();// options => options.ResourcesPath = "Resources");
+                .AddSingleton<ISystemService, SystemService>()
+                .AddScoped<IGlobalizationService,GlobalizationService>();
 
-// Default culture (can be configured via appsettings)
-CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
-
-
-
-//builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped(x => {
      var apiUrl = new Uri("https://maktab.azurewebsites.net/");
@@ -67,4 +63,10 @@ builder.Services.AddScoped(x => {
 });
 
 
-await builder.Build().RunAsync();
+var host = builder.Build();
+
+var globalizationService = host.Services.GetRequiredService<IGlobalizationService>();
+var culture = await globalizationService.GetPersistedCultureName();
+globalizationService.ApplyCultureOnUI(culture);
+
+await host.RunAsync();
