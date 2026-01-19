@@ -5,7 +5,6 @@ namespace Maktab.Consumer.Helpers
 {
      public static class ValidationHelper
      {
-
           public static string RemoveSpecialCharacthers(this string ssn)
           {
                StringBuilder sb = new StringBuilder();
@@ -35,41 +34,73 @@ namespace Maktab.Consumer.Helpers
           }
 
           /// <summary>
-          /// Validate SIN
+        /// Validate Canadian Social Insurance Number (SIN).
+        /// Rules:
+        /// - Must be exactly 9 digits
+        /// - First digit must be 1-7 (not 0, 8, or 9)
+        /// - Must pass Luhn checksum validation
           /// </summary>
-          /// <param name="sin"></param>
-          /// <returns></returns>
+        /// <param name="sin">SIN number (with or without formatting)</param>
+        /// <returns>Collection of error messages. Empty if valid.</returns>
           public static IEnumerable<string> ValidateCanadianIndividualTaxCode(string sin)
           {
+            // Remove formatting characters
                sin = sin.RemoveSpecialCharacthers();
 
-               var chardDigits = sin.ToCharArray();
-               if (Regex.IsMatch(sin, @"^\d{9}$"))
+            // ✅ FIXED: Inverted logic - check if NOT 9 digits
+            if (!Regex.IsMatch(sin, @"^\d{9}$"))
                {
-                    yield return "SIN_InvalidFormat";//("123-456-789");
+                yield return "SIN_InvalidFormat"; // Must be 9 digits
+                yield break; // Stop processing - no point continuing
                }
 
-               int[] digits = new int[chardDigits.Length];
-               for (int i = 0; i < chardDigits.Length; i++)
+            var charDigits = sin.ToCharArray();
+            int[] digits = new int[charDigits.Length];
+
+            // Parse all characters as digits
+            for (int i = 0; i < charDigits.Length; i++)
                {
-                    if (!int.TryParse(chardDigits[i].ToString(), out digits[i]))
+                if (!int.TryParse(charDigits[i].ToString(), out digits[i]))
                     {
-                         yield return "SIN_InvalidFormat_OnlyDigits";//ValidationResult.Invalid("Invalid format! Only digits are allowed");
+                    yield return "SIN_InvalidFormat_OnlyDigits";
+                    yield break;
                     }
                }
 
+            // ✅ NEW: Validate first digit (must be 1-7, not 0, 8, or 9)
+            int firstDigit = digits[0];
+            if (firstDigit == 0 || firstDigit == 8 || firstDigit == 9)
+            {
+                yield return "SIN_InvalidFirstDigit"; // Invalid SIN prefix
+                yield break;
+            }
+
+            // Calculate checksum using Luhn algorithm
                var total = digits.Where((value, index) => index % 2 == 0 && index != 8).Sum()
-                           + digits.Where((value, index) => index % 2 != 0).Select(v => v * 2)
-                                 .SelectMany(v => v.ToDigitEnumerable()).Sum();
+                        + digits.Where((value, index) => index % 2 != 0)
+                              .Select(v => v * 2)
+                              .SelectMany(v => v.ToDigitEnumerable())
+                              .Sum();
 
                var checkDigit = (10 - (total % 10)) % 10;
-
                bool isValid = digits.Last() == checkDigit;
 
-               yield return isValid ? string.Empty : "SIN_Invalid"; //ValidationResult.Success() : ValidationResult.InvalidChecksum();
+            // ✅ FIXED: Return error message instead of empty string
+            if (!isValid)
+            {
+                yield return "SIN_Invalid_Checksum";
+            }
+            // If valid, don't yield anything (empty enumeration means valid)
+        }
 
+        /// <summary>
+        /// Check if SIN is valid (simpler boolean version).
+        /// </summary>
+        public static bool IsValidCanadianSIN(string sin)
+        {
+            var errors = ValidateCanadianIndividualTaxCode(sin);
+            return !errors.Any(); // Valid if no errors
           }
-
 
           public static IEnumerable<string> PasswordStrength(string pw)
           {

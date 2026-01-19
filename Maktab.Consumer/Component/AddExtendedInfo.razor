@@ -28,6 +28,7 @@
                     <MudTextField @bind-Value="ExtendedModel.SIN"
                                   Label=@L[MaktabResources.SIN_Number]
                                   Required="true"
+                                  Validation="@(new Func<string, IEnumerable<string>>(ValidateCanadianIndividualTaxCode))"
                                   For="@(() => ExtendedModel.SIN)" />
                </MudItem>
 
@@ -90,7 +91,7 @@
           {
                isSaving = true;
                RequestRender();
-               await InvokeUserAction(RequestSaveExendedInfo);
+               await InvokeUserAction(RequestSaveExtendedInfo);
           }
           finally
           {
@@ -99,7 +100,7 @@
           }
      }
 
-     private async Task RequestSaveExendedInfo()
+     private async Task RequestSaveExtendedInfo()
      {
           if (FamilyId == Guid.Empty)
           {
