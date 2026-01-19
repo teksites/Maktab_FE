@@ -27,21 +27,21 @@
 
                          <MudStepper @ref=@stepper OnPreviewInteraction="OnPreviewInteraction">
                               <ChildContent>
-                              <MudStep Title="Add home address" SecondaryText="Step 1" HasError="@(!isFamilyAddressAdded)">
+                              <MudStep Title=@L[MaktabResources.Add_Home_Address] SecondaryText=@L[MaktabResources.Step_Number, "1"] HasError="@(!isFamilyAddressAdded)">
                                    <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
                               </MudStep>
 
-                              <MudStep Title="Add Spouse" SecondaryText="Step 2" Skippable="true" HasError="@(!isSpouseAdded)">
+                                   <MudStep Title=@L[MaktabResources.Add_Spouse] SecondaryText=@L[MaktabResources.Step_Number, "2"] Skippable="true" HasError="@(!isSpouseAdded)">
                                    <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
                                         <AddSpouse FamilyId="@userInfo.FamilyId" OnSave="@(OnSpouseSaved)" />
                                    </MudStack>
                                    @* <MudSwitch @bind-Value="_step1Complete" Color="Color.Primary">Flip the switch to be able to advance to step 2</MudSwitch> *@
                               </MudStep>
 
-                              <MudStep Title="Add RL 24" SecondaryText="Step 3" Skippable="true" HasError="@(isExtendedInfoAdded == false)">
+                                   <MudStep Title=@L[MaktabResources.Add_RL24] SecondaryText=@L[MaktabResources.Step_Number, "3"] Skippable="true" HasError="@(isExtendedInfoAdded == false)">
                                    <AddExtendedInfo FamilyId="@userInfo.FamilyId" AddessId="@homeAddressId" UserId="@userId" OnSave="@(OnExtendedInfoSaved)" />
                               </MudStep>
-                              <MudStep Title="Add Emergency Contact" SecondaryText="Step 4" Skippable="true" HasError="@(!isEmergencyContactAdded)">
+                                   <MudStep Title=@L[MaktabResources.Add_Emergency_Contact] SecondaryText=@L[MaktabResources.Step_Number, "4"] Skippable="true" HasError="@(!isEmergencyContactAdded)">
                                    <AddContact  ContactType="ContactType.Emergency" FamilyId="@userInfo.FamilyId" OnSave="@(OnEmergencyContactSaved)" />
                               </MudStep>
 @*                               <MudStep Title="Add Pickup Contact" SecondaryText="Step 5" Skippable="true"  HasError="@(!isPickupContactAdded)">
@@ -54,14 +54,14 @@
                                         <MudIcon Icon="@Icons.Material.Filled.CheckCircle"
                                                  Color="Color.Success" Size="Size.Large" />
 
-                                        <MudText Typo="Typo.h5" Class="mt-3">Registration Successful!</MudText>
+                                        <MudText Typo="Typo.h5" Class="mt-3">@L[MaktabResources.Parent_Registration_Success]</MudText>
                                         <MudText Typo="Typo.body1" Color="Color.Primary">
-                                             Thank you @userInfo.FirstName @userInfo.LastName for registration with Maktab.
+                                             @L[MaktabResources.Msg_Success_Remove_Enrollment, @userInfo.FirstName, MaktabResources.AppTitle]
                                         </MudText>
                                         <MudSpacer />
                                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4"
                                                    OnClick="@NavigateToParentDasboard">
-                                             Start Exploring
+                                             @L[MaktabResources.Start_Exploring]
                                         </MudButton>
                                    </MudContainer>
                               </CompletedContent>
@@ -72,7 +72,7 @@
                }
                else
                {
-                    <BusyContent DisplayText="Initializing" />
+                    <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
                }
           </MudPaper>
 
@@ -138,7 +138,7 @@
                case 0:
                     if (!isFamilyAddressAdded)
                     {
-                         await DialogService.ShowMessageBox("Error", "Please add home address");
+                         await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Add_Home_Address]);
                          arg.Cancel = true;
                     }
                     break;
@@ -173,7 +173,7 @@
                case 1:
                     if (!isFamilyAddressAdded)
                     {
-                         await DialogService.ShowMessageBox("Error", "Finish step 1");
+                         await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Complete_Step_Number,"1"]);
                          arg.Cancel = true;
                     }
                     break;

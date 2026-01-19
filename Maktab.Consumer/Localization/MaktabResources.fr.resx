@@ -427,4 +427,100 @@
   <data name="Available_Courses" xml:space="preserve">
     <value>Cours disponibles</value>
   </data>
+  <data name="Current_Password" xml:space="preserve">
+    <value>Mot de passe actuel</value>
+  </data>
+  <data name="Add_Child" xml:space="preserve">
+    <value>Ajouter un enfant</value>
+  </data>
+  <data name="Children" xml:space="preserve">
+    <value>Enfants</value>
+  </data>
+  <data name="Change_Password" xml:space="preserve">
+    <value>Changer le mot de passe</value>
+  </data>
+  <data name="Old_Password" xml:space="preserve">
+    <value>Ancien mot de passe</value>
+  </data>
+  <data name="Old_Password_HelperText" xml:space="preserve">
+    <value>Fournir l'ancien mot de passe</value>
+  </data>
+  <data name="Msg_Validation_Old_Password" xml:space="preserve">
+    <value>L'ancien mot de passe est requis !</value>
+  </data>
+  <data name="New_Password" xml:space="preserve">
+    <value>Nouveau mot de passe</value>
+  </data>
+  <data name="New_Password_HelperText" xml:space="preserve">
+    <value>Choisissez un mot de passe fort</value>
+  </data>
+  <data name="Msg_Validation_New_Password" xml:space="preserve">
+    <value>Le mot de passe est requis !</value>
+  </data>
+  <data name="Repeat_Password_HelperText" xml:space="preserve">
+    <value>Répétez le mot de passe</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Mise à jour</value>
+  </data>
+  <data name="Amount_Paid" xml:space="preserve">
+    <value>Montant payé</value>
+  </data>
+  <data name="Amount_Due" xml:space="preserve">
+    <value>Montant dû</value>
+  </data>
+  <data name="Msg_Info_Add_Children_To_Enroll" xml:space="preserve">
+    <value>Veuillez ajouter un enfant pour commencer les inscriptions</value>
+  </data>
+  <data name="Enrollment_Details" xml:space="preserve">
+    <value>Détails d'inscription</value>
+  </data>
+  <data name="Enroll_Child" xml:space="preserve">
+    <value>Inscrire l'enfant</value>
+  </data>
+  <data name="Add_Home_Address" xml:space="preserve">
+    <value>Ajouter une adresse personnelle</value>
+  </data>
+  <data name="Add_Spouse" xml:space="preserve">
+    <value>Ajouter un conjoint</value>
+  </data>
+  <data name="Add_RL24" xml:space="preserve">
+    <value>Ajouter le RL 24</value>
+  </data>
+  <data name="Step_Number" xml:space="preserve">
+    <value>Étape {0}</value>
+  </data>
+  <data name="Add_Emergency_Contact" xml:space="preserve">
+    <value>Ajouter un contact d'urgence</value>
+  </data>
+  <data name="Parent_Registration_Success" xml:space="preserve">
+    <value>Inscription réussie</value>
+  </data>
+  <data name="Msg_Success_Parent_Registration" xml:space="preserve">
+    <value>Merci {0} pour votre inscription auprès de {1}.</value>
+  </data>
+  <data name="Start_Exploring" xml:space="preserve">
+    <value>Commencez à explorer</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Msg_Error_Add_Home_Address" xml:space="preserve">
+    <value>Veuillez ajouter l'adresse du domicile</value>
+  </data>
+  <data name="Msg_Error_Complete_Step_Number" xml:space="preserve">
+    <value>Veuillez terminer l'étape {0}</value>
+  </data>
+  <data name="Active_TaxCredit_Recipient" xml:space="preserve">
+    <value>Est-ce qu'un bénéficiaire actif du crédit d'impôt</value>
+  </data>
+  <data name="Add_Contact" xml:space="preserve">
+    <value>Ajouter un contact</value>
+  </data>
+  <data name="Add_Extended_Info" xml:space="preserve">
+    <value>Ajouter des informations étendues</value>
+  </data>
+  <data name="Edit_Profile" xml:space="preserve">
+    <value>Modifier le profil</value>
+  </data>
 </root>

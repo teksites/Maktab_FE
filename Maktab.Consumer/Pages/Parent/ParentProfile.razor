@@ -49,7 +49,7 @@
                                         <MudSwitch @bind-Checked="_ExtendedInfoResponse.IsActiveTaxCreditRecipient"
                                                    T="bool"
                                                    Disabled="true"
-                                                   Label="Is active tax credit recipient"
+                                                   Label=@L[MaktabResources.Active_TaxCredit_Recipient]
                                                    Color="Color.Primary" />
                                    }
 
@@ -86,7 +86,7 @@
                               <MudSpacer />
 
                               <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="OpenChangePasswordDialog" Class="mb-4">
-                                   Change Password
+                                   @L[MaktabResources.Change_Password]
                               </MudButton>
                          </MudStack>
 
@@ -108,7 +108,7 @@
                               <MudStack Row="true">
                                    <MudSpacer />
                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddSpouseDialog" Class="mb-4">
-                                        Add Spouse
+                                        @L[MaktabResources.Add_Spouse]
                                    </MudButton>
                               </MudStack>
                          }
@@ -123,7 +123,7 @@
                               <MudText Typo="Typo.h5" Class="mb-4"> Children</MudText>
                               <MudSpacer />
                               <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
-                                   Add Child
+                                   @L[MaktabResources.Add_Child]
                               </MudButton>
                          </MudStack>
                          <ChildList ShowEnrollMenu="true" ShowHeader="false" FamilyId="@userInfo.FamilyId" />
@@ -142,7 +142,7 @@
                               <MudSpacer />
 
                               <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddContactDialog" Class="mb-4">
-                                   Add Contact
+                                   @L[MaktabResources.Add_Contact]
                               </MudButton>
 
                          </MudStack>
@@ -171,7 +171,7 @@
      }
      else
      {
-          <BusyContent DisplayText="Initializing" />
+          <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
      }
 </MudContainer>
 
@@ -237,7 +237,7 @@
           var parameters = new DialogParameters { ["Profile"] = userInfo };
           var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true };
 
-          var dialog = await DialogService.ShowAsync<EditUserInfoDialog>("Edit Profile", parameters, options);
+          var dialog = await DialogService.ShowAsync<EditUserInfoDialog>(L[MaktabResources.Edit_Profile], parameters, options);
           var result = await dialog.Result;
 
           if (!result.Canceled && result.Data is UserInformationResponse userResponse)
@@ -264,7 +264,7 @@
           var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId };
           var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
 
-          var dialog = await DialogService.ShowAsync<AddSpouseDialog>("Add Spouse", parameters, options);
+          var dialog = await DialogService.ShowAsync<AddSpouseDialog>(L[MaktabResources.Add_Spouse], parameters, options);
           var result = await dialog.Result;
 
           if (!result.Canceled && result.Data is UserInformationResponse spouse)
@@ -303,7 +303,7 @@
           var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId, ["AddessId"] = userInfo.FamilyId, ["UserId"] = userInfo.UserId };
           var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
 
-          var dialog = await DialogService.ShowAsync<AddExtendedInfoDialog>("Add Extended Info", parameters, options);
+          var dialog = await DialogService.ShowAsync<AddExtendedInfoDialog>(L[MaktabResources.Add_Extended_Info], parameters, options);
           var result = await dialog.Result;
 
           if (!result.Canceled && result.Data is ExtendedUserInformationResponse spouse)
@@ -318,7 +318,7 @@
           var parameters = new DialogParameters { ["UserId"] = userInfo.UserId };
           var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true };
 
-          var dialog = await DialogService.ShowAsync<ChangePasswordDialog>("Change Password", parameters, options);
+          var dialog = await DialogService.ShowAsync<ChangePasswordDialog>(L[MaktabResources.Change_Password], parameters, options);
           var result = await dialog.Result;
 
           if (!result.Canceled && result.Data is bool passwordChanged)
