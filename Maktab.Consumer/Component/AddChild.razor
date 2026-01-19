@@ -4,7 +4,7 @@
 @using MudBlazor
 @* @using System.ComponentModel.DataAnnotations *@
 
-@inherits BaseFormComponent<AddSpouse>
+@inherits BaseFormComponent<AddChildRequest>
 
 @inject IChildrenService ChildrenService
 
@@ -13,7 +13,7 @@
      <MudPaper Class="pa-4">
          @*  <MudText Typo="Typo.h5" Class="mb-4">Add Child</MudText> *@
 
-         @if(isInitilized)
+         @if(isInitialized)
          {
          <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)" Spacing="2">
           <MudGrid Container="true" Spacing="3">
@@ -129,15 +129,18 @@
 
      private DateTime? RAMQExpiry { get; set; }
      private DateTime? DateOfBirth { get; set; }
-     private bool isInitilized = false;
+     private bool isInitialized = false;
      private bool isSaving = false;
      private IEnumerable<AcedemicGroupType> acedemicGroups;
 
-     protected async override Task OnInitializedAsync()
+     private static readonly IEnumerable<AcedemicGroupType> AcedemicGroupsCache = 
+    Enum.GetValues(typeof(AcedemicGroupType)).Cast<AcedemicGroupType>().ToList();
+
+     protected override async Task OnInitializedAsync()
      {
           await base.OnInitializedAsync();
-          acedemicGroups = Enum.GetValues(typeof(AcedemicGroupType)).Cast<AcedemicGroupType>();
-          isInitilized = true;
+          acedemicGroups = AcedemicGroupsCache;
+          isInitialized = true;
      }
 
      private async Task HandleSaving()
@@ -147,8 +150,6 @@
 
           try
           {
-               isSaving = true;
-               RequestRender();
                await InvokeUserAction(RequestSaving);
           }
           finally
@@ -175,13 +176,20 @@
                return;
           }
 
+          if (!RAMQExpiry.HasValue || !DateOfBirth.HasValue)
+          {
+              _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required];
+              Snackbar.Add(_errorMessage, Severity.Error);
+              return;
+          }
+
           ChildModel.RAMQExpiry = RAMQExpiry.Value;
           ChildModel.DateOfBirth = DateOfBirth.Value;
           ChildModel.FamilyId = FamilyId;
           ChildModel.RAMQSequenceNumber = -1;
 
           var result = await ChildrenService.AddChildToFamilyAsync(FamilyId, ChildModel);
-          if (result == null || result.ChildId == Guid.Empty)
+          if (result?.ChildId == null || result.ChildId == Guid.Empty)
           {
                _errorMessage = @L[MaktabResources.Msg_Error_Add_Child_Save];//"Child can not be registered with system. Please try again in few minutes";
                Snackbar.Add(_errorMessage, Severity.Error);

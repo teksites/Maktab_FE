@@ -143,7 +143,7 @@
 
 
      [Parameter] public EventCallback<StudentCourseEnrollmentResponse> OnViewDetails { get; set; }
-     [Parameter] public EventCallback OnViewAll { get; set; }
+     //[Parameter] public EventCallback OnViewAll { get; set; }
      [Parameter] public int MaxItems { get; set; } = 5;
 
      private UserInformationResponse userInfo => StateService.ParentState.Profile;

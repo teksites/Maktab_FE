@@ -140,8 +140,7 @@
                </MudPaper> *@
                     <MudItem xs="12" md="12">
                          @* <MudContainer > *@
-                         <EnrollmentNotification OnViewDetails="ShowEnrollmentDetails"
-                                                 OnViewAll="GoToAllEnrollments" />
+                         <EnrollmentNotification OnViewDetails="ShowEnrollmentDetails" />
                          @* </MudContainer> *@
                     </MudItem>
 
@@ -483,17 +482,17 @@
           //return dialog.Result.ContinueWith(_ => Snackbar.Add($"Viewed {GetCourseTitle(e.CourseId)}", Severity.Info));
      }
 
-     private Task EditEnrollment(StudentCourseEnrollmentResponse e)
-     {
-          Snackbar.Add($"Editing enrollment for {GetChildName(e.ChildId)}", Severity.Success);
-          return Task.CompletedTask;
-     }
+     // private Task EditEnrollment(StudentCourseEnrollmentResponse e)
+     // {
+     //      Snackbar.Add($"Editing enrollment for {GetChildName(e.ChildId)}", Severity.Success);
+     //      return Task.CompletedTask;
+     // }
 
-     private Task GoToAllEnrollments()
-     {
-          Snackbar.Add("Navigate to enrollments list", Severity.Info);
-          return Task.CompletedTask;
-     }
+     // private Task GoToAllEnrollments()
+     // {
+     //      Snackbar.Add("Navigate to enrollments list", Severity.Info);
+     //      return Task.CompletedTask;
+     // }
 
      //private string GetCourseTitle(Guid id) => $"Course {id.ToString()[..5]}";
      //private string GetChildName(Guid id) => $"Child {id.ToString()[..5]}";
