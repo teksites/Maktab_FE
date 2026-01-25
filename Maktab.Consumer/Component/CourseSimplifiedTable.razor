@@ -1,16 +1,16 @@
 ﻿@using MaktabDataContracts.Responses.Course
-@inherits BaseComponent<CourseSimplifiedTable>
+@inherits LocalizeableBaseComponent<CourseSimplifiedTable>
 
 <MudCard Class="mb-4">
     <MudCardContent>
-        <MudText Typo="Typo.h6">Enrolled Courses</MudText>
+        <MudText Typo="Typo.h6">@L[MaktabResources.Enrolled_Courses]</MudText>
           <MudTable T="CourseResponseDetailed" Items="Courses" >
             <HeaderContent>
-                <MudTh>Course</MudTh>
-                <MudTh>Category</MudTh>
-                <MudTh>Status</MudTh>
-                <MudTh>Start</MudTh>
-                <MudTh>End</MudTh>
+                <MudTh>@L[MaktabResources.Course]</MudTh>
+                <MudTh>@L[MaktabResources.Category]</MudTh>
+                <MudTh>@L[MaktabResources.Status]</MudTh>
+                <MudTh>@L[MaktabResources.Start]</MudTh>
+                <MudTh>@L[MaktabResources.End]</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd>@context.Name</MudTd>

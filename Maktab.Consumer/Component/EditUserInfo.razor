@@ -12,14 +12,14 @@
      <MudItem xs="12" sm="8">*@
 <MudPaper Class="pa-12">
      <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)" Spacing="2">
-          <MudTextField T="string" @bind-Value="UserInformation.FirstName" Label="First name" Required="true" RequiredError="First name is required!" />
-          <MudTextField T="string" @bind-Value="UserInformation.LastName" Label="Last name" Required="true" RequiredError="Last name is required!" />
-          <MudTextField T="string" ReadOnly="true" @bind-Value="UserInformation.Email" Label="Email" Required="true" RequiredError="Email is required!"
-                        Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
-          <MudTextField T="string" @bind-Value="UserInformation.Phone" Label="Phone" Required="true" RequiredError="Phone number is required!"
-                        Validation="@(new PhoneAttribute() { ErrorMessage = "The phone number is invalid"})" />
+          <MudTextField T="string" @bind-Value="UserInformation.FirstName" Label=@L[MaktabResources.First_Name] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, @L[MaktabResources.First_Name]] />
+          <MudTextField T="string" @bind-Value="UserInformation.LastName" Label=@L[MaktabResources.Last_Name] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, @L[MaktabResources.Last_Name]] />
+          <MudTextField T="string" ReadOnly="true" @bind-Value="UserInformation.Email" Label=@L[MaktabResources.Email] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, @L[MaktabResources.Email]]
+                        Validation="@(new EmailAddressAttribute() {ErrorMessage =@L[MaktabResources.Email_Invalid]})" />
+          <MudTextField T="string" @bind-Value="UserInformation.Phone" Label=@L[MaktabResources.Phone] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, @L[MaktabResources.Phone]]
+                        Validation="@(new PhoneAttribute() { ErrorMessage = @L[MaktabResources.Msg_Error_Phone_Number_Invalid]})" />
 
-          <MudSelect @bind-Value="UserInformation.Relationship" Label="Relationship">
+          <MudSelect @bind-Value="UserInformation.Relationship" Label=@L[MaktabResources.Relationship]>
                @foreach (var margin in relationShips)
                {
                     <MudSelectItem Value="margin">@margin</MudSelectItem>
@@ -39,15 +39,15 @@
                     @if (isSaving)
                     {
                          <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
-                         <span>Processing...</span>
+                         <span>@L[MaktabResources.Msg_Processing]</span>
                     }
                     else
                     {
-                         <span>Save</span>
+                         <span>@L[MaktabResources.Save]</span>
                     }
                </MudButton>
 
-               <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
+               <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">@L[MaktabResources.Cancel]</MudButton>
           </MudStack>
 
 
@@ -69,7 +69,7 @@
      {
           await base.OnInitializedAsync();
 
-          relationShips = Enum.GetValues(typeof(Relationship)).Cast<Relationship>().Where(x=> x == Relationship.Mother || x== Relationship.Father);
+          relationShips = Enum.GetValues(typeof(Relationship)).Cast<Relationship>().Where(x => x == Relationship.Mother || x == Relationship.Father);
      }
 
      private async Task HandleSaving()
@@ -89,8 +89,10 @@
 
      private async Task RequestSaving()
      {
-           UserInformation.Email = UserInformation.Email.ToLowerInvariant();
-           UserInformation.UserName = UserInformation.Email;
+          UserInformation.Email = UserInformation.Email.ToLowerInvariant();
+          UserInformation.UserName = UserInformation.Email;
+
+          //Todo: Add logic to edit user info
 
           // if (FamilyId == Guid.Empty)
           // {
@@ -126,5 +128,5 @@
      {
           await OnCancel.InvokeAsync();
      }
-     
+
 }

@@ -1,8 +1,8 @@
 ﻿@using MaktabDataContracts.Responses.Children
-@inherits BaseComponent<ChildSimplifiedList>
+@inherits LocalizeableBaseComponent<ChildSimplifiedList>
 
 
-<MudExpansionPanel Text="Children">
+<MudExpansionPanel Text=@L[MaktabResources.Children]>
      <MudList T="ChildResponse">
         @foreach (var child in Children)
         {
@@ -11,14 +11,14 @@
                 <MudText>@child.FirstName (Age: @child.)</MudText>
                 <MudSpacer />
                 <MudButton Variant="Variant.Text" OnClick="@(() => OnViewCourses.InvokeAsync(child.ChildId))">
-                    View Courses
+                    @L[MaktabResources.ViewAllCourses]
                 </MudButton>
             </MudListItem>
         }
     </MudList>
     <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add"
                OnClick="OnAddChild">
-        Add Child
+         @L[MaktabResources.Add_Child]
     </MudButton>
 </MudExpansionPanel>
 

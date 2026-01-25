@@ -1,4 +1,4 @@
-﻿@inherits BaseComponent<ChildList>
+﻿@inherits LocalizeableBaseComponent<ChildList>
 
 @using Maktab.Consumer.Dialogs
 @using Maktab.Consumer.Helpers
@@ -15,12 +15,12 @@
 @if (ShowHeader)
 {
      <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">
-          <MudText Typo="Typo.h6">Children</MudText>
+          <MudText Typo="Typo.h6">@L[MaktabResources.Children]</MudText>
           @if (ShowAddButton)
           {
                <MudSpacer />
                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
-                    Add Child
+                    @L[MaktabResources.Add_Child]
                </MudButton>
           }
      </MudStack>
@@ -29,12 +29,12 @@
 
 <MudTable Items="Children" Elevation="1" Dense="true" Bordered="false" Hover="false">
      <HeaderContent>
-          <MudTh>First Name</MudTh>
-          <MudTh>Last Name</MudTh>
-          <MudTh>DOB</MudTh>
-          <MudTh>Gender</MudTh>
-          <MudTh>RAMQ #</MudTh>
-          <MudTh>RAMQ Expiry</MudTh>
+          <MudTh>@L[MaktabResources.First_Name]</MudTh>
+          <MudTh>@L[MaktabResources.Last_Name]</MudTh>
+          <MudTh>@L[MaktabResources.Date_Of_Birth]</MudTh>
+          <MudTh>@L[MaktabResources.Gender]</MudTh>
+          <MudTh>@L[MaktabResources.RAMQ_Number]</MudTh>
+          <MudTh>@L[MaktabResources.RAMQ_Expiry]</MudTh>
           @* <MudTh>Allergies</MudTh>
           <MudTh>Other Health</MudTh> *@
           <MudTh> </MudTh>
@@ -92,7 +92,7 @@
           var parameters = new DialogParameters { ["FamilyId"] = FamilyId };
           var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
 
-          var dialog = await DialogService.ShowAsync<AddChildDialog>("Add Child", parameters, options);
+          var dialog = await DialogService.ShowAsync<AddChildDialog>(@L[MaktabResources.Add_Child], parameters, options);
           var result = await dialog.Result;
 
           if (!result.Canceled && result.Data is ChildResponse child)
@@ -110,20 +110,20 @@
      private async Task RemoveChild(ChildResponse child)
      {
           bool? result = await DialogService.ShowMessageBox(
-            "Warning",
-            $"Would you like to remove {child.FirstName}",
-            yesText: "Delete", cancelText: "Cancel");
+               L[MaktabResources.Warning],
+               L[MaktabResources.Msg_Question_Remove_Variable, child.FirstName],
+               yesText: L[MaktabResources.Delete], cancelText: L[MaktabResources.Cancel]);
           if (result.HasValue && result.Value)
           {
                var deleted = await ChildrenService.RemoveChildByIdAsync(child.ChildId);
                if (deleted)
                {
                     await StateService.LoadChildrenData(ChildrenService, FamilyId, true);
-                    Snackbar.Add("Child Remove successfully!", Severity.Success);
+                    Snackbar.Add(L[MaktabResources.Msg_Success_Child_Removed], Severity.Success);
                }
                else
                {
-                    Snackbar.Add("Child can not be removed at the moment, please try in few minutes.", Severity.Error);
+                    Snackbar.Add(L[MaktabResources.Msg_Error_Child_Not_Removed], Severity.Error);
                }
           }
 

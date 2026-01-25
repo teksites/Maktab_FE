@@ -187,11 +187,29 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Apartment No.
+        /// </summary>
+        public static string Address_Apartment_No {
+            get {
+                return ResourceManager.GetString("Address_Apartment_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Apartment Number.
         /// </summary>
         public static string Address_Apartment_Number {
             get {
                 return ResourceManager.GetString("Address_Apartment_Number", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Address Details.
+        /// </summary>
+        public static string Address_Details {
+            get {
+                return ResourceManager.GetString("Address_Details", resourceCulture);
             }
         }
         
@@ -210,6 +228,24 @@ namespace Maktab.Consumer.Localization {
         public static string Address_Line_2 {
             get {
                 return ResourceManager.GetString("Address_Line_2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Address Type.
+        /// </summary>
+        public static string Address_Type {
+            get {
+                return ResourceManager.GetString("Address_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unit No.
+        /// </summary>
+        public static string Address_Unit_No {
+            get {
+                return ResourceManager.GetString("Address_Unit_No", resourceCulture);
             }
         }
         
@@ -295,6 +331,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Category.
+        /// </summary>
+        public static string Category {
+            get {
+                return ResourceManager.GetString("Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change Password.
         /// </summary>
         public static string Change_Password {
@@ -340,11 +385,38 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Completed.
+        /// </summary>
+        public static string Completed {
+            get {
+                return ResourceManager.GetString("Completed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm Enrollment.
+        /// </summary>
+        public static string Confirm_Enrollment {
+            get {
+                return ResourceManager.GetString("Confirm_Enrollment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Contact type.
         /// </summary>
         public static string Contact_Type {
             get {
                 return ResourceManager.GetString("Contact_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contacts.
+        /// </summary>
+        public static string Contacts {
+            get {
+                return ResourceManager.GetString("Contacts", resourceCulture);
             }
         }
         
@@ -363,6 +435,33 @@ namespace Maktab.Consumer.Localization {
         public static string Course {
             get {
                 return ResourceManager.GetString("Course", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ends on {0}.
+        /// </summary>
+        public static string Course_Ends_Date_Variable {
+            get {
+                return ResourceManager.GetString("Course_Ends_Date_Variable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Course Outline.
+        /// </summary>
+        public static string Course_Outline {
+            get {
+                return ResourceManager.GetString("Course_Outline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upcoming — Starts {0}.
+        /// </summary>
+        public static string Course_Upcoming_Starts_Date_Variable {
+            get {
+                return ResourceManager.GetString("Course_Upcoming_Starts_Date_Variable", resourceCulture);
             }
         }
         
@@ -421,6 +520,24 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Daycare Fee.
+        /// </summary>
+        public static string Daycare_Fee {
+            get {
+                return ResourceManager.GetString("Daycare_Fee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
         public static string Edit {
@@ -466,6 +583,24 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End.
+        /// </summary>
+        public static string End {
+            get {
+                return ResourceManager.GetString("End", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enroll Another.
+        /// </summary>
+        public static string Enroll_Another {
+            get {
+                return ResourceManager.GetString("Enroll_Another", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enroll Child.
         /// </summary>
         public static string Enroll_Child {
@@ -484,6 +619,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enrolled Courses.
+        /// </summary>
+        public static string Enrolled_Courses {
+            get {
+                return ResourceManager.GetString("Enrolled_Courses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enrollment.
         /// </summary>
         public static string Enrollment {
@@ -498,6 +642,24 @@ namespace Maktab.Consumer.Localization {
         public static string Enrollment_Details {
             get {
                 return ResourceManager.GetString("Enrollment_Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enrollment Failed.
+        /// </summary>
+        public static string Enrollment_Failed {
+            get {
+                return ResourceManager.GetString("Enrollment_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enrollment Successful.
+        /// </summary>
+        public static string Enrollment_Successful {
+            get {
+                return ResourceManager.GetString("Enrollment_Successful", resourceCulture);
             }
         }
         
@@ -547,6 +709,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Forgot Password.
+        /// </summary>
+        public static string Forgot_Password {
+            get {
+                return ResourceManager.GetString("Forgot_Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gender.
         /// </summary>
         public static string Gender {
@@ -561,6 +732,15 @@ namespace Maktab.Consumer.Localization {
         public static string Group {
             get {
                 return ResourceManager.GetString("Group", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Groups.
+        /// </summary>
+        public static string Groups {
+            get {
+                return ResourceManager.GetString("Groups", resourceCulture);
             }
         }
         
@@ -700,11 +880,29 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Child can not be removed. please try in few moments.
+        /// </summary>
+        public static string Msg_Error_Child_Not_Removed {
+            get {
+                return ResourceManager.GetString("Msg_Error_Child_Not_Removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please complete step {0}.
         /// </summary>
         public static string Msg_Error_Complete_Step_Number {
             get {
                 return ResourceManager.GetString("Msg_Error_Complete_Step_Number", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contact can not be added with system. Please try in few moments.
+        /// </summary>
+        public static string Msg_Error_Contact_Not_Added {
+            get {
+                return ResourceManager.GetString("Msg_Error_Contact_Not_Added", resourceCulture);
             }
         }
         
@@ -727,6 +925,42 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please provide valid email.
+        /// </summary>
+        public static string Msg_Error_Email_Not_Valid {
+            get {
+                return ResourceManager.GetString("Msg_Error_Email_Not_Valid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enrollments can not be added. Please try in a moment or contact support.
+        /// </summary>
+        public static string Msg_Error_Enrollment_Not_Added {
+            get {
+                return ResourceManager.GetString("Msg_Error_Enrollment_Not_Added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code can not be validated.
+        /// </summary>
+        public static string Msg_Error_Invalid_Code {
+            get {
+                return ResourceManager.GetString("Msg_Error_Invalid_Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passwords don&apos;t match.
+        /// </summary>
+        public static string Msg_Error_New_Password_Not_Match {
+            get {
+                return ResourceManager.GetString("Msg_Error_New_Password_Not_Match", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please provide valid address Id.
         /// </summary>
         public static string Msg_Error_No_Address_Id {
@@ -741,6 +975,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Error_No_Family_Id {
             get {
                 return ResourceManager.GetString("Msg_Error_No_Family_Id", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not all child have valid group assigned.
+        /// </summary>
+        public static string Msg_Error_Not_All_Child_Valid_Group {
+            get {
+                return ResourceManager.GetString("Msg_Error_Not_All_Child_Valid_Group", resourceCulture);
             }
         }
         
@@ -763,6 +1006,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Request was not processed. Please retry in few moments.
+        /// </summary>
+        public static string Msg_Error_Request_Not_Processed {
+            get {
+                return ResourceManager.GetString("Msg_Error_Request_Not_Processed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User can not be registered with system. Please try again in few minutes.
         /// </summary>
         public static string Msg_Error_Spouse_Save {
@@ -772,11 +1024,101 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please use different new password.
+        /// </summary>
+        public static string Msg_Error_Use_Diffent_New_Password {
+            get {
+                return ResourceManager.GetString("Msg_Error_Use_Diffent_New_Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please Add child to start enrollments.
         /// </summary>
         public static string Msg_Info_Add_Children_To_Enroll {
             get {
                 return ResourceManager.GetString("Msg_Info_Add_Children_To_Enroll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose a strong password.
+        /// </summary>
+        public static string Msg_Info_Choose_Strong_Password {
+            get {
+                return ResourceManager.GetString("Msg_Info_Choose_Strong_Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter code.
+        /// </summary>
+        public static string Msg_Info_Enter_Code {
+            get {
+                return ResourceManager.GetString("Msg_Info_Enter_Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter code sent in your email.
+        /// </summary>
+        public static string Msg_Info_Enter_Code_Email {
+            get {
+                return ResourceManager.GetString("Msg_Info_Enter_Code_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No address selected.
+        /// </summary>
+        public static string Msg_Info_No_Address_Selected {
+            get {
+                return ResourceManager.GetString("Msg_Info_No_Address_Selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No groups found for this course.
+        /// </summary>
+        public static string Msg_Info_No_Course_Groups_Found {
+            get {
+                return ResourceManager.GetString("Msg_Info_No_Course_Groups_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No modules available.
+        /// </summary>
+        public static string Msg_Info_No_Course_Modules {
+            get {
+                return ResourceManager.GetString("Msg_Info_No_Course_Modules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Enrollments.
+        /// </summary>
+        public static string Msg_Info_No_Enrollment {
+            get {
+                return ResourceManager.GetString("Msg_Info_No_Enrollment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provide old password.
+        /// </summary>
+        public static string Msg_Info_Provide_Old_Password {
+            get {
+                return ResourceManager.GetString("Msg_Info_Provide_Old_Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repeat the password.
+        /// </summary>
+        public static string Msg_Info_Repeat_Password {
+            get {
+                return ResourceManager.GetString("Msg_Info_Repeat_Password", resourceCulture);
             }
         }
         
@@ -835,6 +1177,33 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Would you like to remove {0} ?.
+        /// </summary>
+        public static string Msg_Question_Remove_Variable {
+            get {
+                return ResourceManager.GetString("Msg_Question_Remove_Variable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enrollments have been added successfully.
+        /// </summary>
+        public static string Msg_Success_Add_Enrollment {
+            get {
+                return ResourceManager.GetString("Msg_Success_Add_Enrollment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Address has been added successfully.
+        /// </summary>
+        public static string Msg_Success_Address_Added {
+            get {
+                return ResourceManager.GetString("Msg_Success_Address_Added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Address Remove successfully!.
         /// </summary>
         public static string Msg_Success_Address_Removed {
@@ -849,6 +1218,24 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Success_Child_Added {
             get {
                 return ResourceManager.GetString("Msg_Success_Child_Added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has been enrolled in {1}.
+        /// </summary>
+        public static string Msg_Success_Child_Enrolled_Course_Variable {
+            get {
+                return ResourceManager.GetString("Msg_Success_Child_Enrolled_Course_Variable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Child has been Remove successfully!.
+        /// </summary>
+        public static string Msg_Success_Child_Removed {
+            get {
+                return ResourceManager.GetString("Msg_Success_Child_Removed", resourceCulture);
             }
         }
         
@@ -889,6 +1276,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User has been linked.
+        /// </summary>
+        public static string Msg_Sucess_User_Linked {
+            get {
+                return ResourceManager.GetString("Msg_Sucess_User_Linked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password is required!.
         /// </summary>
         public static string Msg_Validation_New_Password {
@@ -903,6 +1299,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Validation_Old_Password {
             get {
                 return ResourceManager.GetString("Msg_Validation_Old_Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please provide valid family identifier.
+        /// </summary>
+        public static string Msg_Warning_Provide_Family_Id {
+            get {
+                return ResourceManager.GetString("Msg_Warning_Provide_Family_Id", resourceCulture);
             }
         }
         
@@ -925,6 +1330,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        public static string Next {
+            get {
+                return ResourceManager.GetString("Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
         public static string No {
@@ -939,6 +1353,15 @@ namespace Maktab.Consumer.Localization {
         public static string No_Course_Found {
             get {
                 return ResourceManager.GetString("No_Course_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string OK {
+            get {
+                return ResourceManager.GetString("OK", resourceCulture);
             }
         }
         
@@ -1042,6 +1465,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Progress: {0}%.
+        /// </summary>
+        public static string Progress_Variable {
+            get {
+                return ResourceManager.GetString("Progress_Variable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please provide valid credentials.
         /// </summary>
         public static string Provide_Valid_Credentials {
@@ -1123,6 +1555,24 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Review.
+        /// </summary>
+        public static string Review {
+            get {
+                return ResourceManager.GetString("Review", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Review Enrollment.
+        /// </summary>
+        public static string Review_Enrollment {
+            get {
+                return ResourceManager.GetString("Review_Enrollment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string Save {
@@ -1137,6 +1587,51 @@ namespace Maktab.Consumer.Localization {
         public static string Search_Courses {
             get {
                 return ResourceManager.GetString("Search_Courses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Child.
+        /// </summary>
+        public static string Select_Child {
+            get {
+                return ResourceManager.GetString("Select_Child", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Course.
+        /// </summary>
+        public static string Select_Course {
+            get {
+                return ResourceManager.GetString("Select_Course", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Enrollment Group.
+        /// </summary>
+        public static string Select_Enrollment_Group {
+            get {
+                return ResourceManager.GetString("Select_Enrollment_Group", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send code again.
+        /// </summary>
+        public static string Send_Code_Again {
+            get {
+                return ResourceManager.GetString("Send_Code_Again", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sending code.
+        /// </summary>
+        public static string Sending_Code {
+            get {
+                return ResourceManager.GetString("Sending_Code", resourceCulture);
             }
         }
         
@@ -1159,6 +1654,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        public static string Start {
+            get {
+                return ResourceManager.GetString("Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start Exploring.
         /// </summary>
         public static string Start_Exploring {
@@ -1168,11 +1672,29 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string Status {
+            get {
+                return ResourceManager.GetString("Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Step {0}.
         /// </summary>
         public static string Step_Number {
             get {
                 return ResourceManager.GetString("Step_Number", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Submit.
+        /// </summary>
+        public static string Submit {
+            get {
+                return ResourceManager.GetString("Submit", resourceCulture);
             }
         }
         
@@ -1191,6 +1713,33 @@ namespace Maktab.Consumer.Localization {
         public static string Update {
             get {
                 return ResourceManager.GetString("Update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Daycare.
+        /// </summary>
+        public static string Use_Daycare {
+            get {
+                return ResourceManager.GetString("Use_Daycare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Validate.
+        /// </summary>
+        public static string Validate {
+            get {
+                return ResourceManager.GetString("Validate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Validate Code.
+        /// </summary>
+        public static string Validate_Code {
+            get {
+                return ResourceManager.GetString("Validate_Code", resourceCulture);
             }
         }
         

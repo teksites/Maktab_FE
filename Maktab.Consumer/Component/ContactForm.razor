@@ -7,18 +7,18 @@
 
 <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)">
      <MudStack Spacing="2">
-          <MudTextField @bind-Value="_contact.FirstName" Label="First Name" Required="true" />
-          <MudTextField @bind-Value="_contact.LastName" Label="Last Name" Required="true" />
-          <MudTextField @bind-Value="_contact.Phone" Label="Phone" Required="true" />
+          <MudTextField @bind-Value="_contact.FirstName" Label=@L[MaktabResources.First_Name] Required="true" />
+          <MudTextField @bind-Value="_contact.LastName" Label=@L[MaktabResources.Last_Name] Required="true" />
+          <MudTextField @bind-Value="_contact.Phone" Label=@L[MaktabResources.Phone] Required="true" />
 
-          <MudSelect T="ContactType" Label="Contact Type" @bind-Value="_contact.ContactType" Required="true">
+          <MudSelect T="ContactType" Label=@L[MaktabResources.Contact_Type] @bind-Value="_contact.ContactType" Required="true">
                @foreach (var type in Enum.GetValues<ContactType>())
                {
                     <MudSelectItem Value="@type">@type</MudSelectItem>
                }
           </MudSelect>
 
-          <MudSelect T="Relationship" Label="Relationship" @bind-Value="_contact.Relationship" Required="true">
+          <MudSelect T="Relationship" Label=@L[MaktabResources.Relationship] @bind-Value="_contact.Relationship" Required="true">
                @foreach (var rel in Enum.GetValues<Relationship>())
                {
                     <MudSelectItem Value="@rel">@rel</MudSelectItem>
@@ -88,11 +88,9 @@
 
      private async Task RequestSaving()
      {
-          
-
           if (FamilyId == Guid.Empty)
           {
-               _errorMessage = "Please provide valid family id to connect.";
+               _errorMessage = L[MaktabResources.Msg_Warning_Provide_Family_Id];
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
@@ -116,7 +114,7 @@
           // //      return;
           // // }
 
-          Snackbar.Add("User has been linked.", Severity.Success);
+          Snackbar.Add(L[MaktabResources.Msg_Sucess_User_Linked], Severity.Success);
           // await OnSave.InvokeAsync(result);
      }
 

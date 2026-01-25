@@ -15,14 +15,14 @@
 
                @if(isInitialized)
                {
-                    <MudText Typo="Typo.h4" Class="mb-6 text-center">Validate Code</MudText>
+                    <MudText Typo="Typo.h4" Class="mb-6 text-center">@L[MaktabResources.Validate_Code]</MudText>
                          <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleCodeValidation)" Validated="@(OnFormValidated)">
                               <MudGrid Justify="Justify.Center">
                                    <MudItem xs="12">
-                                        <MudAlert Severity="Severity.Info" Elevation="0" Class="mt-2">Please enter code sent in your email.</MudAlert>
+                                   <MudAlert Severity="Severity.Info" Elevation="0" Class="mt-2">@L[MaktabResources.Msg_Info_Enter_Code_Email]</MudAlert>
                                    </MudItem>
                                    <MudItem xs="12">
-                                   <MudTextField Immediate="true" T="string" Label="Code" @bind-Text="@emailValidationCode" Required="true" RequiredError="Please enter code!" />
+                                   <MudTextField Immediate="true" T="string" Label="Code" @bind-Text="@emailValidationCode" Required="true" RequiredError=@L[MaktabResources.Msg_Info_Enter_Code] />
                                    </MudItem>
 
                                      <MudItem xs="12">
@@ -33,11 +33,11 @@
                                         @if (isSendingCodeAgain)
                                         {
                                              <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                             <MudText Class="ms-2">Sending code</MudText>
+                                                  <MudText Class="ms-2">@L[MaktabResources.Sending_Code]</MudText>
                                         }
                                         else
                                         {
-                                             <MudText>Send code again</MudText>
+                                                  <MudText>@L[MaktabResources.Send_Code_Again]</MudText>
                                         }
                                         
                                    </MudButton>
@@ -53,11 +53,11 @@
                               @if (isCodeValidating)
                               {
                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                   <MudText Class="ms-2">Validating</MudText>
+                                   <MudText Class="ms-2">@L[MaktabResources.Msg_Processing]</MudText>
                               }
                               else
                               {
-                                   <MudText>Validate</MudText>
+                                   <MudText>@L[MaktabResources.Validate]</MudText>
                               }
                          </MudButton>
                                    </MudStack>
@@ -77,7 +77,7 @@
                }
                else
                {
-                    <BusyContent DisplayText="Initializing"/>
+                    <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing]/>
                }
           </MudPaper>
      </MudItem>
@@ -153,7 +153,7 @@
           }
           else
           {
-               _errorMessage = "Code can not be validated.";
+               _errorMessage = L[MaktabResources.Msg_Error_Invalid_Code];
                Snackbar.Add(_errorMessage, Severity.Error);
           }
      }
@@ -179,7 +179,7 @@
           var codeSent = await UserService.SendUserActivationCodeAsync(userId);
           if (!codeSent)
           {
-               _errorMessage = "Can not process, please try again in few minutes.";
+               _errorMessage = L[MaktabResources.Msg_Error_Request_Not_Processed];
                Snackbar.Add(_errorMessage, Severity.Error);
           }
      }

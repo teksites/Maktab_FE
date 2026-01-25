@@ -25,14 +25,14 @@
                <MudIcon Icon="@Icons.Material.Filled.CheckCircle"
                         Color="Color.Success" Size="Size.Large" />
 
-               <MudText Typo="Typo.h5" Class="mt-3">Enrollment Successful!</MudText>
+               <MudText Typo="Typo.h5" Class="mt-3">@L[MaktabResources.Enrollment_Successful]!</MudText>
                <MudText Typo="Typo.body1" Color="Color.Secondary">
-                    @SelectedChild?.FirstName has been enrolled in @SelectedCourse?.Name
+                 @L[MaktabResources.Msg_Success_Child_Enrolled_Course_Variable,  @SelectedChild?.FirstName, @SelectedCourse?.Name]
                </MudText>
 
                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4"
                           OnClick="Reset">
-                    Enroll Another
+                    @L[MaktabResources.Enroll_Another]
                </MudButton>
 
                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4"
@@ -48,7 +48,7 @@
                <MudIcon Icon="@Icons.Material.Filled.Error"
                         Color="Color.Error" Size="Size.Large" />
 
-               <MudText Typo="Typo.h5" Class="mt-3">Enrollment Failed!</MudText>
+               <MudText Typo="Typo.h5" Class="mt-3"> @L[MaktabResources.Enrollment_Failed]</MudText>
                @* <MudText Typo="Typo.body1" Color="Color.Secondary">
                     @SelectedChild?.FirstName has been enrolled in @SelectedCourse?.Name
                </MudText> *@
@@ -81,10 +81,10 @@
                       Rounded="Rounded.Small"
                       Class="mb-6">
 
-               <MudStep Label="Child" Icon="@Icons.Material.Filled.Person" />
-               <MudStep Label="Course" Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedChild is null)" />
-               <MudStep Label="Groups" Icon="@Icons.Material.Filled.Groups" Disabled="@(SelectedCourse is null)" />
-               <MudStep Label="Review" Icon="@Icons.Material.Filled.CheckCircle" Disabled="@(!SelectedGroups.Any())" />
+               <MudStep Label=@L[MaktabResources.Child] Icon="@Icons.Material.Filled.Person" />
+               <MudStep Label=@L[MaktabResources.Course] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedChild is null)" />
+               <MudStep Label=@L[MaktabResources.Course] Icon="@Icons.Material.Filled.Groups" Disabled="@(SelectedCourse is null)" />
+               <MudStep Label=@L[MaktabResources.Review] Icon="@Icons.Material.Filled.CheckCircle" Disabled="@(!SelectedGroups.Any())" />
 
           </MudStepper>
 
@@ -93,7 +93,7 @@
           {
                <!-- STEP 1: Choose Child -->
                <MudPaper Class="p-4" Elevation="1">
-                    <MudText Typo="Typo.h6">Select Child</MudText>
+                    <MudText Typo="Typo.h6">@L[MaktabResources.Select_Child]</MudText>
 
                     @if (Children == null)
                     {
@@ -104,7 +104,7 @@
                     {
                          <MudSelect T="ChildResponse"
                                     @bind-Value="SelectedChild"
-                                    Label="Child"
+                                    Label=@L[MaktabResources.Children]
                                     Dense="true"
                                     Clearable="true">
 
@@ -123,7 +123,7 @@
                          <MudButton Variant="Variant.Filled" Color="Color.Primary"
                                     Disabled="@(SelectedChild is null)"
                                     OnClick="@(()=> ActiveStep = 1)"
-                                    Class="mt-4">Next</MudButton>
+                                    Class="mt-4">@L[MaktabResources.Next]</MudButton>
                     }
                </MudPaper>
           }
@@ -132,7 +132,7 @@
           {
                <!-- STEP 2: Choose Course -->
                <MudPaper Class="p-4" Elevation="1">
-                    <MudText Typo="Typo.h6">Select Course</MudText>
+                    <MudText Typo="Typo.h6">@L[MaktabResources.Select_Course]</MudText>
 
                     @if (Courses == null)
                     {
@@ -167,8 +167,8 @@
 
                          <MudButton Variant="Variant.Filled" Color="Color.Primary"
                                     Disabled="@(SelectedCourse is null)"
-                                    OnClick="@(()=> ActiveStep = 2)"
-                                    Class="mt-4">Next</MudButton>
+                                    OnClick="@(()=> ActiveStep = 2)"d
+                                    Class="mt-4">@L[MaktabResources.Next]</MudButton>
                     }
                </MudPaper>
           }
@@ -177,11 +177,11 @@
           {
                <!-- STEP 3: Choose Groups -->
                <MudPaper Class="p-4" Elevation="1">
-                    <MudText Typo="Typo.h6">Select Enrollment Group(s)</MudText>
+                    <MudText Typo="Typo.h6">@L[MaktabResources.Select_Enrollment_Group]</MudText>
 
                     @if (SelectedCourse?.CourseEnrollmentGroups is null)
                     {
-                         <MudText>No groups found for this course.</MudText>
+                              <MudText>@L[MaktabResources.Msg_Info_No_Course_Groups_Found]</MudText>
                     }
                     else
                     {
@@ -192,7 +192,7 @@
                                          MultiSelection="true"
                                          SelectedValues="@SelectedGroups"
                                          SelectedValuesChanged="@((IEnumerable<CourseEnrollmentGroupResponse> v) => SelectedGroups = v.ToHashSet() )"
-                                         Label="Groups"
+                                         Label=@L[MaktabResources.Groups]
                                          Dense="true">
 
                                    @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
@@ -231,7 +231,7 @@
                               <MudSelect T="CourseEnrollmentGroupResponse"
                                          MultiSelection="false"
                                          @bind-Value="@SelectedGroup"
-                                         Label="Groups"
+                                              Label=@L[MaktabResources.Groups]
                                          Dense="true">
 
                                    @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
@@ -269,7 +269,7 @@
                          <MudButton Variant="Variant.Filled" Color="Color.Primary"
                                     Disabled="@(!SelectedGroups.Any())"
                                     OnClick="@(()=> ActiveStep = 3)"
-                                    Class="mt-4">Next</MudButton>
+                                    Class="mt-4">@L[MaktabResources.Next]</MudButton>
                     }
                </MudPaper>
           }
@@ -280,7 +280,7 @@
                <MudGrid Class="p-4" Elevation="1">
                     <MudItem xs="12">
 
-                         <MudText Typo="Typo.h6">Review Enrollment</MudText>
+                         <MudText Typo="Typo.h6">@L[MaktabResources.Review_Enrollment]</MudText>
                     </MudItem xs="12">
 
 
@@ -341,7 +341,7 @@
                     <MudItem xs="12">
 
                          <MudSwitch T="bool" @bind-Value="WillUseDayCare"  Color="Color.Primary" Class="mt-3">
-                              Use Daycare
+                              @L[MaktabResources.Use_Daycare]
                          </MudSwitch>
 
 
@@ -373,7 +373,7 @@
                          <MudButton Color="Color.Success" Variant="Variant.Filled"
                                     OnClick="SubmitEnrollment"
                                     Class="mt-4">
-                              Confirm Enrollment
+                              @L[MaktabResources.Confirm_Enrollment]
                          </MudButton>
                     </MudItem>
 
@@ -501,8 +501,9 @@
                if (SelectedGroups?.Any() != true)
                {
                     await DialogService.ShowMessageBox(
-                   "Warning",
-                   "Not all child have valid group assigned.", "OK");
+                   L[MaktabResources.Warning],
+                   L[MaktabResources.Msg_Error_Not_All_Child_Valid_Group],
+                   L[MaktabResources.OK]);
                     return;
                }
 
@@ -512,7 +513,6 @@
                {
                     var studentEnrollment = new AddStudentCourseEnrollment()
                               {
-
                                    ChildId = SelectedChild.ChildId,
                                    FamilyId = userInfo.FamilyId,
                                    CourseId = SelectedCourse.CourseId,
@@ -528,8 +528,9 @@
                if (SelectedGroups == null)
                {
                     await DialogService.ShowMessageBox(
-                         "Warning",
-                         "Not all child have valid group assigned.", "OK");
+                         L[MaktabResources.Warning],
+                         L[MaktabResources.Msg_Error_Not_All_Child_Valid_Group],
+                         L[MaktabResources.OK]);
                     return;
                }
 
@@ -557,7 +558,7 @@
           {
                //StateService.ParentState.ClearCourseEnrollment();
                await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, true);
-               Snackbar.Add("Enrollments have been added.", Severity.Success);
+               Snackbar.Add(L[MaktabResources.Msg_Success_Add_Enrollment], Severity.Success);
 
                await OnCompletedClickedHandler();
                IsSuccess = true;
@@ -567,7 +568,7 @@
           else
           {
                IsError = true;
-               Snackbar.Add("Enrollments can not be added for family. Please try in a moment or contact support.", Severity.Error);
+               Snackbar.Add(L[MaktabResources.Msg_Error_Enrollment_Not_Added], Severity.Error);
           }
      }
 

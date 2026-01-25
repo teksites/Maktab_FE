@@ -40,8 +40,8 @@
                               <MudTh>@L[MaktabResources.Group]</MudTh>
                               <MudTh>@L[MaktabResources.Enrollment]</MudTh>
                               <MudTh>@L[MaktabResources.Fee]</MudTh>
-                              <MudTh>Day Care Fee</MudTh>
-                              <MudTh>Use Day Care</MudTh>
+                              <MudTh>@L[MaktabResources.Daycare_Fee]</MudTh>
+                              <MudTh>@L[MaktabResources.Use_Daycare]</MudTh>
                               <MudTh> </MudTh>
                          </HeaderContent>
                          <RowTemplate>
@@ -68,7 +68,7 @@
                                         {
                                              <MudMenuItem OnClick="OpenAssignCourseDialog">Enroll</MudMenuItem>
                                         } *@
-                                        <MudMenuItem OnClick="@(() => RemoveEnrollment(context))">Delete</MudMenuItem>
+                                        <MudMenuItem OnClick="@(() => RemoveEnrollment(context))">@L[MaktabResources.Delete]</MudMenuItem>
                                    </MudMenu>
 
                               </MudTd>
@@ -130,7 +130,7 @@
                }
                else
                {
-                    <MudText Typo="Typo.body2" Color="Color.Secondary">No recent enrollments.</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">@L[MaktabResources.Msg_Info_No_Enrollment]</MudText>
                }
           </ChildContent>
      </MudExpansionPanel>

@@ -1,4 +1,4 @@
-﻿@inherits BaseComponent<EnrollmentCard>
+﻿@inherits LocalizeableBaseComponent<EnrollmentCard>
 
 @using MaktabDataContracts.Responses.Course
 @using MudBlazor
@@ -12,14 +12,16 @@
 
         <MudSpacer />
           <MudChip T="StudentCourseEnrollmentResponse" Color="@GetStatusColor()" Variant="Variant.Outlined" Size="Size.Small">
-            @(Enrollment.IsActive ? "Active" : "Inactive")
+               @(Enrollment.IsActive ? @L[MaktabResources.Active] : @L[MaktabResources.Inactive])
         </MudChip>
     </MudCardHeader>
 
     <MudCardContent>
         <MudText Typo="Typo.body2">Child: <b>@ChildName</b></MudText>
-        <MudText Typo="Typo.body2">Daycare: @(Enrollment.WillUseDayCare ? $"Yes ({Enrollment.DayCareDays}d)" : "No")</MudText>
-        <MudText Typo="Typo.caption" Color="Color.Secondary">Created @Enrollment.CreatedAt:d</MudText>
+          <MudText Typo="Typo.body2">
+               Daycare: @(Enrollment.WillUseDayCare ? $"{@L[MaktabResources.Yes]} ({Enrollment.DayCareDays}d)" : @L[MaktabResources.No])
+          </MudText>
+        @* <MudText Typo="Typo.caption" Color="Color.Secondary">Created @Enrollment.CreatedAt:d</MudText> *@
     </MudCardContent>
 
     <MudCardActions>

@@ -1,17 +1,17 @@
 ﻿@using MaktabDataContracts.Responses.OtherContacts
-@inherits BaseComponent<ContactSimplifiedList>
+@inherits LocalizeableBaseComponent<ContactSimplifiedList>
 
 @if (ShowHeader)
 {
      <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">
-          <MudText Typo="Typo.h6">Contacts</MudText>
+          <MudText Typo="Typo.h6">@L[MaktabResources.Contacts]</MudText>
           @if (ShowAddButton)
           {
                <MudButton Variant="Variant.Outlined"
                           Color="Color.Primary"
                           StartIcon="@Icons.Material.Filled.Add"
                           OnClick="OnAddContact">
-                    Add Contact
+                    @L[MaktabResources.Add_Contact]
                </MudButton>
           }
      </MudStack>

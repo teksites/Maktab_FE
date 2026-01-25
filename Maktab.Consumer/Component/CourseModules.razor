@@ -1,8 +1,8 @@
 ﻿@using Maktab.Models.Models
-@inherits BaseComponent<CourseModules>
+@inherits LocalizeableBaseComponent<CourseModules>
 
 <MudPaper Class="pa-4 mt-4">
-     <MudText Typo="Typo.h6" Class="mb-2">Course Outline</MudText>
+     <MudText Typo="Typo.h6" Class="mb-2">@L[MaktabResources.Course_Outline]</MudText>
 
      @if (Modules?.Any() == true)
      {
@@ -27,7 +27,7 @@
      }
      else
      {
-          <MudText Typo="Typo.body2" Color="Color.Secondary">No modules available</MudText>
+          <MudText Typo="Typo.body2" Color="Color.Secondary">L[MaktabResources.Msg_Info_No_Course_Modules]</MudText>
      }
 </MudPaper>
 
