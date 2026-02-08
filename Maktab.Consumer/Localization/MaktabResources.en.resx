@@ -703,4 +703,10 @@
   <data name="Msg_Error_Invalid_Code" xml:space="preserve">
     <value>Code can not be validated</value>
   </data>
+  <data name="Academic_Levels" xml:space="preserve">
+    <value>Academic Levels</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
 </root>

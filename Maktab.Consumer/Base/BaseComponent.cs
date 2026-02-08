@@ -243,7 +243,7 @@ namespace Maktab.Consumer.Base
                var parameters = new DialogParameters { ["FamilyId"] = familyId };
                var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
 
-               var dialog = await dialogService.ShowAsync<AddChildDialog>("Add Child", parameters, options);
+               var dialog = await dialogService.ShowAsync<AddChildDialog>(null, parameters, options);
                var result = await dialog.Result;
                return result;
           }

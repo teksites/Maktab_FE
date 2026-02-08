@@ -2,16 +2,20 @@
 @using MaktabDataContracts.Enums
 @using MaktabDataContracts.Responses.Children
 @using MudBlazor
-@* @using System.ComponentModel.DataAnnotations *@
 
-@inherits BaseFormComponent<AddChildRequest>
+@inherits BaseFormComponent<AddChild>
 
 @inject IChildrenService ChildrenService
 
 
 @* <EditForm Model="@ChildModel" OnValidSubmit="HandleValidSubmit"> *@
-     <MudPaper Class="pa-4">
-         @*  <MudText Typo="Typo.h5" Class="mb-4">Add Child</MudText> *@
+<MudPaper Class="pa-6" Elevation="0" Outlined="false">
+     @if (ShowLabel)
+     {
+          <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
+               @L[MaktabResources.Add_Child]
+          </MudText>
+     }
 
          @if(isInitialized)
          {
@@ -93,8 +97,14 @@
                </MudItem>
           </MudGrid>
 
-          <MudStack Justify="Justify.FlexEnd" Row="true" Spacing="2" Class="mt-4">
-               <MudButton Type="Submit" Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Check" OnClick="@(HandleSaving)">
+          <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+               <MudButton Variant="Variant.Outlined" Color="Color.Default"
+                          OnClick="@OnCancelClickedHandler"
+                          StartIcon="@Icons.Material.Filled.Close">
+                    Cancel
+               </MudButton>
+               <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" 
+                          StartIcon="@Icons.Material.Filled.Check" OnClick="@(HandleSaving)">
                     @if (isSaving)
                     {
                          <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
@@ -104,9 +114,7 @@
                     {
                               <span>@L[MaktabResources.Save]</span>
                     }
-                    
                </MudButton>
-               <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
           </MudStack>
           </MudForm>
      }
@@ -118,11 +126,10 @@
 @* </EditForm> *@
 
 @code {
-     [Parameter, EditorRequired]
-     public AddChildRequest ChildModel { get; set; } = new();
 
-     [Parameter]
-     public Guid FamilyId { get; set; } = Guid.Empty;
+     [Parameter, EditorRequired] public AddChildRequest ChildModel { get; set; } = new();
+     [Parameter] public Guid FamilyId { get; set; } = Guid.Empty;
+     [Parameter] public bool ShowLabel { get; set; } = true;
 
      [Parameter] public EventCallback<ChildResponse> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }

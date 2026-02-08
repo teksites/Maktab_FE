@@ -6,6 +6,36 @@ h1:focus {
     outline: none;
 }
 
+/* Card Selection Styles */
+.mud-border-success-3 {
+     border-color: #4caf50 !important;
+     background: linear-gradient(135deg, rgba(76, 175, 80, 0.03) 0%, transparent 100%) !important;
+     border-width: 2px !important;
+     box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15) !important;
+}
+
+.mud-border-success-3:hover {
+     box-shadow: 0 6px 16px rgba(76, 175, 80, 0.25) !important;
+}
+
+.mud-border-paper-1 {
+     border-color: rgba(0, 0, 0, 0.12) !important;
+     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.mud-border-paper-1:hover {
+     border-color: #1976d2 !important;
+     box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15) !important;
+}
+
+.border-1 {
+     border-width: 1px !important;
+}
+
+.border-2 {
+     border-width: 2px !important;
+}
+
 a, .btn-link {
     color: #0071c1;
 }

@@ -7,13 +7,12 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthProvider
 
-<MudGrid Justify="Justify.Center">
-     <MudItem xs="12" sm="7" md="5">
-          <MudPaper Class="pa-6" Elevation="8">
+<MudContainer MaxWidth="MaxWidth.Small" Class="py-8">
+     <MudPaper Class="pa-6" Elevation="0" Outlined="true">
 
                @if (isInitialized)
                {
-                    <MudText Typo="Typo.h4" Class="mb-6 text-center">@L[MaktabResources.Login]</MudText>
+               <MudText Typo="Typo.h5" Class="mb-6 text-center">@L[MaktabResources.Login]</MudText>
 
                     <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleLogin)" Validated="@(OnFormValidated)">
 
@@ -42,8 +41,13 @@
                               </MudAlert>
                          }
 
-                         <MudStack Direction="Row" Justify="Justify.SpaceBetween" Spacing="4" Class="mt-6">
-                              <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || authenticating)" OnClick="@(HandleLogin)">
+                    <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+                         <MudButton Href="@Constants.RegisterParentRoute" Variant="Variant.Outlined" 
+                                    Color="Color.Default" StartIcon="@Icons.Material.Filled.AppRegistration"
+                                    Disabled="@authenticating">@L[MaktabResources.Create_New_Account]</MudButton>
+                         <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" 
+                                    StartIcon="@Icons.Material.Filled.Login"
+                                    Disabled="@(!_isValid || authenticating)" OnClick="@(HandleLogin)">
                                    @if (authenticating)
                                    {
                                         <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
@@ -54,8 +58,6 @@
                                         <span>@L[MaktabResources.Login]</span>
                                    }
                               </MudButton>
-
-                              <MudButton Href="@Constants.RegisterParentRoute" Variant="Variant.Outlined" Color="Color.Primary" Disabled="@authenticating">@L[MaktabResources.Create_New_Account]</MudButton>
                          </MudStack>
 
                     </MudForm>
@@ -66,8 +68,7 @@
                }
 
           </MudPaper>
-     </MudItem>
-</MudGrid>
+</MudContainer>
 
 @code {
 

@@ -9,27 +9,27 @@
 
 @* @inject IAlertService AlertService *@
 
-<MudGrid Justify="Justify.Center">
-     <MudItem xs="12" sm="7" md="5">
-          <MudPaper Class="pa-6" Elevation="8">
+<MudContainer MaxWidth="MaxWidth.Small" Class="py-8">
+     <MudPaper Class="pa-6" Elevation="0" Outlined="false">
 
                @if(isInitialized)
                {
-                    <MudText Typo="Typo.h4" Class="mb-6 text-center">@L[MaktabResources.Validate_Code]</MudText>
+               <MudText Typo="Typo.h5" Class="mb-6 text-center">@L[MaktabResources.Validate_Code]</MudText>
                          <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleCodeValidation)" Validated="@(OnFormValidated)">
-                              <MudGrid Justify="Justify.Center">
-                                   <MudItem xs="12">
-                                   <MudAlert Severity="Severity.Info" Elevation="0" Class="mt-2">@L[MaktabResources.Msg_Info_Enter_Code_Email]</MudAlert>
-                                   </MudItem>
-                                   <MudItem xs="12">
+
+                    <MudAlert Severity="Severity.Info" Elevation="0" Class="mb-4">@L[MaktabResources.Msg_Info_Enter_Code_Email]</MudAlert>
+
                                    <MudTextField Immediate="true" T="string" Label="Code" @bind-Text="@emailValidationCode" Required="true" RequiredError=@L[MaktabResources.Msg_Info_Enter_Code] />
-                                   </MudItem>
 
-                                     <MudItem xs="12">
-                                       <MudStack Row=true >
+                    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                    {
+                         <MudAlert Severity="Severity.Error" Elevation="0" Class="mt-4">@_errorMessage</MudAlert>
+                    }
 
-                                            <MudButton Disabled="@isSendingCodeAgain" onclick="@(HandleSendUserCode)" Variant="Variant.Text"
-                                              Color="Color.Tertiary" >
+                    <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+                         <MudButton OnClick="@(HandleSendUserCode)" Variant="Variant.Text"
+                                    Color="Color.Primary" StartIcon="@Icons.Material.Filled.Refresh"
+                                    Disabled="@isSendingCodeAgain">
                                         @if (isSendingCodeAgain)
                                         {
                                              <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -39,17 +39,11 @@
                                         {
                                                   <MudText>@L[MaktabResources.Send_Code_Again]</MudText>
                                         }
-                                        
                                    </MudButton>
 
-                                   @*< MudText Class="mt-3 text-center">
-                                        <MudLink Href="/register/customer" Color="Color.Tertiary">
-                                             Create account
-                                        </MudLink>
-                                   </MudText> *@
-
-                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isCodeValidating)" Class="ml-auto" OnClick="@(HandleCodeValidation)">
-
+                         <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" 
+                                    StartIcon="@Icons.Material.Filled.Check"
+                                    Disabled="@(!_isValid || isCodeValidating)" OnClick="@(HandleCodeValidation)">
                               @if (isCodeValidating)
                               {
                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -61,17 +55,6 @@
                               }
                          </MudButton>
                                    </MudStack>
-                              </MudItem>
-                         @if (!string.IsNullOrWhiteSpace(_errorMessage))
-                         {
-                              <MudItem>
-                              <MudAlert Severity="Severity.Error" Elevation="0" Class="mt-2">@_errorMessage</MudAlert>
-                                   </MudItem>
-                         }
-
-                         
-                         
-                         </MudGrid>
 
                     </MudForm>
                }
@@ -80,8 +63,7 @@
                     <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing]/>
                }
           </MudPaper>
-     </MudItem>
-</MudGrid>
+</MudContainer>
 @code {
      string username;
      Guid userId = Guid.Empty;
