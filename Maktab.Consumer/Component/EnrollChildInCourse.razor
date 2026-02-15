@@ -1,4 +1,4 @@
-﻿@using Maktab.Consumer.State
+@using Maktab.Consumer.State
 @using Maktab.Consumer.Extensions
 @using MaktabDataContracts.Requests.Course
 @using MaktabDataContracts.Responses.Children
@@ -11,379 +11,484 @@
 @inject ICourseService CourseService
 @inject IUserService UserService
 @inject ICourseEnrollmentService CourseEnrollmentService
-
-
 @inject UserStateService StateService
 @inject IDialogService DialogService 
 
-<MudPaper Class="p-6 mx-auto max-w-3xl">
+<MudContainer MaxWidth="MaxWidth.Small" Class="py-8">
 
-     <!-- Success Screen -->
-     @if (@IsSuccess)
-     {
-          <MudPaper Class="p-6 text-center" Elevation="3">
+<!-- Success Screen -->
+@if (@IsSuccess)
+{
+     <MudPaper Class="pa-8 text-center" Elevation="1">
+          <MudStack Spacing="4" AlignItems="AlignItems.Center">
                <MudIcon Icon="@Icons.Material.Filled.CheckCircle"
                         Color="Color.Success" Size="Size.Large" />
 
-               <MudText Typo="Typo.h5" Class="mt-3">@L[MaktabResources.Enrollment_Successful]!</MudText>
-               <MudText Typo="Typo.body1" Color="Color.Secondary">
-                 @L[MaktabResources.Msg_Success_Child_Enrolled_Course_Variable,  @SelectedChild?.FirstName, @SelectedCourse?.Name]
+               <MudText Typo="Typo.h5" GutterBottom="false">
+                    @L[MaktabResources.Enrollment_Successful]
+               </MudText>
+                    
+               <MudText Typo="Typo.body2" Color="Color.Secondary">
+                    @L[MaktabResources.Msg_Success_Child_Enrolled_Course_Variable, @SelectedChild?.FirstName, @SelectedCourse?.Name]
                </MudText>
 
-               <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4"
-                          OnClick="Reset">
-                    @L[MaktabResources.Enroll_Another]
-               </MudButton>
+               <MudStack Row="true" Spacing="2" Class="mt-4">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" 
+                               StartIcon="@Icons.Material.Filled.AddCircle"
+                               OnClick="Reset">
+                         @L[MaktabResources.Enroll_Another]
+                    </MudButton>
 
-               <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4"
-                          OnClick="OnCompletedClickedHandler">
-                    @L[MaktabResources.Close]
-               </MudButton>
-          </MudPaper>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Close"
+                               OnClick="OnCompletedClickedHandler">
+                         @L[MaktabResources.Close]
+                    </MudButton>
+               </MudStack>
+          </MudStack>
+     </MudPaper>
 
-     }
-     else if (IsError)
-     {
-          <MudPaper Class="p-6 text-center" Elevation="3">
-               <MudIcon Icon="@Icons.Material.Filled.Error"
+}
+else if (IsError)
+{
+     <MudPaper Class="pa-8 text-center" Elevation="1">
+          <MudStack Spacing="4" AlignItems="AlignItems.Center">
+               <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
                         Color="Color.Error" Size="Size.Large" />
 
-               <MudText Typo="Typo.h5" Class="mt-3"> @L[MaktabResources.Enrollment_Failed]</MudText>
-               @* <MudText Typo="Typo.body1" Color="Color.Secondary">
-                    @SelectedChild?.FirstName has been enrolled in @SelectedCourse?.Name
-               </MudText> *@
+               <MudText Typo="Typo.h5" GutterBottom="false">
+                    @L[MaktabResources.Enrollment_Failed]
+               </MudText>
 
-              @*  <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4"
-                          OnClick="Reset">
-                    Enroll Another
-               </MudButton> *@
+               <MudAlert Severity="Severity.Error" Elevation="0" Dense="true">
+                    @L[MaktabResources.Msg_Error_Enrollment_Not_Added]
+               </MudAlert>
 
-               <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4"
-                          OnClick="OnCompletedClickedHandler">
+               <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                          StartIcon="@Icons.Material.Filled.Close"
+                          OnClick="OnCompletedClickedHandler"
+                          FullWidth="true">
                     @L[MaktabResources.Close]
                </MudButton>
-          </MudPaper>
+          </MudStack>
+     </MudPaper>
 
-     }
+}
      else
      {
-
-
           <!-- Loading Overlay -->
           <LoadingOverlay IsLoading="@IsLoadingData" />
 
           @if (isInitialized && !IsLoadingData)
           {
+               <!-- Stepper -->
+               <MudStepper @bind-ActiveIndex="ActiveStep"
+                           Elevation="0"
+                           Rounded="Rounded.Small"
+                           OnPreviewInteraction="OnPreviewInteraction"
+                           Class="mb-8">
 
-          <!-- Stepper -->
-          <MudStepper @bind-ActiveIndex="ActiveStep"
-                      Elevation="1"
-                      Rounded="Rounded.Small"
-                      Class="mb-6">
+                    <MudStep Label=@L[MaktabResources.Child] Icon="@Icons.Material.Filled.Person" />
+                    <MudStep Label=@L[MaktabResources.Course] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedChild is null)" />
+                    <MudStep Label=@L[MaktabResources.Groups] Icon="@Icons.Material.Filled.Groups" Disabled="@(SelectedCourse is null)" />
+                    <MudStep Label=@L[MaktabResources.Review] Icon="@Icons.Material.Filled.CheckCircle" Disabled="@(!SelectedGroups.Any())" />
 
-               <MudStep Label=@L[MaktabResources.Child] Icon="@Icons.Material.Filled.Person" />
-               <MudStep Label=@L[MaktabResources.Course] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedChild is null)" />
-               <MudStep Label=@L[MaktabResources.Course] Icon="@Icons.Material.Filled.Groups" Disabled="@(SelectedCourse is null)" />
-               <MudStep Label=@L[MaktabResources.Review] Icon="@Icons.Material.Filled.CheckCircle" Disabled="@(!SelectedGroups.Any())" />
+               </MudStepper>
 
-          </MudStepper>
+               <!-- STEP CONTENT -->
+               @if (ActiveStep == 0)
+               {
+                    <!-- STEP 1: Choose Child -->
+                    <MudPaper Class="pa-6" Elevation="0" Outlined="true">
+                         <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
+                              @L[MaktabResources.Select_Child]
+                         </MudText>
 
-          <!-- STEP CONTENT -->
-          @if (ActiveStep == 0)
-          {
-               <!-- STEP 1: Choose Child -->
-               <MudPaper Class="p-4" Elevation="1">
-                    <MudText Typo="Typo.h6">@L[MaktabResources.Select_Child]</MudText>
-
-                    @if (Children == null)
-                    {
-                         <MudSkeleton Height="60px" Width="100%" Class="mb-2" />
-                         <MudSkeleton Height="60px" Width="100%" />
-                    }
-                    else
-                    {
-                         <MudSelect T="ChildResponse"
-                                    @bind-Value="SelectedChild"
-                                    Label=@L[MaktabResources.Children]
-                                    Dense="true"
-                                    Clearable="true">
-
-                              @foreach (var child in Children)
-                              {
-                                   <MudSelectItem Value="@child">
-                                        <MudStack Row="true">
-                                        @* <MudAvatar  Size="Size.Small" Class="mr-2"/> *@
-                                        <MudIcon Icon="@Icons.Material.Filled.Person" />
-                                        @child.FirstName @child.LastName
-                                        </MudStack>
-                                   </MudSelectItem>
-                              }
-                         </MudSelect>
-
-                         <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                                    Disabled="@(SelectedChild is null)"
-                                    OnClick="@(()=> ActiveStep = 1)"
-                                    Class="mt-4">@L[MaktabResources.Next]</MudButton>
-                    }
-               </MudPaper>
-          }
-
-          else if (ActiveStep == 1)
-          {
-               <!-- STEP 2: Choose Course -->
-               <MudPaper Class="p-4" Elevation="1">
-                    <MudText Typo="Typo.h6">@L[MaktabResources.Select_Course]</MudText>
-
-                    @if (Courses == null)
-                    {
-                         <MudSkeleton Height="50px" Width="100%" />
-                    }
-                    else
-                    {
-                         <MudSelect T="CourseResponseDetailed"
-                                    @bind-Value="SelectedCourse"
-                                    Label="Course"
-                                    Dense="true"
-                                    Clearable="true">
-
-                              @foreach (var c in Courses)
-                              {
-                                   <MudSelectItem Value="@c">
-                                        <MudIcon Icon="@Icons.Material.Filled.School" Class="mr-2" />
-                                        @c.Name
-                                   </MudSelectItem>
-                              }
-                         </MudSelect>
-
-                         @if (SelectedCourse != null)
+                         @if (Children == null)
                          {
-                              <MudPaper Class="p-3 mt-3" Elevation="1">
-                                   <MudText Typo="Typo.subtitle1">@SelectedCourse.Name</MudText>
-                                   <MudText Typo="Typo.body2" Color="Color.Secondary">
-                                        @SelectedCourse.Description
-                                   </MudText>
-                              </MudPaper>
-                         }
-
-                         <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                                    Disabled="@(SelectedCourse is null)"
-                                    OnClick="@(()=> ActiveStep = 2)"d
-                                    Class="mt-4">@L[MaktabResources.Next]</MudButton>
-                    }
-               </MudPaper>
-          }
-
-          else if (ActiveStep == 2)
-          {
-               <!-- STEP 3: Choose Groups -->
-               <MudPaper Class="p-4" Elevation="1">
-                    <MudText Typo="Typo.h6">@L[MaktabResources.Select_Enrollment_Group]</MudText>
-
-                    @if (SelectedCourse?.CourseEnrollmentGroups is null)
-                    {
-                              <MudText>@L[MaktabResources.Msg_Info_No_Course_Groups_Found]</MudText>
-                    }
-                    else
-                    {
-                         if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
-                         {
-                              <MudSelect T="CourseEnrollmentGroupResponse"
-                                         ToStringFunc="g => g.GroupTitle"
-                                         MultiSelection="true"
-                                         SelectedValues="@SelectedGroups"
-                                         SelectedValuesChanged="@((IEnumerable<CourseEnrollmentGroupResponse> v) => SelectedGroups = v.ToHashSet() )"
-                                         Label=@L[MaktabResources.Groups]
-                                         Dense="true">
-
-                                   @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
-                                   {
-                                        <MudSelectItem Value="@g">
-                                             <MudStack Row="true" AlignItems="AlignItems.Center">
-                                             <MudIcon Icon="@Icons.Material.Filled.Groups" Class="mr-2" />
-                                             <strong>@g.GroupTitle</strong>
-                                              
-                                             @* <MudText Typo="Typo.caption" Class="ml-2">Fee: </MudText> *@
-                                             @* <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Class="mr-2" />*@
-                                             <MudText Typo="Typo.caption" Class="ml-2"> 
-                                                  @* (@g.StartTime - @g.EndTime) *@
-                                                  @g.Fee
-                                             </MudText>
-                                             @* <MudIcon Icon="@Icons.Material.Filled.ChildCare" Class="mr-2" />
-                                              @* <MudText Typo="Typo.caption" Class="ml-2"> Day care Fee: </MudText> *@
-                                             @* <MudText Typo="Typo.caption" Class="ml-2"> *@
-                                                  @* (@g.StartTime - @g.EndTime) *@
-                                                  @* @g.DayCareFee
-                                             </MudText> *@
-
-                                              <MudChipSet  T="CourseEnrollmentGroupResponse" >
-                                                  @foreach( var chipSet in g.AcedemicGroups)
-                                                       {
-                                                          <MudChip T="String" Text="@chipSet"/>
-                                                       }
-                                              </MudChipSet>
-                                              </MudStack>
-                                        </MudSelectItem>
-                                   }
-                              </MudSelect>
+                              <MudStack Spacing="2">
+                                   <MudSkeleton Height="56px" Width="100%" />
+                                   <MudSkeleton Height="56px" Width="100%" />
+                              </MudStack>
                          }
                          else
                          {
-                              <MudSelect T="CourseEnrollmentGroupResponse"
-                                         MultiSelection="false"
-                                         @bind-Value="@SelectedGroup"
-                                              Label=@L[MaktabResources.Groups]
-                                         Dense="true">
+                              <MudSelect T="ChildResponse"
+                                         @bind-Value="SelectedChild"
+                                         Label=@L[MaktabResources.Children]
+                                         Dense="false"
+                                         Clearable="true"
+                                         AnchorOrigin="Origin.BottomCenter"
+                                         TransformOrigin="Origin.TopCenter">
 
-                                   @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
+                                   @foreach (var child in Children)
                                    {
-                                        <MudSelectItem Value="@g">
-                                            <MudStack Row="true" AlignItems="AlignItems.Center">
-                                             <MudIcon Icon="@Icons.Material.Filled.Groups" Class="mr-2" />
-                                             <strong>@g.GroupTitle</strong>
-                                              
-                                             @* <MudText Typo="Typo.caption" Class="ml-2">Fee: </MudText> *@
-                                             @* <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Class="mr-2" />*@
-                                             <MudText Typo="Typo.caption" Class="ml-2"> 
-                                                  @* (@g.StartTime - @g.EndTime) *@
-                                                  @g.Fee
-                                             </MudText>
-                                             @* <MudIcon Icon="@Icons.Material.Filled.ChildCare" Class="mr-2" />
-                                              @* <MudText Typo="Typo.caption" Class="ml-2"> Day care Fee: </MudText> *@
-                                             @* <MudText Typo="Typo.caption" Class="ml-2"> *@
-                                                  @* (@g.StartTime - @g.EndTime) *@
-                                                  @* @g.DayCareFee
-                                             </MudText> *@
-
-                                              <MudChipSet  T="CourseEnrollmentGroupResponse" >
-                                                  @foreach( var chipSet in g.AcedemicGroups)
-                                                       {
-                                                          <MudChip T="String" Text="@chipSet"/>
-                                                       }
-                                              </MudChipSet>
-                                              </MudStack>
+                                        <MudSelectItem Value="@child">
+                                             <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                                  <MudIcon Icon="@Icons.Material.Filled.PersonOutline" Size="Size.Small" />
+                                                  <span>@child.FirstName @child.LastName</span>
+                                             </MudStack>
                                         </MudSelectItem>
                                    }
                               </MudSelect>
+
+                              <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+                                   <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                              Disabled="@(SelectedChild is null)"
+                                              OnClick="@(()=> ActiveStep = 1)"
+                                              StartIcon="@Icons.Material.Filled.NavigateNext">
+                                        @L[MaktabResources.Next]
+                                   </MudButton>
+                              </MudStack>
                          }
+                    </MudPaper>
+               }
 
-                         <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                                    Disabled="@(!SelectedGroups.Any())"
-                                    OnClick="@(()=> ActiveStep = 3)"
-                                    Class="mt-4">@L[MaktabResources.Next]</MudButton>
-                    }
-               </MudPaper>
-          }
-
-          else if (ActiveStep == 3)
-          {
-               <!-- STEP 4: Review -->
-               <MudGrid Class="p-4" Elevation="1">
-                    <MudItem xs="12">
-
-                         <MudText Typo="Typo.h6">@L[MaktabResources.Review_Enrollment]</MudText>
-                    </MudItem xs="12">
-
-
-                    <MudItem>
-                           <MudStack Row="true">
-                                @* <MudText Typo="Typo.caption">Child</MudText> *@
-                         <MudIcon Icon="@Icons.Material.Filled.Person" />
-                         <MudText>@SelectedChild.FirstName @SelectedChild.LastName</MudText>
-                           </MudStack>
-                    </MudItem>
-
-                    <MudItem xs="12">
-                         <MudStack  Row="true">
-
-                         <MudIcon Icon="@Icons.Material.Filled.School" />
-                                @* <MudText Typo="Typo.caption">Course</MudText> *@
-
-                         <MudText>@SelectedCourse.Name</MudText>
-
-                         </MudStack>
-                    </MudItem>
-
-                    <MudItem xs="12">
-                         <MudStack  Row="true">
-                         <MudIcon Icon="@Icons.Material.Filled.Groups" />
-                         <MudText>
-                              @if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
-                              {
-                                   @string.Join(", ", SelectedGroups.Select(g => g.GroupTitle))
-                              }
-                              else
-                              {
-                                   @SelectedGroup?.GroupTitle
-                              }
+               else if (ActiveStep == 1)
+               {
+                    <!-- STEP 2: Choose Course -->
+                    <MudPaper Class="pa-6" Elevation="0" Outlined="true">
+                         <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
+                              @L[MaktabResources.Select_Course]
                          </MudText>
-                         </MudStack>
-                         </MudItem>
 
-@*                     <MudItem xs="12">
-                         <MudStack  Row="true">
-
-                         <MudIcon Icon="@Icons.Material.Filled.AttachMoney" />
-
-                         <MudText>
-                              @if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
-                              {
-                                   @SelectedGroups.Sum(x=>x.Fee)
-                                   @* @string.Join(", ", SelectedGroups.Select(g => g.GroupTitle)) *@
-                            @*  }
-                              else
-                              {
-                                   @SelectedGroup?.Fee
-                              }
-                         </MudText>
-                         </MudStack>
-
-                    </MudItem> *@
-                    <MudItem xs="12">
-
-                         <MudSwitch T="bool" @bind-Value="WillUseDayCare"  Color="Color.Primary" Class="mt-3">
-                              @L[MaktabResources.Use_Daycare]
-                         </MudSwitch>
-
-
-                         @*  @if (WillUseDayCare)
+                         @if (Courses == null)
                          {
-                              <MudStack Row="true">
-                         <MudIcon Icon="@Icons.Material.Filled.ChildCare" />
-                          <MudText>
+                              <MudStack Spacing="2">
+                                   <MudSkeleton Height="56px" Width="100%" />
+                                   <MudSkeleton Height="56px" Width="100%" />
+                              </MudStack>
+                         }
+                         else
+                         {
+                              <MudSelect T="CourseResponseDetailed"
+                                         @bind-Value="SelectedCourse"
+                                         Label=@L[MaktabResources.Course]
+                                         Dense="false"
+                                         Clearable="true"
+                                         AnchorOrigin="Origin.BottomCenter"
+                                         TransformOrigin="Origin.TopCenter">
+
+                                   @foreach (var c in Courses)
+                                   {
+                                        <MudSelectItem Value="@c">
+                                             <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                                  <MudIcon Icon="@Icons.Material.Filled.School" Size="Size.Small" />
+                                                  <span>@(GetCourseName(c))</span>
+                                             </MudStack>
+                                        </MudSelectItem>
+                                   }
+                              </MudSelect>
+
+                              @if (SelectedCourse != null)
+                              {
+                                   <MudAlert Severity="Severity.Info" Elevation="0" Dense="true" Class="mt-4">
+                                        <MudStack Row="true">
+                                        <MudText Typo="Typo.body2">
+                                             @(GetCourseDescription(SelectedCourse))
+                                        </MudText>
+                                             <MudText Typo="Typo.body2">
+                                                  <span>@L[MaktabResources.Registration_Fee]</span>: <span>@(SelectedCourse?.RegistrationFee)</span>
+                                             </MudText>
+                                        </MudStack>
+                                   </MudAlert>
+                              }
+
+                              <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+                                   <MudButton Variant="Variant.Outlined" Color="Color.Default"
+                                              OnClick="@(()=> ActiveStep = 0)"
+                                              StartIcon="@Icons.Material.Filled.NavigateBefore">
+                                        Previous
+                                   </MudButton>
+                                   <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                              Disabled="@(SelectedCourse is null)"
+                                              OnClick="@(()=> ActiveStep = 2)"
+                                              StartIcon="@Icons.Material.Filled.NavigateNext">
+                                        @L[MaktabResources.Next]
+                                   </MudButton>
+                              </MudStack>
+                         }
+                    </MudPaper>
+               }
+
+               else if (ActiveStep == 2)
+               {
+                    <!-- STEP 3: Choose Groups as List/Cards -->
+                    <MudPaper Class="pa-6" Elevation="0" Outlined="true">
+                         <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
+                              @L[MaktabResources.Select_Enrollment_Group]
+                         </MudText>
+
+                         @if (SelectedCourse?.CourseEnrollmentGroups is null || !SelectedCourse.CourseEnrollmentGroups.Any())
+                         {
+                              <MudAlert Severity="Severity.Warning" Elevation="0" Dense="true">
+                                   @L[MaktabResources.Msg_Info_No_Course_Groups_Found]
+                              </MudAlert>
+                         }
+                         else
+                         {
                               @if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
                               {
-                                   @SelectedGroups.Sum(x=>x.DayCareFee) *@
-                                   @* @string.Join(", ", SelectedGroups.Select(g => g.GroupTitle)) *@
-                             @*  }
+                                   <!-- MULTI-SELECT: Checkbox cards -->
+                                   <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mb-3">
+                                        @L[MaktabResources.Msg_Info_Select_One_More_Enrollment_Group]
+                                   </MudText>
+
+                                   <MudGrid Class="mt-4" Spacing="2">
+                                        <MudSelect T="CourseEnrollmentGroupResponse"
+                                                   ToStringFunc="g => g.GroupTitle"
+                                                   MultiSelection="true"
+                                                   SelectedValues="@SelectedGroups"
+                                                   SelectedValuesChanged="@((IEnumerable<CourseEnrollmentGroupResponse> v) => SelectedGroups = v.ToHashSet() )"
+                                                   Label=@L[MaktabResources.Groups]
+                                                   Dense="true">
+
+                                             @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
+                                             {
+                                                  <MudSelectItem Value="@g">
+                                                       <MudStack Row="true" AlignItems="AlignItems.Center">
+                                                            <MudIcon Icon="@Icons.Material.Filled.Groups" Class="mr-2" />
+                                                            <strong>@g.GroupTitle</strong>
+
+                                                            @* <MudText Typo="Typo.caption" Class="ml-2">Fee: </MudText> *@
+                                                            @* <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Class="mr-2" />*@
+                                                            <MudText Typo="Typo.caption" Class="ml-2">
+                                                                 @* (@g.StartTime - @g.EndTime) *@
+                                                                 @g.Fee
+                                                            </MudText>
+                                                            @* <MudIcon Icon="@Icons.Material.Filled.ChildCare" Class="mr-2" />
+                                              @* <MudText Typo="Typo.caption" Class="ml-2"> Day care Fee: </MudText> *@
+                                                            @* <MudText Typo="Typo.caption" Class="ml-2"> *@
+                                                            @* (@g.StartTime - @g.EndTime) *@
+                                                            @* @g.DayCareFee
+                                             </MudText> *@
+
+                                                            <MudChipSet T="CourseEnrollmentGroupResponse">
+                                                                 @foreach (var chipSet in g.AcedemicGroups)
+                                                                 {
+                                                                      <MudChip T="String" Text="@chipSet" />
+                                                                 }
+                                                            </MudChipSet>
+                                                       </MudStack>
+                                                  </MudSelectItem>
+                                             }
+                                        </MudSelect>
+                                   </MudGrid>
+                              }
                               else
                               {
-                                   @SelectedGroup?.DayCareFee
+                                   <!-- SINGLE-SELECT: Radio button cards -->
+                                   <MudGrid Class="mt-4" Spacing="2">
+                                        <MudSelect T="CourseEnrollmentGroupResponse"
+                                                   MultiSelection="false"
+                                                   @bind-Value="@SelectedGroup"
+                                                   Label=@L[MaktabResources.Groups]
+                                                   Dense="true">
+
+                                             @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
+                                             {
+                                                  <MudSelectItem Value="@g">
+                                                       <MudStack Row="true" AlignItems="AlignItems.Center">
+                                                            <MudIcon Icon="@Icons.Material.Filled.Groups" Class="mr-2" />
+                                                            <strong>@g.GroupTitle</strong>
+
+                                                            @* <MudText Typo="Typo.caption" Class="ml-2">Fee: </MudText> *@
+                                                            @* <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Class="mr-2" />*@
+                                                            <MudText Typo="Typo.caption" Class="ml-2">
+                                                                 @* (@g.StartTime - @g.EndTime) *@
+                                                                 @g.Fee
+                                                            </MudText>
+                                                            @* <MudIcon Icon="@Icons.Material.Filled.ChildCare" Class="mr-2" />
+                                              @* <MudText Typo="Typo.caption" Class="ml-2"> Day care Fee: </MudText> *@
+                                                            @* <MudText Typo="Typo.caption" Class="ml-2"> *@
+                                                            @* (@g.StartTime - @g.EndTime) *@
+                                                            @* @g.DayCareFee
+                                             </MudText> *@
+
+                                                            <MudChipSet T="CourseEnrollmentGroupResponse">
+                                                                 @foreach (var chipSet in g.AcedemicGroups)
+                                                                 {
+                                                                      <MudChip T="String" Text="@chipSet" />
+                                                                 }
+                                                            </MudChipSet>
+                                                       </MudStack>
+                                                  </MudSelectItem>
+                                             }
+                                        </MudSelect>
+                                   </MudGrid>
                               }
+
+                              <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+                                   <MudButton Variant="Variant.Outlined" Color="Color.Default"
+                                              OnClick="@(()=> ActiveStep = 1)"
+                                              StartIcon="@Icons.Material.Filled.NavigateBefore">
+                                        @L[MaktabResources.Back]
+                                   </MudButton>
+                                   <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                              Disabled="@(!HasGroupsSelected())"
+                                              OnClick="@(()=>{ UpdateCourseEnrollments(); ActiveStep = 3;})"
+                                              StartIcon="@Icons.Material.Filled.NavigateNext">
+                                        @L[MaktabResources.Next]
+                                   </MudButton>
+                              </MudStack>
+                         }
+                    </MudPaper>
+               }
+
+               else if (ActiveStep == 3)
+               {
+                    <!-- STEP 4: Review -->
+                    <MudPaper Class="pa-6" Elevation="0" Outlined="true">
+                         <MudText Typo="Typo.h6" Class="mb-6" GutterBottom="true">
+                              @L[MaktabResources.Review_Enrollment]
                          </MudText>
-                              </MudStack> *@
-                              @* <MudText Typo="Typo.caption">Day care fee: @Sel</MudText> *@
-                              @*<MudNumericField T="int"
-                                               Label="Daycare Days"
-                                               @bind-Value="DayCareDays"
-                                               Min="1" Max="7"
-                                               Class="mt-2" />
-                         } *@
-                    </MudItem>
-                    <MudItem xs="12">
-                         <MudButton Color="Color.Success" Variant="Variant.Filled"
-                                    OnClick="SubmitEnrollment"
-                                    Class="mt-4">
-                              @L[MaktabResources.Confirm_Enrollment]
-                         </MudButton>
-                    </MudItem>
 
-               </MudGrid>
-          }
-          }
-     }
+                         <MudStack Spacing="3">
+                              <!-- Child Info -->
+                              <MudPaper Class="pa-4" Elevation="0" Outlined="true">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                        <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Primary" />
+                                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                             <strong>@L[MaktabResources.Child]</strong>
+                                        </MudText>
+                                        <MudSpacer />
+                                        <MudText Typo="Typo.body2">
+                                             @SelectedChild.FirstName @SelectedChild.LastName
+                                        </MudText>
+                                   </MudStack>
+                              </MudPaper>
+
+                              <!-- Course Info -->
+                              <MudPaper Class="pa-4" Elevation="0" Outlined="true">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" />
+                                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                             <strong>@L[MaktabResources.Course]</strong>
+                                        </MudText>
+                                        <MudSpacer />
+                                        <MudStack Spacing="0">
+                                        <MudText Typo="Typo.body2">
+                                             @SelectedCourse.Name
+                                        </MudText>
+                                             <MudText Typo="Typo.body2">
+                                                  <span>@L[MaktabResources.Registration_Fee]</span>: <span>@(SelectedCourse?.RegistrationFee)</span>
+                                             </MudText>
+                                        </MudStack>
+                                   </MudStack>
+                              </MudPaper>
+
+                              <!-- Groups Info -->
+                              <MudPaper  Elevation="0" Outlined="true">
+                                   @* Class="pa-4" *@
+                                  @*  <MudStack> *@
+                                  @*  <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                        <MudIcon Icon="@Icons.Material.Filled.Groups" Color="Color.Primary" /> *@
+                                       @*  <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                             <strong>@L[MaktabResources.Groups]</strong>
+                                        </MudText> *@
+                                        @* </MudStack> *@
+                                       
+                                        @* <MudSpacer /> *@
+
+                                        <MudSimpleTable Outlined="false" Hover="false" Dense="true" Striped="true" FixedHeader="true" >
+                                             <thead>
+                                                  <tr>
+                                                       <th style="width:40%">
+                                                            <MudStack Row="true">
+                                                                 <MudIcon Icon="@Icons.Material.Filled.Groups" Color="Color.Primary" />
+                                                                 @L[MaktabResources.Group]
+                                                            </MudStack>
+                                                            </th>
+                                                       <th style="width:20%">@L[MaktabResources.Fee]</th>
+                                                       <th style="width:20%">@L[MaktabResources.Use_Daycare]</th>
+                                                       <th style="width:20%">@L[MaktabResources.Daycare]</th>
+                                                  </tr>
+                                             </thead>
+                                             <tbody>
+                                                  @if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
+                                                  {
+                                                       @foreach (var g in SelectedGroups)
+                                                       {
+                                                            @* var e = GetStudentEnrollmentFromEnrollmentGroup(g.CourseEnrollmentGroupId) *@
+                                                            <tr>
+                                                                 <td>@GetCourseGroupTitle(g)</td>
+                                                                 <td>@g.Fee</td>
+                                                                 <td>
+                                                                 <MudSwitch T="bool"
+                                                                                 @bind-Value="GetStudentEnrollmentFromEnrollmentGroup(g.CourseEnrollmentGroupId).WillUseDayCare"
+                                                                            Color="Color.Primary"
+                                                                            Size="Size.Small" />
+                                                                 </td>
+                                                                 <td>
+                                                                      <MudNumericField  Variant="Variant.Text" Min="1" Max="5" 
+                                                                                       @bind-Value="@(GetStudentEnrollmentFromEnrollmentGroup(g.CourseEnrollmentGroupId).DayCareDays)" />
+                                                                 </td>
+                                                            </tr>
+                                                       }
+                                                  }
+                                                  else if (SelectedGroup != null)
+                                                  {
+                                                       <tr>
+                                                            <td>@GetCourseGroupTitle(SelectedGroup)</td>
+                                                            <td>@SelectedGroup.Fee</td>
+                                                       </tr>
+                                                  }
+                                             </tbody>
+                                        </MudSimpleTable>
+
+                                       @*  <MudText Typo="Typo.body2">
+
+                                             @if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
+                                             {
+                                                  @string.Join(", ", SelectedGroups.Select(g => g.GroupTitle))
+                                             }
+                                             else
+                                             {
+                                                  @SelectedGroup?.GroupTitle
+                                             }
+                                        </MudText> *@
+                                  @*  </MudStack> *@
+                              </MudPaper>
+
+                              <!-- Daycare Option -->
+                              @* <MudPaper Class="pa-4" Elevation="0" Outlined="true">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                        <MudIcon Icon="@Icons.Material.Filled.ChildCare" Color="Color.Primary" />
+                                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                             <strong>@L[MaktabResources.Use_Daycare]</strong>
+                                        </MudText>
+                                        <MudSpacer />
+                                        <MudSwitch T="bool" @bind-Checked="WillUseDayCare" 
+                                                   Color="Color.Primary"
+                                                   Size="Size.Small" />
+                                   </MudStack>
+                              </MudPaper> *@
+                         </MudStack>
+
+                         <MudStack Row="true" Spacing="2" Class="mt-8" Justify="Justify.FlexEnd">
+                              <MudButton Variant="Variant.Outlined" Color="Color.Default"
+                                          OnClick="@(()=> ActiveStep = 2)"
+                                          StartIcon="@Icons.Material.Filled.NavigateBefore">
+                                    Previous
+                               </MudButton>
+                              <MudButton Variant="Variant.Filled" Color="Color.Success"
+                                         OnClick="SubmitEnrollment"
+                                         StartIcon="@Icons.Material.Filled.CheckCircle"
+                                         Disabled="@IsSaving">
+                                   @if (IsSaving)
+                                   {
+                                        <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                                   }
+                                   @L[MaktabResources.Confirm_Enrollment]
+                              </MudButton>
+                         </MudStack>
+                    </MudPaper>
+               }
+           }
+      }
 
 
-</MudPaper>
+</MudContainer>
 
 @code {
      [Parameter] public EventCallback OnCompleted { get; set; }
@@ -398,6 +503,7 @@
      protected CourseResponseDetailed? SelectedCourse { get; set; }
      private CourseEnrollmentGroupResponse SelectedGroup { get; set; }
      protected HashSet<CourseEnrollmentGroupResponse> SelectedGroups { get; set; } = new();
+     private IReadOnlyCollection<AddStudentCourseEnrollment> _StudentCourseEnrollments = Array.Empty<AddStudentCourseEnrollment>();
 
      protected bool WillUseDayCare { get; set; }
      protected int DayCareDays { get; set; } = 5;
@@ -426,7 +532,6 @@
      {
           StateService.ParentState.OnChange -= HandleStateChange;
           StateService.InstituteState.OnChange -= HandleStateChange;
-
      }
 
 
@@ -492,10 +597,6 @@
 
      protected async Task RequestEnrollment()
      {
-
-          List<AddStudentCourseEnrollment> addEnrollments = new();
-
-
           if (SelectedCourse.CanSelectMultipleEnrollmentGroups)
           {
                if (SelectedGroups?.Any() != true)
@@ -505,22 +606,6 @@
                    L[MaktabResources.Msg_Error_Not_All_Child_Valid_Group],
                    L[MaktabResources.OK]);
                     return;
-               }
-
-               //var addEnrollments = new List<AddStudentCourseEnrollment>();
-
-               foreach (var enrollmentgroup in SelectedGroups)
-               {
-                    var studentEnrollment = new AddStudentCourseEnrollment()
-                              {
-                                   ChildId = SelectedChild.ChildId,
-                                   FamilyId = userInfo.FamilyId,
-                                   CourseId = SelectedCourse.CourseId,
-                                   CourseEnrollmentGroupId = enrollmentgroup.CourseEnrollmentGroupId,
-                                   WillUseDayCare = WillUseDayCare,
-                                   DayCareDays = DayCareDays,
-                              };
-                    addEnrollments.Add(studentEnrollment);
                }
           }
           else
@@ -533,42 +618,98 @@
                          L[MaktabResources.OK]);
                     return;
                }
+          }
 
-               //addEnrollments = new List<AddStudentCourseEnrollment>();
+          if (_StudentCourseEnrollments?.Any() == true)
+          {
+               //Add enrollments.
+               var items = await CourseEnrollmentService.AddCourseEnrollmentsAsync(_StudentCourseEnrollments);
+               if (items?.Any() == true)
                {
+                    //StateService.ParentState.ClearCourseEnrollment();
+                    await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, true);
+                    Snackbar.Add(L[MaktabResources.Msg_Success_Add_Enrollment], Severity.Success);
 
+                    await OnCompletedClickedHandler();
+                    IsSuccess = true;
+
+                    //MudDialog.Close(DialogResult.Ok(items));
+               }
+               else
+               {
+                    IsError = true;
+                    Snackbar.Add(L[MaktabResources.Msg_Error_Enrollment_Not_Added], Severity.Error);
+               }
+          }
+     }
+
+     private void UpdateCourseEnrollments()
+     {
+          _StudentCourseEnrollments = GenerateCourseEnrollments();
+     }
+
+     private IReadOnlyCollection<AddStudentCourseEnrollment> GenerateCourseEnrollments()
+     {
+          List<AddStudentCourseEnrollment> addEnrollments = new();
+          if (SelectedCourse.CanSelectMultipleEnrollmentGroups)
+          {
+               foreach (var enrollmentgroup in SelectedGroups)
+               {
                     var studentEnrollment = new AddStudentCourseEnrollment()
                          {
-
                               ChildId = SelectedChild.ChildId,
                               FamilyId = userInfo.FamilyId,
                               CourseId = SelectedCourse.CourseId,
-                              CourseEnrollmentGroupId = SelectedGroup.CourseEnrollmentGroupId,
-                             WillUseDayCare = WillUseDayCare,
-                                   DayCareDays = DayCareDays,
+                              CourseEnrollmentGroupId = enrollmentgroup.CourseEnrollmentGroupId,
+                              WillUseDayCare = WillUseDayCare,
+                              DayCareDays = DayCareDays,
                          };
-
                     addEnrollments.Add(studentEnrollment);
                }
           }
-
-          //Add enrollments.
-          var items = await CourseEnrollmentService.AddCourseEnrollmentsAsync(addEnrollments);
-          if (items?.Any() == true)
-          {
-               //StateService.ParentState.ClearCourseEnrollment();
-               await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, true);
-               Snackbar.Add(L[MaktabResources.Msg_Success_Add_Enrollment], Severity.Success);
-
-               await OnCompletedClickedHandler();
-               IsSuccess = true;
-
-               //MudDialog.Close(DialogResult.Ok(items));
-          }
           else
           {
-               IsError = true;
-               Snackbar.Add(L[MaktabResources.Msg_Error_Enrollment_Not_Added], Severity.Error);
+               var studentEnrollment = new AddStudentCourseEnrollment()
+                    {
+
+                         ChildId = SelectedChild.ChildId,
+                         FamilyId = userInfo.FamilyId,
+                         CourseId = SelectedCourse.CourseId,
+                         CourseEnrollmentGroupId = SelectedGroup.CourseEnrollmentGroupId,
+                         WillUseDayCare = WillUseDayCare,
+                         DayCareDays = DayCareDays,
+                    };
+
+               addEnrollments.Add(studentEnrollment);
+          }
+
+          return addEnrollments;
+     }
+
+     private AddStudentCourseEnrollment? GetStudentEnrollmentFromEnrollmentGroup(Guid groupEnrollmentId)
+     {
+          if(_StudentCourseEnrollments?.Any() == true)
+          {
+               var courseEnrollment = _StudentCourseEnrollments.FirstOrDefault(x => x.CourseEnrollmentGroupId == groupEnrollmentId);
+               return courseEnrollment;
+          }
+
+          return null;
+     }
+
+     private async Task OnPreviewInteraction(StepperInteractionEventArgs arg)
+     {
+          if (arg.Action == StepAction.Complete)
+          {
+               // occurrs when clicking next
+               if(arg.StepIndex == 2)
+               {
+                    UpdateCourseEnrollments();
+               }
+          }
+          else if (arg.Action == StepAction.Activate)
+          {
+               // occurrs when clicking a step header with the mouse
           }
      }
 
@@ -579,4 +720,116 @@
                await OnCompleted.InvokeAsync();
           }
      }
+
+     /// <summary>
+     /// Get CSS class for group card based on selection state
+     /// </summary>
+     private string GetGroupCardClass(bool isSelected)
+     {
+          if (isSelected)
+          {
+               return "pa-4 mud-border-success-3 border-2";
+          }
+          return "pa-4 mud-border-paper-1 border-1 hover:mud-elevation-8";
+     }
+
+     /// <summary>
+     /// Toggle group selection for multi-select mode
+     /// </summary>
+     private void ToggleGroupSelection(CourseEnrollmentGroupResponse group)
+     {
+          if (SelectedGroups.Contains(group))
+          {
+               SelectedGroups.Remove(group);
+          }
+          else
+          {
+               SelectedGroups.Add(group);
+          }
+          StateHasChanged();
+     }
+
+     /// <summary>
+     /// Select a single group for single-select mode
+     /// </summary>
+     private void SelectSingleGroup(CourseEnrollmentGroupResponse group)
+     {
+          SelectedGroup = group;
+          SelectedGroups.Clear();
+          SelectedGroups.Add(group);
+          StateHasChanged();
+     }
+
+     /// <summary>
+     /// Check if any groups are selected
+     /// </summary>
+     private bool HasGroupsSelected()
+     {
+          if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
+          {
+               return SelectedGroups.Any();
+          }
+          else
+          {
+               return SelectedGroup != null;
+          }
+     }
+
+     private string GetCourseName(CourseResponseDetailed course)
+     {
+          if (course == null) return string.Empty;
+
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return course.NameFr;
+          }
+          else
+          {
+               return course.Name;
+          }
+     }
+
+     private string GetCourseDetails(CourseResponseDetailed course)
+     {
+          if (course == null) return string.Empty;
+
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return course.DetailsFr;
+          }
+          else
+          {
+               return course.Details;
+          }
+     }
+
+     private string GetCourseDescription(CourseResponseDetailed course)
+     {
+          if (course == null) return string.Empty;
+
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return course.DescriptionFr;
+          }
+          else
+          {
+               return course.Description;
+          }
+     }
+
+     private string GetCourseGroupTitle(CourseEnrollmentGroupResponse group)
+     {
+          if (group == null) return string.Empty;
+
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return group.GroupTitleFr;
+          }
+          else
+          {
+               return group.GroupTitle;
+          }
+     }
 }
+
+
