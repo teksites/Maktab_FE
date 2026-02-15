@@ -703,4 +703,10 @@
   <data name="Back" xml:space="preserve">
     <value>Back</value>
   </data>
+  <data name="Registration_Fee" xml:space="preserve">
+    <value>Registration Fee</value>
+  </data>
+  <data name="Msg_Info_Select_One_More_Enrollment_Group" xml:space="preserve">
+    <value>Please select one or more enrollment groups</value>
+  </data>
 </root>

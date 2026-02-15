@@ -706,4 +706,16 @@
   <data name="Msg_Error_Invalid_Code" xml:space="preserve">
     <value>Le code ne peut pas être validé</value>
   </data>
+  <data name="Academic_Levels" xml:space="preserve">
+    <value>Niveaux académiques</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Dos</value>
+  </data>
+  <data name="Registration_Fee" xml:space="preserve">
+    <value>Frais d'inscription</value>
+  </data>
+  <data name="Msg_Info_Select_One_More_Enrollment_Group" xml:space="preserve">
+    <value>Veuillez sélectionner un ou plusieurs groupes d'inscription</value>
+  </data>
 </root>

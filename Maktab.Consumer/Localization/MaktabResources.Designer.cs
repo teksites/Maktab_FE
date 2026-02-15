@@ -1141,6 +1141,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please select one or more enrollment groups.
+        /// </summary>
+        public static string Msg_Info_Select_One_More_Enrollment_Group {
+            get {
+                return ResourceManager.GetString("Msg_Info_Select_One_More_Enrollment_Group", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is required.
         /// </summary>
         public static string Msg_Info_Value_Is_Required {
@@ -1524,6 +1533,15 @@ namespace Maktab.Consumer.Localization {
         public static string RAMQ_Number {
             get {
                 return ResourceManager.GetString("RAMQ_Number", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registration Fee.
+        /// </summary>
+        public static string Registration_Fee {
+            get {
+                return ResourceManager.GetString("Registration_Fee", resourceCulture);
             }
         }
         
