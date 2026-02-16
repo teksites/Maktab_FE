@@ -99,6 +99,28 @@ namespace Maktab.Consumer.Extensions
                }
           }
 
+          public static async Task LoadCourseTransactionsByCourse(this UserStateService userStateService, ICourseEnrollmentTransactionService courseEnrollmentTransactionService, IEnumerable<Guid> courseIds, Guid familyId, bool forceReload = false)
+          {
+               if (userStateService.ParentState.CourseTransactions == null || forceReload)
+               {
+                    userStateService.ParentState.ClearCourseTransactions();
+                    if (courseIds?.Any() == true)
+                    {
+                         foreach (var courseId in courseIds)
+                         {
+                              var courseTransactions = await courseEnrollmentTransactionService.GetCourseEnrollmentTranasctionByFamilyAndCourseIdAsync(familyId, courseId);
+                              if (courseTransactions?.Any() == true)
+                              {
+                                   foreach (var courseTransaction in courseTransactions)
+                                   {
+                                        userStateService.ParentState.AddCourseTransactions(courseTransaction);
+                                   }
+                              }
+                         }
+                    }
+               }
+          }
+
           public static async Task LoadCourseTransactionsByCourse(this UserStateService userStateService, ICourseEnrollmentTransactionService courseEnrollmentTransactionService, IEnumerable<StudentCourseEnrollmentResponse> studentCourseEnrollments, Guid familyId, bool forceReload = false)
           {
                if (userStateService.ParentState.CourseTransactions == null || forceReload)

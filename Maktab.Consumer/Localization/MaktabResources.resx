@@ -709,4 +709,61 @@
   <data name="Msg_Info_Select_One_More_Enrollment_Group" xml:space="preserve">
     <value>Please select one or more enrollment groups</value>
   </data>
+  <data name="Total_Amount" xml:space="preserve">
+    <value>Total Amount</value>
+  </data>
+  <data name="Payment_Code" xml:space="preserve">
+    <value>Payment Code</value>
+  </data>
+  <data name="Discount" xml:space="preserve">
+    <value>Discount</value>
+  </data>
+  <data name="Daycare_Discount" xml:space="preserve">
+    <value>Daycare Discount</value>
+  </data>
+  <data name="Pay_Now" xml:space="preserve">
+    <value>Pay Now</value>
+  </data>
+  <data name="Payment_Details" xml:space="preserve">
+    <value>Payment Details</value>
+  </data>
+  <data name="Msg_Info_Manage_Course_Transaction_Payments" xml:space="preserve">
+    <value>Manage and track your course payment transactions</value>
+  </data>
+  <data name="Msg_Info_Amount_Paid" xml:space="preserve">
+    <value>Total amount paid so far</value>
+  </data>
+  <data name="Msg_Info_Amount_Due" xml:space="preserve">
+    <value>Remaining amount to pay</value>
+  </data>
+  <data name="Msg_Info_Payment_Code" xml:space="preserve">
+    <value>Unique payment code for this transaction</value>
+  </data>
+  <data name="Msg_Info_Total_Amount" xml:space="preserve">
+    <value>Total amount across all courses</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Paid</value>
+  </data>
+  <data name="Partially_Paid" xml:space="preserve">
+    <value>Partially Paid</value>
+  </data>
+  <data name="Unpaid" xml:space="preserve">
+    <value>Unpaid</value>
+  </data>
+  <data name="Back_To_Dashboard" xml:space="preserve">
+    <value>Back to Dashboard</value>
+  </data>
+  <data name="Msg_Error_No_Payment_Tranaction" xml:space="preserve">
+    <value> You don't have any payment transactions yet. Once you enroll in a course, your transactions will appear here</value>
+  </data>
+  <data name="No_Transaction" xml:space="preserve">
+    <value>No Transactions</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Payment_Transaction" xml:space="preserve">
+    <value>Your Payment Transactions</value>
+  </data>
 </root>

@@ -28,7 +28,8 @@
                                             InputType="InputType.Password"
                                             Required="true"
                                             RequiredError=@L[MaktabResources.Password_Required]
-                                            Immediate="true" />
+                                            Immediate="true"
+                                            @onkeydown="@(async (KeyboardEventArgs e) => await OnKeyDown(e))" />
                               <MudText Class="mt-2" Align="Align.End">
                                    <MudLink Href="@Constants.ForgotPasswordRoute" Color="Color.Default">@L[MaktabResources.Password_Forgot]</MudLink>
                               </MudText>
@@ -90,9 +91,16 @@
           RequestRender();
      }
 
-     private async void HandleLogin()
+     private async Task OnKeyDown(KeyboardEventArgs e)
      {
+          if (e.Key == "Enter" && _isValid && !authenticating)
+          {
+               await HandleLogin();
+          }
+     }
 
+     private async Task HandleLogin()
+     {
           authenticating = true;
           RequestRender();
           await InvokeUserAction(LoginToSystem);

@@ -718,4 +718,58 @@
   <data name="Msg_Info_Select_One_More_Enrollment_Group" xml:space="preserve">
     <value>Veuillez sélectionner un ou plusieurs groupes d'inscription</value>
   </data>
+  <data name="Total_Amount" xml:space="preserve">
+    <value>Montant total</value>
+  </data>
+  <data name="Payment_Code" xml:space="preserve">
+    <value>Code de paiement</value>
+  </data>
+  <data name="Discount" xml:space="preserve">
+    <value>Rabais</value>
+  </data>
+  <data name="Daycare_Discount" xml:space="preserve">
+    <value>Rabais garderie</value>
+  </data>
+  <data name="Pay_Now" xml:space="preserve">
+    <value>Payez maintenant</value>
+  </data>
+  <data name="Payment_Details" xml:space="preserve">
+    <value>Détails du paiement</value>
+  </data>
+  <data name="Msg_Info_Manage_Course_Transaction_Payments" xml:space="preserve">
+    <value>Gérez et suivez vos transactions de paiement de cours</value>
+  </data>
+  <data name="Msg_Info_Amount_Paid" xml:space="preserve">
+    <value>Montant total payé jusqu'à présent</value>
+  </data>
+  <data name="Msg_Info_Amount_Due" xml:space="preserve">
+    <value>Montant restant à payer</value>
+  </data>
+  <data name="Msg_Info_Payment_Code" xml:space="preserve">
+    <value>Code de paiement unique pour cette transaction</value>
+  </data>
+  <data name="Msg_Info_Total_Amount" xml:space="preserve">
+    <value>Montant total pour tous les cours</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Payé</value>
+  </data>
+  <data name="Partially_Paid" xml:space="preserve">
+    <value>Partiellement payé</value>
+  </data>
+  <data name="Unpaid" xml:space="preserve">
+    <value>Non rémunéré</value>
+  </data>
+  <data name="Back_To_Dashboard" xml:space="preserve">
+    <value>Retour au tableau de bord</value>
+  </data>
+  <data name="Msg_Error_No_Payment_Tranaction" xml:space="preserve">
+    <value>Vous n'avez pas encore d'opérations de paiement. Une fois inscrit à un cours, vos transactions apparaîtront ici</value>
+  </data>
+  <data name="No_Transaction" xml:space="preserve">
+    <value>Aucune transaction</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Tableau de bord</value>
+  </data>
 </root>

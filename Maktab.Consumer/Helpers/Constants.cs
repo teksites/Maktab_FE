@@ -21,5 +21,6 @@
 
           public const string ChildCourseAssignmentRoute = "/child/assign-course";
 
+          public const string PaymentDetailsRoute = "/payment/payment-details";
      }
 }

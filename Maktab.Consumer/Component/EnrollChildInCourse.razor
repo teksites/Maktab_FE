@@ -431,6 +431,16 @@ else if (IsError)
                                                        <tr>
                                                             <td>@GetCourseGroupTitle(SelectedGroup)</td>
                                                             <td>@SelectedGroup.Fee</td>
+                                                       <td>
+                                                            <MudSwitch T="bool"
+                                                                       @bind-Value="GetStudentEnrollmentFromEnrollmentGroup(SelectedGroup.CourseEnrollmentGroupId).WillUseDayCare"
+                                                                       Color="Color.Primary"
+                                                                       Size="Size.Small" />
+                                                       </td>
+                                                       <td>
+                                                            <MudNumericField Variant="Variant.Text" Min="1" Max="5"
+                                                                             @bind-Value="@(GetStudentEnrollmentFromEnrollmentGroup(SelectedGroup.CourseEnrollmentGroupId).DayCareDays)" />
+                                                       </td>
                                                        </tr>
                                                   }
                                              </tbody>
