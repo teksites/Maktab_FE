@@ -787,4 +787,16 @@
   <data name="Pay" xml:space="preserve">
     <value>Payer</value>
   </data>
+  <data name="History" xml:space="preserve">
+    <value>Histoire</value>
+  </data>
+  <data name="Payment" xml:space="preserve">
+    <value>Paiement</value>
+  </data>
+  <data name="Institute" xml:space="preserve">
+    <value>Institut</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
 </root>

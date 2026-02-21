@@ -79,6 +79,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Action.
+        /// </summary>
+        public static string Action {
+            get {
+                return ResourceManager.GetString("Action", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Active.
         /// </summary>
         public static string Active {
@@ -808,6 +817,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to History.
+        /// </summary>
+        public static string History {
+            get {
+                return ResourceManager.GetString("History", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home Address.
         /// </summary>
         public static string Home_Address {
@@ -822,6 +840,15 @@ namespace Maktab.Consumer.Localization {
         public static string Inactive {
             get {
                 return ResourceManager.GetString("Inactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Institute.
+        /// </summary>
+        public static string Institute {
+            get {
+                return ResourceManager.GetString("Institute", resourceCulture);
             }
         }
         
@@ -1042,7 +1069,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  You don&apos;t have any payment transactions yet. Once you enroll in a course, your transactions will appear here.
+        ///   Looks up a localized string similar to You don&apos;t have any payment transactions yet. Once you enroll in a course, your transactions will appear here.
         /// </summary>
         public static string Msg_Error_No_Payment_Tranaction {
             get {
@@ -1614,6 +1641,15 @@ namespace Maktab.Consumer.Localization {
         public static string Pay_Now {
             get {
                 return ResourceManager.GetString("Pay_Now", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payment.
+        /// </summary>
+        public static string Payment {
+            get {
+                return ResourceManager.GetString("Payment", resourceCulture);
             }
         }
         

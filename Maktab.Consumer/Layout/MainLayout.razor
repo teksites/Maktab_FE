@@ -56,7 +56,7 @@
 
                               <ChildContent>
                                    <MudMenuItem OnClick="@(async () => await SelectLanguage("en"))">
-                                        <MudImage Src="/images/flag_usa.png" Style="width: 24px" Class="me-2" /> English
+                                        <MudImage Src="/images/flag_canada.png" Style="width: 24px" Class="me-2" /> English
                                    </MudMenuItem>
                                    <MudMenuItem OnClick="@(async () => await SelectLanguage("fr"))">
                                         <MudImage Src="/images/flag_france.png" Style="width: 24px" Class="me-2" /> French
@@ -176,7 +176,7 @@ else
      private string? _userRole;
      private string _userInitials = "?";
      private string _defaultCulture = "en";
-     private string _SelectedFlag = "en";
+     private string _SelectedFlag = "/images/flag_canada.png";
 
      private string[] manifestName;
      private IStringLocalizer localizer;
@@ -273,7 +273,7 @@ else
                          _SelectedFlag = "/images/flag_france.png";
                          break;
                     default:
-                         _SelectedFlag = "/images/flag_usa.png";
+                         _SelectedFlag = "/images/flag_canada.png";
                          break;
                }
           }

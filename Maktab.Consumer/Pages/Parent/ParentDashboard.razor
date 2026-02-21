@@ -88,23 +88,13 @@
                          </MudItem>
                          <MudItem xs="12" sm="6" md="3">
                               <MudCard Class="pa-4">
-                                 @*   <MudCardHeader>
-                                        <CardHeaderContent>
-                                             <MudText Typo="Typo.h6">
-                                                  <b><span>@L[MaktabResources.Total_Amount]</span><span> : </span><span>@TotalAmount</span></b>
-                                             </MudText>
-                                        </CardHeaderContent>
-                                   </MudCardHeader>
-                                   <MudCardContent>
-                                        @* <MudText Typo="Typo.body1"></MudText> 
-                                        <MudText Typo="Typo.h6">
-                                             <b><span>@L[MaktabResources.Amount_Paid]</span><span> : </span><span>@AmountPaid</span></b>
-                                        </MudText>
-                                   </MudCardContent> *@
                                    <MudCardHeader>
                                         <CardHeaderContent>
                                              <MudText Typo="Typo.h6">@L[MaktabResources.Total_Amount]</MudText>
                                         </CardHeaderContent>
+                                        <CardHeaderActions>
+                                                  <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToPaymentDetailsPage">@L[MaktabResources.History]</MudButton>
+                                        </CardHeaderActions>
                                         @* <CardHeaderActions>
                                              <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OpenAddChildDialog">@L[MaktabResources.Add_Child]</MudButton>
                                         </CardHeaderActions> *@
@@ -119,12 +109,11 @@
                                    <MudCardHeader>
                                         <CardHeaderContent>
                                              <MudText Typo="Typo.h6">@L[MaktabResources.Amount_Due]</MudText>
-
                                         </CardHeaderContent>
                                         <CardHeaderActions>
                                              @if (this.AmountPayable > 0)
                                              {
-                                                  <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToPaymentDetailsPage">@L[MaktabResources.Pay]</MudButton>
+                                                  <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToPaymentInfoPage">@L[MaktabResources.Pay]</MudButton>
                                                   @* <MudIconButton Icon="@Icons.Material.Filled.Payment" Color="Color.Default" /> *@
                                              }
                                         </CardHeaderActions>
@@ -538,6 +527,11 @@
      private async Task NavigateToPaymentDetailsPage()
      {
           NavigationManager.NavigateTo(Constants.PaymentDetailsRoute, false);
+     }
+
+     private async Task NavigateToPaymentInfoPage()
+     {
+          NavigationManager.NavigateTo(Constants.PaymentInfoRoute, false);
      }
 
      private async Task OpenZeffyPaymentDialog()

@@ -11,8 +11,6 @@
           public const string AddParentProfileDetailRoute = "/parent/adddetails";
           public const string RegisterParentRoute = "/parent/register";
           public const string ParentProfileRoute = "/parent/profile";
-          
-          
 
           public const string AppLandingPage = "/landing/mainpage";
 
@@ -22,5 +20,6 @@
           public const string ChildCourseAssignmentRoute = "/child/assign-course";
 
           public const string PaymentDetailsRoute = "/payment/payment-details";
+          public const string PaymentInfoRoute = "/payment/payment-info";
      }
 }
