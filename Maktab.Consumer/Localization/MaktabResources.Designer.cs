@@ -754,6 +754,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fee Payment.
+        /// </summary>
+        public static string Fee_Payment {
+            get {
+                return ResourceManager.GetString("Fee_Payment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
         public static string First_Name {
@@ -1249,6 +1258,24 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please select &quot;Other&quot; in drop down and set zero in donation section.
+        /// </summary>
+        public static string Msg_Info_Zeffy_Payment_donation_section {
+            get {
+                return ResourceManager.GetString("Msg_Info_Zeffy_Payment_donation_section", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please use following payment code and email in mandatory fields on Zeffy payment.
+        /// </summary>
+        public static string Msg_Info_Zeffy_Payment_Mandatory_Fields {
+            get {
+                return ResourceManager.GetString("Msg_Info_Zeffy_Payment_Mandatory_Fields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initializing....
         /// </summary>
         public static string Msg_Initializing {
@@ -1569,6 +1596,15 @@ namespace Maktab.Consumer.Localization {
         public static string Password_Required {
             get {
                 return ResourceManager.GetString("Password_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pay.
+        /// </summary>
+        public static string Pay {
+            get {
+                return ResourceManager.GetString("Pay", resourceCulture);
             }
         }
         

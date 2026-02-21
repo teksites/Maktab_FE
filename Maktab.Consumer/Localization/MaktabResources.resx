@@ -766,4 +766,16 @@
   <data name="Payment_Transaction" xml:space="preserve">
     <value>Your Payment Transactions</value>
   </data>
+  <data name="Fee_Payment" xml:space="preserve">
+    <value>Fee Payment</value>
+  </data>
+  <data name="Msg_Info_Zeffy_Payment_Mandatory_Fields" xml:space="preserve">
+    <value>Please use following payment code and email in mandatory fields on Zeffy payment</value>
+  </data>
+  <data name="Msg_Info_Zeffy_Payment_donation_section" xml:space="preserve">
+    <value>Please select "Other" in drop down and set zero in donation section</value>
+  </data>
+  <data name="Pay" xml:space="preserve">
+    <value>Pay</value>
+  </data>
 </root>

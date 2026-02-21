@@ -772,4 +772,19 @@
   <data name="Dashboard" xml:space="preserve">
     <value>Tableau de bord</value>
   </data>
+  <data name="Payment_Transaction" xml:space="preserve">
+    <value>Vos opérations de paiement</value>
+  </data>
+  <data name="Fee_Payment" xml:space="preserve">
+    <value>Paiement des frais</value>
+  </data>
+  <data name="Msg_Info_Zeffy_Payment_Mandatory_Fields" xml:space="preserve">
+    <value>Veuillez utiliser le code de paiement et l'e-mail suivants dans les champs obligatoires du paiement Zeffy.</value>
+  </data>
+  <data name="Msg_Info_Zeffy_Payment_donation_section" xml:space="preserve">
+    <value>Veuillez sélectionner « Autre » dans le menu déroulant et définir zéro dans la section des dons.</value>
+  </data>
+  <data name="Pay" xml:space="preserve">
+    <value>Payer</value>
+  </data>
 </root>
