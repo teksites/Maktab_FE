@@ -44,8 +44,8 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddScoped<AuthenticationStateProvider, AuthStateProvider>()
                 .AddSingleton<UserStateService>()
                 .AddSingleton<ISystemService, SystemService>()
-                .AddScoped<IGlobalizationService,GlobalizationService>();
-
+                .AddScoped<IGlobalizationService,GlobalizationService>()
+                .AddSingleton<IClipboardService, ClipboardService>();
 
 builder.Services.AddScoped(x => {
      var apiUrl = new Uri("https://maktab.azurewebsites.net/");
