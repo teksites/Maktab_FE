@@ -11,5 +11,8 @@ namespace Maktab.Core.Interfaces.Services
           Task<OtherContactResponse> GetContactById(Guid contactId);
           Task<bool> HasContactAddedForFamily(Guid familyId);
           Task<OtherContactResponse> SaveContactAsync(Guid familyId, AddOtherContact contact);
+
+          Task<OtherContactResponse> UpdateContactAsync(OtherContactResponse contact);
+
      }
 }

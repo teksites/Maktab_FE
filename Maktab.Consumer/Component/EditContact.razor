@@ -49,7 +49,7 @@
      }
 </MudForm>
 
-@code {
+     @code {
 
      [Parameter, EditorRequired] public OtherContactResponse? Contact { get; set; } = new();
 
@@ -97,8 +97,15 @@
 
      private async Task RequestSaving()
      {
+          if (Contact == null)
+          {
+               _errorMessage = L[MaktabResources.Msg_Error_Contact_Invalid_Details];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
           //Todo: Call Service to Save Contact
-          var addedContact = Contact;//await ContactService.SaveContactAsync(Contact.FamilyId, Contact);
+          var addedContact = await ContactService.UpdateContactAsync( Contact);
           if (addedContact.ContactId == Guid.Empty)
           {
                _errorMessage = L[MaktabResources.Msg_Error_Contact_Not_Added];

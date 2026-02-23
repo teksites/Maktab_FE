@@ -610,6 +610,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Contact.
+        /// </summary>
+        public static string Edit_Contact {
+            get {
+                return ResourceManager.GetString("Edit_Contact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit Profile.
         /// </summary>
         public static string Edit_Profile {
@@ -988,11 +997,29 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please provide valid contact info.
+        /// </summary>
+        public static string Msg_Error_Contact_Invalid_Details {
+            get {
+                return ResourceManager.GetString("Msg_Error_Contact_Invalid_Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Contact can not be added with system. Please try in few moments.
         /// </summary>
         public static string Msg_Error_Contact_Not_Added {
             get {
                 return ResourceManager.GetString("Msg_Error_Contact_Not_Added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contact can not be removed. please try in few moments.
+        /// </summary>
+        public static string Msg_Error_Contact_Not_Removed {
+            get {
+                return ResourceManager.GetString("Msg_Error_Contact_Not_Removed", resourceCulture);
             }
         }
         
@@ -1335,6 +1362,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Question_Remove_Address {
             get {
                 return ResourceManager.GetString("Msg_Question_Remove_Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to remove contact?.
+        /// </summary>
+        public static string Msg_Question_Remove_Contact {
+            get {
+                return ResourceManager.GetString("Msg_Question_Remove_Contact", resourceCulture);
             }
         }
         

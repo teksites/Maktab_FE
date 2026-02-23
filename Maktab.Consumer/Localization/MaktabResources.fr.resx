@@ -799,4 +799,16 @@
   <data name="Action" xml:space="preserve">
     <value>Action</value>
   </data>
+  <data name="Msg_Question_Remove_Contact" xml:space="preserve">
+    <value>Souhaitez-vous supprimer le contact ?</value>
+  </data>
+  <data name="Msg_Error_Contact_Not_Removed" xml:space="preserve">
+    <value>Le contact ne peut pas être supprimé. s'il te plaît, essaie dans quelques instants</value>
+  </data>
+  <data name="Msg_Error_Contact_Invalid_Details" xml:space="preserve">
+    <value>Veuillez fournir des informations de contact valides</value>
+  </data>
+  <data name="Edit_Contact" xml:space="preserve">
+    <value>Modifier le contact</value>
+  </data>
 </root>

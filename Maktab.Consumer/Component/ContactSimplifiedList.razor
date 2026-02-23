@@ -1,38 +1,286 @@
-﻿@using MaktabDataContracts.Responses.OtherContacts
+﻿@using Maktab.Consumer.State
+@using Maktab.Consumer.Extensions
+@using MaktabDataContracts.Responses.OtherContacts
+@using MaktabDataContracts.Enums
+
 @inherits LocalizeableBaseComponent<ContactSimplifiedList>
 
-@if (ShowHeader)
-{
-     <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">
-          <MudText Typo="Typo.h6">@L[MaktabResources.Contacts]</MudText>
-          @if (ShowAddButton)
-          {
-               <MudButton Variant="Variant.Outlined"
-                          Color="Color.Primary"
-                          StartIcon="@Icons.Material.Filled.Add"
-                          OnClick="OnAddContact">
-                    @L[MaktabResources.Add_Contact]
-               </MudButton>
-          }
-     </MudStack>
-}
+@inject IDialogService DialogService
+@inject IContactService ContactService
+@inject UserStateService StateService
 
-<MudList T="OtherContactResponse">
-     @foreach (var contact in Contacts)
-     {
-          <MudListItem>
-               <MudStack Row="true"> 
-               <MudIcon Icon="@Icons.Material.Filled.ContactPhone" />
-               <MudText>@contact.FirstName @contact.LastName - @contact.Phone</MudText>
-               </MudStack>
-          </MudListItem>
+<style>
+     .contact-list-item {
+          transition: all 0.2s ease;
+          border-radius: 6px;
+          margin-bottom: 8px;
      }
-</MudList>
 
+          .contact-list-item:hover {
+               background-color: rgba(0, 0, 0, 0.03);
+          }
+
+     .contact-icon-badge {
+          position: relative;
+     }
+
+     .contact-info-group {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+     }
+</style>
+
+<MudContainer>
+     @if (ShowHeader)
+     {
+          <MudStack Row="true"
+                    AlignItems="AlignItems.Center"
+                    JustifyContent="JustifyContent.SpaceBetween"
+                    Class="mb-4">
+               <div>
+                    <MudText Typo="Typo.h6" Class="font-weight-bold">
+                         @L[MaktabResources.Contacts]
+                    </MudText>
+                    @if (Contacts?.Any() == true)
+                    {
+                         <MudText Typo="Typo.caption" Color="Color.Secondary">
+                              @Contacts.Count() contact@(Contacts.Count() == 1 ? "" : "s") saved
+                         </MudText>
+                    }
+               </div>
+
+               @if (ShowAddButton)
+               {
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Add"
+                               OnClick="OnAddContact"
+                               Size="Size.Small">
+                         @L[MaktabResources.Add_Contact]
+                    </MudButton>
+               }
+          </MudStack>
+     }
+
+     @if (Contacts == null || !Contacts.Any())
+     {
+          <MudAlert Severity="Severity.Info" Elevation="0">
+               No contacts yet. @(ShowAddButton ? "Click 'Add Contact' to get started." : "")
+          </MudAlert>
+     }
+     else
+     {
+          <MudList T="OtherContactResponse"  Class="px-0">
+               @foreach (var contact in Contacts)
+               {
+                    <MudListItem Class="contact-list-item pa-3">
+                         <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center" Style="width: 100%;">
+                              <!-- Icon with Badge -->
+                              @* <div class="contact-icon-badge">
+                                   <MudBadge Content="@contact.Relationship.ToString().First()"
+                                             Color="@GetRelationshipColor(contact)"
+                                             Overlap="true"> *@
+                              <MudIcon Icon="@GetContactIcon(contact)"
+                                       Color="Color.Primary"
+                                       Size="Size.Large" />
+                              @* </MudBadge>
+                              </div> *@
+
+                              <!-- Contact Details -->
+                              @* <MudStack Spacing="2" Style="flex: 1;"> *@
+
+                                   <MudStack Spacing="1">
+                                        <!-- Name -->
+                                        <MudText Typo="Typo.h6" Class="font-weight-bold">
+                                             @contact.FirstName @contact.LastName
+                                        </MudText>
+
+                                        <!-- Phone -->
+                                        <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                             <MudIcon Icon="@Icons.Material.Filled.Phone"
+                                                      Size="Size.Small"
+                                                      Class="text-secondary" />
+                                             <MudText Typo="Typo.body2">
+                                                  @contact.Phone
+                                             </MudText>
+                                        </MudStack>
+
+                                   </MudStack>
+
+                              @* <MudSpacer />
+                                   <!-- Relationship and Contact Type Badges -->
+                                   <MudStack Row="true" Spacing="1" Class="mt-1" Style="flex-wrap: wrap;">
+                                        <!-- Relationship Badge -->
+                                        <MudChip T="string"
+                                                 Size="Size.Small"
+                                                 Color="@GetRelationshipColor(contact)"
+                                                 Variant="Variant.Filled"
+                                                 Icon="@GetRelationshipIcon(contact)"
+                                                 Class="contact-badge">
+                                             @GetRelationshipLabel(contact)
+                                        </MudChip>
+
+                                        <!-- Contact Type Badge -->
+                                        @if (!string.IsNullOrEmpty(GetContactTypeLabel(contact)))
+                                        {
+                                             <MudChip T="string"
+                                                      Size="Size.Small"
+                                                      Color="@GetContactTypeColor(contact)"
+                                                      Variant="Variant.Outlined"
+                                                      Icon="@GetContactTypeIcon(contact)"
+                                                      Class="contact-badge">
+                                                  @GetContactTypeLabel(contact)
+                                             </MudChip>
+                                        }
+                                   </MudStack> *@
+                              @* </MudStack> *@
+
+                              <MudSpacer />
+                              <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
+                                   <MudMenuItem Disabled="true" OnClick="() => OnEditClicked(contact)">@L[MaktabResources.Edit]</MudMenuItem>
+                                   <MudMenuItem OnClick="() => OnDeleteClicked(contact)">@L[MaktabResources.Remove]</MudMenuItem>
+                              </MudMenu>
+                              <!-- Action Buttons -->
+                              @* <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                   <MudTooltip Text="@L[MaktabResources.Edit]">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                                       Size="Size.Small"
+                                                       Color="Color.Primary"
+                                                       OnClick="@(() => OnEditClicked(contact))" />
+                                   </MudTooltip>
+                                   <MudTooltip Text="@L[MaktabResources.Remove]">
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                       Size="Size.Small"
+                                                       Color="Color.Error"
+                                                       OnClick="@(() => OnDeleteClicked(contact))" />
+                                   </MudTooltip>
+                              </MudStack> *@
+                         </MudStack>
+                    </MudListItem>
+                    @* <MudDivider Class="my-0" /> *@
+               }
+          </MudList>
+     }
+</MudContainer>
 
 @code {
      [Parameter] public bool ShowAddButton { get; set; } = true;
      [Parameter] public bool ShowHeader { get; set; } = true;
      [Parameter] public IEnumerable<OtherContactResponse> Contacts { get; set; }
      [Parameter] public EventCallback OnAddContact { get; set; }
+     [Parameter] public EventCallback<OtherContactResponse> OnEdit { get; set; }
+     [Parameter] public EventCallback<OtherContactResponse> OnDelete { get; set; }
+
+     private Task OnEditClicked(OtherContactResponse contact) => OnEdit.InvokeAsync(contact);
+
+     private async Task OnDeleteClicked(OtherContactResponse contact)
+     {
+          bool? result = await DialogService.ShowMessageBox(
+              L[MaktabResources.Warning],
+              L[MaktabResources.Msg_Question_Remove_Contact],
+              yesText: L[MaktabResources.Remove],
+              cancelText: L[MaktabResources.Cancel]);
+
+          if (result.HasValue && result.Value)
+          {
+               var deleted = await ContactService.DeleteContactById(contact.ContactId);
+               if (deleted)
+               {
+                    Snackbar.Add(L[MaktabResources.Msg_Success_Address_Removed], Severity.Success);
+               }
+               else
+               {
+                    Snackbar.Add(L[MaktabResources.Msg_Error_Address_Removed], Severity.Error);
+               }
+          }
+
+          if (OnDelete.HasDelegate)
+          {
+               await OnDelete.InvokeAsync(contact);
+          }
+     }
+
+     /// <summary>
+     /// Get avatar color based on relationship type
+     /// </summary>
+     private Color GetContactColor(OtherContactResponse contact) =>
+         contact?.Relationship switch
+         {
+              Relationship.Father => Color.Primary,
+              Relationship.Mother => Color.Surface,
+              Relationship.Guardian => Color.Info,
+              Relationship.Relative => Color.Warning,
+              Relationship.Teacher => Color.Secondary,
+              Relationship.FamilyFriend => Color.Secondary,
+              _ => Color.Default
+         };
+
+     private string GetContactIcon(OtherContactResponse contact) =>
+         contact?.Relationship switch
+         {
+              Relationship.Father => Icons.Material.Filled.Male,
+              Relationship.Mother => Icons.Material.Filled.Female,
+              Relationship.Guardian => Icons.Material.Filled.ContactEmergency,
+              _ => Icons.Material.Filled.Contacts
+         };
+
+     /// <summary>
+     /// Get color for relationship badge
+     /// </summary>
+     private Color GetRelationshipColor(OtherContactResponse contact) =>
+         contact?.Relationship switch
+         {
+              Relationship.Father => Color.Primary,
+              Relationship.Mother => Color.Surface,
+              Relationship.Guardian => Color.Info,
+              Relationship.Relative => Color.Warning,
+              Relationship.Teacher => Color.Secondary,
+              Relationship.FamilyFriend => Color.Secondary,
+              _ => Color.Default
+         };
+
+     private string GetContactTypeLabel(OtherContactResponse contact) =>
+         contact?.ContactType.ToString() ?? string.Empty;
+
+     /// <summary>
+     /// Get readable label for relationship
+     /// </summary>
+     private string GetRelationshipLabel(OtherContactResponse contact) =>
+         contact?.Relationship.ToString() ?? "Unknown";
+
+     /// <summary>
+     /// Get icon for relationship badge
+     /// </summary>
+     private string GetRelationshipIcon(OtherContactResponse contact) =>
+         contact?.Relationship switch
+         {
+              Relationship.Father => Icons.Material.Filled.FamilyRestroom,
+              Relationship.Mother => Icons.Material.Filled.FamilyRestroom,
+              _ => Icons.Material.Filled.Info
+         };
+
+     /// <summary>
+     /// Get color for contact type badge
+     /// </summary>
+     private Color GetContactTypeColor(OtherContactResponse contact) =>
+         contact?.ContactType switch
+         {
+              ContactType.Pickup => Color.Success,
+              ContactType.Other => Color.Info,
+              ContactType.Emergency => Color.Warning,
+              _ => Color.Default
+         };
+
+     /// <summary>
+     /// Get icon for contact type badge
+     /// </summary>
+     private string GetContactTypeIcon(OtherContactResponse contact) =>
+         contact?.ContactType switch
+         {
+              ContactType.Pickup => Icons.Material.Filled.CardTravel,
+              ContactType.Other => Icons.Material.Filled.OtherHouses,
+              ContactType.Emergency => Icons.Material.Filled.ContactEmergency,
+              _ => Icons.Material.Filled.Phone
+         };
 }

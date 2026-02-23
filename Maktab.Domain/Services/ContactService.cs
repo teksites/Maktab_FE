@@ -41,11 +41,11 @@ namespace Maktab.Domain.Services
                return result;
           }
 
-          //public async Task<AddressResponse> UpdateContact(AddAddress addAddress)
-          //{
-          //     var result = await _httpService.Post<AddressResponse>(updateAddress, addAddress);
-          //     return result;
-          //}
+          public async Task<OtherContactResponse> UpdateContactAsync(OtherContactResponse contact)
+          {
+               var result = contact;//await _httpService.Post<AddressResponse>(updateAddress, addAddress);
+               return result;
+          }
 
           public async Task<bool> DeleteContactById(Guid contactId)
           {

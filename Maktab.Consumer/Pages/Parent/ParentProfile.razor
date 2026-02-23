@@ -147,7 +147,7 @@
 
                          </MudStack>
 
-                         <ContactSimplifiedList ShowHeader="false" Contacts="@_OtherContacts" OnAddContact="OpenAddContactDialog" />
+                         <ContactSimplifiedList ShowHeader="false" Contacts="@_OtherContacts" OnAddContact="OpenAddContactDialog" OnDelete="OnContactDelete" OnEdit="OnContactEdit" />
                     </MudCard>
                </MudItem>
 
@@ -175,7 +175,7 @@
      }
 </MudContainer>
 
-@code {
+     @code {
      private UserInformationResponse userInfo => StateService.ParentState.Profile;
      private UserInformationResponse _SpouseInfo => StateService.ParentState.Spouse;
      private ExtendedUserInformationResponse _ExtendedInfoResponse => StateService.ParentState.ExtendedProfileInfo;
@@ -217,8 +217,10 @@
 
           await StateService.LoadUserExtendedProfileData(UserService, userId, forceReload);
 
+          await StateService.LoadContactsData(ContactService, userInfo.FamilyId, forceReload);
+
           await StateService.LoadAddressesData(AddressService, userId, forceReload);
-          await StateService.LoadAddressesData(AddressService, userInfo.FamilyId, true);
+          await StateService.LoadAddressesData(AddressService, userInfo.FamilyId, forceReload);
 
           isDataLoading = false;
      }
@@ -254,7 +256,9 @@
           var dialogResult = await this.OpenAddContactDialog(DialogService, userInfo.FamilyId);
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is OtherContactResponse contact)
           {
-               StateService.ParentState.AddContact(contact);
+               StateService.ParentState.ClearContact();
+               await StateService.LoadContactsData(ContactService, userInfo.FamilyId, true);
+
                this.RequestRender();
           }
      }
@@ -265,9 +269,8 @@
           var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
 
           var dialog = await DialogService.ShowAsync<AddSpouseDialog>(L[MaktabResources.Add_Spouse], parameters, options);
-          var result = await dialog.Result;
-
-          if (!result.Canceled && result.Data is UserInformationResponse spouse)
+          var dialogResult = await dialog.Result;
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is UserInformationResponse spouse)
           {
                StateService.ParentState.SetSpouse(spouse);
                this.RequestRender();
@@ -336,4 +339,31 @@
      {
           StateService.ParentState.OnChange -= HandleStateChange;
      }
+
+     private async Task OnContactEdit(OtherContactResponse contact)
+     {
+          var parameters = new DialogParameters { ["Contact"] = contact };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<EditContactDialog>(L[MaktabResources.Edit_Contact], parameters, options);
+          var dialogResult = await dialog.Result;
+
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is OtherContactResponse updatedContact)
+          {
+               StateService.ParentState.ClearContact();
+               await StateService.LoadContactsData(ContactService, userInfo.FamilyId, true);
+               this.RequestRender();
+          }
+     }
+
+     private async Task OnContactDelete(OtherContactResponse contact)
+     {
+          if(contact != null)
+          {
+               StateService.ParentState.ClearContact();
+               await StateService.LoadContactsData(ContactService, userInfo.FamilyId, true);
+               this.RequestRender();
+          }
+     }
+
 }
