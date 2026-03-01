@@ -610,11 +610,29 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Address.
+        /// </summary>
+        public static string Edit_Address {
+            get {
+                return ResourceManager.GetString("Edit_Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit Contact.
         /// </summary>
         public static string Edit_Contact {
             get {
                 return ResourceManager.GetString("Edit_Contact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Extended info.
+        /// </summary>
+        public static string Edit_Extended_Info {
+            get {
+                return ResourceManager.GetString("Edit_Extended_Info", resourceCulture);
             }
         }
         
@@ -750,6 +768,15 @@ namespace Maktab.Consumer.Localization {
         public static string Error {
             get {
                 return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extended Info.
+        /// </summary>
+        public static string Extended_Info {
+            get {
+                return ResourceManager.GetString("Extended_Info", resourceCulture);
             }
         }
         

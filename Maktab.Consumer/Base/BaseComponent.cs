@@ -194,7 +194,6 @@ namespace Maktab.Consumer.Base
                catch (UnauthorizedAccessException)
                {
                     _errorMessage = "Please provide valid credentials.";
-                    Snackbar.Add(_errorMessage, Severity.Error);
                     NavigationManager.NavigateTo(Constants.LogoutRoute);
                }
                catch (Exception ex)
@@ -208,6 +207,7 @@ namespace Maktab.Consumer.Base
                     IsBusy = false;
                }
           }
+
           protected virtual Task HandlerUserAction(ref bool flag, Func<Task> userAction)
           {
                if (IsDisposed)

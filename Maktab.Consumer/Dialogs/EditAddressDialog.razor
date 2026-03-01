@@ -1,0 +1,42 @@
+﻿@inherits BaseDialog<EditAddressDialog>
+@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Responses.Addresses
+@using MaktabDataContracts.Responses.Users
+@using MudBlazor
+
+<MudDialog>
+     <DialogContent>
+          @if (isInitialized)
+          {
+               <EditAddress AddressModel="@(EditAddress)" OnSave="SaveDialog" OnCancel="CancelDialog" />
+          }
+          else
+          {
+               <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+          }
+     </DialogContent>
+</MudDialog>
+
+@code {
+
+     [Parameter, EditorRequired] public AddressResponse EditAddress { get; set; }
+     private bool isInitialized = false;
+
+
+     protected async override Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private void SaveDialog(AddressResponse userInfo)
+     {
+          MudDialog.Close(DialogResult.Ok(userInfo));
+     }
+
+     private void CancelDialog()
+     {
+          MudDialog.Cancel();
+     }
+}

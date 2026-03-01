@@ -65,7 +65,7 @@
                                    }
                                    else
                                    {
-                                        <MudButton Variant="Variant.Outlined" Disabled="true" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
+                                        <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="OpenEditExtendedInfoDialog" Class="mb-4">
                                              @L[MaktabResources.Edit]
                                         </MudButton>
                                    }
@@ -163,7 +163,7 @@
                               </MudButton>
 
                          </MudStack>
-                         <AddressList Addresses="@_Addresses" ShowHeader="false" />
+                         <AddressList Addresses="@_Addresses" OnEdit="OpenEditAddressDialog" ShowHeader="false" />
                     </MudCard>
                </MudItem>
 
@@ -240,9 +240,8 @@
           var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true };
 
           var dialog = await DialogService.ShowAsync<EditUserInfoDialog>(L[MaktabResources.Edit_Profile], parameters, options);
-          var result = await dialog.Result;
-
-          if (!result.Canceled && result.Data is UserInformationResponse userResponse)
+          var dialogResult = await dialog.Result;
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is UserInformationResponse userResponse)
           {
                StateService.ParentState.SetProfile(userResponse);
                this.RequestRender();
@@ -276,6 +275,7 @@
                this.RequestRender();
           }
      }
+
      private async Task OpenAddAddressDialog()
      {
           var dialogResult = await this.OpenAddAddressDialog(DialogService, userInfo.FamilyId);
@@ -307,11 +307,44 @@
           var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
 
           var dialog = await DialogService.ShowAsync<AddExtendedInfoDialog>(L[MaktabResources.Add_Extended_Info], parameters, options);
-          var result = await dialog.Result;
-
-          if (!result.Canceled && result.Data is ExtendedUserInformationResponse spouse)
+          var dialogResult = await dialog.Result;
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ExtendedUserInformationResponse extendedInfo)
           {
-               StateService.ParentState.SetExtendedInfo(spouse);
+               StateService.ParentState.SetExtendedInfo(extendedInfo);
+               this.RequestRender();
+          }
+     }
+
+     private async Task OpenEditExtendedInfoDialog()
+     {
+          var parameters = new DialogParameters { ["ExtendedInfo"] = _ExtendedInfoResponse };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<EditExtendedInfoDialog>(L[MaktabResources.Edit_Extended_Info], parameters, options);
+
+          var dialogResult = await dialog.Result;
+          if (dialogResult !=null && !dialogResult.Canceled && dialogResult.Data is ExtendedUserInformationResponse extendedInfo)
+          {
+               StateService.ParentState.SetExtendedInfo(extendedInfo);
+               this.RequestRender();
+          }
+     }
+
+     private async Task OpenEditAddressDialog(AddressResponse address)
+     {
+          var parameters = new DialogParameters { ["EditAddress"] = address };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<EditAddressDialog>(L[MaktabResources.Edit_Extended_Info], parameters, options);
+
+          var dialogResult = await dialog.Result;
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is AddressResponse addressResponse)
+          {
+               //StateService.ParentState.AddAddress(address);
+               StateService.ParentState.ClearAddress();
+               await StateService.LoadAddressesData(AddressService, userInfo.UserId, true);
+               await StateService.LoadAddressesData(AddressService, userInfo.FamilyId, true);
+
                this.RequestRender();
           }
      }
@@ -322,9 +355,8 @@
           var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true };
 
           var dialog = await DialogService.ShowAsync<ChangePasswordDialog>(L[MaktabResources.Change_Password], parameters, options);
-          var result = await dialog.Result;
-
-          if (!result.Canceled && result.Data is bool passwordChanged)
+          var dialogResult = await dialog.Result;
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is bool passwordChanged)
           {
                this.RequestRender();
           }
@@ -347,7 +379,6 @@
 
           var dialog = await DialogService.ShowAsync<EditContactDialog>(L[MaktabResources.Edit_Contact], parameters, options);
           var dialogResult = await dialog.Result;
-
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is OtherContactResponse updatedContact)
           {
                StateService.ParentState.ClearContact();

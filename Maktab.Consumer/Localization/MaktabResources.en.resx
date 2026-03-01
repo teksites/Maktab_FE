@@ -808,4 +808,13 @@
   <data name="Edit_Contact" xml:space="preserve">
     <value>Edit Contact</value>
   </data>
+  <data name="Edit_Extended_Info" xml:space="preserve">
+    <value>Edit Extended info</value>
+  </data>
+  <data name="Extended_Info" xml:space="preserve">
+    <value>Extended Info</value>
+  </data>
+  <data name="Edit_Address" xml:space="preserve">
+    <value>Edit Address</value>
+  </data>
 </root>
