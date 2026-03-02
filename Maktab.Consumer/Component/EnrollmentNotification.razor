@@ -36,32 +36,32 @@
                     <MudTable Items="Enrollments" Elevation="1" Dense="true" Bordered="true" Hover="true">
                          <HeaderContent>
                               <MudTh>@L[MaktabResources.Child]</MudTh>
-                              <MudTh>@L[MaktabResources.Course]</MudTh>
-                              <MudTh>@L[MaktabResources.Group]</MudTh>
-                              <MudTh>@L[MaktabResources.Enrollment]</MudTh>
+                              <MudTh Style="text-align:center">@L[MaktabResources.Course]</MudTh>
+                              <MudTh Style="text-align:center">@L[MaktabResources.Group]</MudTh>
+                              <MudTh Style="text-align:center">@L[MaktabResources.Enrollment]</MudTh>
                               @* <MudTh>@L[MaktabResources.Fee]</MudTh>
-                              <MudTh>@L[MaktabResources.Daycare_Fee]</MudTh>
-                              <MudTh>@L[MaktabResources.Use_Daycare]</MudTh> *@
-                              <MudTh> </MudTh>
+                              <MudTh>@L[MaktabResources.Daycare_Fee]</MudTh>*@
+                              <MudTh Style="text-align:center">@L[MaktabResources.Use_Daycare]</MudTh>
+                              <MudTh Style="text-align:center"> </MudTh>
                          </HeaderContent>
                          <RowTemplate>
                               <MudTd>@GetChildName(context.ChildId)</MudTd>
-                              <MudTd>@GetCourseName(context.CourseId)</MudTd>
-                              <MudTd>@GetCourseEnrollmentGroupTitle(context.CourseEnrollmentGroupId)</MudTd>
-                              <MudTd>
+                              <MudTd Style="text-align:center">@GetCourseName(context.CourseId)</MudTd>
+                              <MudTd Style="text-align:center">@GetCourseEnrollmentGroupTitle(context.CourseEnrollmentGroupId)</MudTd>
+                              <MudTd Style="text-align:center">
                                    @* @context.IsActive *@
                                    <MudChip T="string" Color="@(GetStatusColor(context))" Variant="Variant.Filled" Size="Size.Small">@GetStatusText(context)</MudChip>
                               
                               </MudTd>
                             @*   <MudTd Style="text-align:right">@GetCourseEnrollmentGroup(context.CourseEnrollmentGroupId)?.Fee</MudTd>
-                              <MudTd Style="text-align:right">@GetDayCareFee(context)</MudTd>
-                              <MudTd Style="text-align:center">@GetUseDayCareStatusText(context)</MudTd> *@
+                              <MudTd Style="text-align:right">@GetDayCareFee(context)</MudTd>*@
+                              <MudTd Style="text-align:center">@GetUseDayCareStatusText(context)</MudTd> 
                              @*  <MudTd>@context.DayCareDays</MudTd> *@
                              @*  <MudTd>@context.RAMQNumber</MudTd>
                               <MudTd>@context.RAMQExpiry.ToShortDateString()</MudTd> *@
                               @* <MudTd>@context.Allergies</MudTd>
           <MudTd>@context.OtherHealthConditions</MudTd> *@
-                              <MudTd>
+                              <MudTd Style="text-align:center">
                                    <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
                                         <MudMenuItem OnClick="@(() => ViewDetails(context))">View</MudMenuItem>
                                        @*  @if (ShowEnrollMenu)
@@ -75,9 +75,6 @@
                               @* <MudTd>@(context.WillUseDayCareServices ? "Yes" : "No")</MudTd> *@
                          </RowTemplate>
                     </MudTable>
-
-
-
 
                    @*  <MudList T="StudentCourseEnrollmentResponse" Dense="true" ReadOnly="true" >
                          @foreach (var enrollment in Enrollments.Take(MaxItems))
