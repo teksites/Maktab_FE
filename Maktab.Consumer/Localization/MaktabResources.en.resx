@@ -817,4 +817,13 @@
   <data name="Edit_Address" xml:space="preserve">
     <value>Edit Address</value>
   </data>
+  <data name="Total_Course_Fee" xml:space="preserve">
+    <value>Total course fee</value>
+  </data>
+  <data name="Course_Fee" xml:space="preserve">
+    <value>Course fee</value>
+  </data>
+  <data name="Tooltip_Course_Discount" xml:space="preserve">
+    <value>Course fee discount applied</value>
+  </data>
 </root>

@@ -19,18 +19,18 @@
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
 
-    <!-- Breadcrumbs Navigation -->
-    <MudBreadcrumbs Items="breadcrumbItems" Class="mb-6" />
+     <!-- Breadcrumbs Navigation -->
+     <MudBreadcrumbs Items="breadcrumbItems" Class="mb-6" />
 
-    <!-- Page Header with Alert -->
-    <MudStack Spacing="2" Class="mb-8">
-        <MudText Typo="Typo.h4" Class="font-weight-bold">@L[MaktabResources.Payment]</MudText>
-        <MudText Typo="Typo.body2" Style="opacity: 0.7;">
+     <!-- Page Header with Alert -->
+     <MudStack Spacing="2" Class="mb-8">
+          <MudText Typo="Typo.h4" Class="font-weight-bold">@L[MaktabResources.Payment]</MudText>
+          <MudText Typo="Typo.body2" Style="opacity: 0.7;">
                @L[MaktabResources.Msg_Info_Manage_Course_Transaction_Payments]
-        </MudText>
+          </MudText>
 
-        <!-- Alert for Outstanding Amount -->
-       @*  @if (Outstanding > 0)
+          <!-- Alert for Outstanding Amount -->
+          @*  @if (Outstanding > 0)
         {
             <MudAlert Severity="Severity.Warning" Dense="true" Class="mt-2">
                 <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
@@ -45,194 +45,200 @@
                 </MudStack>
             </MudAlert>
         } *@
-    </MudStack>
+     </MudStack>
 
-    @if (!isInitialized || isDataLoading)
-    {
-        <!-- Loading State -->
-        <MudStack Spacing="3">
-            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="120px" Class="rounded-lg" />
-            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="300px" Class="rounded-lg" />
-        </MudStack>
-    }
-    else
-    {
-        <!-- Summary Section with Enhanced Cards -->
-        <MudGrid Class="my-6" Spacing="3">
-                    <!-- Total Amount Card -->
-                    <MudItem xs="12" sm="6" md="4">
-                        <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%); border-left: 4px solid #2196F3;">
-                            <MudStack Spacing="2">
-                                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
-                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                                        <MudText Typo="Typo.body2" Class="font-weight-medium" Style="opacity: 0.7;">
-                                                @L[MaktabResources.Total_Amount]
-                                            </MudText>
-                                        <MudTooltip Text=@L[MaktabResources.Msg_Info_Total_Amount]>
-                                            <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" />
-                                        </MudTooltip>
-                                    </MudStack>
-                                    <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Info" />
-                                </MudStack>
-                                <MudText Typo="Typo.h5" Class="font-weight-bold">
-                                    @TotalPayable
-                                </MudText>
-                                @* <MudProgressLinear Value="100" Color="Color.Info" Class="mt-2" /> *@
-                            </MudStack>
-                        </MudPaper>
-                    </MudItem>
-
-                    <!-- Amount Paid Card -->
-                    <MudItem xs="12" sm="6" md="4">
-                        <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%); border-left: 4px solid #4CAF50;">
-                            <MudStack Spacing="2">
+     @if (!isInitialized || isDataLoading)
+     {
+          <!-- Loading State -->
+          <MudStack Spacing="3">
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="120px" Class="rounded-lg" />
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="300px" Class="rounded-lg" />
+          </MudStack>
+     }
+     else
+     {
+          <!-- Summary Section with Enhanced Cards -->
+          <MudGrid Class="my-6" Spacing="3">
+               <!-- Total Amount Card -->
+               <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%); border-left: 4px solid #2196F3;">
+                         <MudStack Spacing="2">
                               <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
-                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                                         <MudText Typo="Typo.body2" Class="font-weight-medium" Style="opacity: 0.7;">
-                                            @L[MaktabResources.Amount_Paid]
+                                             @L[MaktabResources.Total_Amount]
+                                        </MudText>
+                                        <MudTooltip Text=@L[MaktabResources.Msg_Info_Total_Amount]>
+                                             <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" />
+                                        </MudTooltip>
+                                   </MudStack>
+                                   <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Info" />
+                              </MudStack>
+                              <MudText Typo="Typo.h5" Class="font-weight-bold">
+                                   @TotalPayable
+                              </MudText>
+                              @* <MudProgressLinear Value="100" Color="Color.Info" Class="mt-2" /> *@
+                         </MudStack>
+                    </MudPaper>
+               </MudItem>
+
+               <!-- Amount Paid Card -->
+               <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%); border-left: 4px solid #4CAF50;">
+                         <MudStack Spacing="2">
+                              <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudText Typo="Typo.body2" Class="font-weight-medium" Style="opacity: 0.7;">
+                                             @L[MaktabResources.Amount_Paid]
                                         </MudText>
                                         <MudTooltip Text=@L[MaktabResources.Msg_Info_Amount_Paid]>
-                                            <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" />
+                                             <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" />
                                         </MudTooltip>
-                                    </MudStack>
-                                    <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success" />
-                                </MudStack>
-                                <MudText Typo="Typo.h5" Class="font-weight-bold" Color="Color.Success">
-                                    @TotalPaid
-                                </MudText>
-                                @* <MudProgressLinear Value="@GetProgressPercentage()" Color="Color.Success" Class="mt-2" /> *@
-                            </MudStack>
-                        </MudPaper>
-                    </MudItem>
+                                   </MudStack>
+                                   <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success" />
+                              </MudStack>
+                              <MudText Typo="Typo.h5" Class="font-weight-bold" Color="Color.Success">
+                                   @TotalPaid
+                              </MudText>
+                              @* <MudProgressLinear Value="@GetProgressPercentage()" Color="Color.Success" Class="mt-2" /> *@
+                         </MudStack>
+                    </MudPaper>
+               </MudItem>
 
-                    <!-- Amount Due Card -->
-                    <MudItem xs="12" sm="6" md="4">
-                        <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%); border-left: 4px solid #F44336;">
-                            <MudStack Spacing="2">
+               <!-- Amount Due Card -->
+               <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%); border-left: 4px solid #F44336;">
+                         <MudStack Spacing="2">
                               <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
-                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                                         <MudText Typo="Typo.body2" Class="font-weight-medium" Style="opacity: 0.7;">
-                                            @L[MaktabResources.Amount_Due]
+                                             @L[MaktabResources.Amount_Due]
                                         </MudText>
                                         <MudTooltip Text=@L[MaktabResources.Msg_Info_Amount_Due]>
-                                            <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" />
+                                             <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" />
                                         </MudTooltip>
-                                    </MudStack>
-                                    <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Error" />
-                                </MudStack>
-                                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                                    <MudText Typo="Typo.h5" Class="font-weight-bold" Color="Color.Error">
+                                   </MudStack>
+                                   <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Error" />
+                              </MudStack>
+                              <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                   <MudText Typo="Typo.h5" Class="font-weight-bold" Color="Color.Error">
                                         @Outstanding
-                                    </MudText>
-                                    @* <MudProgressCircular Value="@GetProgressPercentage()" Color="Color.Success" Size="Size.Small" /> *@
-                                </MudStack>
-                                @* <MudProgressLinear Value="@GetProgressPercentage()" Color="Color.Error" Class="mt-2" Rounded="true" /> *@
-                            </MudStack>
-                        </MudPaper>
-                    </MudItem>
-                </MudGrid>
+                                   </MudText>
+                                   @* <MudProgressCircular Value="@GetProgressPercentage()" Color="Color.Success" Size="Size.Small" /> *@
+                              </MudStack>
+                              @* <MudProgressLinear Value="@GetProgressPercentage()" Color="Color.Error" Class="mt-2" Rounded="true" /> *@
+                         </MudStack>
+                    </MudPaper>
+               </MudItem>
+          </MudGrid>
 
-                <!-- Transactions Section -->
-                <MudStack Spacing="3" Class="mt-8">
-                     <MudText Typo="Typo.h5" Class="font-weight-bold">@L[MaktabResources.Payment_Transaction]</MudText>
+          <!-- Transactions Section -->
+          <MudStack Spacing="3" Class="mt-8">
+               <MudText Typo="Typo.h5" Class="font-weight-bold">@L[MaktabResources.Payment_Transaction]</MudText>
 
-                     @if (GroupedData.Any())
-                     {
-                          <!-- Payment Transactions Table -->
-                          <MudTable Items="@GetFlatTransactionList()" Hover="true" Striped="true" Dense="false" Class="mt-4">
-                               <HeaderContent>
-                                    <MudTh>@L[MaktabResources.Institute]</MudTh>
-                                    <MudTh>@L[MaktabResources.Course]</MudTh>
-                                    <MudTh>@L[MaktabResources.Status]</MudTh>
-                                    <MudTh Style="text-align: right;">@L[MaktabResources.Total_Amount]</MudTh>
-                                    <MudTh Style="text-align: right;">@L[MaktabResources.Amount_Paid]</MudTh>
-                                    <MudTh Style="text-align: right;">@L[MaktabResources.Amount_Due]</MudTh>
-                                    <MudTh Style="text-align: center;">@L[MaktabResources.Action]</MudTh>
-                               </HeaderContent>
-                               <RowTemplate>
-                                    <MudTd DataLabel="@L[MaktabResources.Institute]">
-                                         <MudText Typo="Typo.body2" Class="font-weight-medium">
-                                              @GetInstituteName(context.InstituteId)
-                                         </MudText>
-                                    </MudTd>
-                                    <MudTd DataLabel="@L[MaktabResources.Course]">
-                                         <MudText Typo="Typo.body2">
-                                              @GetCourseName(context.CourseId)
-                                         </MudText>
-                                    </MudTd>
-                                    <MudTd DataLabel="@L[MaktabResources.Status]">
-                                         <MudChip T="String" 
-                                                  Color="@GetStatusColor(context.Transaction)"
-                                                  Variant="Variant.Filled"
-                                                  Size="Size.Small"
-                                                  Icon="@GetStatusIcon(context.Transaction)">
-                                              @GetStatusText(context.Transaction)
-                                         </MudChip>
-                                    </MudTd>
-                                    <MudTd DataLabel="@L[MaktabResources.Total_Amount]" Style="text-align: right;">
-                                         <MudText Typo="Typo.body2" Class="font-weight-medium">
-                                              @context.Transaction.TotalPayable
-                                         </MudText>
-                                    </MudTd>
-                                    <MudTd DataLabel="@L[MaktabResources.Amount_Paid]" Style="text-align: right;">
-                                         <MudText Typo="Typo.body2" Color="Color.Success" Class="font-weight-medium">
-                                              @context.Transaction.TotalAmountPaid
-                                         </MudText>
-                                    </MudTd>
-                                    <MudTd DataLabel="@L[MaktabResources.Amount_Due]" Style="text-align: right;">
-                                         <MudText Typo="Typo.body2" 
-                                                  Color="@GetAmountDueColor(context.Transaction)" 
-                                                  Class="font-weight-bold">
-                                              @(context.Transaction.TotalPayable - context.Transaction.TotalAmountPaid)
-                                         </MudText>
-                                    </MudTd>
-                                    <MudTd DataLabel="@L[MaktabResources.Action]" Style="text-align: center;">
-                                         @if (context.Transaction.TotalPayable > context.Transaction.TotalAmountPaid)
-                                         {
-                                              <MudButton Variant="Variant.Filled"
-                                                         Color="Color.Primary"
-                                                         Size="Size.Small"
-                                                         OnClick="@(() => OpenZeffyPaymentDialog(context.Transaction))">
-                                                   @L[MaktabResources.Pay_Now]
-                                              </MudButton>
-                                         }
-                                         else
-                                         {
-                                              <MudButton Variant="Variant.Filled"
-                                                         Color="Color.Success"
-                                                         Size="Size.Small"
-                                                         StartIcon="@Icons.Material.Filled.CheckCircle"
-                                                         Disabled="true">
-                                                   @L[MaktabResources.Paid]
-                                              </MudButton>
-                                         }
-                                    </MudTd>
-                               </RowTemplate>
-                          </MudTable>
-                     }
-                     else
-                     {
-                          <!-- Empty State -->
-                          <MudPaper Class="pa-8 rounded-lg text-center mt-6" Elevation="0" Style="background: rgba(0,0,0,0.02);">
-                               <MudStack Spacing="3" AlignItems="AlignItems.Center">
-                                    <MudIcon Icon="@Icons.Material.Filled.ReceiptLong" Size="Size.Large" Color="Color.Default" Style="font-size: 48px; opacity: 0.5;" />
-                                    <MudStack Spacing="1" AlignItems="AlignItems.Center">
-                                         <MudText Typo="Typo.h6" Class="font-weight-bold">@L[MaktabResources.No_Transaction]</MudText>
-                                         <MudText Typo="Typo.body2" Style="opacity: 0.7;">
-                                              @L[MaktabResources.Msg_Error_No_Payment_Tranaction]
-                                         </MudText>
-                                    </MudStack>
-                                    <MudButton Variant="Variant.Outlined"
-                                               Color="Color.Primary"
-                                               OnClick="@(() => NavigationManager.NavigateTo(Constants.ParentDashboardRoute))">
-                                         @L[MaktabResources.Back_To_Dashboard]
-                                    </MudButton>
-                               </MudStack>
-                          </MudPaper>
-                     }
-                </MudStack>
-            }
-        </MudContainer>
+               @if (GroupedData.Any())
+               {
+                    <!-- Payment Transactions Table -->
+                    <MudTable Items="@GetFlatTransactionList()" Hover="true" Striped="true" Dense="false" Class="mt-4">
+                         <HeaderContent>
+                              <MudTh>@L[MaktabResources.Institute]</MudTh>
+                              <MudTh>@L[MaktabResources.Course]</MudTh>
+                              <MudTh>@L[MaktabResources.Status]</MudTh>
+                              <MudTh Style="text-align: right;">@L[MaktabResources.Total_Amount]</MudTh>
+                              <MudTh Style="text-align: right;">@L[MaktabResources.Amount_Paid]</MudTh>
+                              <MudTh Style="text-align: right;">@L[MaktabResources.Discount]</MudTh>
+                              <MudTh Style="text-align: right;">@L[MaktabResources.Amount_Due]</MudTh>
+                              <MudTh Style="text-align: center;">@L[MaktabResources.Action]</MudTh>
+                         </HeaderContent>
+                         <RowTemplate>
+                              <MudTd DataLabel="@L[MaktabResources.Institute]">
+                                   <MudText Typo="Typo.body2" Class="font-weight-medium">
+                                        @GetInstituteName(context.InstituteId)
+                                   </MudText>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Course]">
+                                   <MudText Typo="Typo.body2">
+                                        @GetCourseName(context.CourseId)
+                                   </MudText>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Status]">
+                                   <MudChip T="String"
+                                            Color="@GetStatusColor(context.Transaction)"
+                                            Variant="Variant.Filled"
+                                            Size="Size.Small"
+                                            Icon="@GetStatusIcon(context.Transaction)">
+                                        @GetStatusText(context.Transaction)
+                                   </MudChip>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Total_Amount]" Style="text-align: right;">
+                                   <MudText Typo="Typo.body2" Color="Color.Info" Class="font-weight-medium">
+                                        @context.Transaction.TotalPayable
+                                   </MudText>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Amount_Paid]" Style="text-align: right;">
+                                   <MudText Typo="Typo.body2" Color="Color.Success" Class="font-weight-medium">
+                                        @context.Transaction.TotalAmountPaid
+                                   </MudText>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Discount]" Style="text-align: right;">
+                                   <MudText Typo="Typo.body2" Color="Color.Success" Class="font-weight-medium">
+                                        @(context.Transaction.DayCareDiscount + context.Transaction.FeeAmountDiscount)
+                                   </MudText>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Amount_Due]" Style="text-align: right;">
+                                   <MudText Typo="Typo.body2"
+                                            Color="Color.Error"
+                                            Class="font-weight-bold">
+                                        @(context.Transaction.TotalPayable - context.Transaction.TotalAmountPaid)
+                                   </MudText>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Action]" Style="text-align: center;">
+                                   @if (context.Transaction.TotalPayable > context.Transaction.TotalAmountPaid)
+                                   {
+                                        <MudButton Variant="Variant.Filled"
+                                                   Color="Color.Primary"
+                                                   Size="Size.Small"
+                                                   OnClick="@(() => OpenZeffyPaymentDialog(context.Transaction))">
+                                             @L[MaktabResources.Pay_Now]
+                                        </MudButton>
+                                   }
+                                   else
+                                   {
+                                        <MudButton Variant="Variant.Filled"
+                                                   Color="Color.Success"
+                                                   Size="Size.Small"
+                                                   StartIcon="@Icons.Material.Filled.CheckCircle"
+                                                   Disabled="true">
+                                             @L[MaktabResources.Paid]
+                                        </MudButton>
+                                   }
+                              </MudTd>
+                         </RowTemplate>
+                    </MudTable>
+               }
+               else
+               {
+                    <!-- Empty State -->
+                    <MudPaper Class="pa-8 rounded-lg text-center mt-6" Elevation="0" Style="background: rgba(0,0,0,0.02);">
+                         <MudStack Spacing="3" AlignItems="AlignItems.Center">
+                              <MudIcon Icon="@Icons.Material.Filled.ReceiptLong" Size="Size.Large" Color="Color.Default" Style="font-size: 48px; opacity: 0.5;" />
+                              <MudStack Spacing="1" AlignItems="AlignItems.Center">
+                                   <MudText Typo="Typo.h6" Class="font-weight-bold">@L[MaktabResources.No_Transaction]</MudText>
+                                   <MudText Typo="Typo.body2" Style="opacity: 0.7;">
+                                        @L[MaktabResources.Msg_Error_No_Payment_Tranaction]
+                                   </MudText>
+                              </MudStack>
+                              <MudButton Variant="Variant.Outlined"
+                                         Color="Color.Primary"
+                                         OnClick="@(() => NavigationManager.NavigateTo(Constants.ParentDashboardRoute))">
+                                   @L[MaktabResources.Back_To_Dashboard]
+                              </MudButton>
+                         </MudStack>
+                    </MudPaper>
+               }
+          </MudStack>
+     }
+</MudContainer>
 
 
 

@@ -484,6 +484,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Course fee.
+        /// </summary>
+        public static string Course_Fee {
+            get {
+                return ResourceManager.GetString("Course_Fee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Course Outline.
         /// </summary>
         public static string Course_Outline {
@@ -2032,11 +2041,29 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Course fee discount applied.
+        /// </summary>
+        public static string Tooltip_Course_Discount {
+            get {
+                return ResourceManager.GetString("Tooltip_Course_Discount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Amount.
         /// </summary>
         public static string Total_Amount {
             get {
                 return ResourceManager.GetString("Total_Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total course fee.
+        /// </summary>
+        public static string Total_Course_Fee {
+            get {
+                return ResourceManager.GetString("Total_Course_Fee", resourceCulture);
             }
         }
         

@@ -811,4 +811,22 @@
   <data name="Edit_Contact" xml:space="preserve">
     <value>Modifier le contact</value>
   </data>
+  <data name="Edit_Extended_Info" xml:space="preserve">
+    <value>Modifier les informations détaillées</value>
+  </data>
+  <data name="Extended_Info" xml:space="preserve">
+    <value>Informations étendues</value>
+  </data>
+  <data name="Edit_Address" xml:space="preserve">
+    <value>Modifier l'adresse</value>
+  </data>
+  <data name="Total_Course_Fee" xml:space="preserve">
+    <value>Frais de cours totaux</value>
+  </data>
+  <data name="Course_Fee" xml:space="preserve">
+    <value>Frais de cours</value>
+  </data>
+  <data name="Tooltip_Course_Discount" xml:space="preserve">
+    <value>Remise sur les frais de cours appliquée</value>
+  </data>
 </root>
