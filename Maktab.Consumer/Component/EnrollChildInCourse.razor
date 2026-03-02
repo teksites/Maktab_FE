@@ -400,8 +400,9 @@ else if (IsError)
                                                             </MudStack>
                                                             </th>
                                                        <th style="width:20%">@L[MaktabResources.Fee]</th>
+                                                       <th style="width:20%">@L[MaktabResources.Daycare_Fee]</th>
                                                        <th style="width:20%">@L[MaktabResources.Use_Daycare]</th>
-                                                       <th style="width:20%">@L[MaktabResources.Daycare]</th>
+                                                       @* <th style="width:20%">@L[MaktabResources.Daycare]</th> *@
                                                   </tr>
                                              </thead>
                                              <tbody>
@@ -413,16 +414,17 @@ else if (IsError)
                                                             <tr>
                                                                  <td>@GetCourseGroupTitle(g)</td>
                                                                  <td>@g.Fee</td>
+                                                                 <td>@g.DayCareFee</td>
                                                                  <td>
                                                                  <MudSwitch T="bool"
                                                                                  @bind-Value="GetStudentEnrollmentFromEnrollmentGroup(g.CourseEnrollmentGroupId).WillUseDayCare"
                                                                             Color="Color.Primary"
                                                                             Size="Size.Small" />
                                                                  </td>
-                                                                 <td>
+                                                                 @* <td>
                                                                       <MudNumericField  Variant="Variant.Text" Min="1" Max="5" 
                                                                                        @bind-Value="@(GetStudentEnrollmentFromEnrollmentGroup(g.CourseEnrollmentGroupId).DayCareDays)" />
-                                                                 </td>
+                                                                 </td> *@
                                                             </tr>
                                                        }
                                                   }
