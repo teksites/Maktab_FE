@@ -592,6 +592,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        public static string Default {
+            get {
+                return ResourceManager.GetString("Default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
         public static string Delete {
@@ -1204,6 +1213,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please use add button to add address.
+        /// </summary>
+        public static string Msg_Info_Add_Address_Guidance {
+            get {
+                return ResourceManager.GetString("Msg_Info_Add_Address_Guidance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please Add child to start enrollments.
         /// </summary>
         public static string Msg_Info_Add_Children_To_Enroll {
@@ -1263,6 +1281,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Info_Manage_Course_Transaction_Payments {
             get {
                 return ResourceManager.GetString("Msg_Info_Manage_Course_Transaction_Payments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Address has been added.
+        /// </summary>
+        public static string Msg_Info_No_Address_Available {
+            get {
+                return ResourceManager.GetString("Msg_Info_No_Address_Available", resourceCulture);
             }
         }
         

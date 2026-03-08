@@ -4,14 +4,13 @@
 
 <MudDialog>
     <DialogContent>
-        <AddAddress AddressModel="Address" AddressType="@(AddressType)" ConnectedId="@(ConnectedId)" OnSave="SaveAddress" OnCancel="CancelDialog" />
+        <AddAddress AddressModel="Address"  ConnectedId="@(ConnectedId)" OnSave="SaveAddress" OnCancel="CancelDialog" />
     </DialogContent>
 </MudDialog>
 
 @code {
 
-     [Parameter] public AddressType AddressType { get; set; }
-     [Parameter] public Guid ConnectedId { get; set; } = Guid.Empty;
+     [Parameter, EditorRequired] public Guid ConnectedId { get; set; } = Guid.Empty;
 
      private MaktabDataContracts.Requests.Addresses.AddAddress Address { get; set; } = new();
 

@@ -832,4 +832,13 @@
   <data name="Msg_Error_Cannot_Remove_Home_Address" xml:space="preserve">
     <value>L'adresse ne peut pas être supprimée. Le système nécessite une adresse par défaut pour la communication.</value>
   </data>
+  <data name="Default" xml:space="preserve">
+    <value>Défaut</value>
+  </data>
+  <data name="Msg_Info_No_Address_Available" xml:space="preserve">
+    <value>Aucune adresse n'a été ajoutée</value>
+  </data>
+  <data name="Msg_Info_Add_Address_Guidance" xml:space="preserve">
+    <value>Veuillez utiliser le bouton Ajouter pour ajouter une adresse</value>
+  </data>
 </root>

@@ -74,7 +74,7 @@
           <MudList T="OtherContactResponse"  Class="px-0">
                @foreach (var contact in Contacts)
                {
-                    <MudListItem Class="contact-list-item pa-3">
+                    <MudListItem Class="contact-list-item">
                          <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center" Style="width: 100%;">
                               <!-- Icon with Badge -->
                               @* <div class="contact-icon-badge">
@@ -83,7 +83,7 @@
                                              Overlap="true"> *@
                               <MudIcon Icon="@GetContactIcon(contact)"
                                        Color="Color.Primary"
-                                       Size="Size.Large" />
+                                       Size="Size.Small" />
                               @* </MudBadge>
                               </div> *@
 
@@ -92,7 +92,7 @@
 
                                    <MudStack Spacing="1">
                                         <!-- Name -->
-                                        <MudText Typo="Typo.h6" Class="font-weight-bold">
+                                   <MudText Typo="Typo.caption" Class="font-weight-bold">
                                              @contact.FirstName @contact.LastName
                                         </MudText>
 

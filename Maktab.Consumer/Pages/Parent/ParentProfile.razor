@@ -46,7 +46,7 @@
 
                                              <MudText>@_ExtendedInfoResponse.SIN</MudText>
                                         </MudStack>
-                                        <MudSwitch @bind-Checked="_ExtendedInfoResponse.IsActiveTaxCreditRecipient"
+                                        <MudSwitch @bind-Value="_ExtendedInfoResponse.IsActiveTaxCreditRecipient"
                                                    T="bool"
                                                    Disabled="true"
                                                    Label=@L[MaktabResources.Active_TaxCredit_Recipient]
@@ -163,7 +163,7 @@
                               </MudButton>
 
                          </MudStack>
-                         <AddressList Addresses="@_Addresses" OnEdit="OpenEditAddressDialog" ShowHeader="false" />
+                         <AddressList Addresses="@_Addresses" OnEdit="OpenEditAddressDialog" OnDelete="OnDeleteAddress" ShowHeader="false" />
                     </MudCard>
                </MudItem>
 
@@ -281,10 +281,15 @@
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is AddressResponse address)
           {
                //StateService.ParentState.AddAddress(address);
-               StateService.ParentState.ClearAddress();
-               await StateService.LoadAddressesData(AddressService, userInfo.UserId, true);
-               this.RequestRender();
+               await ReloadAddressesAsync();
           }
+     }
+
+     private async Task ReloadAddressesAsync()
+     {
+          StateService.ParentState.ClearAddress();
+          await StateService.LoadAddressesData(AddressService, userInfo.UserId, true);
+          this.RequestRender();
      }
 
      private async Task OpenAddChildDialog()
@@ -338,9 +343,15 @@
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is AddressResponse addressResponse)
           {
                //StateService.ParentState.AddAddress(address);
-               StateService.ParentState.ClearAddress();
-               await StateService.LoadAddressesData(AddressService, userInfo.UserId, true);
-               this.RequestRender();
+               await ReloadAddressesAsync();
+          }
+     }
+
+     private async Task OnDeleteAddress(AddressResponse address)
+     {
+          if(address != null)
+          {
+               await ReloadAddressesAsync();
           }
      }
 

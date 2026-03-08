@@ -1,13 +1,15 @@
-﻿@inherits LocalizeableBaseComponent<AddressList>
+@inherits LocalizeableBaseComponent<AddressList>
 
 @using MaktabDataContracts.Responses.Addresses
+@using MaktabDataContracts.Enums
 @using MudBlazor
+@using System.Globalization
 
 @inject IDialogService DialogService
 @inject IAddressService AddressService
-@* @typeparam TAddress *@
+@inject IAddressFormattingService AddressFormatter
+@inject ISnackbar Snackbar
 
-@* <MudPaper Class="pa-3 rounded-lg" Elevation="2"> *@
 @if (ShowHeader)
 {
      <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">
@@ -24,41 +26,107 @@
      </MudStack>
 }
 
-@if (Addresses is not null && Addresses.Any())
+@if (IsLoading)
 {
-     <MudList T="AddressResponse" ReadOnly="true" Dense="false">
+     <MudStack Spacing="2">
+          @for (int i = 0; i < 2; i++)
+          {
+               <MudCard Class="pa-3">
+                    <MudStack Spacing="1">
+                         <MudSkeleton SkeletonType="SkeletonType.Text" Height="20px" Width="40%" />
+                         <MudSkeleton SkeletonType="SkeletonType.Text" Height="16px" Width="100%" />
+                         <MudSkeleton SkeletonType="SkeletonType.Text" Height="16px" Width="80%" />
+                    </MudStack>
+               </MudCard>
+          }
+     </MudStack>
+}
+else if (Addresses is not null && Addresses.Any())
+{
+     <MudList T="AddressResponse" ReadOnly="true" Dense="false" Class="px-0">
           @foreach (var address in Addresses)
           {
-               <MudListItem Class="pa-2 my-1 rounded-md">
-                    @* Class="pa-2 my-1 rounded-md" Style="border: 1px solid var(--mud-palette-divider);"> *@
-                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width: 100%;">
-                         @* <MudAvatar Color="@(address.HomeAddress? Color.Success: Color.Info)" Icon="@Icons.Material.Filled.Home" Size="Size.Medium" /> *@
+               <MudListItem Class="address-list-item pa-3 my-2 rounded-lg" Style="border: 1px solid var(--mud-palette-divider);">
+                    <MudStack Spacing="2" Style="width: 100%;">
+                         <!-- Header Row: Icon, Title, Badge, Menu -->
+                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width: 100%;">
+                              <!-- Icon -->
+                              @* <MudAvatar Color="@GetAddressColor(address)" Variant="Variant.Outlined" *@
+                              <MudIcon Color="@GetAddressColor(address)"
+                                        Icon="@GetAddressIcon(address)" 
+                                        Size="Size.Medium" />
 
-                         @* <MudStack Style="flex:1; min-width:0">
-                              <MudText Typo="Typo.subtitle1" Class="text-truncate">
-                                   @GetAddressTitle(address)
-                              </MudText> *@
+                              <!-- Title and Badge -->
+                              <MudStack Spacing="0">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudText Typo="Typo.subtitle2" Class="font-weight-600">
+                                             @AddressFormatter.GetAddressTypeLabel(address)
+                                        </MudText>
+                                        @if (address.HomeAddress)
+                                        {
+                                             <MudChip T="string" 
+                                                     Size="Size.Small" 
+                                                     Color="Color.Success" 
+                                                     Variant="Variant.Filled"
+                                                     Label="true"
+                                                     Icon="@Icons.Material.Filled.Check">
+                                                  @L[MaktabResources.Default]
+                                             </MudChip>
+                                        }
+                                   </MudStack>
+                              </MudStack>
 
-                         <MudText Typo="Typo.body2" Class="text-truncate">
-                              @GetFormattedAddress(address)
-                         </MudText>
+                              <MudSpacer />
 
-                         @* <MudText Typo="Typo.caption" Color="Color.Secondary">
-                                   Added on @address.CreatedAt.ToString("d", CultureInfo.InvariantCulture)
-                              </MudText> *@
-                         @* </MudStack> *@
+                              <!-- Menu -->
+                              <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
+                                   <MudMenuItem OnClick="() => OnEditClicked(address)">
+                                        @L[MaktabResources.Edit]
+                                   </MudMenuItem>
+                                   <MudMenuItem Disabled="@(!CanDeleteAddress(address))" 
+                                               OnClick="() => OnDeleteClicked(address)"
+                                               Title="@(!CanDeleteAddress(address) ? L[MaktabResources.Msg_Error_Cannot_Remove_Home_Address] : "")">
+                                        @L[MaktabResources.Remove]
+                                   </MudMenuItem>
+                              </MudMenu>
+                         </MudStack>
 
-                         @*   <MudChip Color="@(address.IsActive ? Color.Success : Color.Warning)"
-                                 Variant="Variant.Filled"
-                                 Size="Size.Small"
-                                 Label="@(address.IsActive ? "Active" : "Inactive")" /> *@
+                         <!-- Address Content (Multi-line) -->
+                         <MudStack Spacing="0" Class="address-content">
+                              <!-- Street Address -->
+                              <MudText Typo="Typo.body2" Class="white-space-prewrap font-weight-500">
+                                   @AddressFormatter.FormatStreetAddress(address)
+                              </MudText>
 
-                         <MudSpacer />
+                              <!-- City, Province, Postal -->
+                              <MudText Typo="Typo.body2" >
+                                   @AddressFormatter.FormatCityProvincePostal(address)
+                              </MudText>
 
-                         <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
-                              <MudMenuItem OnClick="() => OnEditClicked(address)">@L[MaktabResources.Edit]</MudMenuItem>
-                              <MudMenuItem Disabled="true" OnClick="() => OnDeleteClicked(address)">@L[MaktabResources.Remove]</MudMenuItem>
-                         </MudMenu>
+                              <!-- Country if present -->
+                              @if (!string.IsNullOrWhiteSpace(address.Country))
+                              {
+                                   <MudText Typo="Typo.caption" >
+                                        @address.Country
+                                   </MudText>
+                              }
+                         </MudStack>
+
+                         <!-- Metadata Footer -->
+                         @* <MudStack Row="true" Spacing="2" Class="mt-2" Style="padding-top: 8px; border-top: 1px solid var(--mud-palette-divider);">
+                              <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                   @L[MaktabResources.Added]: @address.CreatedAt.ToString("MMM d, yyyy", CultureInfo.InvariantCulture)
+                              </MudText>
+                              @if (address.LastModified.HasValue && address.LastModified != address.CreatedAt)
+                              {
+                                   <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                        •
+                                   </MudText>
+                                   <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                        @L[MaktabResources.Modified]: @address.LastModified.Value.ToString("MMM d, yyyy", CultureInfo.InvariantCulture)
+                                   </MudText>
+                              }
+                         </MudStack> *@
                     </MudStack>
                </MudListItem>
           }
@@ -66,70 +134,143 @@
 }
 else
 {
-     <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-2">
-          No addresses available.
-     </MudText>
+     <MudAlert Severity="Severity.Info" Class="mt-4">
+          <MudStack Spacing="2">
+               <MudText Typo="Typo.body2" Class="font-weight-600">
+                    @L[MaktabResources.Msg_Info_No_Address_Available]
+               </MudText>
+               <MudText Typo="Typo.body2">
+                    @L[MaktabResources.Msg_Info_Add_Address_Guidance]
+               </MudText>
+          </MudStack>
+     </MudAlert>
 }
-@* </MudPaper> *@
 
 @code {
-     [Parameter] public IEnumerable<AddressResponse>? Addresses { get; set; }
-     [Parameter] public EventCallback<AddressResponse> OnEdit { get; set; }
-     [Parameter] public EventCallback<AddressResponse> OnDelete { get; set; }
-     [Parameter] public EventCallback OnAdd { get; set; }
-     [Parameter] public bool ShowAddButton { get; set; } = true;
-     [Parameter] public bool ShowHeader { get; set; } = true;
+     [Parameter]
+     public IEnumerable<AddressResponse>? Addresses { get; set; }
 
+     [Parameter]
+     public EventCallback<AddressResponse> OnEdit { get; set; }
+
+     [Parameter]
+     public EventCallback<AddressResponse> OnDelete { get; set; }
+
+     [Parameter]
+     public EventCallback OnAdd { get; set; }
+
+     [Parameter]
+     public bool ShowAddButton { get; set; } = true;
+
+     [Parameter]
+     public bool ShowHeader { get; set; } = true;
+
+     [Parameter]
+     public bool IsLoading { get; set; } = false;
+
+     private Task OnAddClicked() => OnAdd.InvokeAsync();
 
      private Task OnEditClicked(AddressResponse address) => OnEdit.InvokeAsync(address);
+
      private async Task OnDeleteClicked(AddressResponse address)
      {
-          if(address.HomeAddress && address.AddressType == MaktabDataContracts.Enums.AddressType.Parent)
+          // Validation: cannot delete home address for parent
+          if (!CanDeleteAddress(address))
           {
                Snackbar.Add(L[MaktabResources.Msg_Error_Cannot_Remove_Home_Address], Severity.Error);
                return;
           }
 
+          // Show confirmation dialog
           bool? result = await DialogService.ShowMessageBox(
-                 L[MaktabResources.Warning],
-                 L[MaktabResources.Msg_Question_Remove_Address],
-                 yesText: L[MaktabResources.Remove], cancelText: L[MaktabResources.Cancel]);
+               title: L[MaktabResources.Warning],
+               message: L[MaktabResources.Msg_Question_Remove_Address],
+               yesText: L[MaktabResources.Remove],
+               cancelText: L[MaktabResources.Cancel]);
+
           if (result.HasValue && result.Value)
           {
-               var deleted = await AddressService.DeleteAddressByConnectedId(address.ConnectedId);
-               if (deleted)
+               try
                {
-                    Snackbar.Add(L[MaktabResources.Msg_Success_Address_Removed], Severity.Success);
+                    var deleted = await AddressService.DeleteAddressById(address.AddressId);
+                    if (deleted)
+                    {
+                         Snackbar.Add(L[MaktabResources.Msg_Success_Address_Removed], Severity.Success);
+                         await OnDelete.InvokeAsync(address);
+                    }
+                    else
+                    {
+                         Snackbar.Add(L[MaktabResources.Msg_Error_Address_Removed], Severity.Error);
+                    }
                }
-               else
+               catch (Exception ex)
                {
                     Snackbar.Add(L[MaktabResources.Msg_Error_Address_Removed], Severity.Error);
+                    Console.Error.WriteLine($"Error deleting address: {ex.Message}");
                }
           }
-
-          if (OnDelete.HasDelegate)
-          {
-               await OnDelete.InvokeAsync(address);
-          }
      }
 
-     private Task OnAddClicked() => OnAdd.InvokeAsync();
-
-     private string GetAddressTitle(AddressResponse address)
-         => address.HomeAddress ? L[MaktabResources.Home_Address] : $"{address.AddressType} Address";
-
-     private static string GetFormattedAddress(AddressResponse address)
+     /// <summary>
+     /// Determines if an address can be deleted
+     /// Cannot delete home address for parent type
+     /// </summary>
+     private bool CanDeleteAddress(AddressResponse address)
      {
-          var parts = new List<string>();
-          if (!string.IsNullOrWhiteSpace(address.UnitNo)) parts.Add($"Unit {address.UnitNo}");
-          if (!string.IsNullOrWhiteSpace(address.ApartmentNo)) parts.Add($"Apt {address.ApartmentNo}");
-          if (!string.IsNullOrWhiteSpace(address.AddressLine1)) parts.Add(address.AddressLine1);
-          if (!string.IsNullOrWhiteSpace(address.AddressLine2)) parts.Add(address.AddressLine2);
-          if (!string.IsNullOrWhiteSpace(address.City)) parts.Add(address.City);
-          if (!string.IsNullOrWhiteSpace(address.Province)) parts.Add(address.Province);
-          if (!string.IsNullOrWhiteSpace(address.Country)) parts.Add(address.Country);
-          if (!string.IsNullOrWhiteSpace(address.PostalCode)) parts.Add(address.PostalCode);
+          return !(address.HomeAddress && address.AddressType == AddressType.Parent);
+     }
 
-          return string.Join(", ", parts);
+     /// <summary>
+     /// Gets the color for the address icon based on type
+     /// </summary>
+     private Color GetAddressColor(AddressResponse address)
+     {
+          if (address.HomeAddress)
+               return Color.Success;
+
+          return address.AddressType switch
+          {
+               AddressType.Parent => Color.Primary,
+               AddressType.Billing => Color.Warning,
+               AddressType.OtherContact => Color.Info,
+               _ => Color.Default
+          };
+     }
+
+     /// <summary>
+     /// Gets the icon for the address type
+     /// </summary>
+     private string GetAddressIcon(AddressResponse address)
+     {
+          if (address.HomeAddress)
+               return Icons.Material.Filled.Home;
+
+          return address.AddressType switch
+          {
+               AddressType.Parent => Icons.Material.Filled.LocationOn,
+               AddressType.Billing => Icons.Material.Filled.MoneyOffCsred,
+               _ => Icons.Material.Filled.LocationOn
+          };
      }
 }
+
+<style>
+.address-list-item {
+    transition: all 0.2s ease;
+}
+
+.address-list-item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.address-content {
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.white-space-prewrap {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+</style>
