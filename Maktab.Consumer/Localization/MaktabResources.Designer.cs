@@ -1231,6 +1231,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please use add button to add contacts.
+        /// </summary>
+        public static string Msg_Info_Add_Contact_Guidance {
+            get {
+                return ResourceManager.GetString("Msg_Info_Add_Contact_Guidance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remaining amount to pay.
         /// </summary>
         public static string Msg_Info_Amount_Due {
@@ -1299,6 +1308,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Info_No_Address_Selected {
             get {
                 return ResourceManager.GetString("Msg_Info_No_Address_Selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Contact has been added.
+        /// </summary>
+        public static string Msg_Info_No_Contact_Available {
+            get {
+                return ResourceManager.GetString("Msg_Info_No_Contact_Available", resourceCulture);
             }
         }
         
@@ -1524,6 +1542,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Success_Contact_Added {
             get {
                 return ResourceManager.GetString("Msg_Success_Contact_Added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contact has been removed.
+        /// </summary>
+        public static string Msg_Success_Contact_Removed {
+            get {
+                return ResourceManager.GetString("Msg_Success_Contact_Removed", resourceCulture);
             }
         }
         
@@ -2100,6 +2127,15 @@ namespace Maktab.Consumer.Localization {
         public static string Total_Course_Fee {
             get {
                 return ResourceManager.GetString("Total_Course_Fee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        public static string Type {
+            get {
+                return ResourceManager.GetString("Type", resourceCulture);
             }
         }
         

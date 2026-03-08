@@ -32,6 +32,7 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddScoped<IAddressFormattingService, AddressFormattingService>()
                 .AddScoped<IChildrenService, ChildrenService>()
                 .AddScoped<IContactService, ContactService>()
+                .AddScoped<IContactFormattingService, ContactFormattingService>()
                 .AddScoped<IHttpService, HttpService>()
                 .AddScoped<ILocalStorageService, LocalStorageService>()
                 .AddScoped<IRoleMenuService, RoleMenuService>()

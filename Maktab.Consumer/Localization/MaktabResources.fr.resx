@@ -841,4 +841,16 @@
   <data name="Msg_Info_Add_Address_Guidance" xml:space="preserve">
     <value>Veuillez utiliser le bouton Ajouter pour ajouter une adresse</value>
   </data>
+  <data name="Type" xml:space="preserve">
+    <value>Taper</value>
+  </data>
+  <data name="Msg_Success_Contact_Removed" xml:space="preserve">
+    <value>Le contact a été supprimé</value>
+  </data>
+  <data name="Msg_Info_No_Contact_Available" xml:space="preserve">
+    <value>Aucun contact n'a été ajouté</value>
+  </data>
+  <data name="Msg_Info_Add_Contact_Guidance" xml:space="preserve">
+    <value>Veuillez utiliser le bouton Ajouter pour ajouter des contacts</value>
+  </data>
 </root>
