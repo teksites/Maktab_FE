@@ -829,4 +829,7 @@
   <data name="Tooltip_Course_Discount" xml:space="preserve">
     <value>Remise sur les frais de cours appliquée</value>
   </data>
+  <data name="Msg_Error_Cannot_Remove_Home_Address" xml:space="preserve">
+    <value>L'adresse ne peut pas être supprimée. Le système nécessite une adresse par défaut pour la communication.</value>
+  </data>
 </root>

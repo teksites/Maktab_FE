@@ -1015,6 +1015,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Address can not be removed, System requires default address for communication..
+        /// </summary>
+        public static string Msg_Error_Cannot_Remove_Home_Address {
+            get {
+                return ResourceManager.GetString("Msg_Error_Cannot_Remove_Home_Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Child can not be removed. please try in few moments.
         /// </summary>
         public static string Msg_Error_Child_Not_Removed {

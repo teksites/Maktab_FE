@@ -84,6 +84,11 @@ else
      private Task OnEditClicked(AddressResponse address) => OnEdit.InvokeAsync(address);
      private async Task OnDeleteClicked(AddressResponse address)
      {
+          if(address.HomeAddress && address.AddressType == MaktabDataContracts.Enums.AddressType.Parent)
+          {
+               Snackbar.Add(L[MaktabResources.Msg_Error_Cannot_Remove_Home_Address], Severity.Error);
+               return;
+          }
 
           bool? result = await DialogService.ShowMessageBox(
                  L[MaktabResources.Warning],
