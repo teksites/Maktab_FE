@@ -82,7 +82,7 @@ namespace Maktab.Domain.Services
           /// <summary>
           /// Get address by connected ID
           /// </summary>
-          public async Task<AddressResponse> GetAddressByConnectedId(Guid connectedId)
+          public async Task<IEnumerable<AddressResponse>> GetAddressesByConnectedId(Guid connectedId)
           {
                try
                {
@@ -96,7 +96,7 @@ namespace Maktab.Domain.Services
                     _logger.LogInformation("Fetching address by connected ID {ConnectedId}", connectedId);
 
                     var formattedUrl = string.Format(getAddressByConnectedId, connectedId);
-                    var result = await _httpService.Get<AddressResponse>(formattedUrl);
+                    var result = await _httpService.Get<IEnumerable<AddressResponse>>(formattedUrl);
 
                     if (result == null)
                     {

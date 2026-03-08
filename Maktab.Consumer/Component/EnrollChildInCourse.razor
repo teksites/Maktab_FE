@@ -510,7 +510,7 @@ else if (IsError)
 
      protected int ActiveStep { get; set; } = 0;
      private IReadOnlyCollection<ChildResponse> Children => StateService.ParentState.Children ?? Array.Empty<ChildResponse>();
-     private IReadOnlyCollection<CourseResponseDetailed> Courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
+     private IEnumerable<CourseResponseDetailed> Courses => StateService.InstituteState.Courses.Where(x => x.IsRegistrationOpened == true) ?? Array.Empty<CourseResponseDetailed>();
      private UserInformationResponse userInfo => StateService.ParentState.Profile;
 
      protected CourseResponseDetailed? SelectedCourse { get; set; }

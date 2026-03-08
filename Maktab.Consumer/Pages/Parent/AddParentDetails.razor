@@ -28,7 +28,7 @@
                          <MudStepper @ref=@stepper OnPreviewInteraction="OnPreviewInteraction">
                               <ChildContent>
                               <MudStep Title=@L[MaktabResources.Add_Home_Address] SecondaryText=@L[MaktabResources.Step_Number, "1"] HasError="@(!isFamilyAddressAdded)">
-                                   <AddAddress AddressModel="@parentAddress" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
+                                   <AddAddress AddressModel="@parentAddress" HideAddressType="true" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
                               </MudStep>
 
                                    <MudStep Title=@L[MaktabResources.Add_Spouse] SecondaryText=@L[MaktabResources.Step_Number, "2"] Skippable="true" HasError="@(!isSpouseAdded)">
@@ -96,8 +96,6 @@
      string username = string.Empty;
      MudStepper stepper;
 
-
-
      protected override async Task OnInitializedAsync()
      {
           await base.OnInitializedAsync();
@@ -108,6 +106,7 @@
 
           isInitialized = true;
           parentAddress.ConnectedId = userInfo.UserId;
+          parentAddress.AddressType = AddressType.Parent;
           parentAddress.HomeAddress = true;
           RequestRender();
      }
@@ -275,6 +274,4 @@
      {
           NavigationManager.NavigateTo(Constants.ParentDashboardRoute);
      }
-
-     
 }

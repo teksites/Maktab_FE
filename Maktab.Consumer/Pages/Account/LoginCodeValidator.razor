@@ -88,8 +88,8 @@
           }
           else if (!userInfo.IfTempUser)
           {
-               var userAddress = await AddressService.GetAddressByConnectedId(userInfo.UserId);
-               if (userAddress != null && userAddress.HomeAddress)
+               var userAddress = await AddressService.GetAddressesByConnectedId(userInfo.UserId);
+               if (userAddress?.Any(x => x.HomeAddress) == true)
                {
                     NavigationManager.NavigateTo(Constants.ParentDashboardRoute);
                }

@@ -14,7 +14,7 @@ namespace Maktab.Consumer.Extensions
                     var childCollection = await childrenService.GetChildrenByFamilyIdAsync(familyId);
                     if (childCollection?.Any() == true)
                     {
-                         var sortedCollection = childCollection.OrderBy(x => x.FirstName);
+                         var sortedCollection = childCollection.Where(x => x.IsActive).OrderBy(x => x.FirstName);
                          userStateService.ParentState.SetChildren(sortedCollection);
                     }
                     else
@@ -150,10 +150,10 @@ namespace Maktab.Consumer.Extensions
 
                if (userStateService.ParentState.Addresses == null || forceReload)
                {
-                    var familyAddress = await addressService.GetAddressByConnectedId(connectedId);
-                    if (familyAddress != null)
+                    var familyAddress = await addressService.GetAddressesByConnectedId(connectedId);
+                    if (familyAddress?.Any() == true)
                     {
-                         userStateService.ParentState.AddAddress(familyAddress);
+                         userStateService.ParentState.SetAddress(familyAddress);
                     }
                }
           }

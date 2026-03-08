@@ -74,16 +74,14 @@
                                Color="Color.Primary" />
                </MudItem>
 
-               @* <MudItem xs="12" sm="12">
-                    <MudSelect T="AddressType"
-                               @bind-Value="AddressModel.AddressType"
-                               Label="Address Type"
-                               ReadOnly = "true"
-                               Required="true"
-                               For="@(() => AddressModel.AddressType)">
-                         <MudSelectItem Value="@AddressType">@AddressType</MudSelectItem>
+               <MudItem xs="12" sm="6" @bind-hidden="HideAddressType" Class="d-flex align-center">
+                    <MudSelect @bind-Hidden="HideAddressType" T="AddressType" Label=@L[MaktabResources.Address_Type] @bind-Value="AddressModel.AddressType" Required="true">
+                         @foreach (var rel in AddressTypes)
+                         {
+                              <MudSelectItem Value="@rel">@rel</MudSelectItem>
+                         }
                     </MudSelect> 
-               </MudItem>*@
+               </MudItem>
           </MudGrid>
 
           @if (!string.IsNullOrWhiteSpace(_errorMessage))
@@ -120,8 +118,18 @@
      [Parameter] public EventCallback OnCancel { get; set; }
      [Parameter] public AddressType AddressType { get; set; }
      [Parameter] public Guid ConnectedId { get; set; } = Guid.Empty;
-
+     [Parameter] public bool HideAddressType { get; set; } = false;
+     private IReadOnlyCollection<AddressType> AddressTypes { get; } = Enum.GetValues(typeof(AddressType)).Cast<AddressType>().Where(x=>x != AddressType.Unknown || x != AddressType.Institute).ToList();
      private bool isSaving = false;
+     private bool isInitialized = false;
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          isInitialized = true;
+          RequestRender();
+     }
 
      private async Task HandleAddressSave()
      {
@@ -148,19 +156,15 @@
                return;
           }
 
-          if (AddressType == AddressType.Unknown)
+          if (AddressType != AddressType.Unknown)
           {
                _errorMessage = L[MaktabResources.Msg_Error_Address_No_AddressType];//"Please provide valid address type.";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
 
-
           AddressModel.ConnectedId = this.ConnectedId;
-          if (AddressModel.AddressType == AddressType.Unknown && AddressType != AddressType.Unknown)
-          {
                AddressModel.AddressType = this.AddressType;
-          }
 
           var savedAddress = await AddressService.SaveAddressAsync(AddressModel);
           if (savedAddress == null)

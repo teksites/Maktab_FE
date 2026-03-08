@@ -74,18 +74,12 @@
                                Color="Color.Primary" />
                </MudItem>
 
-               <MudItem xs="12" sm="12">
-                    <MudSelect T="AddressType"
-                               @bind-Value="AddressModel.AddressType"
-                               Label=@L[MaktabResources.Address_Type]
-                               ReadOnly = "true"
-                               Required="true"
-                               For="@(() => AddressModel.AddressType)">
-                         @foreach (var type in Enum.GetValues<AddressType>())
+               <MudItem xs="12" sm="6">
+                    <MudSelect T="AddressType" Label=@L[MaktabResources.Address_Type] @bind-Value="AddressModel.AddressType" Required="true">
+                         @foreach (var rel in AddressTypes)
                          {
-                              <MudSelectItem Value="@type">@type</MudSelectItem>
+                              <MudSelectItem Value="@rel">@rel</MudSelectItem>
                          }
-
                     </MudSelect> 
                </MudItem>
           </MudGrid>
@@ -120,7 +114,17 @@
      [Parameter, EditorRequired] public AddressResponse AddressModel { get; set; }
      [Parameter] public EventCallback<AddressResponse> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }
+     private IReadOnlyCollection<AddressType> AddressTypes { get; } = Enum.GetValues(typeof(AddressType)).Cast<AddressType>().Where(x => x != AddressType.Unknown || x != AddressType.Institute).ToList();
      private bool isSaving = false;
+     private bool isInitialized = false;
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          isInitialized = true;
+          RequestRender();
+     }
 
      private async Task HandleAddressSave()
      {
@@ -136,7 +140,6 @@
                RequestRender();
           }
      }
-
 
      private async Task RequestSavingAddress()
      {

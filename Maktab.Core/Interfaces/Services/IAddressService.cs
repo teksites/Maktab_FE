@@ -17,7 +17,7 @@ namespace Maktab.Core.Interfaces.Services
           /// <summary>
           /// Get address by connected ID (family/parent connection)
           /// </summary>
-          Task<AddressResponse> GetAddressByConnectedId(Guid connectedId);
+          Task<IEnumerable<AddressResponse>> GetAddressesByConnectedId(Guid connectedId);
 
           /// <summary>
           /// Save new address with validation

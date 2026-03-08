@@ -155,10 +155,10 @@
                     <MudCard Class="mb-4 pa-4">
                          <MudStack Row="true">
 
-                              <MudText Typo="Typo.h5" Class="mb-4"> Address</MudText>
+                              <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Addresses]</MudText>
                               <MudSpacer />
 
-                              <MudButton Variant="Variant.Outlined" Disabled="true" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddAddressDialog" Class="mb-4">
+                              <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddAddressDialog" Class="mb-4">
                                    @L[MaktabResources.Add]
                               </MudButton>
 
@@ -220,7 +220,6 @@
           await StateService.LoadContactsData(ContactService, userInfo.FamilyId, forceReload);
 
           await StateService.LoadAddressesData(AddressService, userId, forceReload);
-          await StateService.LoadAddressesData(AddressService, userInfo.FamilyId, forceReload);
 
           isDataLoading = false;
      }
@@ -278,14 +277,12 @@
 
      private async Task OpenAddAddressDialog()
      {
-          var dialogResult = await this.OpenAddAddressDialog(DialogService, userInfo.FamilyId);
+          var dialogResult = await this.OpenAddAddressDialog(DialogService, userInfo.UserId);
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is AddressResponse address)
           {
                //StateService.ParentState.AddAddress(address);
                StateService.ParentState.ClearAddress();
                await StateService.LoadAddressesData(AddressService, userInfo.UserId, true);
-               await StateService.LoadAddressesData(AddressService, userInfo.FamilyId, true);
-
                this.RequestRender();
           }
      }
@@ -343,8 +340,6 @@
                //StateService.ParentState.AddAddress(address);
                StateService.ParentState.ClearAddress();
                await StateService.LoadAddressesData(AddressService, userInfo.UserId, true);
-               await StateService.LoadAddressesData(AddressService, userInfo.FamilyId, true);
-
                this.RequestRender();
           }
      }
