@@ -28,20 +28,20 @@
                          <MudStepper @ref=@stepper OnPreviewInteraction="OnPreviewInteraction">
                               <ChildContent>
                               <MudStep Title=@L[MaktabResources.Add_Home_Address] SecondaryText=@L[MaktabResources.Step_Number, "1"] HasError="@(!isFamilyAddressAdded)">
-                                   <AddAddress AddressModel="@parentAddress" HideAddressType="true" AddressType="AddressType.Parent" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
+                                   <AddAddress AddressModel="@parentAddress" HideAddressType="true" ConnectedId="@userInfo.UserId" OnSave="@(OnFamilyAddressSaved)" />
                               </MudStep>
 
-                                   <MudStep Title=@L[MaktabResources.Add_Spouse] SecondaryText=@L[MaktabResources.Step_Number, "2"] Skippable="true" HasError="@(!isSpouseAdded)">
-                                   <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
-                                        <AddSpouse FamilyId="@userInfo.FamilyId" OnSave="@(OnSpouseSaved)" />
-                                   </MudStack>
-                                   @* <MudSwitch @bind-Value="_step1Complete" Color="Color.Primary">Flip the switch to be able to advance to step 2</MudSwitch> *@
-                              </MudStep>
+                                   <MudStep Title=@L[MaktabResources.Add_Spouse] SecondaryText=@L[MaktabResources.Step_Number, "2"] Skippable="true">
+                                        <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
+                                             <AddSpouse FamilyId="@userInfo.FamilyId" OnSave="@(OnSpouseSaved)" />
+                                        </MudStack>
+                                        @* <MudSwitch @bind-Value="_step1Complete" Color="Color.Primary">Flip the switch to be able to advance to step 2</MudSwitch> *@
+                                   </MudStep>
 
-                                   <MudStep Title=@L[MaktabResources.Add_RL24] SecondaryText=@L[MaktabResources.Step_Number, "3"] Skippable="true" HasError="@(isExtendedInfoAdded == false)">
-                                   <AddExtendedInfo FamilyId="@userInfo.FamilyId" AddessId="@homeAddressId" UserId="@userId" OnSave="@(OnExtendedInfoSaved)" />
-                              </MudStep>
-                                   <MudStep Title=@L[MaktabResources.Add_Emergency_Contact] SecondaryText=@L[MaktabResources.Step_Number, "4"] Skippable="true" HasError="@(!isEmergencyContactAdded)">
+                                        <MudStep Title=@L[MaktabResources.Add_RL24] SecondaryText=@L[MaktabResources.Step_Number, "3"] Skippable="true">
+                                        <AddExtendedInfo FamilyId="@userInfo.FamilyId" AddessId="@homeAddressId" UserId="@userId" OnSave="@(OnExtendedInfoSaved)" />
+                                   </MudStep>
+                                        <MudStep Title=@L[MaktabResources.Add_Emergency_Contact] SecondaryText=@L[MaktabResources.Step_Number, "4"] Skippable="true">
                                    <AddContact  ContactType="ContactType.Emergency" FamilyId="@userInfo.FamilyId" OnSave="@(OnEmergencyContactSaved)" />
                               </MudStep>
 @*                               <MudStep Title="Add Pickup Contact" SecondaryText="Step 5" Skippable="true"  HasError="@(!isPickupContactAdded)">
@@ -56,7 +56,7 @@
 
                                         <MudText Typo="Typo.h5" Class="mt-3">@L[MaktabResources.Parent_Registration_Success]</MudText>
                                         <MudText Typo="Typo.body1" Color="Color.Primary">
-                                             @L[MaktabResources.Msg_Success_Remove_Enrollment, @userInfo.FirstName, MaktabResources.AppTitle]
+                                             @L[MaktabResources.Msg_Success_Parent_Registration, @userInfo.FirstName, MaktabResources.AppTitle]
                                         </MudText>
                                         <MudSpacer />
                                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4"
@@ -86,7 +86,7 @@
      Guid homeAddressId = Guid.Empty;
 
      UserInformationResponse userInfo = null;
-     MaktabDataContracts.Requests.Addresses.AddAddress parentAddress = new();
+     MaktabDataContracts.Requests.Addresses.AddAddress parentAddress = new() { AddressType = AddressType.Parent };
      bool isInitialized;
      bool isSpouseAdded;
      bool isFamilyAddressAdded;

@@ -93,7 +93,7 @@
                                              <MudText Typo="Typo.h6">@L[MaktabResources.Total_Amount]</MudText>
                                         </CardHeaderContent>
                                         <CardHeaderActions>
-                                                  <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToPaymentDetailsPage">@L[MaktabResources.Details]</MudButton>
+                                                  <MudButton Disabled="(this.TotalAmount <= 0)" Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToPaymentDetailsPage">@L[MaktabResources.Details]</MudButton>
                                         </CardHeaderActions>
                                         @* <CardHeaderActions>
                                              <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OpenAddChildDialog">@L[MaktabResources.Add_Child]</MudButton>
