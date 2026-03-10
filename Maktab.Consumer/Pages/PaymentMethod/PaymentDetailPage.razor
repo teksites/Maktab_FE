@@ -298,7 +298,7 @@
                                                                            <MudSpacer />
 
                                                                            <MudText Typo="Typo.body2" Class="font-weight-bold">
-                                                                                @((transaction.TotalPayable - transaction.TotalAmountPaid).ToString("F2"))
+                                                                                @((transaction.TotalPayable - (transaction.TotalAmountPaid + transaction.FeeAmountDiscount + transaction.DayCareDiscount)).ToString("F2"))
                                                                            </MudText>
                                                                       </MudStack>
 
@@ -388,7 +388,9 @@
 
      private decimal TotalPayable => _CourseTransactions.Sum(x => x.TotalPayable);
      private decimal TotalPaid => _CourseTransactions.Sum(x => x.TotalAmountPaid);
-     private decimal Outstanding => TotalPayable - TotalPaid;
+     private decimal TotalFeeDiscount => _CourseTransactions.Sum(x => x.FeeAmountDiscount);
+     private decimal TotalDayCareFeeDiscount => _CourseTransactions.Sum(x => x.DayCareDiscount);
+     private decimal Outstanding => TotalPayable - (TotalPaid + TotalFeeDiscount + TotalDayCareFeeDiscount);
 
      protected override void OnInitialized()
      {

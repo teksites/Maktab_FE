@@ -240,7 +240,9 @@
 
      private decimal AmountPaid => _CourseTransactions?.Any() == true ? _CourseTransactions.Sum(x => x.TotalAmountPaid) : 0;
      private decimal TotalAmount => _CourseTransactions?.Any() == true ? _CourseTransactions.Sum(x => x.TotalPayable) : 0;
-     private decimal AmountPayable => _CourseTransactions?.Any() == true ? TotalAmount - AmountPaid : 0;
+     private decimal TotalFeeDiscount => _CourseTransactions?.Any() == true ? _CourseTransactions.Sum(x => x.FeeAmountDiscount) : 0;
+     private decimal TotalDaycareFeeDiscount => _CourseTransactions?.Any() == true ? _CourseTransactions.Sum(x => x.DayCareDiscount) : 0;
+     private decimal AmountPayable => _CourseTransactions?.Any() == true ? TotalAmount - (AmountPaid + TotalFeeDiscount + TotalDaycareFeeDiscount) : 0;
      protected int EnrolledCourses => _CourseEnrollments?.Any() == true ? _CourseEnrollments.Count() : 0;
 
      protected override void OnInitialized()

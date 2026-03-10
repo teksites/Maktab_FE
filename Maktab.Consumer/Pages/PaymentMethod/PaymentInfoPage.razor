@@ -189,7 +189,7 @@
                                    <MudText Typo="Typo.body2"
                                             Color="Color.Error"
                                             Class="font-weight-bold">
-                                        @(context.Transaction.TotalPayable - context.Transaction.TotalAmountPaid)
+                                        @(context.Transaction.TotalPayable - (context.Transaction.TotalAmountPaid + context.Transaction.DayCareDiscount + context.Transaction.FeeAmountDiscount))
                                    </MudText>
                               </MudTd>
                               <MudTd DataLabel="@L[MaktabResources.Action]" Style="text-align: center;">
@@ -258,7 +258,9 @@
 
      private decimal TotalPayable => _CourseTransactions.Sum(x => x.TotalPayable);
      private decimal TotalPaid => _CourseTransactions.Sum(x => x.TotalAmountPaid);
-     private decimal Outstanding => TotalPayable - TotalPaid;
+     private decimal TotalFeeDiscount => _CourseTransactions.Sum(x => x.FeeAmountDiscount);
+     private decimal TotalDayCareFeeDiscount => _CourseTransactions.Sum(x => x.DayCareDiscount);
+     private decimal Outstanding => TotalPayable - (TotalPaid + TotalFeeDiscount + TotalDayCareFeeDiscount);
 
      protected override void OnInitialized()
      {
