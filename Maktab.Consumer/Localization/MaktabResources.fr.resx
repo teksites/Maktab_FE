@@ -853,4 +853,7 @@
   <data name="Msg_Info_Add_Contact_Guidance" xml:space="preserve">
     <value>Veuillez utiliser le bouton Ajouter pour ajouter des contacts</value>
   </data>
+  <data name="Details" xml:space="preserve">
+    <value>Détails</value>
+  </data>
 </root>
