@@ -18,7 +18,14 @@ namespace Maktab.Infrastructure.Services
           private NavigationManager _navigationManager;
           private ILocalStorageService _localStorageService;
           private IConfiguration _configuration;
-          private JsonSerializerOptions _serializerOptions;
+
+          private static readonly JsonSerializerOptions _serializerOptions = new()
+          {
+               PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+               WriteIndented = true,
+               PropertyNameCaseInsensitive = true,
+               DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+          };
 
           public HttpService(
               HttpClient httpClient,
@@ -30,14 +37,6 @@ namespace Maktab.Infrastructure.Services
                _navigationManager = navigationManager;
                _localStorageService = localStorageService;
                _configuration = configuration;
-
-               _serializerOptions = new JsonSerializerOptions
-               {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    WriteIndented = true,
-                    PropertyNameCaseInsensitive = true,
-                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-               };
 
                _serializerOptions.Converters.Add(new JsonStringEnumConverter());
                _serializerOptions.Converters.Add(new BoolConverter());
