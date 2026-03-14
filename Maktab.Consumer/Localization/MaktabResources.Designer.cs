@@ -322,15 +322,6 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Authenticating....
-        /// </summary>
-        public static string Authenticating {
-            get {
-                return ResourceManager.GetString("Authenticating", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Available courses.
         /// </summary>
         public static string Available_Courses {
@@ -421,6 +412,24 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Complete.
+        /// </summary>
+        public static string Complete {
+            get {
+                return ResourceManager.GetString("Complete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complete all required steps to finish registration.
+        /// </summary>
+        public static string Complete_Required_Steps_To_Finish {
+            get {
+                return ResourceManager.GetString("Complete_Required_Steps_To_Finish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Completed.
         /// </summary>
         public static string Completed {
@@ -430,11 +439,29 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Completion.
+        /// </summary>
+        public static string Completion {
+            get {
+                return ResourceManager.GetString("Completion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm Enrollment.
         /// </summary>
         public static string Confirm_Enrollment {
             get {
                 return ResourceManager.GetString("Confirm_Enrollment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip This Step?.
+        /// </summary>
+        public static string Confirm_Skip {
+            get {
+                return ResourceManager.GetString("Confirm_Skip", resourceCulture);
             }
         }
         
@@ -808,6 +835,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Extended family information can be added later from your profile..
+        /// </summary>
+        public static string Extended_Info_Can_Be_Added_Later {
+            get {
+                return ResourceManager.GetString("Extended_Info_Can_Be_Added_Later", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Featured Courses.
         /// </summary>
         public static string FeaturedCourses {
@@ -862,6 +898,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Go Back.
+        /// </summary>
+        public static string Go_Back {
+            get {
+                return ResourceManager.GetString("Go_Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Group.
         /// </summary>
         public static string Group {
@@ -903,6 +948,24 @@ namespace Maktab.Consumer.Localization {
         public static string Inactive {
             get {
                 return ResourceManager.GetString("Inactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Information Added.
+        /// </summary>
+        public static string Information_Added {
+            get {
+                return ResourceManager.GetString("Information_Added", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can edit this information anytime from your profile..
+        /// </summary>
+        public static string Information_Can_Be_Edited_Anytime {
+            get {
+                return ResourceManager.GetString("Information_Can_Be_Edited_Anytime", resourceCulture);
             }
         }
         
@@ -1177,6 +1240,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Passwords don&apos;t match.
+        /// </summary>
+        public static string Msg_Error_Password_Not_Match {
+            get {
+                return ResourceManager.GetString("Msg_Error_Password_Not_Match", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Phone number is invalid.
         /// </summary>
         public static string Msg_Error_Phone_Number_Invalid {
@@ -1222,6 +1294,24 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User is already registered with system; Please login to continue.
+        /// </summary>
+        public static string Msg_Error_User_Resgister_Already_Registered {
+            get {
+                return ResourceManager.GetString("Msg_Error_User_Resgister_Already_Registered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please provide a valid relationship with child.
+        /// </summary>
+        public static string Msg_Error_User_Resgister_No_RelationShip_Defined {
+            get {
+                return ResourceManager.GetString("Msg_Error_User_Resgister_No_RelationShip_Defined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please use add button to add address.
         /// </summary>
         public static string Msg_Info_Add_Address_Guidance {
@@ -1263,6 +1353,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Info_Amount_Paid {
             get {
                 return ResourceManager.GetString("Msg_Info_Amount_Paid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authenticating....
+        /// </summary>
+        public static string Msg_Info_Authenticating {
+            get {
+                return ResourceManager.GetString("Msg_Info_Authenticating", resourceCulture);
             }
         }
         
@@ -1591,6 +1690,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User has been added to system.
+        /// </summary>
+        public static string Msg_Success_User_Added_To_System {
+            get {
+                return ResourceManager.GetString("Msg_Success_User_Added_To_System", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User has been linked.
         /// </summary>
         public static string Msg_Sucess_User_Linked {
@@ -1704,6 +1812,15 @@ namespace Maktab.Consumer.Localization {
         public static string Old_Password_HelperText {
             get {
                 return ResourceManager.GetString("Old_Password_HelperText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Optional.
+        /// </summary>
+        public static string Optional {
+            get {
+                return ResourceManager.GetString("Optional", resourceCulture);
             }
         }
         
@@ -1906,6 +2023,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Register.
+        /// </summary>
+        public static string Register {
+            get {
+                return ResourceManager.GetString("Register", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Registration Fee.
         /// </summary>
         public static string Registration_Fee {
@@ -1920,6 +2046,15 @@ namespace Maktab.Consumer.Localization {
         public static string Registration_Open {
             get {
                 return ResourceManager.GetString("Registration_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registration Progress.
+        /// </summary>
+        public static string Registration_Progress {
+            get {
+                return ResourceManager.GetString("Registration_Progress", resourceCulture);
             }
         }
         
@@ -1956,6 +2091,15 @@ namespace Maktab.Consumer.Localization {
         public static string Repeat_Password_HelperText {
             get {
                 return ResourceManager.GetString("Repeat_Password_HelperText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required.
+        /// </summary>
+        public static string Required {
+            get {
+                return ResourceManager.GetString("Required", resourceCulture);
             }
         }
         
@@ -2059,6 +2203,24 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Skip Anyway.
+        /// </summary>
+        public static string Skip_Anyway {
+            get {
+                return ResourceManager.GetString("Skip_Anyway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spouse information can be added later from your profile..
+        /// </summary>
+        public static string Spouse_Info_Can_Be_Added_Later {
+            get {
+                return ResourceManager.GetString("Spouse_Info_Can_Be_Added_Later", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start.
         /// </summary>
         public static string Start {
@@ -2086,6 +2248,42 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add an emergency contact person. The school will use this contact if we cannot reach you. This step is optional..
+        /// </summary>
+        public static string Step_Instruction_Emergency_Contact {
+            get {
+                return ResourceManager.GetString("Step_Instruction_Emergency_Contact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add additional family information for school records. This step is optional..
+        /// </summary>
+        public static string Step_Instruction_Extended_Info {
+            get {
+                return ResourceManager.GetString("Step_Instruction_Extended_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter your home address so the school can contact you if needed..
+        /// </summary>
+        public static string Step_Instruction_Family_Address {
+            get {
+                return ResourceManager.GetString("Step_Instruction_Family_Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add information about your spouse or co-guardian. This step is optional but recommended..
+        /// </summary>
+        public static string Step_Instruction_Spouse {
+            get {
+                return ResourceManager.GetString("Step_Instruction_Spouse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Step {0}.
         /// </summary>
         public static string Step_Number {
@@ -2109,6 +2307,15 @@ namespace Maktab.Consumer.Localization {
         public static string Tax_Info {
             get {
                 return ResourceManager.GetString("Tax_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tip.
+        /// </summary>
+        public static string Tip {
+            get {
+                return ResourceManager.GetString("Tip", resourceCulture);
             }
         }
         

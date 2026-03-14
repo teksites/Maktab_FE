@@ -169,7 +169,7 @@
   <data name="Password_Forgot" xml:space="preserve">
     <value>Mot de passe oublié</value>
   </data>
-  <data name="Authenticating" xml:space="preserve">
+  <data name="Msg_Info_Authenticating" xml:space="preserve">
     <value>Authentification...</value>
   </data>
   <data name="Processing" xml:space="preserve">
@@ -855,5 +855,74 @@
   </data>
   <data name="Details" xml:space="preserve">
     <value>Détails</value>
+  </data>
+  <data name="Registration_Progress" xml:space="preserve">
+    <value>Progression de l'inscription</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Requis</value>
+  </data>
+  <data name="Optional" xml:space="preserve">
+    <value>Facultatif</value>
+  </data>
+  <data name="Completion" xml:space="preserve">
+    <value>Achèvement</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Complet</value>
+  </data>
+  <data name="Tip" xml:space="preserve">
+    <value>Conseil</value>
+  </data>
+  <data name="Complete_Required_Steps_To_Finish" xml:space="preserve">
+    <value>Terminez toutes les étapes requises pour terminer l’inscription</value>
+  </data>
+  <data name="Step_Instruction_Family_Address" xml:space="preserve">
+    <value>Veuillez entrer votre adresse personnelle afin que l'école puisse vous contacter si nécessaire.</value>
+  </data>
+  <data name="Step_Instruction_Spouse" xml:space="preserve">
+    <value>Ajoutez des informations sur votre conjoint ou co-tuteur. Cette étape est facultative mais recommandée.</value>
+  </data>
+  <data name="Step_Instruction_Extended_Info" xml:space="preserve">
+    <value>Ajoutez des informations familiales supplémentaires pour les dossiers scolaires. Cette étape est facultative.</value>
+  </data>
+  <data name="Step_Instruction_Emergency_Contact" xml:space="preserve">
+    <value>Ajoutez une personne à contacter en cas d'urgence. L'école utilisera ce contact si nous ne pouvons pas vous joindre. Cette étape est facultative.</value>
+  </data>
+  <data name="Confirm_Skip" xml:space="preserve">
+    <value>Passer cette étape ?</value>
+  </data>
+  <data name="Skip_Anyway" xml:space="preserve">
+    <value>Sauter quand même</value>
+  </data>
+  <data name="Go_Back" xml:space="preserve">
+    <value>Retourner</value>
+  </data>
+  <data name="Spouse_Info_Can_Be_Added_Later" xml:space="preserve">
+    <value>Les informations sur le conjoint peuvent être ajoutées ultérieurement à partir de votre profil.</value>
+  </data>
+  <data name="Extended_Info_Can_Be_Added_Later" xml:space="preserve">
+    <value>Les informations sur la famille élargie peuvent être ajoutées ultérieurement à partir de votre profil.</value>
+  </data>
+  <data name="Information_Added" xml:space="preserve">
+    <value>Informations ajoutées</value>
+  </data>
+  <data name="Information_Can_Be_Edited_Anytime" xml:space="preserve">
+    <value>Vous pouvez modifier ces informations à tout moment depuis votre profil.</value>
+  </data>
+  <data name="Msg_Error_User_Resgister_No_RelationShip_Defined" xml:space="preserve">
+    <value>Veuillez fournir une relation valide avec l'enfant</value>
+  </data>
+  <data name="Msg_Error_User_Resgister_Already_Registered" xml:space="preserve">
+    <value>L'utilisateur est déjà enregistré dans le système ; Veuillez vous connecter pour continuer</value>
+  </data>
+  <data name="Msg_Success_User_Added_To_System" xml:space="preserve">
+    <value>L'utilisateur a été ajouté au système</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Registre</value>
+  </data>
+  <data name="Msg_Error_Password_Not_Match" xml:space="preserve">
+    <value>Les mots de passe ne correspondent pas</value>
   </data>
 </root>
