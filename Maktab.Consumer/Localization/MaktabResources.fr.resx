@@ -120,16 +120,6 @@
   <data name="AppTitle" xml:space="preserve">
     <value>ICC Maktab</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Login" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="MainPageDescription" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Register" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
   <data name="Login" xml:space="preserve">
     <value>Se connecter</value>
   </data>
@@ -924,5 +914,52 @@
   </data>
   <data name="Msg_Error_Password_Not_Match" xml:space="preserve">
     <value>Les mots de passe ne correspondent pas</value>
+  </data>
+  <data name="Agree_Terms_Conditions" xml:space="preserve">
+    <value>J'accepte les termes et conditions</value>
+  </data>
+  <data name="Read_Terms_Conditions" xml:space="preserve">
+    <value>Lire les termes et conditions</value>
+  </data>
+  <data name="Msg_Info_Password_Policy" xml:space="preserve">
+    <value>Minimum 8 caractères, 1 majuscule, 1 chiffre</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Accepter</value>
+  </data>
+  <data name="Terms_And_Conditions" xml:space="preserve">
+    <value>Termes et conditions</value>
+  </data>
+  <data name="Terms_And_Conditions_Content" xml:space="preserve">
+    <value>&lt;strong&gt;1. Acceptation des conditions&lt;/strong&gt;
+&lt;p&gt;En accédant et en utilisant cette plateforme, vous acceptez d'être lié par les termes et dispositions de cet accord.&lt;/p&gt;
+
+&lt;strong&gt;2. Utiliser la licence&lt;/strong&gt;
+&lt;p&gt;L'autorisation est accordée de télécharger temporairement une copie du matériel (informations ou logiciels) sur cette plate-forme à des fins de visualisation transitoire personnelle et non commerciale uniquement. Il s'agit de l'octroi d'une licence, et non d'un transfert de titre, et en vertu de cette licence, vous ne pouvez pas :
+&lt;ul&gt;
+&lt;li&gt;Modifier ou copier les matériaux&lt;/li&gt;
+&lt;li&gt;Utiliser les documents à des fins commerciales ou pour toute exposition publique&lt;/li&gt;
+&lt;li&gt;Tentative de décompilation ou d'ingénierie inverse de tout logiciel contenu sur la plate-forme&lt;/li&gt;
+&lt;li&gt;Supprimez toute mention de droit d'auteur ou toute autre mention de propriété des documents&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+
+&lt;strong&gt;3. Avis de non-responsabilité&lt;/strong&gt;
+&lt;p&gt;Les documents présents sur cette plateforme sont fournis « tels quels ». Nous n'offrons aucune garantie, expresse ou implicite, et déclinons et annulons par la présente toutes les autres garanties, y compris, sans limitation, les garanties ou conditions implicites de qualité marchande, d'adéquation à un usage particulier, ou de non-violation de la propriété intellectuelle ou autre violation des droits.&lt;/p&gt;
+
+&lt;strong&gt;4. Limites&lt;/strong&gt;
+&lt;p&gt;En aucun cas, notre plateforme ou ses fournisseurs ne pourront être tenus responsables de tout dommage (y compris, sans limitation, les dommages liés à la perte de données ou de profits, ou à l'interruption des activités) découlant de l'utilisation ou de l'impossibilité d'utiliser les éléments de la plateforme.&lt;/p&gt;
+
+&lt;strong&gt;5. Précision des matériaux&lt;/strong&gt;
+&lt;p&gt;Les éléments apparaissant sur la plateforme peuvent contenir des erreurs techniques, typographiques ou photographiques. Nous ne garantissons pas que les éléments de la plateforme soient exacts, complets ou à jour. Nous pouvons apporter des modifications aux éléments contenus sur la plateforme à tout moment et sans préavis.&lt;/p&gt;
+
+&lt;strong&gt;6. Liens&lt;/strong&gt;
+&lt;p&gt;Nous n'avons pas examiné tous les sites liés à notre site Web et ne sommes pas responsables du contenu de ces sites liés. L'inclusion de tout lien n'implique pas notre approbation du site. L'utilisation de ces sites Web liés se fait aux propres risques de l'utilisateur.&lt;/p&gt;
+
+&lt;strong&gt;7. Modifications&lt;/strong&gt;
+&lt;p&gt;Nous pouvons réviser ces conditions d'utilisation de la plateforme à tout moment et sans préavis. En utilisant cette plateforme, vous acceptez d'être lié par la version alors en vigueur de ces conditions d'utilisation.&lt;/p&gt;
+
+&lt;strong&gt;8. Loi applicable&lt;/strong&gt;
+&lt;p&gt;Ces termes et conditions sont régis et interprétés conformément aux lois de la juridiction dans laquelle la plateforme fonctionne, et vous vous soumettez irrévocablement à la compétence exclusive des tribunaux de cet endroit.&lt;/p&gt;</value>
   </data>
 </root>

@@ -79,6 +79,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Accept.
+        /// </summary>
+        public static string Accept {
+            get {
+                return ResourceManager.GetString("Accept", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Action.
         /// </summary>
         public static string Action {
@@ -282,6 +291,15 @@ namespace Maktab.Consumer.Localization {
         public static string Addresses {
             get {
                 return ResourceManager.GetString("Addresses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I agree to terms and conditions.
+        /// </summary>
+        public static string Agree_Terms_Conditions {
+            get {
+                return ResourceManager.GetString("Agree_Terms_Conditions", resourceCulture);
             }
         }
         
@@ -1456,6 +1474,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Minimum 8 characters, 1 uppercase, 1 number.
+        /// </summary>
+        public static string Msg_Info_Password_Policy {
+            get {
+                return ResourceManager.GetString("Msg_Info_Password_Policy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unique payment code for this transaction.
         /// </summary>
         public static string Msg_Info_Payment_Code {
@@ -2023,6 +2050,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Read terms and conditions.
+        /// </summary>
+        public static string Read_Terms_Conditions {
+            get {
+                return ResourceManager.GetString("Read_Terms_Conditions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Register.
         /// </summary>
         public static string Register {
@@ -2307,6 +2343,31 @@ namespace Maktab.Consumer.Localization {
         public static string Tax_Info {
             get {
                 return ResourceManager.GetString("Tax_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Terms and Conditions.
+        /// </summary>
+        public static string Terms_And_Conditions {
+            get {
+                return ResourceManager.GetString("Terms_And_Conditions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;strong&gt;1. Acceptance of Terms&lt;/strong&gt;
+        ///&lt;p&gt;By accessing and using this platform, you accept and agree to be bound by the terms and provision of this agreement.&lt;/p&gt;
+        ///
+        ///&lt;strong&gt;2. Use License&lt;/strong&gt;
+        ///&lt;p&gt;Permission is granted to temporarily download one copy of the materials (information or software) on this platform for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
+        ///&lt;ul&gt;
+        ///&lt;li&gt;Modify or copy the materials&lt;/li&gt;
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string Terms_And_Conditions_Content {
+            get {
+                return ResourceManager.GetString("Terms_And_Conditions_Content", resourceCulture);
             }
         }
         

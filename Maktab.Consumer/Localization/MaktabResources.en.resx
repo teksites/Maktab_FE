@@ -123,12 +123,8 @@
   <data name="Login" xml:space="preserve">
     <value>Login</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="MainPageDescription" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="Register" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
+  <data name="Signup" xml:space="preserve">
+    <value>Signup</value>
   </data>
   <data name="MainPage_Title" xml:space="preserve">
     <value>Welcome to ICC Maktab</value>
@@ -144,9 +140,6 @@
   </data>
   <data name="FeaturedCourses" xml:space="preserve">
     <value>Featured Courses</value>
-  </data>
-  <data name="Signup" xml:space="preserve">
-    <value>Signup</value>
   </data>
   <data name="Email" xml:space="preserve">
     <value>Email</value>
@@ -223,11 +216,11 @@
   <data name="Msg_Processing" xml:space="preserve">
     <value>Processing...</value>
   </data>
-  <data name="Msg_Error_Address_No_Assignee" xml:space="preserve">
-    <value>Please provide valid address assignee</value>
-  </data>
   <data name="Msg_Error_Address_No_AddressType" xml:space="preserve">
     <value>Please provide valid address type</value>
+  </data>
+  <data name="Msg_Error_Address_No_Assignee" xml:space="preserve">
+    <value>Please provide valid address assignee</value>
   </data>
   <data name="Msg_Error_Address_Save" xml:space="preserve">
     <value>Error saving address please try in few moments</value>
@@ -244,11 +237,11 @@
   <data name="Gender" xml:space="preserve">
     <value>Gender</value>
   </data>
-  <data name="RAMQ_Expiry" xml:space="preserve">
-    <value>RAMQ Expiry</value>
-  </data>
   <data name="RAMQ_Number" xml:space="preserve">
     <value>RAMQ Number</value>
+  </data>
+  <data name="RAMQ_Expiry" xml:space="preserve">
+    <value>RAMQ Expiry</value>
   </data>
   <data name="Allergies" xml:space="preserve">
     <value>Allergies</value>
@@ -295,11 +288,11 @@
   <data name="Active_Tax_Payer" xml:space="preserve">
     <value>Active tax payer</value>
   </data>
-  <data name="Msg_Error_No_Address_Id" xml:space="preserve">
-    <value>Please provide valid address Id</value>
-  </data>
   <data name="Msg_Error_Add_ExtendedInfo_Save" xml:space="preserve">
     <value>Error saving extended info. please try in few moments</value>
+  </data>
+  <data name="Msg_Error_No_Address_Id" xml:space="preserve">
+    <value>Please provide valid address Id</value>
   </data>
   <data name="Addresses" xml:space="preserve">
     <value>Addresses</value>
@@ -358,11 +351,11 @@
   <data name="Msg_Loading_Course_Details" xml:space="preserve">
     <value>Loading course details...</value>
   </data>
-  <data name="Date_End" xml:space="preserve">
-    <value>End Date</value>
-  </data>
   <data name="Date_Start" xml:space="preserve">
     <value>Start Date</value>
+  </data>
+  <data name="Date_End" xml:space="preserve">
+    <value>End Date</value>
   </data>
   <data name="Registration_Open" xml:space="preserve">
     <value>Registration open</value>
@@ -379,11 +372,11 @@
   <data name="Enrollments" xml:space="preserve">
     <value>Enrollments</value>
   </data>
-  <data name="Inactive" xml:space="preserve">
-    <value>Inactive</value>
-  </data>
   <data name="Active" xml:space="preserve">
     <value>Active</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
@@ -394,11 +387,11 @@
   <data name="Msg_Question_Remove_Enrollment" xml:space="preserve">
     <value>Would you like to remove enrollment?</value>
   </data>
-  <data name="Msg_Success_Remove_Enrollment" xml:space="preserve">
-    <value>Enrollment Remove successfully</value>
-  </data>
   <data name="Msg_Error_Remove_Enrollment" xml:space="preserve">
     <value>Enrollment can not be removed at the moment, please try in few minutes</value>
+  </data>
+  <data name="Msg_Success_Remove_Enrollment" xml:space="preserve">
+    <value>Enrollment Remove successfully</value>
   </data>
   <data name="Course" xml:space="preserve">
     <value>Course</value>
@@ -748,11 +741,11 @@
   <data name="Msg_Info_Total_Amount" xml:space="preserve">
     <value>Total amount across all courses</value>
   </data>
-  <data name="Partially_Paid" xml:space="preserve">
-    <value>Partially Paid</value>
-  </data>
   <data name="Paid" xml:space="preserve">
     <value>Paid</value>
+  </data>
+  <data name="Partially_Paid" xml:space="preserve">
+    <value>Partially Paid</value>
   </data>
   <data name="Unpaid" xml:space="preserve">
     <value>Unpaid</value>
@@ -921,5 +914,52 @@
   </data>
   <data name="Msg_Error_Password_Not_Match" xml:space="preserve">
     <value>Passwords don't match</value>
+  </data>
+  <data name="Agree_Terms_Conditions" xml:space="preserve">
+    <value>I agree to terms and conditions</value>
+  </data>
+  <data name="Read_Terms_Conditions" xml:space="preserve">
+    <value>Read terms and conditions</value>
+  </data>
+  <data name="Msg_Info_Password_Policy" xml:space="preserve">
+    <value>Minimum 8 characters, 1 uppercase, 1 number</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="Terms_And_Conditions" xml:space="preserve">
+    <value>Terms and Conditions</value>
+  </data>
+  <data name="Terms_And_Conditions_Content" xml:space="preserve">
+    <value>&lt;strong&gt;1. Acceptance of Terms&lt;/strong&gt;
+&lt;p&gt;By accessing and using this platform, you accept and agree to be bound by the terms and provision of this agreement.&lt;/p&gt;
+
+&lt;strong&gt;2. Use License&lt;/strong&gt;
+&lt;p&gt;Permission is granted to temporarily download one copy of the materials (information or software) on this platform for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
+&lt;ul&gt;
+&lt;li&gt;Modify or copy the materials&lt;/li&gt;
+&lt;li&gt;Use the materials for any commercial purpose or for any public display&lt;/li&gt;
+&lt;li&gt;Attempt to decompile or reverse engineer any software contained on the platform&lt;/li&gt;
+&lt;li&gt;Remove any copyright or other proprietary notations from the materials&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+
+&lt;strong&gt;3. Disclaimer&lt;/strong&gt;
+&lt;p&gt;The materials on this platform are provided on an "as-is" basis. We make no warranties, expressed or implied, and hereby disclaim and negate all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.&lt;/p&gt;
+
+&lt;strong&gt;4. Limitations&lt;/strong&gt;
+&lt;p&gt;In no event shall our platform or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on the platform.&lt;/p&gt;
+
+&lt;strong&gt;5. Accuracy of Materials&lt;/strong&gt;
+&lt;p&gt;The materials appearing on the platform could include technical, typographical, or photographic errors. We do not warrant that any of the materials on the platform are accurate, complete, or current. We may make changes to the materials contained on the platform at any time without notice.&lt;/p&gt;
+
+&lt;strong&gt;6. Links&lt;/strong&gt;
+&lt;p&gt;We have not reviewed all of the sites linked to our website and are not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by us of the site. Use of any such linked website is at the user's own risk.&lt;/p&gt;
+
+&lt;strong&gt;7. Modifications&lt;/strong&gt;
+&lt;p&gt;We may revise these terms of service for the platform at any time without notice. By using this platform, you are agreeing to be bound by the then current version of these terms of service.&lt;/p&gt;
+
+&lt;strong&gt;8. Governing Law&lt;/strong&gt;
+&lt;p&gt;These terms and conditions are governed by and construed in accordance with the laws of the jurisdiction in which the platform operates, and you irrevocably submit to the exclusive jurisdiction of the courts in that location.&lt;/p&gt;</value>
   </data>
 </root>

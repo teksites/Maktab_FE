@@ -8,19 +8,20 @@
 @using MaktabDataContracts.Requests.Users
 
 @inject IUserService UserService
+@inject IDialogService DialogService
 
-<MudContainer MaxWidth="MaxWidth.Small" Class="py-8">
+<MudContainer MaxWidth="MaxWidth.Medium" Class="py-8 px-4">
      @if (isInitialized)
      {
-          <MudPaper Class="pa-6" Elevation="0" Outlined="true">
+          <MudPaper Class="pa-4 pa-sm-6" Elevation="0" Outlined="true">
                <MudText Typo="Typo.h5" Class="mb-6 text-center">Register User</MudText>
                <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandlerRegisterUser)" Validated="@(OnFormValidated)">
                     <MudTextField T="string" @bind-Value="addUserInformation.FirstName" Label=@L[MaktabResources.First_Name] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.First_Name] />
                     <MudTextField T="string" @bind-Value="addUserInformation.LastName" Label=@L[MaktabResources.Last_Name] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Last_Name] />
                     <MudTextField T="string" @bind-Value="addUserInformation.Email" Label=@L[MaktabResources.Email] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Email]
-                    Validation="@(new EmailAddressAttribute() {ErrorMessage = @L[MaktabResources.Msg_Error_Email_Address_Invalid]})" />
+                                  Validation="@(new EmailAddressAttribute() {ErrorMessage = @L[MaktabResources.Msg_Error_Email_Address_Invalid]})" />
                     <MudTextField T="string" @bind-Value="addUserInformation.Phone" Label=@L[MaktabResources.Phone] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Phone]
-                    Validation="@(new PhoneAttribute() { ErrorMessage = @L[MaktabResources.Msg_Error_Phone_Number_Invalid]})" />
+                                  Validation="@(new PhoneAttribute() { ErrorMessage = @L[MaktabResources.Msg_Error_Phone_Number_Invalid]})" />
 
                     <MudSelect @bind-Value="addUserInformation.Relationship" Label=@L[MaktabResources.Relashion_With_Children] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Relashion_With_Children]>
                          @foreach (var margin in relationShips)
@@ -29,13 +30,15 @@
                          }
                     </MudSelect>
 
-                    <MudTextField T="string" Label=@L[MaktabResources.Password] HelperText="Choose a strong password" @ref="pwField1"
-                    InputType="InputType.Password"
-                    Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
-                    RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Password]/>
+                    <MudTextField T="string" Label=@L[MaktabResources.Password]
+                                  HelperText=@L[MaktabResources.Msg_Info_Password_Policy]
+                                  @ref="pwField1"
+                                  InputType="InputType.Password"
+                                  Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                                  RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Password] />
                     <MudTextField T="string"
-                    Label=@L[MaktabResources.Password] HelperText="Repeat the password" InputType="InputType.Password"
-                    Validation="@(new Func<string, string>(PasswordMatch))" />
+                                  Label=@L[MaktabResources.Password] HelperText="Repeat the password" InputType="InputType.Password"
+                                  Validation="@(new Func<string, string>(PasswordMatch))" />
 
                     @if (!string.IsNullOrWhiteSpace(_errorMessage))
                     {
@@ -44,16 +47,24 @@
                          </MudAlert>
                     }
 
-                    <MudCheckBox T="bool" Required="true" RequiredError="You must agree to terms and conditions" 
-                    Label="I agree to terms and conditions of Maktab" Class="mb-6" />
+                    <!-- For terms & conditions -->
+                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center" Class="mb-6">
+                         <MudCheckBox T="bool"
+                                      @bind-Value="termsAccepted"
+                                      Required="true"
+                                      Label=@L[MaktabResources.Agree_Terms_Conditions]
+                                      Dense="true" />
+
+                         <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="@ShowTermsDialog">@L[MaktabResources.Read_Terms_Conditions]</MudButton>
+                    </MudStack>
 
                     <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
-                         <MudButton Href="@Constants.LoginRoute" Variant="Variant.Outlined" 
-                         Color="Color.Default" StartIcon="@Icons.Material.Filled.Login"
-                         Disabled="@(IsRegistering)">LogIn</MudButton>
+                         <MudButton Href="@Constants.LoginRoute" Variant="Variant.Outlined"
+                                    Color="Color.Default" StartIcon="@Icons.Material.Filled.Login"
+                                    Disabled="@(IsRegistering)">@L[MaktabResources.Login]</MudButton>
                          <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary"
-                         StartIcon="@Icons.Material.Filled.PersonAdd"
-                         Disabled="@(!_isValid || IsRegistering)" OnClick="@(HandlerRegisterUser)">
+                                    StartIcon="@Icons.Material.Filled.PersonAdd"
+                                    Disabled="@(!_isValid || IsRegistering)" OnClick="@(HandlerRegisterUser)">
                               @if (IsRegistering)
                               {
                                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
@@ -79,6 +90,7 @@
 @code {
 
      AddUserInformation addUserInformation = new AddUserInformation() { Relationship = Relationship.Unknown };
+     private bool termsAccepted = false;
      private bool isInitialized = false;
      bool IsRegistering;
      MudTextField<string> pwField1;
@@ -99,6 +111,18 @@
           if (pwField1.Value != arg)
                return L[MaktabResources.Msg_Error_Password_Not_Match];
           return null;
+     }
+
+     private async Task ShowTermsDialog()
+     {
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true };
+          var dialog = await DialogService.ShowAsync<TermsAndConditionsDialog>(@L[MaktabResources.Terms_And_Conditions], options);
+          var result = await dialog.Result;
+          if (result?.Data is bool accepted)
+          {
+               termsAccepted = accepted;
+               RequestRender();
+          }
      }
 
      private async void HandlerRegisterUser()
