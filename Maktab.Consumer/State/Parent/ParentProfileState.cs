@@ -220,6 +220,7 @@ namespace Maktab.Consumer.State.Parent
                lock (EnrollmentSyncLock)
                {
                     _courseEnrollments = items.ToList();
+                    _courseEnrollments.Sort((x, y) => x.EnrollmentStatus.CompareTo(y.EnrollmentStatus));
                }
 
                NotifyStateChanged();

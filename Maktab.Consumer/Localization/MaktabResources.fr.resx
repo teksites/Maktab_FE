@@ -962,4 +962,19 @@
 &lt;strong&gt;8. Loi applicable&lt;/strong&gt;
 &lt;p&gt;Ces termes et conditions sont régis et interprétés conformément aux lois de la juridiction dans laquelle la plateforme fonctionne, et vous vous soumettez irrévocablement à la compétence exclusive des tribunaux de cet endroit.&lt;/p&gt;</value>
   </data>
+  <data name="EnrollmentStatus_Awaiting" xml:space="preserve">
+    <value>En attente</value>
+  </data>
+  <data name="EnrollmentStatus_Registered" xml:space="preserve">
+    <value>Inscrit</value>
+  </data>
+  <data name="EnrollmentStatus_Refunded" xml:space="preserve">
+    <value>Remboursé</value>
+  </data>
+  <data name="EnrollmentStatus_Cancelled" xml:space="preserve">
+    <value>Annulé</value>
+  </data>
+  <data name="EnrollmentStatus_Unknown" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
 </root>

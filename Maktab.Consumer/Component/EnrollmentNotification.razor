@@ -68,7 +68,7 @@
                                         {
                                              <MudMenuItem OnClick="OpenAssignCourseDialog">Enroll</MudMenuItem>
                                         } *@
-                                        <MudMenuItem OnClick="@(() => RemoveEnrollment(context))">@L[MaktabResources.Delete]</MudMenuItem>
+                                        <MudMenuItem Disabled="@(CanRemoveEnrollment(context) == false)" OnClick="@(() => RemoveEnrollment(context))">@L[MaktabResources.Delete]</MudMenuItem>
                                    </MudMenu>
 
                               </MudTd>
@@ -253,8 +253,39 @@
      }
 
      private string GetUseDayCareStatusText(StudentCourseEnrollmentResponse studentCourseEnrollment) => studentCourseEnrollment.WillUseDayCare ? L[MaktabResources.Yes] : L[MaktabResources.No];
-     private string GetStatusText(StudentCourseEnrollmentResponse studentCourseEnrollment) => studentCourseEnrollment.IsActive ? L[MaktabResources.Active] : L[MaktabResources.Inactive];
-     private Color GetStatusColor(StudentCourseEnrollmentResponse studentCourseEnrollment) => studentCourseEnrollment.IsActive ? Color.Success : Color.Warning;
+     private string GetStatusText(StudentCourseEnrollmentResponse studentCourseEnrollment)
+     {
+          switch(studentCourseEnrollment.EnrollmentStatus)
+          {
+               case MaktabDataContracts.Enums.EnrollmentStatus.Awaiting:
+                    return L[MaktabResources.EnrollmentStatus_Awaiting];
+               case MaktabDataContracts.Enums.EnrollmentStatus.Registered:
+                    return L[MaktabResources.EnrollmentStatus_Registered];
+               case MaktabDataContracts.Enums.EnrollmentStatus.Refunded:
+                    return L[MaktabResources.EnrollmentStatus_Refunded];
+               case MaktabDataContracts.Enums.EnrollmentStatus.Cancelled:
+                    return L[MaktabResources.EnrollmentStatus_Cancelled];
+               default:
+                    return L[MaktabResources.EnrollmentStatus_Unknown];
+          }
+     }
+
+     private Color GetStatusColor(StudentCourseEnrollmentResponse studentCourseEnrollment)
+     {
+       switch(studentCourseEnrollment.EnrollmentStatus)
+          {
+               case MaktabDataContracts.Enums.EnrollmentStatus.Awaiting:
+                    return Color.Info;
+               case MaktabDataContracts.Enums.EnrollmentStatus.Registered:
+                    return Color.Success;
+               case MaktabDataContracts.Enums.EnrollmentStatus.Refunded:
+                    return Color.Warning;
+               case MaktabDataContracts.Enums.EnrollmentStatus.Cancelled:
+                    return Color.Error;
+               default:
+                    return Color.Default;
+          }
+     }
 
      private async Task RemoveEnrollment(StudentCourseEnrollmentResponse e)
      {
@@ -281,6 +312,13 @@
                     Snackbar.Add(L[MaktabResources.Msg_Error_Remove_Enrollment], Severity.Error);
                }
           }
+     }
+
+     private bool CanRemoveEnrollment(StudentCourseEnrollmentResponse enrollment)
+     {
+          // Implement any logic to determine if the enrollment can be removed
+          // For example, you might check if the enrollment is active or if there are any pending transactions
+          return enrollment.IsActive && enrollment.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Awaiting; // Placeholder - allow all removals for now
      }
 }
 

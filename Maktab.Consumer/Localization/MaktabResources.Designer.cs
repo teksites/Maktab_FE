@@ -835,6 +835,51 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Awaiting.
+        /// </summary>
+        public static string EnrollmentStatus_Awaiting {
+            get {
+                return ResourceManager.GetString("EnrollmentStatus_Awaiting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancelled.
+        /// </summary>
+        public static string EnrollmentStatus_Cancelled {
+            get {
+                return ResourceManager.GetString("EnrollmentStatus_Cancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refunded.
+        /// </summary>
+        public static string EnrollmentStatus_Refunded {
+            get {
+                return ResourceManager.GetString("EnrollmentStatus_Refunded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registered.
+        /// </summary>
+        public static string EnrollmentStatus_Registered {
+            get {
+                return ResourceManager.GetString("EnrollmentStatus_Registered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string EnrollmentStatus_Unknown {
+            get {
+                return ResourceManager.GetString("EnrollmentStatus_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string Error {

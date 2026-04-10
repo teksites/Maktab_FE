@@ -963,4 +963,19 @@
 &lt;strong&gt;8. Governing Law&lt;/strong&gt;
 &lt;p&gt;These terms and conditions are governed by and construed in accordance with the laws of the jurisdiction in which the platform operates, and you irrevocably submit to the exclusive jurisdiction of the courts in that location.&lt;/p&gt;</value>
   </data>
+  <data name="EnrollmentStatus_Awaiting" xml:space="preserve">
+    <value>Awaiting</value>
+  </data>
+  <data name="EnrollmentStatus_Registered" xml:space="preserve">
+    <value>Registered</value>
+  </data>
+  <data name="EnrollmentStatus_Refunded" xml:space="preserve">
+    <value>Refunded</value>
+  </data>
+  <data name="EnrollmentStatus_Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="EnrollmentStatus_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
 </root>
