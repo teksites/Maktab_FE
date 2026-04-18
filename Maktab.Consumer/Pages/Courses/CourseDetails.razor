@@ -157,7 +157,6 @@
           bool isAuthorized = await SessionService.IsAuthenticatedAsync();
           if (isAuthorized)
           {
-               //await OpenAssignmentDialog(CourseId);
                NavigationManager.NavigateTo(Constants.ParentDashboardRoute);
           }
           else
@@ -168,32 +167,6 @@
      }
 
      private void BackToCourses() => NavigationManager.NavigateTo("/");
-
-     private async Task OpenAssignmentDialog(Guid courseId)
-     {
-          var parameters = new DialogParameters { ["CourseId"] = courseId };
-          var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-
-          var dialog = DialogService.Show<Dialogs.AssignChildrenToCourseDialog>( "Assign children to course" , parameters, options);
-          var result = await dialog.Result;
-
-          if (!result.Canceled )//&& result.Data is ChildResponse savedChild)
-          {
-               Snackbar.Add("Course assigned!", Severity.Success);
-
-               // if (child == null)
-               // {
-               //      //Parent.Children.Add(savedChild);
-               //      Snackbar.Add("Child added successfully!", Severity.Success);
-               // }
-               // else
-               // {
-               //      // var index = Parent.Children.FindIndex(c => c.Id == savedChild.Id);
-               //      // if (index >= 0) Parent.Children[index] = savedChild;
-               //      Snackbar.Add("Child updated successfully!", Severity.Success);
-               // }
-          }
-     }
 
      private string GetCourseName()
      {
