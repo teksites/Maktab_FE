@@ -1,18 +1,30 @@
 ﻿@using Maktab.Consumer.Helpers
 @using Maktab.Domain.Extensions
-
+@using Maktab.Consumer.State
 @using MaktabDataContracts.Responses.Course
 
 @inherits LocalizeableBaseComponent<CourseCard>
 
-@inject NavigationManager Navigation
+@inject UserStateService StateService
 
 <MudCard Class="flex-auto mb-4">
-     @* <MudCardMedia Image="@Course.ImageUrl" Height="180" /> *@
+     <MudCardHeader>
+          <MudText Typo="Typo.h5">@GetCourseName()</MudText>
+     </MudCardHeader>
      <MudCardContent>
-          <MudText Typo="Typo.h6">@(GetCourseName())</MudText>
           @* <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@Course.Instructor</MudText> *@
           <MudText Typo="Typo.body2" Class="truncate-2">@(GetCourseDescription())</MudText>
+
+          @if (ShowInstituteName)
+          {
+               <!-- Institute -->
+               <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
+                    <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Info" />
+                    <MudText Typo="Typo.subtitle1">
+                         <b>@L[MaktabResources.Institute]</b> @(GetInstituteName())
+                    </MudText>
+               </MudStack>
+          }
 
           @if (ShowProgress)
           {
@@ -62,6 +74,7 @@
      [Parameter] public bool ShowProgress { get; set; } = false;
      //[Parameter] public string ViewDetailsButtonText { get; set; }// = this.L[MaktabResources.View_Details];
      [Parameter] public bool HighlightButton { get; set; } = false;
+     [Parameter] public bool ShowInstituteName { get; set; } = false;
 
 
      protected override async Task OnInitializedAsync()
@@ -71,7 +84,7 @@
 
      private void NavigateToDetails()
      {
-          Navigation.NavigateTo(string.Format(Constants.CourseDetailsRoute, Course.CourseId));
+          NavigationManager.NavigateTo(string.Format(Constants.CourseDetailsRoute, Course.CourseId));
      }
 
      private string GetCourseName()
@@ -107,6 +120,19 @@
           else
           {
                return Course.Description;
+          }
+     }
+
+     private string GetInstituteName()
+     {
+          var institute = StateService.InstituteState.Institutes?.FirstOrDefault(i => i.InstituteId == Course.InstituteId);
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return institute?.NameFr ?? string.Empty;
+          }
+          else
+          {
+               return institute?.Name ?? string.Empty;
           }
      }
 }

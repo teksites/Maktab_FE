@@ -3,6 +3,7 @@
 @using Maktab.Consumer.State
 @using MaktabDataContracts.Responses.Course
 @using Maktab.Consumer.Extensions;
+@using MaktabDataContracts.Responses.Institute
 
 @inherits LocalizeableBaseComponent<MainPage>
 
@@ -24,11 +25,13 @@
      </MudPaper>
 
      <!-- Courses Section -->
-     <MudText Typo="Typo.h5" Class="mt-10 mb-6">@L[MaktabResources.FeaturedCourses]</MudText>
+     <MudText Typo="Typo.h5" Class="mt-10 mb-6">@L[MaktabResources.FeaturedInstitutes]</MudText>
      @if (isInitialized && !isDataLoading)
      {
-          <CourseList Courses=@_courses ShowProgress="false"
-          />
+          <InstituteList Institutes=@_institute/>
+          @* ShowCourseCount="true" /> *@
+          @* <CourseList Courses=@_courses ShowProgress="false"
+          /> *@
           @*  <MudGrid GutterSize="3">
         @foreach (var course in _courses)
         {
@@ -70,7 +73,8 @@
      // string emailValidationCode = string.Empty;
 
      //private IEnumerable<CourseResponseDetailed> _courses = Enumerable.Empty<CourseResponseDetailed>();
-     private IReadOnlyCollection<CourseResponseDetailed> _courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
+     //private IReadOnlyCollection<CourseResponseDetailed> _courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
+     private IReadOnlyCollection<InstituteResponse> _institute => StateService.InstituteState.Institutes ?? Array.Empty<InstituteResponse>();
 
      protected override void OnInitialized()
      {
@@ -96,7 +100,8 @@
      {
           isDataLoading = true;
 
-          await StateService.LoadActiveCoursesData(CourseService, forceReload);
+          //await StateService.LoadActiveCoursesData(CourseService, forceReload);
+          await StateService.LoadActiveInstitutesData(InstitutionService, forceReload);
 
           // if (StateService.InstituteState.Courses == null || forceReload)
           // {

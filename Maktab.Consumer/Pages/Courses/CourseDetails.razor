@@ -1,14 +1,15 @@
 ﻿@page "/courses/{CourseId:guid}"
 @using Maktab.Consumer.Base
+@using Maktab.Consumer.Extensions
+@using Maktab.Consumer.State
 @using MaktabDataContracts.Responses.Course
+@using MaktabDataContracts.Responses.Institute
 
 @inherits LocalizeableBaseComponent<CourseDetails>
 
-
 @inject IInstitutionService InstitutionService
 @inject ICourseService CourseService
-
-@inject NavigationManager Navigation
+@inject UserStateService StateService
 
 <MudContainer  Class="mt-8 mb-8">
     @if (_course is null)
@@ -40,6 +41,14 @@
             <!-- Description -->
                     <MudText Typo="Typo.body1" Class="mb-4">@(GetCourseDescription())</MudText>
 
+                    <!-- Institute -->
+                    <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
+                         <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Info" />
+                         <MudText Typo="Typo.subtitle1">
+                              <b>@L[MaktabResources.Institute]</b> @(GetInstituteName())
+                         </MudText>
+                    </MudStack>
+
                     @if (!string.IsNullOrEmpty(_course.PolicyHyperLink))
                     {
                          <MudLink Target="" Href="@_course.PolicyHyperLink">@L[MaktabResources.Policy]</MudLink>
@@ -69,8 +78,6 @@
 
                     <CourseGroupList CourseGroups="@_course.CourseEnrollmentGroups" />
 
-            <MudDivider Class="my-4" />
-
             
                </MudStack>
                <!-- CTA -->
@@ -96,20 +103,53 @@
     }
 </MudContainer>
 
-@code {
+     @code {
      [Inject] private IDialogService DialogService { get; set; } = default!;
 
      [Parameter] public Guid CourseId { get; set; }
      private CourseResponseDetailed? _course;
+     private InstituteResponse? _institute;  
 
-     //private IEnumerable<CourseEnrollmentGroupResponse> _couseGroups;
+     private bool isInitialized = false;
+     private bool isDataLoading = false;
 
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.InstituteState.OnChange += HandleStateChange;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.InstituteState.OnChange -= HandleStateChange;
+     }
 
      protected override async Task OnInitializedAsync()
      {
-          _course = await CourseService.GetCourseByIdAsync(CourseId);
+          await LoadData();
+
+          isInitialized = true;
+
           RequestRender();
-          //_couseGroups = await CourseGroupService.GetEnrollmentGroupsByCourseIdAsync(CourseId);
+     }
+
+     private async Task LoadData(bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadActiveInstitutesData(InstitutionService, forceReload);
+          await StateService.LoadActiveCoursesData(CourseService, forceReload);
+
+          _course = StateService.InstituteState.Courses?.FirstOrDefault(c => c.CourseId == CourseId);
+          _institute = StateService.InstituteState.Institutes?.FirstOrDefault(i => i.InstituteId == _course?.InstituteId);
+
+          isDataLoading = false;
      }
 
      protected async void EnrollChild()
@@ -117,7 +157,7 @@
           bool isAuthorized = await SessionService.IsAuthenticatedAsync();
           if (isAuthorized)
           {
-              //await OpenAssignmentDialog(CourseId);
+               //await OpenAssignmentDialog(CourseId);
                NavigationManager.NavigateTo(Constants.ParentDashboardRoute);
           }
           else
@@ -126,9 +166,8 @@
           }
 
      }
-     
 
-    private void BackToCourses() => Navigation.NavigateTo("/");
+     private void BackToCourses() => NavigationManager.NavigateTo("/");
 
      private async Task OpenAssignmentDialog(Guid courseId)
      {
@@ -192,4 +231,15 @@
           }
      }
 
+     private string GetInstituteName()
+     {
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return _institute?.NameFr ?? string.Empty;
+          }
+          else
+          {
+               return _institute?.Name ?? string.Empty;
+          }
+     }
 }

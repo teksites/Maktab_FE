@@ -126,5 +126,14 @@ namespace Maktab.Consumer.State.Course
 
                NotifyStateChanged();
           }
+
+          public IReadOnlyList<CourseResponseDetailed> GetCoursesByInstituteId(Guid instituteId)
+          {
+               if (_courses == null) return Array.Empty<CourseResponseDetailed>();
+               lock (CourseSyncLock)
+               {
+                    return _courses.Where(c => c.InstituteId == instituteId).ToList();
+               }
+          }
      }
 }

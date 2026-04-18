@@ -1,0 +1,74 @@
+﻿@using Maktab.Consumer.Helpers
+@using Maktab.Domain.Extensions
+@using MaktabDataContracts.Responses.Institute
+
+@inherits LocalizeableBaseComponent<InstituteCard>
+
+@inject NavigationManager Navigation
+
+<MudCard Class="flex-auto mb-4">
+     <MudCardHeader>
+          <MudText Typo="Typo.h5">@GetInstituteName()</MudText>
+     </MudCardHeader>
+     @* <MudCardMedia Image="@Course.ImageUrl" Height="180" /> *@
+     <MudCardContent>
+          <MudText Typo="Typo.body2" Class="truncate-2">@(GetInstituteDescription())</MudText>
+
+     </MudCardContent>
+
+     <MudCardActions>
+          @if (HighlightButton)
+          {
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToDetails">
+                    @L[MaktabResources.View_Details]
+               </MudButton>
+          }
+          else
+          {
+               <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="NavigateToDetails">
+                    @L[MaktabResources.View_Details]
+               </MudButton>
+          }
+     </MudCardActions>
+</MudCard>
+
+@code {
+     [Parameter] public InstituteResponse Institute { get; set; } = new();
+     [Parameter] public bool HighlightButton { get; set; } = false;
+     bool isInitialized = false;
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+          isInitialized = true;
+     }
+
+     private void NavigateToDetails()
+     {
+          Navigation.NavigateTo(string.Format(Constants.InstituteDetailsRoute, Institute.InstituteId));
+     }
+
+     private string GetInstituteName()
+     {
+          if(GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return Institute.NameFr;
+          }
+          else
+          {
+               return Institute.Name;
+          }
+     }
+
+     private string GetInstituteDescription()
+     {
+          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          {
+               return Institute.DescriptionFr;
+          }
+          else
+          {
+               return Institute.Description;
+          }
+     }
+}

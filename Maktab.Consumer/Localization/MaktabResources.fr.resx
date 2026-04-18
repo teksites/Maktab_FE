@@ -177,7 +177,7 @@
   <data name="Provide_Valid_Credentials" xml:space="preserve">
     <value>Veuillez fournir des informations d'identification valides</value>
   </data>
-  <data name="No_Course_Found" xml:space="preserve">
+  <data name="Msg_Info_No_Course_Found" xml:space="preserve">
     <value>Aucun cours trouvé</value>
   </data>
   <data name="View_Details" xml:space="preserve">
@@ -271,7 +271,7 @@
     <value>Type de contact</value>
   </data>
   <data name="Relationship" xml:space="preserve">
-    <value>Relation</value>
+    <value>Lien avec l'enfant</value>
   </data>
   <data name="Msg_Error_Add_Contact_Save" xml:space="preserve">
     <value>Le contact ne peut pas être ajouté avec le système. Veuillez réessayer dans quelques minutes</value>
@@ -748,7 +748,7 @@
     <value>Partiellement payé</value>
   </data>
   <data name="Unpaid" xml:space="preserve">
-    <value>Non rémunéré</value>
+    <value>Impayé</value>
   </data>
   <data name="Back_To_Dashboard" xml:space="preserve">
     <value>Retour au tableau de bord</value>
@@ -976,5 +976,35 @@
   </data>
   <data name="EnrollmentStatus_Unknown" xml:space="preserve">
     <value>Inconnu</value>
+  </data>
+  <data name="Type_Of_Allergy" xml:space="preserve">
+    <value>Type d'allergie</value>
+  </data>
+  <data name="Skip" xml:space="preserve">
+    <value>Sauter</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>Femelle</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="Emergency" xml:space="preserve">
+    <value>Urgence</value>
+  </data>
+  <data name="Pickup" xml:space="preserve">
+    <value>Chercher l'enfant</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Autre</value>
+  </data>
+  <data name="Msg_Info_No_Institute_Found" xml:space="preserve">
+    <value>Aucune information sur l'institut n'a été trouvée</value>
+  </data>
+  <data name="Msg_Info_Loading_Institute_Details" xml:space="preserve">
+    <value>Chargement des détails de l'institut</value>
+  </data>
+  <data name="FeaturedInstitutes" xml:space="preserve">
+    <value>Instituts en vedette</value>
   </data>
 </root>

@@ -1,0 +1,137 @@
+﻿@page "/institutes/{InstituteId:guid}"
+@using Maktab.Consumer.Base
+@using Maktab.Consumer.Extensions
+@using Maktab.Consumer.State
+@using MaktabDataContracts.Responses.Course
+@using MaktabDataContracts.Responses.Institute
+
+@inherits LocalizeableBaseComponent<InstituteDetails>
+
+@inject IInstitutionService InstitutionService
+@inject ICourseService CourseService
+@inject UserStateService StateService
+
+<MudContainer Class="mt-8 mb-8">
+     @if (_institute is null)
+     {
+          <MudText Typo="Typo.h6">@L[MaktabResources.Msg_Info_Loading_Institute_Details]</MudText>
+     }
+     else
+     {
+          <MudPaper Class="pa-6" Outlined="false">
+               <!-- Back Navigation -->
+               @* <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="BackToCourses" Class="mb-4">
+                <MudIcon Icon="@Icons.Material.Filled.ArrowBack" /> Back to Courses
+            </MudButton> *@
+               @if (isInitialized && !isDataLoading)
+               {
+                    <MudStack>
+                         <!-- Title + Category -->
+                         <MudText Typo="Typo.h4" GutterBottom="true">@(GetInstituteName())</MudText>
+                         <MudText Typo="Typo.subtitle1" Color="Color.Info" Class="mb-2">
+                              @(GetInstituteDescription())
+                         </MudText>
+
+                         <!-- Email -->
+                         <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
+                              <MudIcon Icon="@Icons.Material.Filled.Email" Color="Color.Info" />
+                              <MudText Typo="Typo.subtitle1">
+                                   @_institute.Email
+                              </MudText>
+                         </MudStack>
+
+                         <!-- Phone -->
+                         <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
+                              <MudIcon Icon="@Icons.Material.Filled.Phone" Color="Color.Info" />
+                              <MudText Typo="Typo.subtitle1">
+                                   @_institute.Phone
+                              </MudText>
+                         </MudStack>
+
+                         <MudDivider />
+
+                         <!-- Courses Section -->
+                         <MudText Typo="Typo.h5" Class="mt-10 mb-6">@L[MaktabResources.FeaturedCourses]</MudText>
+                         <CourseList Courses="@_courses" />
+
+                    </MudStack>
+               }
+               else
+               {
+                    <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+               }
+          </MudPaper>
+     }
+</MudContainer>
+
+     @code {
+     [Parameter] public Guid InstituteId { get; set; }
+     private InstituteResponse? _institute;
+
+     private IEnumerable<CourseResponseDetailed> _courses = Array.Empty<CourseResponseDetailed>();
+     private bool isInitialized = false;
+     private bool isDataLoading = false;
+
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.InstituteState.OnChange += HandleStateChange;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.InstituteState.OnChange -= HandleStateChange;
+     }
+
+     protected override async Task OnInitializedAsync()
+     {
+          await LoadData();
+
+          isInitialized = true;
+
+          RequestRender();
+     }
+
+     private async Task LoadData(bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadActiveInstitutesData(InstitutionService, forceReload);
+          await StateService.LoadActiveCoursesData(CourseService, forceReload);
+
+          _institute = StateService.InstituteState.Institutes?.FirstOrDefault(i => i.InstituteId == InstituteId);
+          _courses = StateService.InstituteState.GetCoursesByInstituteId(InstituteId) ?? Array.Empty<CourseResponseDetailed>();
+
+          isDataLoading = false;
+     }
+
+    private string GetInstituteName()
+    {
+        if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+        {
+            return _institute?.NameFr;
+        }
+        else
+        {
+            return _institute?.Name;
+        }
+    }
+
+    private string GetInstituteDescription()
+    {
+        if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+        {
+            return _institute?.DescriptionFr;
+        }
+        else
+        {
+            return _institute?.Description;
+        }
+    }
+}
