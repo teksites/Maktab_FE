@@ -771,9 +771,6 @@
   <data name="Msg_Info_Zeffy_Payment_Mandatory_Fields" xml:space="preserve">
     <value>Veuillez utiliser le code de paiement et l'e-mail suivants dans les champs obligatoires du paiement Zeffy.</value>
   </data>
-  <data name="Msg_Info_Zeffy_Payment_donation_section" xml:space="preserve">
-    <value>Veuillez sélectionner « Autre » dans le menu déroulant et définir zéro dans la section des dons.</value>
-  </data>
   <data name="Pay" xml:space="preserve">
     <value>Payer</value>
   </data>
@@ -1006,5 +1003,83 @@
   </data>
   <data name="FeaturedInstitutes" xml:space="preserve">
     <value>Instituts en vedette</value>
+  </data>
+  <data name="Select_Institute" xml:space="preserve">
+    <value>Sélectionnez l'institut</value>
+  </data>
+  <data name="Address_Type_Billing" xml:space="preserve">
+    <value>Facturation</value>
+  </data>
+  <data name="Address_Type_Institute" xml:space="preserve">
+    <value>Institut</value>
+  </data>
+  <data name="Address_Type_Parent" xml:space="preserve">
+    <value>Mère</value>
+  </data>
+  <data name="Address_Type_OtherContact" xml:space="preserve">
+    <value>Autre contrat</value>
+  </data>
+  <data name="Address_Type_Other" xml:space="preserve">
+    <value>Autre</value>
+  </data>
+  <data name="Address_Type_Unknown" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="Contact_Type_Pickup" xml:space="preserve">
+    <value>Chercher l'enfant</value>
+  </data>
+  <data name="Contact_Type_Emergency" xml:space="preserve">
+    <value>Urgence</value>
+  </data>
+  <data name="Contact_Type_Other" xml:space="preserve">
+    <value>Autre</value>
+  </data>
+  <data name="Contact_Type_Unknown" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="Relationship_Type_Unknown" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="Relationship_Type_Father" xml:space="preserve">
+    <value>Père</value>
+  </data>
+  <data name="Relationship_Type_Mother" xml:space="preserve">
+    <value>Mère</value>
+  </data>
+  <data name="Relationship_Type_Grandparent" xml:space="preserve">
+    <value>Grand-parent</value>
+  </data>
+  <data name="Relationship_Type_Relative" xml:space="preserve">
+    <value>Relatif</value>
+  </data>
+  <data name="Relationship_Type_Guardian" xml:space="preserve">
+    <value>Tuteur</value>
+  </data>
+  <data name="Relationship_Type_Teacher" xml:space="preserve">
+    <value>Professeur</value>
+  </data>
+  <data name="Relationship_Type_FamilyFriend" xml:space="preserve">
+    <value>Ami de la famille</value>
+  </data>
+  <data name="Relationship_Type_Uncle" xml:space="preserve">
+    <value>Oncle</value>
+  </data>
+  <data name="Relationship_Type_Aunt" xml:space="preserve">
+    <value>Tante</value>
+  </data>
+  <data name="Relationship_Type_Cousin" xml:space="preserve">
+    <value>Cousin</value>
+  </data>
+  <data name="Gender_Type_Male" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="Gender_Type_Female" xml:space="preserve">
+    <value>Femelle</value>
+  </data>
+  <data name="Gender_Type_Unknown" xml:space="preserve">
+    <value>Inconnu</value>
+  </data>
+  <data name="Msg_Info_Zeffy_Payment_donation_section" xml:space="preserve">
+    <value>Veuillez sélectionner Autre dans la liste déroulante et définir zéro dans la section Contribution pour Help Zeffy.</value>
   </data>
 </root>

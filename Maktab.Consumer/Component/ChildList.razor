@@ -44,7 +44,7 @@
           <MudTd>@context.FirstName</MudTd>
           <MudTd>@context.LastName</MudTd>
           <MudTd>@context.DateOfBirth.ToShortDateString()</MudTd>
-          <MudTd>@context.Gender</MudTd>
+          <MudTd>@(GetGenderLabel(context.Gender))</MudTd>
           <MudTd>@context.RAMQNumber</MudTd>
           <MudTd>@context.RAMQExpiry.ToShortDateString()</MudTd>
           @* <MudTd>@context.Allergies</MudTd>

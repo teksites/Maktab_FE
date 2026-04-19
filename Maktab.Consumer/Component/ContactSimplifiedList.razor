@@ -70,7 +70,7 @@ else if (Contacts is not null && Contacts.Any())
                                                      Color="@ContactFormatter.GetRelationshipColor(contact)"
                                                      Variant="Variant.Filled"
                                                      Label="true">
-                                                  @ContactFormatter.GetRelationshipLabel(contact)
+                                                  @(GetRelationshipLabel(contact.Relationship))
                                              </MudChip>
                                         }
                                    </MudStack>
@@ -121,7 +121,7 @@ else if (Contacts is not null && Contacts.Any())
                               @if (!string.IsNullOrWhiteSpace(contact?.ContactType.ToString()))
                               {
                                    <MudText Typo="Typo.caption">
-                                        @ContactFormatter.GetContactTypeLabel(contact)
+                                        @(GetContactTypeLabel(contact.ContactType))
                                    </MudText>
                               }
                          </MudStack>

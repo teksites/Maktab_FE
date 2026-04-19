@@ -268,6 +268,60 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Billing.
+        /// </summary>
+        public static string Address_Type_Billing {
+            get {
+                return ResourceManager.GetString("Address_Type_Billing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Institute.
+        /// </summary>
+        public static string Address_Type_Institute {
+            get {
+                return ResourceManager.GetString("Address_Type_Institute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        public static string Address_Type_Other {
+            get {
+                return ResourceManager.GetString("Address_Type_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other contract.
+        /// </summary>
+        public static string Address_Type_OtherContact {
+            get {
+                return ResourceManager.GetString("Address_Type_OtherContact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parent.
+        /// </summary>
+        public static string Address_Type_Parent {
+            get {
+                return ResourceManager.GetString("Address_Type_Parent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string Address_Type_Unknown {
+            get {
+                return ResourceManager.GetString("Address_Type_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unit No.
         /// </summary>
         public static string Address_Unit_No {
@@ -489,6 +543,42 @@ namespace Maktab.Consumer.Localization {
         public static string Contact_Type {
             get {
                 return ResourceManager.GetString("Contact_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emergency.
+        /// </summary>
+        public static string Contact_Type_Emergency {
+            get {
+                return ResourceManager.GetString("Contact_Type_Emergency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        public static string Contact_Type_Other {
+            get {
+                return ResourceManager.GetString("Contact_Type_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pickup.
+        /// </summary>
+        public static string Contact_Type_Pickup {
+            get {
+                return ResourceManager.GetString("Contact_Type_Pickup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string Contact_Type_Unknown {
+            get {
+                return ResourceManager.GetString("Contact_Type_Unknown", resourceCulture);
             }
         }
         
@@ -984,6 +1074,33 @@ namespace Maktab.Consumer.Localization {
         public static string Gender {
             get {
                 return ResourceManager.GetString("Gender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Female.
+        /// </summary>
+        public static string Gender_Type_Female {
+            get {
+                return ResourceManager.GetString("Gender_Type_Female", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Male.
+        /// </summary>
+        public static string Gender_Type_Male {
+            get {
+                return ResourceManager.GetString("Gender_Type_Male", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string Gender_Type_Unknown {
+            get {
+                return ResourceManager.GetString("Gender_Type_Unknown", resourceCulture);
             }
         }
         
@@ -1645,7 +1762,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select &quot;Other&quot; in drop down and set zero in donation section.
+        ///   Looks up a localized string similar to Please select Other in dropdown and set zero in Contribution for Help Zeffy section.
         /// </summary>
         public static string Msg_Info_Zeffy_Payment_donation_section {
             get {
@@ -2230,6 +2347,105 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Aunt.
+        /// </summary>
+        public static string Relationship_Type_Aunt {
+            get {
+                return ResourceManager.GetString("Relationship_Type_Aunt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cousin.
+        /// </summary>
+        public static string Relationship_Type_Cousin {
+            get {
+                return ResourceManager.GetString("Relationship_Type_Cousin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Family friend.
+        /// </summary>
+        public static string Relationship_Type_FamilyFriend {
+            get {
+                return ResourceManager.GetString("Relationship_Type_FamilyFriend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Father.
+        /// </summary>
+        public static string Relationship_Type_Father {
+            get {
+                return ResourceManager.GetString("Relationship_Type_Father", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grand parent.
+        /// </summary>
+        public static string Relationship_Type_Grandparent {
+            get {
+                return ResourceManager.GetString("Relationship_Type_Grandparent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Guardian.
+        /// </summary>
+        public static string Relationship_Type_Guardian {
+            get {
+                return ResourceManager.GetString("Relationship_Type_Guardian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mother.
+        /// </summary>
+        public static string Relationship_Type_Mother {
+            get {
+                return ResourceManager.GetString("Relationship_Type_Mother", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Relative.
+        /// </summary>
+        public static string Relationship_Type_Relative {
+            get {
+                return ResourceManager.GetString("Relationship_Type_Relative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teacher.
+        /// </summary>
+        public static string Relationship_Type_Teacher {
+            get {
+                return ResourceManager.GetString("Relationship_Type_Teacher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uncle.
+        /// </summary>
+        public static string Relationship_Type_Uncle {
+            get {
+                return ResourceManager.GetString("Relationship_Type_Uncle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string Relationship_Type_Unknown {
+            get {
+                return ResourceManager.GetString("Relationship_Type_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove.
         /// </summary>
         public static string Remove {
@@ -2316,6 +2532,15 @@ namespace Maktab.Consumer.Localization {
         public static string Select_Enrollment_Group {
             get {
                 return ResourceManager.GetString("Select_Enrollment_Group", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Institute.
+        /// </summary>
+        public static string Select_Institute {
+            get {
+                return ResourceManager.GetString("Select_Institute", resourceCulture);
             }
         }
         

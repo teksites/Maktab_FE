@@ -21,7 +21,7 @@
           <MudSelect @bind-Value="Spouse.Relationship" Label=@L[MaktabResources.Relashion_With_Children]>
                @foreach (var margin in relationShips)
                {
-                    <MudSelectItem Value="margin">@margin</MudSelectItem>
+                    <MudSelectItem Value="margin">@(GetRelationshipLabel(margin))</MudSelectItem>
                }
           </MudSelect>
 

@@ -46,8 +46,10 @@
                     <MudSelect T="Gender" @bind-Value="ChildModel.Gender"
                                Label=@L[MaktabResources.Gender] Required="true"
                                For="@(() => ChildModel.Gender)">
-                         <MudSelectItem Value="Gender.Male">Male</MudSelectItem>
-                         <MudSelectItem Value="Gender.Female">Female</MudSelectItem>
+                              @foreach (var rel in Genders)
+                              {
+                                   <MudSelectItem Value="@rel">@(GetGenderLabel(rel))</MudSelectItem>
+                              }
                     </MudSelect>
                </MudItem>
 
@@ -125,7 +127,7 @@
 </MudPaper>
 @* </EditForm> *@
 
-@code {
+     @code {
 
      [Parameter, EditorRequired] public AddChildRequest ChildModel { get; set; } = new();
      [Parameter] public Guid FamilyId { get; set; } = Guid.Empty;
@@ -133,6 +135,7 @@
 
      [Parameter] public EventCallback<ChildResponse> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }
+     private IReadOnlyCollection<Gender> Genders { get; } = Enum.GetValues(typeof(Gender)).Cast<Gender>().Where(x => x != Gender.Unknown).ToList();
 
      private DateTime? RAMQExpiry { get; set; }
      private DateTime? DateOfBirth { get; set; }

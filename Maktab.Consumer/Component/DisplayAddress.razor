@@ -19,7 +19,7 @@
                <MudItem xs="12" sm="6">
                     <b>@L[MaktabResources.Home_Address]</b> @(Address.HomeAddress? @L[MaktabResources.Yes] : @L[MaktabResources.No])
                </MudItem>
-               <MudItem xs="12"><b>@L[MaktabResources.Address_Type]</b> @Address.AddressType.ToString()</MudItem>
+               <MudItem xs="12"><b>@L[MaktabResources.Address_Type]</b> @(GetAddressTypeLabel(Address.AddressType))</MudItem>
           </MudGrid>
      }
      else

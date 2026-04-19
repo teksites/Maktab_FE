@@ -773,7 +773,7 @@
     <value>Please use following payment code and email in mandatory fields on Zeffy payment</value>
   </data>
   <data name="Msg_Info_Zeffy_Payment_donation_section" xml:space="preserve">
-    <value>Please select "Other" in drop down and set zero in donation section</value>
+    <value>Please select Other in dropdown and set zero in Contribution for Help Zeffy section</value>
   </data>
   <data name="Pay" xml:space="preserve">
     <value>Pay</value>
@@ -1007,5 +1007,80 @@
   </data>
   <data name="FeaturedInstitutes" xml:space="preserve">
     <value>Featured Institutes</value>
+  </data>
+  <data name="Select_Institute" xml:space="preserve">
+    <value>Select Institute</value>
+  </data>
+  <data name="Address_Type_Billing" xml:space="preserve">
+    <value>Billing</value>
+  </data>
+  <data name="Address_Type_Institute" xml:space="preserve">
+    <value>Institute</value>
+  </data>
+  <data name="Address_Type_Parent" xml:space="preserve">
+    <value>Parent</value>
+  </data>
+  <data name="Address_Type_OtherContact" xml:space="preserve">
+    <value>Other contract</value>
+  </data>
+  <data name="Address_Type_Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Address_Type_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Contact_Type_Pickup" xml:space="preserve">
+    <value>Pickup</value>
+  </data>
+  <data name="Contact_Type_Emergency" xml:space="preserve">
+    <value>Emergency</value>
+  </data>
+  <data name="Contact_Type_Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Contact_Type_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Relationship_Type_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Relationship_Type_Father" xml:space="preserve">
+    <value>Father</value>
+  </data>
+  <data name="Relationship_Type_Mother" xml:space="preserve">
+    <value>Mother</value>
+  </data>
+  <data name="Relationship_Type_Grandparent" xml:space="preserve">
+    <value>Grand parent</value>
+  </data>
+  <data name="Relationship_Type_Relative" xml:space="preserve">
+    <value>Relative</value>
+  </data>
+  <data name="Relationship_Type_Guardian" xml:space="preserve">
+    <value>Guardian</value>
+  </data>
+  <data name="Relationship_Type_Teacher" xml:space="preserve">
+    <value>Teacher</value>
+  </data>
+  <data name="Relationship_Type_FamilyFriend" xml:space="preserve">
+    <value>Family friend</value>
+  </data>
+  <data name="Relationship_Type_Uncle" xml:space="preserve">
+    <value>Uncle</value>
+  </data>
+  <data name="Relationship_Type_Aunt" xml:space="preserve">
+    <value>Aunt</value>
+  </data>
+  <data name="Relationship_Type_Cousin" xml:space="preserve">
+    <value>Cousin</value>
+  </data>
+  <data name="Gender_Type_Male" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="Gender_Type_Female" xml:space="preserve">
+    <value>Female</value>
+  </data>
+  <data name="Gender_Type_Unknown" xml:space="preserve">
+    <value>Unknown</value>
   </data>
 </root>
