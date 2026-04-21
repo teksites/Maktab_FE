@@ -111,27 +111,13 @@
           isDataLoading = false;
      }
 
-    private string GetInstituteName()
-    {
-        if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-        {
-            return _institute?.NameFr;
-        }
-        else
-        {
-            return _institute?.Name;
-        }
-    }
+     private string GetInstituteName()
+     {
+          return GetInstituteName(_institute);
+     }
 
-    private string GetInstituteDescription()
-    {
-        if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-        {
-            return _institute?.DescriptionFr;
-        }
-        else
-        {
-            return _institute?.Description;
-        }
-    }
+     private string GetInstituteDescription()
+     {
+          return GetInstituteDescription(_institute);
+     }
 }

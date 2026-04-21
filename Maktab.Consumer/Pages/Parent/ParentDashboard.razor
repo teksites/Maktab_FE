@@ -536,28 +536,6 @@
           NavigationManager.NavigateTo(Constants.PaymentInfoRoute, false);
      }
 
-     private async Task OpenZeffyPaymentDialog()
-     {
-          const string url = "/PaymentMethod/Payment?amount={0}&code={1}&email={2}";
-
-          string paymentCode = _CourseTransactions.FirstOrDefault()?.PaymentCode;
-
-          var navigationUrl = string.Format(url, AmountPayable.ToString(), paymentCode, userInfo.Email);
-          NavigationManager.NavigateTo(navigationUrl, false);
-
-
-          // var parameters = new DialogParameters { ["PaymentCode"] = paymentCode, ["AmountDue"] = AmountPayable.ToString(), ["UserEmail"] = userInfo.Email };
-          // var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
-
-          // var dialog = await DialogService.ShowAsync<ZeffyPaymentDialog>("Payment", parameters, options);
-          // var result = await dialog.Result;
-
-          // if (!result.Canceled && result.Data is ChildResponse child)
-          // {
-          //      Children.Add(child);
-          // }
-     }
-
      private async Task OpenAddChildDialog()
      {
           var dialogResult = await this.OpenAddChildDialog(DialogService, userInfo.FamilyId);

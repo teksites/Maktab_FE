@@ -1,6 +1,8 @@
 ﻿using Maktab.Consumer.Localization;
 using Maktab.Core.Interfaces.Services;
 using MaktabDataContracts.Enums;
+using MaktabDataContracts.Responses.Course;
+using MaktabDataContracts.Responses.Institute;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 
@@ -75,5 +77,89 @@ namespace Maktab.Consumer.Base
                     _ => L[MaktabResources.Gender_Type_Unknown]
                };
           }
+
+          protected string GetInstituteName(InstituteResponse institute)
+          {
+               if (institute == null) return string.Empty;
+
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return institute.NameFr;
+               }
+               else
+               {
+                    return institute.Name;
+               }
+          }
+
+          protected string GetInstituteDescription(InstituteResponse institute)
+          {
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return institute?.DescriptionFr;
+               }
+               else
+               {
+                    return institute?.Description;
+               }
+          }
+
+          protected string GetCourseName(CourseResponseDetailed course)
+          {
+               if (course == null) return string.Empty;
+
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return course.NameFr;
+               }
+               else
+               {
+                    return course.Name;
+               }
+          }
+
+          protected string GetCourseDetails(CourseResponseDetailed course)
+          {
+               if (course == null) return string.Empty;
+
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return course.DetailsFr;
+               }
+               else
+               {
+                    return course.Details;
+               }
+          }
+
+          protected string GetCourseDescription(CourseResponseDetailed course)
+          {
+               if (course == null) return string.Empty;
+
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return course.DescriptionFr;
+               }
+               else
+               {
+                    return course.Description;
+               }
+          }
+
+          protected string GetCourseGroupTitle(CourseEnrollmentGroupResponse group)
+          {
+               if (group == null) return string.Empty;
+
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return group.GroupTitleFr;
+               }
+               else
+               {
+                    return group.GroupTitle;
+               }
+          }
+
+          
      }
 }

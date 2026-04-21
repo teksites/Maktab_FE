@@ -271,7 +271,7 @@ else if (IsError)
                                    </MudButton>
                                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
                                               Disabled="@(SelectedCourse is null)"
-                                              OnClick="@(()=> ActiveStep = 3)"
+                                              OnClick="@(()=> { UpdateCourseGroupsForCourse(); ActiveStep = 3;})"
                                               StartIcon="@Icons.Material.Filled.NavigateNext">
                                         @L[MaktabResources.Next]
                                    </MudButton>
@@ -331,6 +331,7 @@ else if (IsError)
                                                             @* (@g.StartTime - @g.EndTime) *@
                                                             @* @g.DayCareFee
                                              </MudText> *@
+                                                            <MudChip T="bool" Color="@(GetCourseGroupRegistrationStatusColor(g.IfRegistrationOpen))" Variant="Variant.Filled" Size="Size.Small">@(GetCourseGroupRegistrationStatusLabel(g.IfRegistrationOpen))</MudChip>
 
                                                             <MudChipSet T="CourseEnrollmentGroupResponse">
                                                                  @foreach (var chipSet in g.AcedemicGroups)
@@ -373,6 +374,7 @@ else if (IsError)
                                                             @* (@g.StartTime - @g.EndTime) *@
                                                             @* @g.DayCareFee
                                              </MudText> *@
+                                                            <MudChip T="bool" Color="@(GetCourseGroupRegistrationStatusColor(g.IfRegistrationOpen))" Variant="Variant.Filled" Size="Size.Small">@(GetCourseGroupRegistrationStatusLabel(g.IfRegistrationOpen))</MudChip>
 
                                                             <MudChipSet T="CourseEnrollmentGroupResponse">
                                                                  @foreach (var chipSet in g.AcedemicGroups)
@@ -439,9 +441,6 @@ else if (IsError)
                                              <MudText Typo="Typo.body2">
                                                   @(GetInstituteName(SelectedInstitute))
                                              </MudText>
-                                             <MudText Typo="Typo.body2">
-                                                  <span>@L[MaktabResources.Registration_Fee]</span>: <span>@(SelectedCourse?.RegistrationFee)</span>
-                                             </MudText>
                                         </MudStack>
                                    </MudStack>
                               </MudPaper>
@@ -477,6 +476,12 @@ else if (IsError)
                                         @* </MudStack> *@
                                        
                                         @* <MudSpacer /> *@
+                                   @if (HasRegistrationClosedForAnyCourseGroup())
+                                   {
+                                        <MudAlert Severity="Severity.Warning" Variant="Variant.Filled" Class="my-4">
+                                             @L[MaktabResources.Msg_Info_CourseGroup_Registration_Full]
+                                        </MudAlert>
+                                   }
 
                                         <MudSimpleTable Outlined="false" Hover="false" Dense="true" Striped="true" FixedHeader="true" >
                                              <thead>
@@ -488,13 +493,16 @@ else if (IsError)
                                                             </MudStack>
                                                             </th>
                                                        <th style="width:20%">@L[MaktabResources.Fee]</th>
+                                                       <th style="width:20%">@L[MaktabResources.CourseGroup_Registration_Open]</th>
+
                                                   @if (SelectedCourse?.OfferDaycare == true)
                                                   {
                                                        <th style="width:20%">@L[MaktabResources.Daycare_Fee]</th>
                                                        <th style="width:20%">@L[MaktabResources.Use_Daycare]</th>
                                                        @* <th style="width:20%">@L[MaktabResources.Daycare]</th> *@
                                                   }
-                                             </tr>
+
+                                                   </tr>
                                              </thead>
                                              <tbody>
                                                   @if (SelectedCourse?.CanSelectMultipleEnrollmentGroups == true)
@@ -505,6 +513,10 @@ else if (IsError)
                                                             <tr>
                                                                  <td>@GetCourseGroupTitle(g)</td>
                                                                  <td>@g.Fee</td>
+                                                                  <td>
+                                                                      <MudChip T="bool" Color="@(GetCourseGroupRegistrationStatusColor(g.IfRegistrationOpen))" Variant="Variant.Filled" Size="Size.Small">@(GetCourseGroupRegistrationStatusLabel(g.IfRegistrationOpen))</MudChip>
+                                                                 </td> 
+                                                                 
                                                             @if (SelectedCourse?.OfferDaycare == true)
                                                             {
                                                                  <td>@g.DayCareFee</td>
@@ -527,6 +539,15 @@ else if (IsError)
                                                        <tr>
                                                             <td>@GetCourseGroupTitle(SelectedGroup)</td>
                                                             <td>@SelectedGroup.Fee</td>
+                                                            <td>
+                                                                 @* <MudSwitch T="bool"
+                                                                            Disabled="true"
+                                                                            @bind-Value="SelectedGroup.IfRegistrationOpen"
+                                                                            Color="Color.Primary"
+                                                                            Size="Size.Small" /> *@
+                                                            <MudChip T="bool" Color="@(GetCourseGroupRegistrationStatusColor(SelectedGroup.IfRegistrationOpen))" Variant="Variant.Filled" Size="Size.Small">@(GetCourseGroupRegistrationStatusLabel(SelectedGroup.IfRegistrationOpen))</MudChip>
+
+                                                            </td>
                                                        @if (SelectedCourse?.OfferDaycare == true)
                                                        {
                                                             <td>@SelectedGroup.DayCareFee</td>
@@ -542,6 +563,7 @@ else if (IsError)
                                                                              @bind-Value="@(GetStudentEnrollmentFromEnrollmentGroup(SelectedGroup.CourseEnrollmentGroupId).DayCareDays)" />
                                                        </td> *@
                                                        }
+                                                       
                                                   </tr>
                                                   }
                                              </tbody>
@@ -578,7 +600,7 @@ else if (IsError)
 
                          <MudStack Row="true" Spacing="2" Class="mt-8" Justify="Justify.FlexEnd">
                               <MudButton Variant="Variant.Outlined" Color="Color.Default"
-                                          OnClick="@(()=> ActiveStep = 2)"
+                                          OnClick="@(()=> ActiveStep = 3)"
                                           StartIcon="@Icons.Material.Filled.NavigateBefore">
                                     Previous
                                </MudButton>
@@ -614,7 +636,7 @@ else if (IsError)
      private UserInformationResponse userInfo => StateService.ParentState.Profile;
 
      protected InstituteResponse? SelectedInstitute { get; set; }
-     protected CourseResponseDetailed? SelectedCourse { get; set; }
+     protected CourseResponseDetailed SelectedCourse { get; set; }
      private CourseEnrollmentGroupResponse SelectedGroup { get; set; }
      protected HashSet<CourseEnrollmentGroupResponse> SelectedGroups { get; set; } = new();
      private IReadOnlyCollection<AddStudentCourseEnrollment> _StudentCourseEnrollments = Array.Empty<AddStudentCourseEnrollment>();
@@ -656,7 +678,7 @@ else if (IsError)
 
           var userId = await SessionService.GetLoggedInUserIdAsync();
 
-          await LoadData(userId);
+          await LoadData(userId, true);
 
           isInitialized = true;
      }
@@ -665,10 +687,10 @@ else if (IsError)
      {
           IsLoadingData = true;
 
-          await StateService.LoadUserProfileData(UserService, userId);
-          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId);
+          await StateService.LoadUserProfileData(UserService, userId, forceLoad);
+          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, forceLoad);
           await StateService.LoadActiveInstitutesData(InstitutionService, forceLoad);
-          await StateService.LoadActiveCoursesData(CourseService);
+          await StateService.LoadActiveCoursesData(CourseService, forceLoad);
 
           IsLoadingData = false;
 
@@ -760,7 +782,28 @@ else if (IsError)
 
      private void UpdateCoursesForInstitute()
      {
-          Courses = StateService.InstituteState.GetCoursesByInstituteId(SelectedInstitute.InstituteId);
+          if (SelectedCourse != null)
+          {
+               SelectedCourse = null;
+          }
+
+          if (SelectedInstitute != null)
+          {
+               Courses = StateService.InstituteState.GetCoursesByInstituteId(SelectedInstitute.InstituteId);
+          }
+     }
+
+     private void UpdateCourseGroupsForCourse()
+     {
+          if (SelectedGroup != null)
+          {
+               SelectedGroup = null;
+          }
+
+          if (SelectedGroups?.Any() == true)
+          {
+               SelectedGroups = new();
+          }
      }
 
      private void UpdateCourseEnrollments()
@@ -903,81 +946,45 @@ else if (IsError)
           }
      }
 
-     private string GetInstituteName(InstituteResponse institute)
-     {
-          if (institute == null) return string.Empty;
-
-          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-          {
-               return institute.NameFr;
-          }
-          else
-          {
-               return institute.Name;
-          }
-     }
-
-     private string GetCourseName(CourseResponseDetailed course)
-     {
-          if (course == null) return string.Empty;
-
-          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-          {
-               return course.NameFr;
-          }
-          else
-          {
-               return course.Name;
-          }
-     }
-
-     private string GetCourseDetails(CourseResponseDetailed course)
-     {
-          if (course == null) return string.Empty;
-
-          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-          {
-               return course.DetailsFr;
-          }
-          else
-          {
-               return course.Details;
-          }
-     }
-
-     private string GetCourseDescription(CourseResponseDetailed course)
-     {
-          if (course == null) return string.Empty;
-
-          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-          {
-               return course.DescriptionFr;
-          }
-          else
-          {
-               return course.Description;
-          }
-     }
-
-     private string GetCourseGroupTitle(CourseEnrollmentGroupResponse group)
-     {
-          if (group == null) return string.Empty;
-
-          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-          {
-               return group.GroupTitleFr;
-          }
-          else
-          {
-               return group.GroupTitle;
-          }
-     }
-
      private bool CanUseDayCare(CourseEnrollmentGroupResponse group)
      {
           if (group == null) return false;
 
           return this.SelectedCourse?.OfferDaycare == true;
+     }
+
+     protected Color GetCourseGroupRegistrationStatusColor(bool isRegistrationOpen)
+     {
+          switch (isRegistrationOpen)
+          {
+               case true:
+                    return Color.Success;
+               default:
+                    return Color.Warning;
+          }
+     }
+
+     protected string GetCourseGroupRegistrationStatusLabel(bool isRegistrationOpen)
+     {
+          switch (isRegistrationOpen)
+          {
+               case true:
+                    return L[MaktabResources.Open];
+               default:
+                    return  L[MaktabResources.CourseGroup_Registration_Awaiting];
+          }
+     }
+
+     protected bool HasRegistrationClosedForAnyCourseGroup()
+     {
+          if(SelectedCourse.CanSelectMultipleEnrollmentGroups)
+          {
+               return SelectedGroups?.Any(x => x.IfRegistrationOpen == false) == true;
+          }
+          else
+          {
+               return SelectedGroup?.IfRegistrationOpen == true;
+          }
      }
 }
 

@@ -1094,4 +1094,16 @@
   <data name="Msg_Error_Can_Only_Remove_Awaiting_Enrollment" xml:space="preserve">
     <value>Veuillez contacter l'administration de l'école pour traiter ces inscriptions</value>
   </data>
+  <data name="CourseGroup_Registration_Open" xml:space="preserve">
+    <value>Inscription ouverte</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Ouvrir</value>
+  </data>
+  <data name="CourseGroup_Registration_Awaiting" xml:space="preserve">
+    <value>En attente</value>
+  </data>
+  <data name="Msg_Info_CourseGroup_Registration_Full" xml:space="preserve">
+    <value>Un des groupes est complet. Si vous continuez, les enfants seront placés sur la liste d'attente et les frais les incluront.</value>
+  </data>
 </root>

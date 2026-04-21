@@ -1095,4 +1095,16 @@
   <data name="Text_Allergies_Placeholder" xml:space="preserve">
     <value>Type of allergy,  precautions to take, needs an EpiPen, other</value>
   </data>
+  <data name="CourseGroup_Registration_Open" xml:space="preserve">
+    <value>Registration open</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="CourseGroup_Registration_Awaiting" xml:space="preserve">
+    <value>In waiting</value>
+  </data>
+  <data name="Msg_Info_CourseGroup_Registration_Full" xml:space="preserve">
+    <value>One of the group is full. If you proceed, children will be placed on the waiting list and fees will include them</value>
+  </data>
 </root>

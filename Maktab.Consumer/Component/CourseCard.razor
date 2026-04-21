@@ -89,50 +89,27 @@
 
      private string GetCourseName()
      {
-          if(GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-          {
-               return Course.NameFr;
-          }
-          else
-          {
-               return Course.Name;
-          }
+          return GetCourseName(Course);
      }
 
      private string GetCourseDetails()
      {
-          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-          {
-               return Course.DetailsFr;
-          }
-          else
-          {
-               return Course.Details;
-          }
+          return GetCourseDetails(Course);
      }
 
      private string GetCourseDescription()
      {
-          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-          {
-               return Course.DescriptionFr;
-          }
-          else
-          {
-               return Course.Description;
-          }
+          return GetCourseDescription(Course);
      }
 
      private string GetInstituteName()
      {
           var institute = StateService.InstituteState.Institutes?.FirstOrDefault(i => i.InstituteId == Course.InstituteId);
-          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+          if(institute == null)
           {
-               return institute?.NameFr ?? string.Empty;
+               return string.Empty;
           }
-          else
-          {
-               return institute?.Name ?? string.Empty;
-          }
+
+          return GetInstituteName(institute);
      }
 }

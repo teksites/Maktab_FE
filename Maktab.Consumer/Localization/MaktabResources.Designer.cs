@@ -646,6 +646,24 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to In waiting.
+        /// </summary>
+        public static string CourseGroup_Registration_Awaiting {
+            get {
+                return ResourceManager.GetString("CourseGroup_Registration_Awaiting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registration open.
+        /// </summary>
+        public static string CourseGroup_Registration_Open {
+            get {
+                return ResourceManager.GetString("CourseGroup_Registration_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create new account.
         /// </summary>
         public static string Create_New_Account {
@@ -1609,6 +1627,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to One of the group is full. If you proceed, children will be placed on the waiting list and fees will include them.
+        /// </summary>
+        public static string Msg_Info_CourseGroup_Registration_Full {
+            get {
+                return ResourceManager.GetString("Msg_Info_CourseGroup_Registration_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter code.
         /// </summary>
         public static string Msg_Info_Enter_Code {
@@ -2082,6 +2109,15 @@ namespace Maktab.Consumer.Localization {
         public static string Old_Password_HelperText {
             get {
                 return ResourceManager.GetString("Old_Password_HelperText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string Open {
+            get {
+                return ResourceManager.GetString("Open", resourceCulture);
             }
         }
         
