@@ -1,9 +1,9 @@
 ﻿using Maktab.Consumer.Dialogs;
 using Maktab.Consumer.Helpers;
 using Maktab.Core.Interfaces.Services;
+using MaktabDataContracts.Enums;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using System.Text.RegularExpressions;
 
 namespace Maktab.Consumer.Base
 {
@@ -269,5 +269,23 @@ namespace Maktab.Consumer.Base
                return result;
           }
 
+          protected Color GetEnrollmentStatusColor(EnrollmentStatus enrollmentStatus)
+          {
+               switch (enrollmentStatus)
+               {
+                    case EnrollmentStatus.Awaiting:
+                         return Color.Warning;
+                    case EnrollmentStatus.Enrolled:
+                         return Color.Info;
+                    case EnrollmentStatus.Registered:
+                         return Color.Success;
+                    case EnrollmentStatus.Refunded:
+                         return Color.Tertiary;
+                    case EnrollmentStatus.Cancelled:
+                         return Color.Error;
+                    default:
+                         return Color.Default;
+               }
+          }
      }
 }

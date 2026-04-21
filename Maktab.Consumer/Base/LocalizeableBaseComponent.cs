@@ -29,6 +29,7 @@ namespace Maktab.Consumer.Base
                return enrollmentStatus switch
                {
                     EnrollmentStatus.Awaiting => L[MaktabResources.EnrollmentStatus_Awaiting],
+                    EnrollmentStatus.Enrolled => L[MaktabResources.EnrollmentStatus_Enrolled],
                     EnrollmentStatus.Registered => L[MaktabResources.EnrollmentStatus_Registered],
                     EnrollmentStatus.Refunded => L[MaktabResources.EnrollmentStatus_Refunded],
                     EnrollmentStatus.Cancelled => L[MaktabResources.EnrollmentStatus_Cancelled],

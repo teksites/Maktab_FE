@@ -964,7 +964,7 @@
 &lt;p&gt;These terms and conditions are governed by and construed in accordance with the laws of the jurisdiction in which the platform operates, and you irrevocably submit to the exclusive jurisdiction of the courts in that location.&lt;/p&gt;</value>
   </data>
   <data name="EnrollmentStatus_Awaiting" xml:space="preserve">
-    <value>Awaiting</value>
+    <value>In waiting</value>
   </data>
   <data name="EnrollmentStatus_Registered" xml:space="preserve">
     <value>Registered</value>
@@ -1082,5 +1082,17 @@
   </data>
   <data name="Gender_Type_Unknown" xml:space="preserve">
     <value>Unknown</value>
+  </data>
+  <data name="Msg_Info_Has_Awaiting_Enrollment" xml:space="preserve">
+    <value>Enrollments marked “In Waiting” will be confirmed only if spots open. Fees currently include these. To exclude them, delete the waiting entries and fees will update.</value>
+  </data>
+  <data name="EnrollmentStatus_Enrolled" xml:space="preserve">
+    <value>Enrolled</value>
+  </data>
+  <data name="Msg_Error_Can_Only_Remove_Awaiting_Enrollment" xml:space="preserve">
+    <value>Please contact school administration to process these enrollments</value>
+  </data>
+  <data name="Text_Allergies_Placeholder" xml:space="preserve">
+    <value>Type of allergy,  precautions to take, needs an EpiPen, other</value>
   </data>
 </root>

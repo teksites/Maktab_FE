@@ -959,9 +959,6 @@
 &lt;strong&gt;8. Loi applicable&lt;/strong&gt;
 &lt;p&gt;Ces termes et conditions sont régis et interprétés conformément aux lois de la juridiction dans laquelle la plateforme fonctionne, et vous vous soumettez irrévocablement à la compétence exclusive des tribunaux de cet endroit.&lt;/p&gt;</value>
   </data>
-  <data name="EnrollmentStatus_Awaiting" xml:space="preserve">
-    <value>En attente</value>
-  </data>
   <data name="EnrollmentStatus_Registered" xml:space="preserve">
     <value>Inscrit</value>
   </data>
@@ -1081,5 +1078,20 @@
   </data>
   <data name="Msg_Info_Zeffy_Payment_donation_section" xml:space="preserve">
     <value>Veuillez sélectionner Autre dans la liste déroulante et définir zéro dans la section Contribution pour Help Zeffy.</value>
+  </data>
+  <data name="Text_Allergies_Placeholder" xml:space="preserve">
+    <value>Type d'allergie, précautions à prendre, besoin d'un Epipen, autre</value>
+  </data>
+  <data name="EnrollmentStatus_Awaiting" xml:space="preserve">
+    <value>En attente</value>
+  </data>
+  <data name="Msg_Info_Has_Awaiting_Enrollment" xml:space="preserve">
+    <value>Les inscriptions marquées « En attente » ne seront confirmées que si les places sont ouvertes. Les frais les incluent actuellement. Pour les exclure, supprimez les entrées en attente et les frais seront mis à jour.</value>
+  </data>
+  <data name="EnrollmentStatus_Enrolled" xml:space="preserve">
+    <value>Inscrit</value>
+  </data>
+  <data name="Msg_Error_Can_Only_Remove_Awaiting_Enrollment" xml:space="preserve">
+    <value>Veuillez contacter l'administration de l'école pour traiter ces inscriptions</value>
   </data>
 </root>

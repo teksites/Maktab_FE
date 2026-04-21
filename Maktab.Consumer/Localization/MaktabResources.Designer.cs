@@ -934,7 +934,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Awaiting.
+        ///   Looks up a localized string similar to In waiting.
         /// </summary>
         public static string EnrollmentStatus_Awaiting {
             get {
@@ -948,6 +948,15 @@ namespace Maktab.Consumer.Localization {
         public static string EnrollmentStatus_Cancelled {
             get {
                 return ResourceManager.GetString("EnrollmentStatus_Cancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enrolled.
+        /// </summary>
+        public static string EnrollmentStatus_Enrolled {
+            get {
+                return ResourceManager.GetString("EnrollmentStatus_Enrolled", resourceCulture);
             }
         }
         
@@ -1312,6 +1321,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please contact school administration to process these enrollments.
+        /// </summary>
+        public static string Msg_Error_Can_Only_Remove_Awaiting_Enrollment {
+            get {
+                return ResourceManager.GetString("Msg_Error_Can_Only_Remove_Awaiting_Enrollment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Address can not be removed, System requires default address for communication..
         /// </summary>
         public static string Msg_Error_Cannot_Remove_Home_Address {
@@ -1605,6 +1623,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Info_Enter_Code_Email {
             get {
                 return ResourceManager.GetString("Msg_Info_Enter_Code_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enrollments marked “In Waiting” will be confirmed only if spots open. Fees currently include these. To exclude them, delete the waiting entries and fees will update..
+        /// </summary>
+        public static string Msg_Info_Has_Awaiting_Enrollment {
+            get {
+                return ResourceManager.GetString("Msg_Info_Has_Awaiting_Enrollment", resourceCulture);
             }
         }
         
@@ -2719,6 +2746,15 @@ namespace Maktab.Consumer.Localization {
         public static string Terms_And_Conditions_Content {
             get {
                 return ResourceManager.GetString("Terms_And_Conditions_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type of allergy,  precautions to take, needs an EpiPen, other.
+        /// </summary>
+        public static string Text_Allergies_Placeholder {
+            get {
+                return ResourceManager.GetString("Text_Allergies_Placeholder", resourceCulture);
             }
         }
         
