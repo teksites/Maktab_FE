@@ -76,7 +76,13 @@
                </MudItem> *@
 
                <MudItem xs="12">
-                         <MudTextField @bind-Value="ChildModel.Allergies" Label=@L[MaktabResources.Allergies] For="@(() => ChildModel.Allergies)" />
+                         <MudStack>
+                              <MudSwitch T="bool" Label=@L[MaktabResources.Allergies] @bind-Value="ChildModel.HasAllergy" />
+                              @if (ChildModel.HasAllergy)
+                              {
+                                   <MudTextField @bind-Value="ChildModel.Allergies" Lines="4" Placeholder=@L[MaktabResources.Text_Allergies_Placeholder] Label=@L[MaktabResources.Allergies] Required="true" For="@(() => ChildModel.Allergies)" />
+                              }
+                         </MudStack>
                </MudItem>
 
                <MudItem xs="12">
@@ -105,7 +111,8 @@
                           StartIcon="@Icons.Material.Filled.Close">
                     Cancel
                </MudButton>
-               <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" 
+               <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary"
+                          Disabled="@(!_isValid || isSaving)"
                           StartIcon="@Icons.Material.Filled.Check" OnClick="@(HandleSaving)">
                     @if (isSaving)
                     {
