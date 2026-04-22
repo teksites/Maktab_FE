@@ -67,20 +67,20 @@
                                    OnClick="@(() => ClipboardService.CopyTextToClipboard(AmountDue))" />
                </MudStack>
 
-               @if (!string.IsNullOrEmpty(MinimumAmountDue) && MinimumAmountDue != "-1")
+               @if (!string.IsNullOrEmpty(MinimumAmountDueToKeepRegistration) && MinimumAmountDueToKeepRegistration != "-1")
                {
                     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
                          <MudText Typo="Typo.h5" Class="font-weight-bold" Color="Color.Error">
-                              @L[MaktabResources.Minimum_Amount_Due]:
+                              @L[MaktabResources.Minimum_Amount_Due_To_Hold_Registration]:
                          </MudText>
                          <MudText Typo="Typo.h4" Class="font-weight-bold" Color="Color.Error">
-                              @MinimumAmountDue
+                              @MinimumAmountDueToKeepRegistration
                          </MudText>
+                         <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+                                        Color="Color.Primary"
+                                        Size="Size.Small"
+                                        OnClick="@(() => ClipboardService.CopyTextToClipboard(MinimumAmountDueToKeepRegistration))" />
                     </MudStack>
-                    <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
-                                   Color="Color.Primary"
-                                   Size="Size.Small"
-                                   OnClick="@(() => ClipboardService.CopyTextToClipboard(MinimumAmountDue))" />
                }
           }
      </MudStack>
@@ -108,7 +108,7 @@
      [Parameter] public string PaymentCode { get; set; } = "";
      [Parameter] public string UserEmail { get; set; } = "";
      [Parameter] public string AmountDue { get; set; } = "0";
-     [Parameter] public string MinimumAmountDue { get; set; } = "-1";
+     [Parameter] public string MinimumAmountDueToKeepRegistration { get; set; } = "-1";
 
      protected bool IsLoadingData = false;
      protected bool isInitialized = false;
@@ -125,7 +125,7 @@
           PaymentCode = query.Get("code") ?? "NoCode";
           UserEmail = query.Get("email") ?? "a@b.c";
           AmountDue = query.Get("amount") ?? "-1";
-          MinimumAmountDue = query.Get("minimumAmount") ?? "-1";
+          MinimumAmountDueToKeepRegistration = query.Get("minimumAmount") ?? "-1";
      }
 
      protected override async Task OnInitializedAsync()

@@ -1119,4 +1119,7 @@
   <data name="Payment_Schedule" xml:space="preserve">
     <value>Payment Schedule</value>
   </data>
+  <data name="Minimum_Amount_Due_To_Hold_Registration" xml:space="preserve">
+    <value>Minimum amount due to keep the registration</value>
+  </data>
 </root>

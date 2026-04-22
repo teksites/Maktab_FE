@@ -1285,6 +1285,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Minimum amount due to keep the registration.
+        /// </summary>
+        public static string Minimum_Amount_Due_To_Hold_Registration {
+            get {
+                return ResourceManager.GetString("Minimum_Amount_Due_To_Hold_Registration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to RAMQ Number already exists.
         /// </summary>
         public static string Msg_Error_Add_Child_RAMQ_Already_Added {
