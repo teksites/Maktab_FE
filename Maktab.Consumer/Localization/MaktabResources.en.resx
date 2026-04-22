@@ -1121,4 +1121,22 @@
   <data name="Minimum_Amount_Due_To_Hold_Registration" xml:space="preserve">
     <value>Minimum amount due to keep the registration</value>
   </data>
+  <data name="Msg_Wait_For_Seconds" xml:space="preserve">
+    <value>Wait {0} seconds...</value>
+  </data>
+  <data name="Msg_Warning_Account_Locked_Seconds" xml:space="preserve">
+    <value>Account locked. Please wait {0} seconds</value>
+  </data>
+  <data name="Msg_Warning_Failed_Attempt_Account_Locked_Seconds" xml:space="preserve">
+    <value>Too many failed attempts. Account locked for {0} seconds</value>
+  </data>
+  <data name="Msg_Warning_Failed_Login_Attempt_Counter" xml:space="preserve">
+    <value>Invalid credentials. {0} attempt(s) remaining before lockout</value>
+  </data>
+  <data name="Msg_Warning_Registration_Attempt_Wait_Seconds" xml:space="preserve">
+    <value>Too many registration attempts. Please wait {0} seconds</value>
+  </data>
+  <data name="Msg_Warning_Failed_Registration_Attempt_Wait_Seconds" xml:space="preserve">
+    <value>Too many failed registration attempts. Please wait {0} seconds</value>
+  </data>
 </root>

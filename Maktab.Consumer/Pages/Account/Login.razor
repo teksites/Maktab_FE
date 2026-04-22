@@ -4,6 +4,7 @@
 
 @using System.ComponentModel.DataAnnotations
 @using Maktab.Consumer.Helpers
+@using Maktab.Consumer.Services
 @using Microsoft.AspNetCore.Components.Authorization
 @inject AuthenticationStateProvider AuthProvider
 
@@ -45,14 +46,18 @@
                     <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
                          <MudButton Href="@Constants.RegisterParentRoute" Variant="Variant.Outlined" 
                                     Color="Color.Default" StartIcon="@Icons.Material.Filled.AppRegistration"
-                                    Disabled="@authenticating">@L[MaktabResources.Create_New_Account]</MudButton>
+                                    Disabled="@(authenticating || rateLimiter.IsLockedOut)">@L[MaktabResources.Create_New_Account]</MudButton>
                          <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" 
                                     StartIcon="@Icons.Material.Filled.Login"
-                                    Disabled="@(!_isValid || authenticating)" OnClick="@(HandleLogin)">
+                                    Disabled="@(!_isValid || authenticating || rateLimiter.IsLockedOut)" OnClick="@(HandleLogin)">
                                    @if (authenticating)
                                    {
                                         <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
                                         <span>@L[MaktabResources.Msg_Info_Authenticating]</span>
+                                   }
+                                   else if (rateLimiter.IsLockedOut)
+                                   {
+                                        <span>@L[MaktabResources.Msg_Wait_For_Seconds,rateLimiter.RemainingSeconds]</span>
                                    }
                                    else
                                    {
@@ -77,6 +82,7 @@
      private string username = string.Empty;
      private string password = string.Empty;
      private bool authenticating = false;
+     private RateLimitHandler rateLimiter = new RateLimitHandler(maxAttempts: 3, lockoutDurationSeconds: 30);
 
      protected async override Task OnInitializedAsync()
      {
@@ -93,7 +99,7 @@
 
      private async Task OnKeyDown(KeyboardEventArgs e)
      {
-          if (e.Key == "Enter" && _isValid && !authenticating)
+          if (e.Key == "Enter" && _isValid && !authenticating && !rateLimiter.IsLockedOut)
           {
                await HandleLogin();
           }
@@ -101,6 +107,14 @@
 
      private async Task HandleLogin()
      {
+          // Check if locked out before attempting login
+          if (rateLimiter.CheckLockout())
+          {
+               _errorMessage = L[MaktabResources.Msg_Warning_Account_Locked_Seconds, rateLimiter.RemainingSeconds];
+               RequestRender();
+               return;
+          }
+
           authenticating = true;
           RequestRender();
           await InvokeUserAction(LoginToSystem);
@@ -119,6 +133,9 @@
           var result = await SessionService.Login(logInfo);
           if (result)
           {
+               // Clear failed attempts on successful login
+               rateLimiter.RecordSuccess();
+
                if (AuthProvider is AuthStateProvider asp)
                {
                     asp.NotifyUserAuthentication();
@@ -128,8 +145,25 @@
           }
           else
           {
-               _errorMessage = L[MaktabResources.Provide_Valid_Credentials];
+               // Record failed attempt
+               rateLimiter.RecordFailedAttempt();
+
+               if (rateLimiter.IsLockedOut)
+               {
+                    _errorMessage = L[MaktabResources.Msg_Warning_Failed_Attempt_Account_Locked_Seconds, rateLimiter.RemainingSeconds];
+                    rateLimiter.StartCountdownTimer(() => RequestRender());
+               }
+               else
+               {
+                    _errorMessage = L[MaktabResources.Msg_Warning_Failed_Login_Attempt_Counter, rateLimiter.RemainingAttempts];
+               }
+
                RequestRender();
           }
+     }
+
+     public void Dispose()
+     {
+          rateLimiter?.Dispose();
      }
 }

@@ -2068,11 +2068,65 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wait {0} seconds....
+        /// </summary>
+        public static string Msg_Wait_For_Seconds {
+            get {
+                return ResourceManager.GetString("Msg_Wait_For_Seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account locked. Please wait {0} seconds.
+        /// </summary>
+        public static string Msg_Warning_Account_Locked_Seconds {
+            get {
+                return ResourceManager.GetString("Msg_Warning_Account_Locked_Seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Too many failed attempts. Account locked for {0} seconds.
+        /// </summary>
+        public static string Msg_Warning_Failed_Attempt_Account_Locked_Seconds {
+            get {
+                return ResourceManager.GetString("Msg_Warning_Failed_Attempt_Account_Locked_Seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid credentials. {0} attempt(s) remaining before lockout.
+        /// </summary>
+        public static string Msg_Warning_Failed_Login_Attempt_Counter {
+            get {
+                return ResourceManager.GetString("Msg_Warning_Failed_Login_Attempt_Counter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Too many failed registration attempts. Please wait {0} seconds.
+        /// </summary>
+        public static string Msg_Warning_Failed_Registration_Attempt_Wait_Seconds {
+            get {
+                return ResourceManager.GetString("Msg_Warning_Failed_Registration_Attempt_Wait_Seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please provide valid family identifier.
         /// </summary>
         public static string Msg_Warning_Provide_Family_Id {
             get {
                 return ResourceManager.GetString("Msg_Warning_Provide_Family_Id", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Too many registration attempts. Please wait {0} seconds.
+        /// </summary>
+        public static string Msg_Warning_Registration_Attempt_Wait_Seconds {
+            get {
+                return ResourceManager.GetString("Msg_Warning_Registration_Attempt_Wait_Seconds", resourceCulture);
             }
         }
         

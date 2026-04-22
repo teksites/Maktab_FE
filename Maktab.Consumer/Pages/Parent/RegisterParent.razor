@@ -6,6 +6,7 @@
 @using System.ComponentModel.DataAnnotations
 @using MaktabDataContracts.Enums
 @using MaktabDataContracts.Requests.Users
+@using Maktab.Consumer.Services
 
 @inject IUserService UserService
 @inject IDialogService DialogService
@@ -61,14 +62,18 @@
                     <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
                          <MudButton Href="@Constants.LoginRoute" Variant="Variant.Outlined"
                                     Color="Color.Default" StartIcon="@Icons.Material.Filled.Login"
-                                    Disabled="@(IsRegistering)">@L[MaktabResources.Login]</MudButton>
+                                    Disabled="@(IsRegistering || registrationLimiter.IsLockedOut)">@L[MaktabResources.Login]</MudButton>
                          <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary"
                                     StartIcon="@Icons.Material.Filled.PersonAdd"
-                                    Disabled="@(!_isValid || IsRegistering)" OnClick="@(HandlerRegisterUser)">
+                                    Disabled="@(!_isValid || IsRegistering || registrationLimiter.IsLockedOut)" OnClick="@(HandlerRegisterUser)">
                               @if (IsRegistering)
                               {
                                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
                                    <span>@L[MaktabResources.Msg_Processing]</span>
+                              }
+                              else if (registrationLimiter.IsLockedOut)
+                              {
+                                   <span>@L[MaktabResources.Msg_Wait_For_Seconds, registrationLimiter.RemainingSeconds]</span>
                               }
                               else
                               {
@@ -95,6 +100,7 @@
      bool IsRegistering;
      MudTextField<string> pwField1;
      IEnumerable<Relationship> relationShips = Array.Empty<Relationship>();
+     private RateLimitHandler registrationLimiter = new RateLimitHandler(maxAttempts: 3, lockoutDurationSeconds: 30);
 
      protected override async Task OnInitializedAsync()
      {
@@ -127,6 +133,14 @@
 
      private async void HandlerRegisterUser()
      {
+          // Check if locked out
+          if (registrationLimiter.CheckLockout())
+          {
+               _errorMessage = L[MaktabResources.Msg_Warning_Registration_Attempt_Wait_Seconds, registrationLimiter.RemainingSeconds];
+               Snackbar.Add(_errorMessage, Severity.Warning);
+               return;
+          }
+
           try
           {
                IsRegistering = true;
@@ -151,6 +165,7 @@
           {
                _errorMessage = L[MaktabResources.Msg_Error_User_Resgister_No_RelationShip_Defined];
                Snackbar.Add(_errorMessage, Severity.Error);
+               registrationLimiter.RecordFailedAttempt();
                return;
           }
 
@@ -159,6 +174,11 @@
           {
                _errorMessage = L[MaktabResources.Msg_Error_User_Resgister_Already_Registered];
                Snackbar.Add(_errorMessage, Severity.Error);
+               registrationLimiter.RecordFailedAttempt();
+               if (registrationLimiter.IsLockedOut)
+               {
+                    registrationLimiter.StartCountdownTimer(() => RequestRender());
+               }
                return;
           }
 
@@ -166,10 +186,26 @@
           var result = await UserService.RegisterUserAsync(addUserInformation);
           if (result != null)
           {
+               // Clear failed attempts on successful registration
+               registrationLimiter.RecordSuccess();
                _errorMessage = L[MaktabResources.Msg_Success_User_Added_To_System];
                Snackbar.Add(_errorMessage, Severity.Success);
-               // Redirect after successful login
+               // Redirect after successful registration
                NavigationManager.NavigateTo(Constants.LoginRoute);
           }
+          else
+          {
+               registrationLimiter.RecordFailedAttempt();
+               if (registrationLimiter.IsLockedOut)
+               {
+                    _errorMessage = L[MaktabResources.Msg_Warning_Failed_Registration_Attempt_Wait_Seconds, registrationLimiter.RemainingSeconds];
+                    registrationLimiter.StartCountdownTimer(() => RequestRender());
+               }
+          }
+     }
+
+     public void Dispose()
+     {
+          registrationLimiter?.Dispose();
      }
 }
