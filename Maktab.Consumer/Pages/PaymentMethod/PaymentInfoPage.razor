@@ -193,6 +193,14 @@
                                    </MudText>
                               </MudTd>
                               <MudTd DataLabel="@L[MaktabResources.Action]" Style="text-align: center;">
+                                   <MudStack Row="true">
+                                        @if (context.Transaction?.FeeInstallments?.Any() == true)
+                                        {
+                                             <MudTooltip Text=@L[MaktabResources.Payment_Schedule]>
+                                                  <MudIconButton OnClick="() => OpenPaymentScheduleDialog(context.Transaction)" Icon="@Icons.Material.Outlined.Schedule" Size="Size.Small" />
+                                             </MudTooltip>
+                                        }
+
                                    @if (context.Transaction.TotalPayable > context.Transaction.TotalAmountPaid)
                                    {
                                         <MudButton Variant="Variant.Filled"
@@ -212,6 +220,8 @@
                                              @L[MaktabResources.Paid]
                                         </MudButton>
                                    }
+                                   </MudStack>
+
                               </MudTd>
                          </RowTemplate>
                     </MudTable>
@@ -507,5 +517,19 @@
                new BreadcrumbItem( L[MaktabResources.Dashboard], Constants.ParentDashboardRoute),
                new BreadcrumbItem( L[MaktabResources.Payment], null, true)
           };
+     }
+
+     private async Task OpenPaymentScheduleDialog(StudentCourseTransactionResponse studentCourseTransactionResponse)
+     {
+          if (studentCourseTransactionResponse == null)
+          {
+               return;
+          }
+
+          var parameters = new DialogParameters { ["FeeInstallments"] = studentCourseTransactionResponse.FeeInstallments };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseOnEscapeKey = true, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<PaymentScheduleDialog>(L[MaktabResources.Payment_Schedule], parameters, options);
+          var result = await dialog.Result;
      }
 }

@@ -763,6 +763,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Details.
         /// </summary>
         public static string Details {
@@ -777,6 +786,15 @@ namespace Maktab.Consumer.Localization {
         public static string Discount {
             get {
                 return ResourceManager.GetString("Discount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Due Date.
+        /// </summary>
+        public static string Due_Date {
+            get {
+                return ResourceManager.GetString("Due_Date", resourceCulture);
             }
         }
         
@@ -1254,6 +1272,15 @@ namespace Maktab.Consumer.Localization {
         public static string Male {
             get {
                 return ResourceManager.GetString("Male", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum amount due.
+        /// </summary>
+        public static string Minimum_Amount_Due {
+            get {
+                return ResourceManager.GetString("Minimum_Amount_Due", resourceCulture);
             }
         }
         
@@ -2244,6 +2271,15 @@ namespace Maktab.Consumer.Localization {
         public static string Payment_Details {
             get {
                 return ResourceManager.GetString("Payment_Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payment Schedule.
+        /// </summary>
+        public static string Payment_Schedule {
+            get {
+                return ResourceManager.GetString("Payment_Schedule", resourceCulture);
             }
         }
         

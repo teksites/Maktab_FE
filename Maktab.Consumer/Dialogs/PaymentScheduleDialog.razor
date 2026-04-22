@@ -1,0 +1,29 @@
+﻿@inherits BaseDialog<PaymentScheduleDialog>
+@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Responses.Transactions
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+          <PaymentSchedule FeeInstallments="FeeInstallments" />
+    </DialogContent>
+</MudDialog>
+
+@code {
+     [Parameter] public IList<FeeInstallment> FeeInstallments { get; set; } = Array.Empty<FeeInstallment>();
+
+     protected async override Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+     }
+
+     private void PasswordChanged(bool passwordChanged)
+     {
+          MudDialog.Close(DialogResult.Ok(passwordChanged));
+     }
+
+     private void CancelDialog()
+     {
+          MudDialog.Cancel();
+     }
+}

@@ -203,16 +203,25 @@
                                                                       <MudDivider DividerType="DividerType.FullWidth" />
 
                                                                       <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                                                           <MudStack Row="true" Spacing="0"  AlignItems="AlignItems.Center" Justify="Justify.SpaceAround">
+
                                                                            <MudTooltip Text=@L[MaktabResources.Total_Course_Fee]>
-                                                                                <MudText Typo="Typo.caption" Style="opacity: 0.7;">
-                                                                                     @L[MaktabResources.Course_Fee]
-                                                                                </MudText>
+                                                                                     <MudText Typo="Typo.caption" Style="opacity: 0.7;">
+                                                                                          @L[MaktabResources.Course_Fee]
+                                                                                     </MudText>
                                                                            </MudTooltip>
+                                                                                @if (transaction?.FeeInstallments?.Any() == true)
+                                                                                {
+                                                                                     <MudTooltip Text=@L[MaktabResources.Payment_Schedule]>
+                                                                                          <MudIconButton OnClick="() => OpenPaymentScheduleDialog(transaction)" Icon="@Icons.Material.Outlined.Schedule" Size="Size.Small" />
+                                                                                     </MudTooltip>
+                                                                                }
+                                                                           </MudStack>
                                                                            <MudSpacer />
 
                                                                            <MudText Typo="Typo.body2" Class="font-weight-medium" Color="Color.Info">
                                                                                 @transaction.PayableFee.ToString("F2")
-                                                                           </MudText>
+                                                                           </MudText> 
                                                                       </MudStack>
 
                                                                       <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
@@ -629,5 +638,19 @@
                new BreadcrumbItem( L[MaktabResources.Dashboard], Constants.ParentDashboardRoute),
                new BreadcrumbItem( L[MaktabResources.Payment_Details], null, true)
           };
+     }
+
+     private async Task OpenPaymentScheduleDialog(StudentCourseTransactionResponse studentCourseTransactionResponse)
+     {
+          if(studentCourseTransactionResponse == null)
+          {
+               return;
+          }
+
+          var parameters = new DialogParameters { ["FeeInstallments"] = studentCourseTransactionResponse.FeeInstallments };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseOnEscapeKey = true, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<PaymentScheduleDialog>(L[MaktabResources.Payment_Schedule], parameters, options);
+          var result = await dialog.Result;
      }
 }

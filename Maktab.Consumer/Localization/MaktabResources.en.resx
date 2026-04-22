@@ -1106,4 +1106,16 @@
   <data name="Msg_Info_CourseGroup_Registration_Full" xml:space="preserve">
     <value>One of the group is full. If you proceed, children will be placed on the waiting list and fees will include them</value>
   </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Minimum_Amount_Due" xml:space="preserve">
+    <value>Minimum amount due</value>
+  </data>
+  <data name="Due_Date" xml:space="preserve">
+    <value>Due Date</value>
+  </data>
+  <data name="Payment_Schedule" xml:space="preserve">
+    <value>Payment Schedule</value>
+  </data>
 </root>
