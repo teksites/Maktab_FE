@@ -148,6 +148,7 @@
                               <MudTh Style="text-align: right;">@L[MaktabResources.Amount_Paid]</MudTh>
                               <MudTh Style="text-align: right;">@L[MaktabResources.Discount]</MudTh>
                               <MudTh Style="text-align: right;">@L[MaktabResources.Amount_Due]</MudTh>
+                              <MudTh Style="text-align: right;">@L[MaktabResources.Minimum_Amount_Due]</MudTh>
                               <MudTh Style="text-align: center;">@L[MaktabResources.Action]</MudTh>
                          </HeaderContent>
                          <RowTemplate>
@@ -192,6 +193,15 @@
                                         @(context.Transaction.TotalPayable - (context.Transaction.TotalAmountPaid + context.Transaction.DayCareDiscount + context.Transaction.FeeAmountDiscount))
                                    </MudText>
                               </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Minimum_Amount_Due]" Style="text-align: right;">
+                                   <MudText Typo="Typo.body2"
+                                            Color="Color.Error"
+                                            Class="font-weight-bold">
+                                        @(DisplayMinumumAmountDue(context.Transaction))
+                                   </MudText>
+                              </MudTd>
+
+
                               <MudTd DataLabel="@L[MaktabResources.Action]" Style="text-align: center;">
                                    <MudStack Row="true">
                                         @if (context.Transaction?.FeeInstallments?.Any() == true)
@@ -506,8 +516,43 @@
                decimal amountPayable = courseTransaction.TotalPayable - courseTransaction.TotalAmountPaid;
 
                var navigationUrl = string.Format(url, amountPayable.ToString(), paymentCode, userInfo.Email);
+
+               //check if minimum amount due is greater than zero and less than total amount due, if so pass it as query param
+               decimal minimumPayable = CalculateMinumumAmountDue(courseTransaction);
+               if (minimumPayable > 0)
+               {
+                    navigationUrl += $"&minimumAmount={minimumPayable.ToString()}";
+               }
+
                NavigationManager.NavigateTo(navigationUrl, false);
           }
+     }
+
+     /// <summary>
+     /// Calculates the minimum amount due for a given transaction.
+     /// </summary>
+     /// <param name="transaction">The transaction to calculate the minimum amount due for.</param>
+     /// <returns>The minimum amount due.</returns>
+     private decimal CalculateMinumumAmountDue(StudentCourseTransactionResponse transaction)
+     {
+          decimal minimumAmount = transaction.MinimumPayable;
+          if (minimumAmount <= 0)
+          {
+               return 0;
+          }
+
+          return minimumAmount;
+     }
+
+     private string DisplayMinumumAmountDue(StudentCourseTransactionResponse transaction)
+     {
+          decimal minAmountDue = CalculateMinumumAmountDue(transaction);
+          if (minAmountDue > 0)
+          {
+               return minAmountDue.ToString();
+          }
+
+          return string.Empty;
      }
 
      private void InitializeBreadcrumbs()

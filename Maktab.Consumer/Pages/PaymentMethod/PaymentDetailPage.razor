@@ -627,8 +627,32 @@
                decimal amountPayable = courseTransaction.TotalPayable - courseTransaction.TotalAmountPaid;
 
                var navigationUrl = string.Format(url, amountPayable.ToString(), paymentCode, userInfo.Email);
+
+               //check if minimum amount due is greater than zero and less than total amount due, if so pass it as query param
+               decimal minimumPayable = CalculateMinumumAmountDue(courseTransaction);
+               if(minimumPayable > 0)
+               {
+                    navigationUrl += $"&minimumAmount={minimumPayable.ToString()}";
+               }
+
                NavigationManager.NavigateTo(navigationUrl, false);
           }
+     }
+
+     /// <summary>
+     /// Calculates the minimum amount due for a given transaction.
+     /// </summary>
+     /// <param name="transaction">The transaction to calculate the minimum amount due for.</param>
+     /// <returns>The minimum amount due.</returns>
+     private decimal CalculateMinumumAmountDue(StudentCourseTransactionResponse transaction)
+     {
+          decimal minimumAmount = transaction.MinimumPayable;
+          if (minimumAmount <= 0)
+          {
+               return 0;
+          }
+
+          return minimumAmount;
      }
 
      private void InitializeBreadcrumbs()

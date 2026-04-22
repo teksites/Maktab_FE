@@ -1276,7 +1276,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Minimum amount due.
+        ///   Looks up a localized string similar to Minimum Amount Due.
         /// </summary>
         public static string Minimum_Amount_Due {
             get {
