@@ -304,8 +304,8 @@ else if (IsError)
                                              {
                                                   <MudSelectItem Value="@g">
                                                        <MudStack Row="true" AlignItems="AlignItems.Center">
-                                                            <MudIcon Icon="@Icons.Material.Filled.Groups" Class="mr-2" />
-                                                            <strong>@g.GroupTitle</strong>
+                                                            <MudIcon Icon="@Icons.Material.Filled.Groups" />
+                                                            <strong>@(GetCourseGroupTitle(g))</strong>
 
                                                             @* <MudText Typo="Typo.caption" Class="ml-2">Fee: </MudText> *@
                                                             @* <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Class="mr-2" />*@
@@ -321,10 +321,10 @@ else if (IsError)
                                              </MudText> *@
                                                             <MudChip T="bool" Color="@(GetCourseGroupRegistrationStatusColor(g.IfRegistrationOpen))" Variant="Variant.Filled" Size="Size.Small">@(GetCourseGroupRegistrationStatusLabel(g.IfRegistrationOpen))</MudChip>
 
-                                                            <MudChipSet T="CourseEnrollmentGroupResponse">
+                                                            <MudChipSet T="CourseEnrollmentGroupResponse"  ReadOnly="true" >
                                                                  @foreach (var chipSet in g.AcedemicGroups)
                                                                  {
-                                                                      <MudChip T="String" Text="@chipSet" />
+                                                                      <MudChip T="String" Text="@chipSet"  Size="Size.Small" />
                                                                  }
                                                             </MudChipSet>
                                                        </MudStack>
@@ -346,13 +346,13 @@ else if (IsError)
                                                             <MudIcon Icon="@Icons.Material.Filled.Groups" />
                                                             <strong>@(GetCourseGroupTitle(g))</strong>
 
-                                                            <MudText Typo="Typo.caption">
+                                                            <MudText Typo="Typo.caption" Class="ml-2">
                                                                  @g.Fee
                                                             </MudText>
 
                                                             <MudChip T="bool" Color="@(GetCourseGroupRegistrationStatusColor(g.IfRegistrationOpen))" Variant="Variant.Filled" Size="Size.Small">@(GetCourseGroupRegistrationStatusLabel(g.IfRegistrationOpen))</MudChip>
 
-                                                            <MudChipSet T="CourseEnrollmentGroupResponse">
+                                                            <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true">
                                                                  @foreach (var chipSet in g.AcedemicGroups)
                                                                  {
                                                                       <MudChip T="String" Text="@chipSet" Size="Size.Small" />
