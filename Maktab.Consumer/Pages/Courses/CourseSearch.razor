@@ -35,7 +35,7 @@
                </MudItem>
                <MudItem xs="12" sm="6" Class="d-flex justify-end">
                     <MudChipSet T="InstituteResponse"
-                                @bind-SelectedValue="@_selectedCategory"
+                                @bind-SelectedValue="SelectedInstitute"
                                 SelectionMode="SelectionMode.ToggleSelection"
                          CheckMark="true" 
                     
@@ -43,7 +43,7 @@
                          @* <MudChip T="string" Selected="@(_selectedCategory == null)">All</MudChip> *@
                          @foreach (var cat in _institutes)
                          {
-                              <MudChip T="InstituteResponse">@cat.Name</MudChip>
+                              <MudChip T="InstituteResponse" Value="@cat" >@cat.Name</MudChip>
                          }
                     </MudChipSet>
                </MudItem>
@@ -59,16 +59,26 @@
      }
 </MudContainer>
 
-@code {
+     @code {
      private IEnumerable<InstituteResponse> _institutes => StateService.InstituteState.Institutes ?? Array.Empty<InstituteResponse>();
 
      private IEnumerable<CourseResponseDetailed> _courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
-     private List<CourseResponseDetailed> _filteredCourses = new();
+     private IEnumerable<CourseResponseDetailed> _filteredCourses = Array.Empty<CourseResponseDetailed>();
      // private IEnumerable<InstituteReponse> _categories = new();
-     private InstituteResponse? _selectedCategory;// = "All";
+     private InstituteResponse? _selectedInstitute;// = "All";
      private string _searchText = string.Empty;
      private bool isInitialized = false;
      private bool isDataLoading = false;
+
+     protected InstituteResponse? SelectedInstitute
+     {
+          get { return _selectedInstitute; }
+          set
+          {
+               _selectedInstitute = value;
+               OnCategoryChanged(_selectedInstitute);
+          }
+     }
 
 
      protected override void OnInitialized()
@@ -121,10 +131,10 @@
      {
           var filtered = _courses;
 
-          if (_selectedCategory != null)
+          if (_selectedInstitute != null)
           {
 
-               filtered = filtered.Where(c => c.InstituteId == _selectedCategory.InstituteId);
+               filtered = filtered.Where(c => c.InstituteId == _selectedInstitute.InstituteId);
           }
 
           if (!string.IsNullOrWhiteSpace(_searchText))
@@ -136,16 +146,6 @@
 
           }
 
-          _filteredCourses = filtered.ToList();
-
-          // _filteredCourses = _courses
-          //     .Where(c =>
-          //         (!string.IsNullOrWhiteSpace(_searchText) &&
-          //          c.Details.Contains(_searchText, StringComparison.OrdinalIgnoreCase) ||
-          //          c.Description.Contains(_searchText, StringComparison.OrdinalIgnoreCase))
-          //         //&& (_selectedCategory == null || c.InstituteId == _institutes.FirstOrDefault(x=>x.Name == _selectedCategory).InstituteId)
-          //     )
-          //     .ToList();
+          _filteredCourses = filtered;
      }
 }
-
