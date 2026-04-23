@@ -92,7 +92,7 @@
                </MudItem>
 
                <MudItem xs="12" sm="6" Class="d-flex align-center">
-                         <MudSelect Label=@L[MaktabResources.Academic_Group] T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
+                         <MudSelect Required="true" Label=@L[MaktabResources.Academic_Group] T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
                          @foreach (var group in acedemicGroups)
                          {
                               <MudSelectItem Value="group">@group.ToString()</MudSelectItem>
@@ -193,11 +193,25 @@
                return;
           }
 
-          if (!RAMQExpiry.HasValue || !DateOfBirth.HasValue)
+          if (!RAMQExpiry.HasValue)
           {
-              _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required];
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.RAMQ_Expiry];
               Snackbar.Add(_errorMessage, Severity.Error);
               return;
+          }
+
+          if (!DateOfBirth.HasValue)
+          {
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Date_Of_Birth];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          if (ChildModel.AcedemicGroup == AcedemicGroupType.None)
+          {
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Academic_Group];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
           }
 
           ChildModel.RAMQExpiry = RAMQExpiry.Value;
