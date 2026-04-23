@@ -203,11 +203,11 @@
 
 
                               <MudTd DataLabel="@L[MaktabResources.Action]" Style="text-align: center;">
-                                   <MudStack Row="true">
+                                   <MudStack Row="true" StretchItems="StretchItems.All" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
                                         @if (context.Transaction?.FeeInstallments?.Any() == true)
                                         {
                                              <MudTooltip Text=@L[MaktabResources.Payment_Schedule]>
-                                                  <MudIconButton OnClick="() => OpenPaymentScheduleDialog(context.Transaction)" Icon="@Icons.Material.Outlined.Schedule" Size="Size.Small" />
+                                                  <MudIconButton Variant="Variant.Outlined" Color="Color.Info" OnClick="() => OpenPaymentScheduleDialog(context.Transaction)" Icon="@Icons.Material.Outlined.Schedule" Size="Size.Small" />
                                              </MudTooltip>
                                         }
 

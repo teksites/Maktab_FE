@@ -21,22 +21,21 @@
                <MudSimpleTable Outlined="false" Hover="false" Dense="false" Striped="true" FixedHeader="true">
                     <thead>
                          <tr>
-
                               <th>@L[MaktabResources.Description]</th>
                               <th>@L[MaktabResources.Due_Date]</th>
                               <th>@L[MaktabResources.Amount_Due]</th>
                          </tr>
                     </thead>
                     <tbody>
-                         <tr>
-                              @foreach (var g in FeeInstallments)
-                              {
-                                   <td>@g.Description</td>
+                         
+                         @foreach (var g in FeeInstallments)
+                         {
+                              <tr>
+                                   <td>@(GetPaymentDescription(g))</td>
                                    <td>@g.DueDate</td>
                                    <td>@g.Amount</td>
-                              }
-                         </tr>
-
+                              </tr>
+                         }
                     </tbody>
                </MudSimpleTable>
           </MudPaper>
@@ -44,7 +43,7 @@
      }
 </MudContainer>
 
-@code {
+     @code {
      [Parameter] public IList<FeeInstallment> FeeInstallments { get; set; } = Array.Empty<FeeInstallment>();
 
      protected bool IsLoadingData = false;
@@ -89,4 +88,36 @@
           IsLoadingData = false;
      }
 
+     protected string GetPaymentDescription(FeeInstallment installment)
+     {
+          if (installment == null) return string.Empty;
+
+          try
+          {
+               var values = installment.Description.Split("//", StringSplitOptions.RemoveEmptyEntries);
+
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    var description = values.LastOrDefault();
+                    if (!string.IsNullOrEmpty(description))
+                    {
+                         return description;
+                    }
+               }
+               else
+               {
+                    var description = values.FirstOrDefault();
+                    if (!string.IsNullOrEmpty(description))
+                    {
+                         return description;
+                    }
+               }
+
+               return string.Empty;
+          }
+          catch (Exception ec)
+          {
+               return string.Empty;
+          }
+     }
 }

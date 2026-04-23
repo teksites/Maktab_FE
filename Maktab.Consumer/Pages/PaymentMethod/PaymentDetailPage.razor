@@ -203,20 +203,12 @@
                                                                       <MudDivider DividerType="DividerType.FullWidth" />
 
                                                                       <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
-                                                                           <MudStack Row="true" Spacing="0"  AlignItems="AlignItems.Center" Justify="Justify.SpaceAround">
-
                                                                            <MudTooltip Text=@L[MaktabResources.Total_Course_Fee]>
                                                                                      <MudText Typo="Typo.caption" Style="opacity: 0.7;">
                                                                                           @L[MaktabResources.Course_Fee]
                                                                                      </MudText>
                                                                            </MudTooltip>
-                                                                                @if (transaction?.FeeInstallments?.Any() == true)
-                                                                                {
-                                                                                     <MudTooltip Text=@L[MaktabResources.Payment_Schedule]>
-                                                                                          <MudIconButton OnClick="() => OpenPaymentScheduleDialog(transaction)" Icon="@Icons.Material.Outlined.Schedule" Size="Size.Small" />
-                                                                                     </MudTooltip>
-                                                                                }
-                                                                           </MudStack>
+                                                                               
                                                                            <MudSpacer />
 
                                                                            <MudText Typo="Typo.body2" Class="font-weight-medium" Color="Color.Info">
@@ -325,6 +317,12 @@
                                                             @if (transaction.TotalPayable > transaction.TotalAmountPaid)
                                                             {
                                                                  <MudCardActions>
+                                                                           @if (transaction?.FeeInstallments?.Any() == true)
+                                                                           {
+                                                                                <MudTooltip Text=@L[MaktabResources.Payment_Schedule]>
+                                                                                     <MudIconButton Class="mr-1" Variant="Variant.Outlined" Color="Color.Info" OnClick="() => OpenPaymentScheduleDialog(transaction)" Icon="@Icons.Material.Outlined.Schedule" Size="Size.Small" />
+                                                                                </MudTooltip>
+                                                                           }
                                                                       <MudButton Variant="Variant.Filled"
                                                                                  Color="Color.Primary"
                                                                                  FullWidth="true"
@@ -342,7 +340,7 @@
                                                                                  FullWidth="true"
                                                                                  Size="Size.Small"
                                                                                  Disabled="true">
-                                                                           ✓ Paid
+                                                                           ✓ @L[MaktabResources.Paid]
                                                                       </MudButton>
                                                                  </MudCardActions>
                                                             }
