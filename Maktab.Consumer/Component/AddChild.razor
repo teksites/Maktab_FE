@@ -77,10 +77,16 @@
 
                <MudItem xs="12">
                          <MudStack>
-                              <MudSwitch T="bool" Label=@L[MaktabResources.Allergies] @bind-Value="ChildModel.HasAllergy" />
+                              <MudSwitch T="bool" Label=@L[MaktabResources.Has_Allergies] @bind-Value="ChildModel.HasAllergy" />
                               @if (ChildModel.HasAllergy)
                               {
-                                   <MudTextField @bind-Value="ChildModel.Allergies" Lines="4" Placeholder=@L[MaktabResources.Text_Allergies_Placeholder] Label=@L[MaktabResources.Allergies] Required="true" For="@(() => ChildModel.Allergies)" />
+                                   <MudTextField
+                                        @bind-Value="ChildModel.Allergies" Variant="Variant.Outlined"
+                                        Lines="2"
+                                        MaxLines="4"
+                                        Placeholder=@L[MaktabResources.Text_Allergies_Placeholder]
+                                        Label=@L[MaktabResources.Allergies]
+                                        Required="true" For="@(() => ChildModel.Allergies)" />
                               }
                          </MudStack>
                </MudItem>
@@ -92,7 +98,7 @@
                </MudItem>
 
                <MudItem xs="12" sm="6" Class="d-flex align-center">
-                         <MudSelect Required="true" Label=@L[MaktabResources.Academic_Group] T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
+                         <MudSelect Required="true" Label=@L[MaktabResources.Academic_Group_In_School] T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
                          @foreach (var group in acedemicGroups)
                          {
                               <MudSelectItem Value="group">@group.ToString()</MudSelectItem>

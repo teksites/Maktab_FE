@@ -1,6 +1,6 @@
 {
      "$schema": "http://json.schemastore.org/launchsettings.json",
-     "apiUrl": "https://maktab.azurewebsites.net/",
+     
      "iisSettings": {
           "windowsAuthentication": false,
           "anonymousAuthentication": true,
@@ -12,7 +12,6 @@
      "profiles": {
           "http": {
                "commandName": "Project",
-               "apiUrl": "https://maktab.azurewebsites.net/",
                "dotnetRunMessages": true,
                "launchBrowser": true,
                "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
@@ -23,7 +22,6 @@
           },
           "https": {
                "commandName": "Project",
-               "apiUrl": "https://maktab.azurewebsites.net/",
                "dotnetRunMessages": true,
                "launchBrowser": true,
                "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
@@ -34,7 +32,6 @@
           },
           "IIS Express": {
                "commandName": "IISExpress",
-               "apiUrl": "https://maktab.azurewebsites.net/",
                "launchBrowser": true,
                "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
                "environmentVariables": {

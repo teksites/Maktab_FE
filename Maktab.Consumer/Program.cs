@@ -50,9 +50,7 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddSingleton<IClipboardService, ClipboardService>();
 
 builder.Services.AddScoped(x => {
-     var apiUrl = new Uri("https://maktab.azurewebsites.net/");
-     //new Uri(builder.HostEnvironment.BaseAddress);
-     //new Uri(builder.Configuration["apiUrl"]);
+     var apiUrl = new Uri(builder.Configuration["apiUrl"]);
 
      // use fake backend if "fakeBackend" is "true" in appsettings.json
      //if (builder.Configuration["fakeBackend"] == "true")

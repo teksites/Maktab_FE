@@ -1140,4 +1140,10 @@
   <data name="Msg_Warning_Failed_Registration_Attempt_Wait_Seconds" xml:space="preserve">
     <value>Too many failed registration attempts. Please wait {0} seconds</value>
   </data>
+  <data name="Academic_Group_In_School" xml:space="preserve">
+    <value>Academic Group In School</value>
+  </data>
+  <data name="Has_Allergies" xml:space="preserve">
+    <value>Has Allergies</value>
+  </data>
 </root>

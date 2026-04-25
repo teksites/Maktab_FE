@@ -1139,4 +1139,10 @@
   <data name="Msg_Warning_Failed_Registration_Attempt_Wait_Seconds" xml:space="preserve">
     <value>Trop de tentatives d'inscription échouées. Veuillez patienter {0} secondes</value>
   </data>
+  <data name="Academic_Group_In_School" xml:space="preserve">
+    <value>Groupe académique à l'école</value>
+  </data>
+  <data name="Has_Allergies" xml:space="preserve">
+    <value>A des allergies</value>
+  </data>
 </root>

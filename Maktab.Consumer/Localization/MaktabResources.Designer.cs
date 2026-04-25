@@ -70,6 +70,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Academic Group In School.
+        /// </summary>
+        public static string Academic_Group_In_School {
+            get {
+                return ResourceManager.GetString("Academic_Group_In_School", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Academic Levels.
         /// </summary>
         public static string Academic_Levels {
@@ -1173,6 +1182,15 @@ namespace Maktab.Consumer.Localization {
         public static string Groups {
             get {
                 return ResourceManager.GetString("Groups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Has Allergies.
+        /// </summary>
+        public static string Has_Allergies {
+            get {
+                return ResourceManager.GetString("Has_Allergies", resourceCulture);
             }
         }
         
