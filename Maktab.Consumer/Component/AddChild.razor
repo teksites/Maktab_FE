@@ -1,12 +1,17 @@
-﻿@using MaktabDataContracts.Requests.Children
+﻿@using Maktab.Consumer.State
+@using MaktabDataContracts.Requests.Children
 @using MaktabDataContracts.Enums
+@using MaktabDataContracts.Requests.Policies
 @using MaktabDataContracts.Responses.Children
+@using Maktab.Consumer.Extensions;
 @using MudBlazor
 
 @inherits BaseFormComponent<AddChild>
 
 @inject IChildrenService ChildrenService
+@inject IInstitutionService InstitutionService
 
+@inject UserStateService StateService
 
 @* <EditForm Model="@ChildModel" OnValidSubmit="HandleValidSubmit"> *@
 <MudPaper Class="pa-6" Elevation="0" Outlined="false">
@@ -17,7 +22,7 @@
           </MudText>
      }
 
-         @if(isInitialized)
+     @if (isInitialized && !isDataLoading)
          {
          <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)" Spacing="2">
           <MudGrid Container="true" Spacing="3">
@@ -111,11 +116,17 @@
                </MudItem>
           </MudGrid>
 
+               @if (ChildConsents?.Any() == true)
+               {
+                    <MudText Class="mt-2" Typo="Typo.h6">@L[MaktabResources.Child_Consent]</MudText>
+                    <ChildConsentList RequiredChildConsents="@RequiredChildConsents" />
+               }
+
           <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
                <MudButton Variant="Variant.Outlined" Color="Color.Default"
                           OnClick="@OnCancelClickedHandler"
                           StartIcon="@Icons.Material.Filled.Close">
-                    Cancel
+                         @L[MaktabResources.Cancel]
                </MudButton>
                <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary"
                           Disabled="@(!_isValid || isSaving)"
@@ -149,21 +160,24 @@
      [Parameter] public EventCallback<ChildResponse> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }
      private IReadOnlyCollection<Gender> Genders { get; } = Enum.GetValues(typeof(Gender)).Cast<Gender>().Where(x => x != Gender.Unknown).ToList();
-
+     private IReadOnlyCollection<Consent> ChildConsents => StateService.InstituteState.ChildConsents;
      private DateTime? RAMQExpiry { get; set; }
      private DateTime? DateOfBirth { get; set; }
      private bool isInitialized = false;
+     private bool isDataLoading = false;
      private bool isSaving = false;
      private IEnumerable<AcedemicGroupType> acedemicGroups;
-
-     private static readonly IEnumerable<AcedemicGroupType> AcedemicGroupsCache = 
-    Enum.GetValues(typeof(AcedemicGroupType)).Cast<AcedemicGroupType>().ToList();
+     private static readonly IEnumerable<AcedemicGroupType> AcedemicGroupsCache = Enum.GetValues(typeof(AcedemicGroupType)).Cast<AcedemicGroupType>().ToList();
+     private IReadOnlyCollection<ChildConsent> RequiredChildConsents { get; set; } = Array.Empty<ChildConsent>();
 
      protected override async Task OnInitializedAsync()
      {
           await base.OnInitializedAsync();
           acedemicGroups = AcedemicGroupsCache;
+          await LoadData();
+
           isInitialized = true;
+          RequestRender();
      }
 
      private async Task HandleSaving()
@@ -180,6 +194,37 @@
                isSaving = false;
                RequestRender();
           }
+     }
+
+     private async Task LoadData(bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadStudentConsentData(InstitutionService, forceReload);
+
+          RequiredChildConsents = GenerateChildConsents();
+
+          isDataLoading = false;
+     }
+
+     private IReadOnlyCollection<ChildConsent> GenerateChildConsents()
+     {
+          var requiredConsents = new List<ChildConsent>();
+          foreach (var consent in ChildConsents)
+          {
+               var childConsent = new ChildConsent()
+               {
+                    ConsentType = consent.ConsentType,
+                    Name = consent.Name,
+                    NameFr = consent.NameFr,
+                    PolicyLink = consent.PolicyLink,
+                    IsAllowed = false,
+               };
+
+               requiredConsents.Add(childConsent);
+          }
+
+          return requiredConsents;
      }
 
      private async Task RequestSaving()
@@ -202,8 +247,8 @@
           if (!RAMQExpiry.HasValue)
           {
                _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.RAMQ_Expiry];
-              Snackbar.Add(_errorMessage, Severity.Error);
-              return;
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
           }
 
           if (!DateOfBirth.HasValue)
@@ -224,8 +269,8 @@
           ChildModel.DateOfBirth = DateOfBirth.Value;
           ChildModel.FamilyId = FamilyId;
           ChildModel.RAMQSequenceNumber = -1;
-
-          var result = await ChildrenService.AddChildToFamilyAsync(FamilyId, ChildModel);
+          
+          var result = await ChildrenService.AddChildToFamilyAsync(FamilyId, ChildModel, RequiredChildConsents);
           if (result?.ChildId == null || result.ChildId == Guid.Empty)
           {
                _errorMessage = @L[MaktabResources.Msg_Error_Add_Child_Save];//"Child can not be registered with system. Please try again in few minutes";

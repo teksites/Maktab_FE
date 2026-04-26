@@ -772,7 +772,7 @@
     <value>Please use following payment code and email in mandatory fields on Zeffy payment</value>
   </data>
   <data name="Msg_Info_Zeffy_Payment_donation_section" xml:space="preserve">
-    <value>Please select Other in dropdown and set zero in Contribution for Help Zeffy section</value>
+    <value>On the next page, please select "Other" in the Summary portion dropdown menu and set Contribution to $0</value>
   </data>
   <data name="Pay" xml:space="preserve">
     <value>Pay</value>
@@ -1144,5 +1144,23 @@
   </data>
   <data name="Has_Allergies" xml:space="preserve">
     <value>Has Allergies</value>
+  </data>
+  <data name="Enroll" xml:space="preserve">
+    <value>Enroll</value>
+  </data>
+  <data name="Registration_Closed" xml:space="preserve">
+    <value>Registration Closed</value>
+  </data>
+  <data name="Msg_Donation_Amount_Equals_Course_Amount" xml:space="preserve">
+    <value>Please note that "donation amount" is the payment amount required</value>
+  </data>
+  <data name="Child_Consent" xml:space="preserve">
+    <value>Child consent</value>
+  </data>
+  <data name="Consent" xml:space="preserve">
+    <value>Consent</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>View</value>
   </data>
 </root>

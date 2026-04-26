@@ -88,36 +88,5 @@
           IsLoadingData = false;
      }
 
-     protected string GetPaymentDescription(FeeInstallment installment)
-     {
-          if (installment == null) return string.Empty;
-
-          try
-          {
-               var values = installment.Description.Split("//", StringSplitOptions.RemoveEmptyEntries);
-
-               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-               {
-                    var description = values.LastOrDefault();
-                    if (!string.IsNullOrEmpty(description))
-                    {
-                         return description;
-                    }
-               }
-               else
-               {
-                    var description = values.FirstOrDefault();
-                    if (!string.IsNullOrEmpty(description))
-                    {
-                         return description;
-                    }
-               }
-
-               return string.Empty;
-          }
-          catch (Exception ec)
-          {
-               return string.Empty;
-          }
-     }
+     
 }

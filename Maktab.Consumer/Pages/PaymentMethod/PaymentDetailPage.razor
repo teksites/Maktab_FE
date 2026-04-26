@@ -7,7 +7,7 @@
 @using MaktabDataContracts.Responses.Users
 @using Maktab.Consumer.Dialogs
 
-@inherits LocalizeableBaseComponent<PaymentDetailPage>
+@inherits BasePaymentComponent<PaymentDetailPage>
 
 @inject IDialogService DialogService
 @inject UserStateService StateService
@@ -327,7 +327,7 @@
                                                                                  Color="Color.Primary"
                                                                                  FullWidth="true"
                                                                                  Size="Size.Small"
-                                                                                 OnClick="@(() => OpenZeffyPaymentDialog(transaction))">
+                                                                                 OnClick="@(() => OpenZeffyPaymentDialog(transaction, GetCourseResponseDetailed(courseGroup.CourseId), userInfo.Email))">
                                                                            @L[MaktabResources.Pay_Now]
                                                                       </MudButton>
                                                                  </MudCardActions>
@@ -379,7 +379,7 @@
 
 
 
-@code {
+     @code {
 
      private bool isInitialized;
      private bool isDataLoading;
@@ -576,11 +576,18 @@
           public List<StudentCourseTransactionResponse> Transactions { get; set; } = new();
      }
 
+     private CourseResponseDetailed GetCourseResponseDetailed(Guid courseId)
+     {
+          if (courseId == Guid.Empty) return null;
+
+          return _Courses.FirstOrDefault(x => x.CourseId == courseId);
+     }
+
      private string GetCourseName(Guid courseId)
      {
           if (courseId == Guid.Empty) return string.Empty;
 
-          var course = _Courses.FirstOrDefault(x => x.CourseId == courseId);
+          var course = GetCourseResponseDetailed(courseId);
           if (course != null)
           {
                if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
@@ -616,43 +623,6 @@
           return string.Empty;
      }
 
-     private async Task OpenZeffyPaymentDialog(StudentCourseTransactionResponse courseTransaction)
-     {
-          const string url = "/PaymentMethod/Payment?amount={0}&code={1}&email={2}";
-          if (courseTransaction != null)
-          {
-               string paymentCode = courseTransaction.PaymentCode;
-               decimal amountPayable = courseTransaction.TotalPayable - courseTransaction.TotalAmountPaid;
-
-               var navigationUrl = string.Format(url, amountPayable.ToString(), paymentCode, userInfo.Email);
-
-               //check if minimum amount due is greater than zero and less than total amount due, if so pass it as query param
-               decimal minimumPayable = CalculateMinumumAmountDue(courseTransaction);
-               if(minimumPayable > 0)
-               {
-                    navigationUrl += $"&minimumAmount={minimumPayable.ToString()}";
-               }
-
-               NavigationManager.NavigateTo(navigationUrl, false);
-          }
-     }
-
-     /// <summary>
-     /// Calculates the minimum amount due for a given transaction.
-     /// </summary>
-     /// <param name="transaction">The transaction to calculate the minimum amount due for.</param>
-     /// <returns>The minimum amount due.</returns>
-     private decimal CalculateMinumumAmountDue(StudentCourseTransactionResponse transaction)
-     {
-          decimal minimumAmount = transaction.MinimumPayable;
-          if (minimumAmount <= 0)
-          {
-               return 0;
-          }
-
-          return minimumAmount;
-     }
-
      private void InitializeBreadcrumbs()
      {
           breadcrumbItems = new List<BreadcrumbItem>
@@ -662,17 +632,9 @@
           };
      }
 
-     private async Task OpenPaymentScheduleDialog(StudentCourseTransactionResponse studentCourseTransactionResponse)
+     protected async Task OpenPaymentScheduleDialog(StudentCourseTransactionResponse studentCourseTransactionResponse)
      {
-          if(studentCourseTransactionResponse == null)
-          {
-               return;
-          }
-
-          var parameters = new DialogParameters { ["FeeInstallments"] = studentCourseTransactionResponse.FeeInstallments };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseOnEscapeKey = true, CloseButton = true };
-
-          var dialog = await DialogService.ShowAsync<PaymentScheduleDialog>(L[MaktabResources.Payment_Schedule], parameters, options);
-          var result = await dialog.Result;
+          await OpenPaymentScheduleDialog(DialogService, studentCourseTransactionResponse);
      }
+
 }

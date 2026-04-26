@@ -1,6 +1,7 @@
 using Maktab.Core.Interfaces.Services;
 using MaktabDataContracts.Models;
 using MaktabDataContracts.Requests.Children;
+using MaktabDataContracts.Requests.Policies;
 using MaktabDataContracts.Responses.Children;
 using Microsoft.Extensions.Logging;
 using System;
@@ -137,7 +138,7 @@ namespace Maktab.Domain.Services
           /// <summary>
           /// Add child to family with validation and error handling
           /// </summary>
-          public async Task<ChildResponse> AddChildToFamilyAsync(Guid familyId, AddChildRequest addChildRequest)
+          public async Task<ChildResponse> AddChildToFamilyAsync(Guid familyId, AddChildRequest addChildRequest, IReadOnlyCollection<ChildConsent> childConsents)
           {
                try
                {
@@ -158,6 +159,12 @@ namespace Maktab.Domain.Services
 
                     // Make request
                     var formattedUrl = string.Format(addChildByFamilyId, familyId);
+
+                    if(childConsents?.Any() == true)
+                    {
+                         addChildRequest.Consent = System.Text.Json.JsonSerializer.Serialize(childConsents);
+                    }
+
                     var result = await _httpService.Post<MaktabApiResult<ChildResponse>>(formattedUrl, addChildRequest);
 
                     // Validate response

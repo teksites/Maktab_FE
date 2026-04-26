@@ -1,4 +1,5 @@
 ﻿using MaktabDataContracts.Requests.Children;
+using MaktabDataContracts.Requests.Policies;
 using MaktabDataContracts.Responses.Children;
 
 namespace Maktab.Core.Interfaces.Services
@@ -22,7 +23,7 @@ namespace Maktab.Core.Interfaces.Services
           /// <summary>
           /// Add child to family with validation
           /// </summary>
-          Task<ChildResponse> AddChildToFamilyAsync(Guid familyId, AddChildRequest addChildRequest);
+          Task<ChildResponse> AddChildToFamilyAsync(Guid familyId, AddChildRequest addChildRequest, IReadOnlyCollection<ChildConsent> childConsents);
 
           /// <summary>
           /// Check if child exists with RAMQ number (backend uses POST)

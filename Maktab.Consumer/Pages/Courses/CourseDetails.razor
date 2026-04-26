@@ -66,11 +66,15 @@
                               <b>@L[MaktabResources.Date_End]</b> @_course.EndDate.ToString("dd MMM yyyy")
                     </MudText>
 
-                         @if(_course.IsRegistrationOpened)
-                {
+                         @if (_course.IsRegistrationOpened)
+                         {
                               <MudChip T="string" Color="Color.Info" Variant="Variant.Outlined">@L[MaktabResources.Registration_Open]</MudChip>
-                }
-            </MudStack>
+                         }
+                         else
+                         {
+                              <MudChip T="string" Color="Color.Warning" Variant="Variant.Outlined">@L[MaktabResources.Registration_Closed]</MudChip>
+                         }
+                    </MudStack>
 
 
             <!-- Modules -->

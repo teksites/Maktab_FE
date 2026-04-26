@@ -207,5 +207,21 @@ namespace Maktab.Consumer.Extensions
                     }
                }
           }
+
+          public static async Task LoadStudentConsentData(this UserStateService userStateService, IInstitutionService institutionService, bool forceReload = false)
+          {
+               if (userStateService.InstituteState.ChildConsents == null || forceReload)
+               {
+                    var consentPolicies = await institutionService.GetChildConsentPoliciesAsync();
+                    if (consentPolicies?.Any() == true)
+                    {
+                         userStateService.InstituteState.SetChildConsent(consentPolicies);
+                    }
+                    else
+                    {
+                         userStateService.InstituteState.ClearChildConsent();
+                    }
+               }
+          }
      }
 }

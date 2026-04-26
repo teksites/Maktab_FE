@@ -466,6 +466,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Child consent.
+        /// </summary>
+        public static string Child_Consent {
+            get {
+                return ResourceManager.GetString("Child_Consent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Children.
         /// </summary>
         public static string Children {
@@ -543,6 +552,15 @@ namespace Maktab.Consumer.Localization {
         public static string Confirm_Skip {
             get {
                 return ResourceManager.GetString("Confirm_Skip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Consent.
+        /// </summary>
+        public static string Consent {
+            get {
+                return ResourceManager.GetString("Consent", resourceCulture);
             }
         }
         
@@ -894,6 +912,15 @@ namespace Maktab.Consumer.Localization {
         public static string End {
             get {
                 return ResourceManager.GetString("End", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enroll.
+        /// </summary>
+        public static string Enroll {
+            get {
+                return ResourceManager.GetString("Enroll", resourceCulture);
             }
         }
         
@@ -1308,6 +1335,15 @@ namespace Maktab.Consumer.Localization {
         public static string Minimum_Amount_Due_To_Hold_Registration {
             get {
                 return ResourceManager.GetString("Minimum_Amount_Due_To_Hold_Registration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please note that &quot;donation amount&quot; is the payment amount required.
+        /// </summary>
+        public static string Msg_Donation_Amount_Equals_Course_Amount {
+            get {
+                return ResourceManager.GetString("Msg_Donation_Amount_Equals_Course_Amount", resourceCulture);
             }
         }
         
@@ -1870,7 +1906,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select Other in dropdown and set zero in Contribution for Help Zeffy section.
+        ///   Looks up a localized string similar to On the next page, please select &quot;Other&quot; in the Summary portion dropdown menu and set Contribution to $0.
         /// </summary>
         public static string Msg_Info_Zeffy_Payment_donation_section {
             get {
@@ -2482,6 +2518,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Registration Closed.
+        /// </summary>
+        public static string Registration_Closed {
+            get {
+                return ResourceManager.GetString("Registration_Closed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Registration Fee.
         /// </summary>
         public static string Registration_Fee {
@@ -3007,6 +3052,15 @@ namespace Maktab.Consumer.Localization {
         public static string Validate_Code {
             get {
                 return ResourceManager.GetString("Validate_Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View.
+        /// </summary>
+        public static string View {
+            get {
+                return ResourceManager.GetString("View", resourceCulture);
             }
         }
         

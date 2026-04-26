@@ -1,4 +1,5 @@
-﻿using MaktabDataContracts.Responses.Course;
+﻿using MaktabDataContracts.Requests.Policies;
+using MaktabDataContracts.Responses.Course;
 using MaktabDataContracts.Responses.Institute;
 
 namespace Maktab.Consumer.State.Course
@@ -134,6 +135,41 @@ namespace Maktab.Consumer.State.Course
                {
                     return _courses.Where(c => c.InstituteId == instituteId).ToList();
                }
+          }
+
+          public Lazy<object> ConsentSyncLock { get; private set; } = new Lazy<object>();
+
+          private IReadOnlyList<Consent>  _childConsents ;
+          public IReadOnlyList<Consent> ChildConsents
+          {
+               get
+               {
+                    //if (_courses == null)
+                    //{
+                    //     return Array.Empty<CourseResponseDetailed>();
+                    //}
+
+                    return _childConsents;
+               }
+          }
+
+          public void SetChildConsent(IEnumerable<Consent> items)
+          {
+               lock (ConsentSyncLock)
+               {
+                    _childConsents = items.ToList();
+                    NotifyStateChanged();
+               }
+          }
+
+          public void ClearChildConsent()
+          {
+               lock (ConsentSyncLock)
+               {
+                    _childConsents = null;
+               }
+
+               NotifyStateChanged();
           }
      }
 }

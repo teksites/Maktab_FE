@@ -699,9 +699,6 @@
   <data name="Academic_Levels" xml:space="preserve">
     <value>Niveaux académiques</value>
   </data>
-  <data name="Back" xml:space="preserve">
-    <value>Dos</value>
-  </data>
   <data name="Registration_Fee" xml:space="preserve">
     <value>Frais d'inscription</value>
   </data>
@@ -1076,9 +1073,6 @@
   <data name="Gender_Type_Unknown" xml:space="preserve">
     <value>Inconnu</value>
   </data>
-  <data name="Msg_Info_Zeffy_Payment_donation_section" xml:space="preserve">
-    <value>Veuillez sélectionner Autre dans la liste déroulante et définir zéro dans la section Contribution pour Help Zeffy</value>
-  </data>
   <data name="Text_Allergies_Placeholder" xml:space="preserve">
     <value>Type d'allergie, précautions à prendre, besoin d'un Epipen, autre</value>
   </data>
@@ -1144,5 +1138,29 @@
   </data>
   <data name="Has_Allergies" xml:space="preserve">
     <value>A des allergies</value>
+  </data>
+  <data name="Msg_Info_Zeffy_Payment_donation_section" xml:space="preserve">
+    <value>Sur la page suivante, veuillez sélectionner « Other» dans le menu déroulant de la partie Summary et mettre la contribution à 0$</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Retour</value>
+  </data>
+  <data name="Enroll" xml:space="preserve">
+    <value>Inscrire</value>
+  </data>
+  <data name="Registration_Closed" xml:space="preserve">
+    <value>Inscription fermé</value>
+  </data>
+  <data name="Msg_Donation_Amount_Equals_Course_Amount" xml:space="preserve">
+    <value>Veuillez noter que le « donation amount » est le montant du paiement requis</value>
+  </data>
+  <data name="Child_Consent" xml:space="preserve">
+    <value>Consentement de l'enfant</value>
+  </data>
+  <data name="Consent" xml:space="preserve">
+    <value>Consentement</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Voir</value>
   </data>
 </root>

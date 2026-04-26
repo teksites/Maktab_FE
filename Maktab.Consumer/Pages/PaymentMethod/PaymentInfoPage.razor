@@ -7,7 +7,7 @@
 @using MaktabDataContracts.Responses.Users
 @using Maktab.Consumer.Dialogs
 
-@inherits LocalizeableBaseComponent<PaymentInfoPage>
+@inherits BasePaymentComponent<PaymentInfoPage>
 
 @inject IDialogService DialogService
 @inject UserStateService StateService
@@ -216,7 +216,7 @@
                                         <MudButton Variant="Variant.Filled"
                                                    Color="Color.Primary"
                                                    Size="Size.Small"
-                                                   OnClick="@(() => OpenZeffyPaymentDialog(context.Transaction))">
+                                                   OnClick="@(() => OpenZeffyPaymentDialog(context.Transaction, GetCourseResponseDetailed(context.CourseId), userInfo.Email))">
                                              @L[MaktabResources.Pay_Now]
                                         </MudButton>
                                    }
@@ -507,43 +507,6 @@
           return string.Empty;
      }
 
-     private async Task OpenZeffyPaymentDialog(StudentCourseTransactionResponse courseTransaction)
-     {
-          const string url = "/PaymentMethod/Payment?amount={0}&code={1}&email={2}";
-          if (courseTransaction != null)
-          {
-               string paymentCode = courseTransaction.PaymentCode;
-               decimal amountPayable = courseTransaction.TotalPayable - courseTransaction.TotalAmountPaid;
-
-               var navigationUrl = string.Format(url, amountPayable.ToString(), paymentCode, userInfo.Email);
-
-               //check if minimum amount due is greater than zero and less than total amount due, if so pass it as query param
-               decimal minimumPayable = CalculateMinumumAmountDue(courseTransaction);
-               if (minimumPayable > 0)
-               {
-                    navigationUrl += $"&minimumAmount={minimumPayable.ToString()}";
-               }
-
-               NavigationManager.NavigateTo(navigationUrl, false);
-          }
-     }
-
-     /// <summary>
-     /// Calculates the minimum amount due for a given transaction.
-     /// </summary>
-     /// <param name="transaction">The transaction to calculate the minimum amount due for.</param>
-     /// <returns>The minimum amount due.</returns>
-     private decimal CalculateMinumumAmountDue(StudentCourseTransactionResponse transaction)
-     {
-          decimal minimumAmount = transaction.MinimumPayable;
-          if (minimumAmount <= 0)
-          {
-               return 0;
-          }
-
-          return minimumAmount;
-     }
-
      private string DisplayMinumumAmountDue(StudentCourseTransactionResponse transaction)
      {
           decimal minAmountDue = CalculateMinumumAmountDue(transaction);
@@ -564,17 +527,15 @@
           };
      }
 
-     private async Task OpenPaymentScheduleDialog(StudentCourseTransactionResponse studentCourseTransactionResponse)
+     private CourseResponseDetailed GetCourseResponseDetailed(Guid courseId)
      {
-          if (studentCourseTransactionResponse == null)
-          {
-               return;
-          }
+          if (courseId == Guid.Empty) return null;
 
-          var parameters = new DialogParameters { ["FeeInstallments"] = studentCourseTransactionResponse.FeeInstallments };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseOnEscapeKey = true, CloseButton = true };
+          return _Courses.FirstOrDefault(x => x.CourseId == courseId);
+     }
 
-          var dialog = await DialogService.ShowAsync<PaymentScheduleDialog>(L[MaktabResources.Payment_Schedule], parameters, options);
-          var result = await dialog.Result;
+     protected async Task OpenPaymentScheduleDialog(StudentCourseTransactionResponse studentCourseTransactionResponse)
+     {
+          await OpenPaymentScheduleDialog(DialogService, studentCourseTransactionResponse);
      }
 }

@@ -186,7 +186,7 @@ else if (IsError)
                                    <MudButton Variant="Variant.Outlined" Color="Color.Default"
                                               OnClick="@(()=> ActiveStep = 0)"
                                               StartIcon="@Icons.Material.Filled.NavigateBefore">
-                                        Previous
+                                        @L[MaktabResources.Back]
                                    </MudButton>
                                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
                                               Disabled="@(SelectedInstitute is null)"
@@ -253,7 +253,7 @@ else if (IsError)
                                    <MudButton Variant="Variant.Outlined" Color="Color.Default"
                                               OnClick="@(()=> ActiveStep = 1)"
                                               StartIcon="@Icons.Material.Filled.NavigateBefore">
-                                        Previous
+                                        @L[MaktabResources.Back]
                                    </MudButton>
                                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
                                               Disabled="@(SelectedCourse is null)"
@@ -545,7 +545,7 @@ else if (IsError)
                               <MudButton Variant="Variant.Outlined" Color="Color.Default"
                                           OnClick="@(()=> ActiveStep = 3)"
                                           StartIcon="@Icons.Material.Filled.NavigateBefore">
-                                    Previous
+                                   @L[MaktabResources.Back]
                                </MudButton>
                               <MudButton Variant="Variant.Filled" Color="Color.Success"
                                          OnClick="SubmitEnrollment"
@@ -734,7 +734,8 @@ else if (IsError)
 
           if (SelectedInstitute != null)
           {
-               Courses = StateService.InstituteState.GetCoursesByInstituteId(SelectedInstitute.InstituteId);
+              var coursesWithRegistrationOpen = StateService.InstituteState.GetCoursesByInstituteId(SelectedInstitute.InstituteId);
+               Courses = coursesWithRegistrationOpen.Where(c => c.IsRegistrationOpened).ToList();
           }
      }
 

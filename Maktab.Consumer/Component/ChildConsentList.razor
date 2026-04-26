@@ -1,0 +1,20 @@
+﻿@using MaktabDataContracts.Requests.Policies
+
+@inherits LocalizeableBaseComponent<ChildConsentList>
+
+<MudContainer>
+     <MudStack Spacing=0" >
+          @foreach (var consent in RequiredChildConsents)
+          {
+               <MudStack Row="true" StretchItems="StretchItems.Start" AlignItems="AlignItems.Baseline">
+                    <MudCheckBox @bind-Value="consent.IsAllowed">@(GetConsentDescription(consent))</MudCheckBox>
+                    <MudLink Href="@consent.PolicyLink" Target="_blank">[@L[MaktabResources.Policy]]</MudLink>
+               </MudStack>
+          }
+     </MudStack>
+</MudContainer>
+
+@code {
+
+     [Parameter] public IReadOnlyCollection<ChildConsent> RequiredChildConsents { get; set; } = Array.Empty<ChildConsent>();
+}

@@ -73,7 +73,7 @@
                                              <MudText Typo="Typo.h6">@L[MaktabResources.Enrollments]</MudText>
                                         </CardHeaderContent>
                                         <CardHeaderActions>
-                                             <MudButton Disabled="(_Children?.Any() != true)" Variant="Variant.Filled" Color="Color.Primary" OnClick="@OpenEnrollChildDialog">Enroll</MudButton>
+                                             <MudButton Disabled="(_Children?.Any() != true)" Variant="Variant.Filled" Color="Color.Primary" OnClick="@OpenEnrollChildDialog">@L[MaktabResources.Enroll]</MudButton>
 
                                              @* <MudTooltip Text="Enroll in course">
                                                   <MudFab StartIcon="@Icons.Material.Filled.LibraryAdd" Color="Color.Success" OnClick="@OpenAddEnrollDialog" />

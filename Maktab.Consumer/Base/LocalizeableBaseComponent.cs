@@ -1,8 +1,10 @@
 ﻿using Maktab.Consumer.Localization;
 using Maktab.Core.Interfaces.Services;
 using MaktabDataContracts.Enums;
+using MaktabDataContracts.Requests.Policies;
 using MaktabDataContracts.Responses.Course;
 using MaktabDataContracts.Responses.Institute;
+using MaktabDataContracts.Responses.Transactions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 
@@ -160,6 +162,32 @@ namespace Maktab.Consumer.Base
                }
           }
 
-          
+          protected string GetConsentDescription(ChildConsent conset)
+          {
+               if (conset == null) return string.Empty;
+
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return conset.NameFr;
+               }
+               else
+               {
+                    return conset.Name;
+               }
+          }
+
+          protected string GetPaymentDescription(FeeInstallment installment)
+          {
+               if (installment == null) return string.Empty;
+
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return installment.DescriptionFr;
+               }
+               else
+               {
+                    return installment.Description;
+               }
+          }
      }
 }

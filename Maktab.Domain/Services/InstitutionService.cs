@@ -1,6 +1,8 @@
 ﻿using Maktab.Core.Interfaces.Services;
+using MaktabDataContracts.Enums;
 using MaktabDataContracts.Models;
 using MaktabDataContracts.Requests.Institute;
+using MaktabDataContracts.Requests.Policies;
 using MaktabDataContracts.Responses.Children;
 using MaktabDataContracts.Responses.Institute;
 using System.Collections.Generic;
@@ -23,7 +25,7 @@ namespace Maktab.Domain.Services
           private const string removeChildByFamilyId = @"/api/families/{0}/children/delete?ifHardDelete=false";
           private const string isChildrenExistByRamQNumber = @"/api/children/check";
 
-         
+          private const string getPolicyByType = @"/policies?policyType={0}";
 
           public InstitutionService(
                    IHttpService httpService,
@@ -37,7 +39,25 @@ namespace Maktab.Domain.Services
                var formatedUrl = string.Format(getInstituteById, institutionId);
                var result = await _httpService.Get<InstituteResponse>(formatedUrl);
                return result;
+          }
 
+          public async Task<InstitutePolicyResponse> GetPolicyAsync(PolicyType policyType)   
+          {
+               var formatedUrl = string.Format(getPolicyByType, policyType);
+               var result = await _httpService.Get<InstitutePolicyResponse>(formatedUrl);
+               return result;
+          }
+
+          public async Task<IReadOnlyCollection<Consent>> GetChildConsentPoliciesAsync()
+          {
+               var instituteConcentPolicy = await GetPolicyAsync(PolicyType.ConsentPolicy);
+               if(!string.IsNullOrEmpty(instituteConcentPolicy?.Details))
+               {
+                    IReadOnlyCollection<Consent> concentPolicies = System.Text.Json.JsonSerializer.Deserialize<List<Consent>>(instituteConcentPolicy.Details);
+                    return concentPolicies ?? Array.Empty<Consent>();
+               }
+
+               return Array.Empty<Consent>();
           }
 
           public async Task<IEnumerable<InstituteResponse>> GetAllInstitutionsAsync()
