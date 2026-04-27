@@ -14,7 +14,7 @@
 
 @if (ShowHeader)
 {
-     <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">
+     <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
           <MudText Typo="Typo.h6">@L[MaktabResources.Children]</MudText>
           @if (ShowAddButton)
           {
@@ -51,12 +51,12 @@
           <MudTd>@context.OtherHealthConditions</MudTd> *@
           <MudTd>
                <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
-                    <MudMenuItem >Edit</MudMenuItem>
+                    <MudMenuItem Disabled="true" >@L[MaktabResources.Edit]</MudMenuItem>
                     @if (ShowEnrollMenu)
                     {
-                         <MudMenuItem OnClick="OpenAssignCourseDialog">Enroll</MudMenuItem>
+                         <MudMenuItem OnClick="OpenAssignCourseDialog">@L[MaktabResources.Enroll]</MudMenuItem>
                     }
-                    <MudMenuItem OnClick="@(() => RemoveChild(context))">Delete</MudMenuItem>
+                    <MudMenuItem OnClick="@(() => RemoveChild(context))">@L[MaktabResources.Delete]</MudMenuItem>
                </MudMenu>
 
           </MudTd>

@@ -1173,4 +1173,16 @@
   <data name="Msg_Acknowledge_Read_Course_Policy" xml:space="preserve">
     <value>I acknowledge that I have read the policy documentsof the camp / school linked above and accept all the policies and rules indicated within</value>
   </data>
+  <data name="Parent_Dashboard" xml:space="preserve">
+    <value>Parent Dashboard</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Activties" xml:space="preserve">
+    <value>Activties</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Log out</value>
+  </data>
 </root>

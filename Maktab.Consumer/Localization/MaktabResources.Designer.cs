@@ -142,6 +142,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activties.
+        /// </summary>
+        public static string Activties {
+            get {
+                return ResourceManager.GetString("Activties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add.
         /// </summary>
         public static string Add {
@@ -1303,6 +1312,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log out.
+        /// </summary>
+        public static string LogOut {
+            get {
+                return ResourceManager.GetString("LogOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Explore our wide range of courses and programs.
         /// </summary>
         public static string MainPage_Description {
@@ -2329,6 +2347,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parent Dashboard.
+        /// </summary>
+        public static string Parent_Dashboard {
+            get {
+                return ResourceManager.GetString("Parent_Dashboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Registration Successful.
         /// </summary>
         public static string Parent_Registration_Success {
@@ -2478,6 +2505,15 @@ namespace Maktab.Consumer.Localization {
         public static string Processing {
             get {
                 return ResourceManager.GetString("Processing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        public static string Profile {
+            get {
+                return ResourceManager.GetString("Profile", resourceCulture);
             }
         }
         

@@ -1140,7 +1140,7 @@
     <value>A des allergies</value>
   </data>
   <data name="Msg_Info_Zeffy_Payment_donation_section" xml:space="preserve">
-    <value>Sur la page suivante, veuillez sélectionner « Other» dans le menu déroulant de la partie Summary et mettre la contribution à 0$</value>
+    <value>Sur la page suivante, veuillez sélectionner "Other" dans le menu déroulant de la partie Summary et mettre la contribution à 0$</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Retour</value>
@@ -1152,7 +1152,7 @@
     <value>Inscription fermé</value>
   </data>
   <data name="Msg_Donation_Amount_Equals_Course_Amount" xml:space="preserve">
-    <value>Veuillez noter que le « donation amount » est le montant du paiement requis</value>
+    <value>Veuillez noter que le "donation amount" est le montant du paiement requis</value>
   </data>
   <data name="Child_Consent" xml:space="preserve">
     <value>Consentement de l'enfant</value>
@@ -1171,5 +1171,17 @@
   </data>
   <data name="Msg_Acknowledge_Read_Course_Policy" xml:space="preserve">
     <value>Je confirme avoir lu le documents relatif aux politiques du camp/de l'école mentionné ci-dessus et j'accepte l'intégralité des politiques et régles qui y sont indiquées</value>
+  </data>
+  <data name="Parent_Dashboard" xml:space="preserve">
+    <value>Tableau de bord des parents</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Activties" xml:space="preserve">
+    <value>Activités</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Se déconnecter</value>
   </data>
 </root>
