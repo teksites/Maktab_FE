@@ -7,7 +7,7 @@ namespace Maktab.Consumer.Base
           protected MudForm _form;
           protected bool _isValid;
 
-          protected void OnFormValidated()
+          protected virtual void OnFormValidated()
           {
                // Clear error message when form is valid
                if (_form?.IsValid == true)
