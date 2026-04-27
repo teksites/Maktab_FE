@@ -11,7 +11,7 @@
 @using MaktabDataContracts.Responses.Users
 @using Microsoft.AspNetCore.Authorization
 
-@inherits LocalizeableBaseComponent<ParentProfile>
+@inherits BaseParentComponent<ParentProfile>
 
 @inject IUserService UserService
 @inject IChildrenService ChildrenService
@@ -98,7 +98,7 @@
                     <MudCard Class="mb-4 pa-4">
 
                          <!-- Spouse Section -->
-                         <MudText Typo="Typo.h5" Class="mb-4">Spouse</MudText>
+                         <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Spouse]</MudText>
                          @if (_SpouseInfo != null)
                          {
                               <ParentInfoCard Parent="@_SpouseInfo" ShowEditButton="false" />
@@ -120,7 +120,7 @@
                     <MudCard Class="mb-4 pa-4">
                          <MudStack Row="true">
                               <!-- Children Overview via reusable component -->
-                              <MudText Typo="Typo.h5" Class="mb-4"> Children</MudText>
+                              <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Children]</MudText>
                               <MudSpacer />
                               <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
                                    @L[MaktabResources.Add_Child]
@@ -138,7 +138,7 @@
                     <MudCard Class="mb-4 pa-4">
                          <MudStack Row="true">
 
-                              <MudText Typo="Typo.h5" Class="mb-4"> Contacts</MudText>
+                              <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Contacts]</MudText>
                               <MudSpacer />
 
                               <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddContactDialog" Class="mb-4">
@@ -212,6 +212,9 @@
           await StateService.LoadUserProfileData(UserService, userId, forceReload);
 
           await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, forceReload);
+
+          //Can be moved to child component if we want to load it on demand when user click on children section
+          await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, forceReload);
 
           await StateService.LoadUserSpouseData(UserService, userId, userInfo.FamilyId, forceReload);
 

@@ -1384,6 +1384,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} has active enrollments and can not be deleted.
+        /// </summary>
+        public static string Msg_Child_Has_Active_Enrollments {
+            get {
+                return ResourceManager.GetString("Msg_Child_Has_Active_Enrollments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please note that &quot;donation amount&quot; is the payment amount required.
         /// </summary>
         public static string Msg_Donation_Amount_Equals_Course_Amount {
@@ -2883,6 +2892,15 @@ namespace Maktab.Consumer.Localization {
         public static string Skip_Anyway {
             get {
                 return ResourceManager.GetString("Skip_Anyway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spouse.
+        /// </summary>
+        public static string Spouse {
+            get {
+                return ResourceManager.GetString("Spouse", resourceCulture);
             }
         }
         

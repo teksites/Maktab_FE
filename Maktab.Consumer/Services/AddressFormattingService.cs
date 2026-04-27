@@ -17,11 +17,6 @@ namespace Maktab.Consumer.Services
         string FormatCityProvincePostal(AddressResponse address);
 
         /// <summary>
-        /// Gets a human-readable label for the address type (e.g., "Home Address", "Student Address")
-        /// </summary>
-        string GetAddressTypeLabel(AddressResponse address);
-
-        /// <summary>
         /// Returns structured address components for flexible display
         /// </summary>
         (string Street, string CityPostal, string Country) FormatAddressStructured(AddressResponse address);
@@ -102,15 +97,5 @@ namespace Maktab.Consumer.Services
             );
         }
 
-        /// <summary>
-        /// Gets user-friendly label for address type
-        /// </summary>
-        public string GetAddressTypeLabel(AddressResponse address)
-        {
-            if (address.HomeAddress)
-                return _localizer["Home Address"];
-            
-            return address?.AddressType.ToString() ?? _localizer["Address"];
-        }
     }
 }

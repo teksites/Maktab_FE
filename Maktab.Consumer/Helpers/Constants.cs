@@ -19,8 +19,6 @@
 
           public const string InstituteDetailsRoute = "/institutes/{0}";
 
-          public const string ChildCourseAssignmentRoute = "/child/assign-course";
-
           public const string PaymentDetailsRoute = "/payment/payment-details";
           public const string PaymentInfoRoute = "/payment/payment-info";
      }

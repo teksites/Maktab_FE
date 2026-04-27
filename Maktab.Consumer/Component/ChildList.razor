@@ -54,7 +54,7 @@
                     <MudMenuItem Disabled="true" >@L[MaktabResources.Edit]</MudMenuItem>
                     @if (ShowEnrollMenu)
                     {
-                         <MudMenuItem OnClick="OpenAssignCourseDialog">@L[MaktabResources.Enroll]</MudMenuItem>
+                         <MudMenuItem OnClick="@(() => OpenAssignCourseDialog(context))">@L[MaktabResources.Enroll]</MudMenuItem>
                     }
                     <MudMenuItem OnClick="@(() => RemoveChild(context))">@L[MaktabResources.Delete]</MudMenuItem>
                </MudMenu>
@@ -102,13 +102,36 @@
           }
      }
 
-     private async Task OpenAssignCourseDialog()
+     private async Task OpenAssignCourseDialog(ChildResponse childResponse)
      {
-          NavigationManager.NavigateTo(Constants.ChildCourseAssignmentRoute);
+          var parameters = new DialogParameters { }; //["Child"] = childResponse };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<EnrollChildInCourseDialog>(L[MaktabResources.Enroll_Child], parameters, options);
+          var result = await dialog.Result;
+
+          //Updated enrollments if enrollment was successful, even if dialog was closed with close button
+          RequestRender();
+     }
+
+     private bool HasCourseEnrollments(ChildResponse child)
+     {
+          return StateService.ParentState.CourseEnrollments?
+                    .Any(enrollment => enrollment.IsActive && enrollment.ChildId == child.ChildId) == true;
      }
 
      private async Task RemoveChild(ChildResponse child)
      {
+          bool hasEnrollments = HasCourseEnrollments(child);
+          if(hasEnrollments)
+          {
+               await DialogService.ShowMessageBox(
+                    L[MaktabResources.Warning],
+                    L[MaktabResources.Msg_Child_Has_Active_Enrollments, child.FirstName], L[MaktabResources.OK]);
+
+                    return;
+          }
+
           bool? result = await DialogService.ShowMessageBox(
                L[MaktabResources.Warning],
                L[MaktabResources.Msg_Question_Remove_Variable, child.FirstName],

@@ -1184,4 +1184,10 @@
   <data name="LogOut" xml:space="preserve">
     <value>Log out</value>
   </data>
+  <data name="Spouse" xml:space="preserve">
+    <value>Spouse</value>
+  </data>
+  <data name="Msg_Child_Has_Active_Enrollments" xml:space="preserve">
+    <value>{0} has active enrollments and can not be deleted</value>
+  </data>
 </root>
