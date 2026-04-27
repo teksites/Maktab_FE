@@ -1163,4 +1163,13 @@
   <data name="View" xml:space="preserve">
     <value>Voir</value>
   </data>
+  <data name="Acknowledgement" xml:space="preserve">
+    <value>Reconnaissance</value>
+  </data>
+  <data name="Msg_Acknowledge_Child_Consent_Completion" xml:space="preserve">
+    <value>Je confirme avoir répondu aux différentes questions de consentement concernant mon enfant</value>
+  </data>
+  <data name="Msg_Acknowledge_Read_Course_Policy" xml:space="preserve">
+    <value>Je confirme avoir lu le documents relatif aux politiques du camp/de l'école mentionné ci-dessus et j'accepte l'intégralité des politiques et régles qui y sont indiquées</value>
+  </data>
 </root>

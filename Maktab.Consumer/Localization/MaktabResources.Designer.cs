@@ -97,6 +97,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Acknowledgement.
+        /// </summary>
+        public static string Acknowledgement {
+            get {
+                return ResourceManager.GetString("Acknowledgement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Action.
         /// </summary>
         public static string Action {
@@ -1335,6 +1344,24 @@ namespace Maktab.Consumer.Localization {
         public static string Minimum_Amount_Due_To_Hold_Registration {
             get {
                 return ResourceManager.GetString("Minimum_Amount_Due_To_Hold_Registration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I acknowledge that I have completed the various consent questions for my child.
+        /// </summary>
+        public static string Msg_Acknowledge_Child_Consent_Completion {
+            get {
+                return ResourceManager.GetString("Msg_Acknowledge_Child_Consent_Completion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I acknowledge that I have read the policy documentsof the camp / school linked above and accept all the policies and rules indicated within.
+        /// </summary>
+        public static string Msg_Acknowledge_Read_Course_Policy {
+            get {
+                return ResourceManager.GetString("Msg_Acknowledge_Read_Course_Policy", resourceCulture);
             }
         }
         

@@ -94,7 +94,8 @@ else if (IsError)
                     <MudStep Label=@L[MaktabResources.Institute] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedChild is null)" />
                     <MudStep Label=@L[MaktabResources.Course] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedInstitute is null)" />
                     <MudStep Label=@L[MaktabResources.Groups] Icon="@Icons.Material.Filled.Groups" Disabled="@(SelectedCourse is null)" />
-                    <MudStep Label=@L[MaktabResources.Review] Icon="@Icons.Material.Filled.CheckCircle" Disabled="@(!SelectedGroups.Any())" />
+                    <MudStep Label=@L[MaktabResources.Acknowledgement] Icon="@Icons.Material.Filled.HealthAndSafety" Disabled="@(!HasGroupsSelected())" />
+                    <MudStep Label=@L[MaktabResources.Review] Icon="@Icons.Material.Filled.CheckCircle" Disabled="@(!(HasChildConsent && HasCourseConsent))" />
 
                </MudStepper>
 
@@ -381,8 +382,45 @@ else if (IsError)
                          }
                     </MudPaper>
                }
-
                else if (ActiveStep == 4)
+               {
+                    <!-- STEP 4: Acknowledge consent -->
+                    <MudPaper Class="pa-6" Elevation="0" Outlined="true">
+                         <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
+                              @L[MaktabResources.Acknowledgement]
+                         </MudText>
+                         
+                         <MudStack Spacing="2">
+                              <MudCheckBox @bind-Value="HasChildConsent">
+                                   @L[MaktabResources.Msg_Acknowledge_Child_Consent_Completion]
+                              </MudCheckBox>
+
+                              @* <MudStack Row="true" Spacing="0" Justify="Justify.FlexStart" AlignItems="AlignItems.Baseline"> *@
+                              <MudCheckBox @bind-Value="HasCourseConsent">
+                                   <span>@L[MaktabResources.Msg_Acknowledge_Read_Course_Policy]</span>
+                                   <span><MudLink Href="@SelectedCourse.PolicyHyperLink" Target="_blank">[@L[MaktabResources.Policy]]</MudLink></span>
+                              </MudCheckBox>
+                              @* </MudStack> *@
+
+                         </MudStack>
+
+                         <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+                              <MudButton Variant="Variant.Outlined" Color="Color.Default"
+                                         OnClick="@(()=> ActiveStep = 3)"
+                                         StartIcon="@Icons.Material.Filled.NavigateBefore">
+                                   @L[MaktabResources.Back]
+                              </MudButton>
+                              <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                         Disabled="@(!(HasChildConsent && HasCourseConsent))"
+                                         OnClick="@(()=>  ActiveStep = 5)"
+                                         StartIcon="@Icons.Material.Filled.NavigateNext">
+                                   @L[MaktabResources.Next]
+                              </MudButton>
+                         </MudStack>
+                    </MudPaper>
+               }
+
+               else if (ActiveStep == 5)
                {
                     <!-- STEP 4: Review -->
                     <MudPaper Class="pa-6" Elevation="0" Outlined="true">
@@ -543,7 +581,7 @@ else if (IsError)
 
                          <MudStack Row="true" Spacing="2" Class="mt-8" Justify="Justify.FlexEnd">
                               <MudButton Variant="Variant.Outlined" Color="Color.Default"
-                                          OnClick="@(()=> ActiveStep = 3)"
+                                          OnClick="@(()=> ActiveStep = 4)"
                                           StartIcon="@Icons.Material.Filled.NavigateBefore">
                                    @L[MaktabResources.Back]
                                </MudButton>
@@ -584,6 +622,8 @@ else if (IsError)
      protected HashSet<CourseEnrollmentGroupResponse> SelectedGroups { get; set; } = new();
      private IReadOnlyCollection<AddStudentCourseEnrollment> _StudentCourseEnrollments = Array.Empty<AddStudentCourseEnrollment>();
 
+     private bool HasChildConsent = false;
+     private bool HasCourseConsent = false;
      protected bool IsActive { get; set; } = true;
      protected bool IsSaving { get; set; }
 
@@ -730,6 +770,8 @@ else if (IsError)
           if (SelectedCourse != null)
           {
                SelectedCourse = null;
+               HasChildConsent =
+               HasCourseConsent = false;
           }
 
           if (SelectedInstitute != null)
