@@ -31,8 +31,8 @@
                <MudItem xs="12" md="12">
                     <!-- Header -->
                     @* <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-6"> *@
-                    <MudContainer AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-6">
-                         <MudText Typo="Typo.h4">@L[MaktabResources.Welcome_User, @userInfo.FirstName]</MudText>
+                    <MudContainer Class="mb-6">
+                         <MudText Typo="Typo.h4">@L[MaktabResources.Welcome_User, @userInfo.FirstName.ToTitleCase()]</MudText>
                     </MudContainer>
                </MudItem>
 
@@ -51,79 +51,124 @@
 
                <MudItem xs="12" md="12">
 
-                    <!-- Summary Cards -->
-                    <MudGrid Class="mb-6">
+                    <!-- Summary Cards with Enhanced KPI Design & Compact Header Actions -->
+                    <MudGrid Class="mb-6" Spacing="3">
+                         <!-- Children Count Card -->
                          <MudItem xs="12" sm="6" md="3">
-                              <MudCard Class="pa-4">
-                                   <MudCardHeader>
-                                        <CardHeaderContent>
-                                             <MudText Typo="Typo.h6">@L[MaktabResources.Child]</MudText>
-                                        </CardHeaderContent>
-                                        <CardHeaderActions>
-                                             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OpenAddChildDialog">@L[MaktabResources.Add]</MudButton>
-                                        </CardHeaderActions>
-                                   </MudCardHeader>
-                                   <MudCardContent>
-                                        <MudText Typo="Typo.h4">@(_Children?.Count())</MudText>
-                                   </MudCardContent>
-                              </MudCard>
-                         </MudItem>
-                         <MudItem xs="12" sm="6" md="3">
-                              <MudCard Class="pa-4">
-                                   <MudCardHeader>
-                                        <CardHeaderContent>
-                                             <MudText Typo="Typo.h6">@L[MaktabResources.Enrollments]</MudText>
-                                        </CardHeaderContent>
-                                        <CardHeaderActions>
-                                             <MudButton Disabled="(_Children?.Any() != true)" Variant="Variant.Filled" Color="Color.Primary" OnClick="@OpenEnrollChildDialog">@L[MaktabResources.Enroll]</MudButton>
+                              <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%); border-left: 4px solid #9C27B0;">
+                                   <MudStack Spacing="4">
+                                        <!-- Header with label, info icon, and action button -->
+                                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                             <MudTooltip Text=@L[MaktabResources.Msg_Info_Total_Registered_Child]>
+                                             <MudText Typo="Typo.body1" Class="font-weight-medium" Style="opacity: 0.9;">
+                                                  @L[MaktabResources.Child]
+                                             </MudText>
+                                             </MudTooltip>
+                                             
+                                             <MudSpacer />
+                                             <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Size="Size.Small" OnClick="@OpenAddChildDialog">
+                                                  @L[MaktabResources.Add]
+                                             </MudButton>
+                                        </MudStack>
 
-                                             @* <MudTooltip Text="Enroll in course">
-                                                  <MudFab StartIcon="@Icons.Material.Filled.LibraryAdd" Color="Color.Success" OnClick="@OpenAddEnrollDialog" />
-                                             </MudTooltip> *@
-                                        </CardHeaderActions>
-                                   </MudCardHeader>
-                                   <MudCardContent>
+                                        <!-- KPI Value and Icon -->
+                                        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="2">
+                                             <MudText Typo="Typo.h4" Class="font-weight-bold">
+                                                  @(_Children?.Count())
+                                             </MudText>
+                                             <MudIcon Icon="@Icons.Material.Filled.Groups2" Color="Color.Secondary" Style="font-size: 32px;" />
+                                        </MudStack>
+                                   </MudStack>
+                              </MudPaper>
+                         </MudItem>
 
-                                        <MudText Typo="Typo.h4">@EnrolledCourses</MudText>
-                                   </MudCardContent>
-                              </MudCard>
-                         </MudItem>
+                         <!-- Enrollments Card -->
                          <MudItem xs="12" sm="6" md="3">
-                              <MudCard Class="pa-4">
-                                   <MudCardHeader>
-                                        <CardHeaderContent>
-                                             <MudText Typo="Typo.h6">@L[MaktabResources.Total_Amount]</MudText>
-                                        </CardHeaderContent>
-                                        <CardHeaderActions>
-                                                  <MudButton Disabled="(this.TotalAmount <= 0)" Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToPaymentDetailsPage">@L[MaktabResources.Details]</MudButton>
-                                        </CardHeaderActions>
-                                        @* <CardHeaderActions>
-                                             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OpenAddChildDialog">@L[MaktabResources.Add_Child]</MudButton>
-                                        </CardHeaderActions> *@
-                                   </MudCardHeader>
-                                   <MudCardContent>
-                                        <MudText Typo="Typo.h4">@TotalAmount</MudText>
-                                   </MudCardContent>
-                              </MudCard>
+                              <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%); border-left: 4px solid #4CAF50;">
+                                   <MudStack Spacing="4">
+                                        <!-- Header with label, info icon, and action button -->
+                                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                             <MudTooltip Text=@L[MaktabResources.Msg_Info_Total_Active_Enrollments]>
+                                             <MudText Typo="Typo.body1" Class="font-weight-medium" Style="opacity: 0.9;">
+                                                  @L[MaktabResources.Enrollments]
+                                             </MudText>
+                                             </MudTooltip>
+                                             
+                                             <MudSpacer />
+                                             <MudButton Variant="Variant.Outlined" Color="Color.Success" Size="Size.Small" Disabled="(_Children?.Any() != true)" OnClick="@OpenEnrollChildDialog">
+                                                  @L[MaktabResources.Enroll]
+                                             </MudButton>
+                                        </MudStack>
+
+                                        <!-- KPI Value and Icon -->
+                                        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="2">
+                                             <MudText Typo="Typo.h4" Class="font-weight-bold" Color="Color.Success">
+                                                  @EnrolledCourses
+                                             </MudText>
+                                             <MudIcon Icon="@Icons.Material.Filled.MenuBook" Color="Color.Success" Style="font-size: 32px;" />
+                                        </MudStack>
+                                   </MudStack>
+                              </MudPaper>
                          </MudItem>
+
+                         <!-- Total Amount Card -->
                          <MudItem xs="12" sm="6" md="3">
-                              <MudCard Class="pa-4">
-                                   <MudCardHeader>
-                                        <CardHeaderContent>
-                                             <MudText Typo="Typo.h6">@L[MaktabResources.Amount_Due]</MudText>
-                                        </CardHeaderContent>
-                                        <CardHeaderActions>
+                              <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%); border-left: 4px solid #2196F3;">
+                                   <MudStack Spacing="4">
+                                        <!-- Header with label, info icon, and action button -->
+                                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                             <MudTooltip Text=@L[MaktabResources.Msg_Info_Amount_Details_All_Enrolled_Courses]>
+                                              <MudText Typo="Typo.body1" Class="font-weight-medium" Style="opacity: 0.9;">
+                                                  @L[MaktabResources.Total_Amount]
+                                             </MudText>
+                                             </MudTooltip>
+                                             <MudSpacer />
+                                             <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" Disabled="(this.TotalAmount <= 0)" OnClick="NavigateToPaymentDetailsPage">
+                                                  @L[MaktabResources.Details]
+                                             </MudButton>
+                                        </MudStack>
+
+                                        <!-- KPI Value and Icon -->
+                                        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="2">
+                                             <MudText Typo="Typo.h4" Class="font-weight-bold">
+                                                  @TotalAmount
+                                             </MudText>
+                                             <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Info" Style="font-size: 32px;" />
+                                        </MudStack>
+                                   </MudStack>
+                              </MudPaper>
+                         </MudItem>
+
+                         <!-- Amount Due Card -->
+                         <MudItem xs="12" sm="6" md="3">
+                              <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%); border-left: 4px solid #F44336;">
+                                   <MudStack Spacing="4">
+                                        <!-- Header with label, info icon, and action button -->
+                                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                             <MudTooltip Text=@L[MaktabResources.Msg_Info_Amount_Outstanding_Due]>
+
+                                             <MudText Typo="Typo.body1" Class="font-weight-medium" Style="opacity: 0.9;">
+                                                  @L[MaktabResources.Amount_Due]
+                                             </MudText>
+                                             </MudTooltip>
+                                             <MudSpacer />
                                              @if (this.AmountPayable > 0)
                                              {
-                                                  <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToPaymentInfoPage">@L[MaktabResources.Pay]</MudButton>
-                                                  @* <MudIconButton Icon="@Icons.Material.Filled.Payment" Color="Color.Default" /> *@
+                                                  <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" OnClick="NavigateToPaymentInfoPage">
+                                                       @L[MaktabResources.Pay]
+                                                  </MudButton>
                                              }
-                                        </CardHeaderActions>
-                                   </MudCardHeader>
-                                   <MudCardContent>
-                                        <MudText Typo="Typo.h4">@AmountPayable</MudText>
-                                   </MudCardContent>
-                              </MudCard>
+                                        </MudStack>
+
+                                        <!-- KPI Value and Icon -->
+                                        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="2">
+                                             <MudText Typo="Typo.h4" Class="font-weight-bold" Color="Color.Error">
+                                                  @AmountPayable
+                                             </MudText>
+                                             <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Error" Style="font-size: 32px;" />
+                                        </MudStack>
+                                   </MudStack>
+                              </MudPaper>
                          </MudItem>
                     </MudGrid>
                </MudItem>
@@ -169,7 +214,7 @@
 
                <MudItem xs="12" md="12">
                     <!-- Courses Section -->
-                    <MudText Typo="Typo.h5" Class="mt-10 mb-6">@L[MaktabResources.FeaturedCourses]</MudText>
+                    <MudText Typo="Typo.h5" Class="mt-10 mb-6">@L[MaktabResources.Courses_Offered]</MudText>
                     <CourseList Courses="_Courses" />
                </MudItem>
 

@@ -153,7 +153,7 @@ namespace Maktab.Consumer.Extensions
                     var familyAddress = await addressService.GetAddressesByConnectedId(connectedId);
                     if (familyAddress?.Any() == true)
                     {
-                         userStateService.ParentState.SetAddress(familyAddress);
+                         userStateService.ParentState.SetAddresses(familyAddress);
                     }
                }
           }
@@ -166,10 +166,7 @@ namespace Maktab.Consumer.Extensions
                     if (familyContacts?.Any() == true)
                     {
                          var sortedCollection = familyContacts.OrderBy(x => x.FirstName);
-                         foreach (var contact in sortedCollection)
-                         {
-                              userStateService.ParentState.AddContact(contact);
-                         }
+                         userStateService.ParentState.SetContacts(sortedCollection);
                     }
                }
           }

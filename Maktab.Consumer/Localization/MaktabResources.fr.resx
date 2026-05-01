@@ -1190,4 +1190,22 @@
   <data name="Msg_Child_Has_Active_Enrollments" xml:space="preserve">
     <value>{0} a des inscriptions actives et ne peut pas être supprimé</value>
   </data>
+  <data name="Activities_Offered" xml:space="preserve">
+    <value>Activités Offerts</value>
+  </data>
+  <data name="Courses_Offered" xml:space="preserve">
+    <value>Activités / Cours Offerts</value>
+  </data>
+  <data name="Msg_Info_Total_Registered_Child" xml:space="preserve">
+    <value>Nombre total d'enfants inscrits</value>
+  </data>
+  <data name="Msg_Info_Total_Active_Enrollments" xml:space="preserve">
+    <value>Inscriptions totales aux cours actifs</value>
+  </data>
+  <data name="Msg_Info_Amount_Details_All_Enrolled_Courses" xml:space="preserve">
+    <value>Montant total pour tous les cours inscrits</value>
+  </data>
+  <data name="Msg_Info_Amount_Outstanding_Due" xml:space="preserve">
+    <value>Montant impayé à payer</value>
+  </data>
 </root>

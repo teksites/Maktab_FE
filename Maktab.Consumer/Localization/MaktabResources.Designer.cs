@@ -142,6 +142,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activities Offered.
+        /// </summary>
+        public static string Activities_Offered {
+            get {
+                return ResourceManager.GetString("Activities_Offered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Activties.
         /// </summary>
         public static string Activties {
@@ -705,6 +714,15 @@ namespace Maktab.Consumer.Localization {
         public static string CourseGroup_Registration_Open {
             get {
                 return ResourceManager.GetString("CourseGroup_Registration_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Activities / Courses Offered.
+        /// </summary>
+        public static string Courses_Offered {
+            get {
+                return ResourceManager.GetString("Courses_Offered", resourceCulture);
             }
         }
         
@@ -1735,11 +1753,29 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total amount for all enrolled courses.
+        /// </summary>
+        public static string Msg_Info_Amount_Details_All_Enrolled_Courses {
+            get {
+                return ResourceManager.GetString("Msg_Info_Amount_Details_All_Enrolled_Courses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remaining amount to pay.
         /// </summary>
         public static string Msg_Info_Amount_Due {
             get {
                 return ResourceManager.GetString("Msg_Info_Amount_Due", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outstanding amount to be paid.
+        /// </summary>
+        public static string Msg_Info_Amount_Outstanding_Due {
+            get {
+                return ResourceManager.GetString("Msg_Info_Amount_Outstanding_Due", resourceCulture);
             }
         }
         
@@ -1942,11 +1978,29 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total active course enrollments.
+        /// </summary>
+        public static string Msg_Info_Total_Active_Enrollments {
+            get {
+                return ResourceManager.GetString("Msg_Info_Total_Active_Enrollments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total amount across all courses.
         /// </summary>
         public static string Msg_Info_Total_Amount {
             get {
                 return ResourceManager.GetString("Msg_Info_Total_Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total number of children registered.
+        /// </summary>
+        public static string Msg_Info_Total_Registered_Child {
+            get {
+                return ResourceManager.GetString("Msg_Info_Total_Registered_Child", resourceCulture);
             }
         }
         
