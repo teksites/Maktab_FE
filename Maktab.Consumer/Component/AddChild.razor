@@ -1,0 +1,296 @@
+﻿@using Maktab.Consumer.State
+@using MaktabDataContracts.Requests.Children
+@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Requests.Policies
+@using MaktabDataContracts.Responses.Children
+@using Maktab.Consumer.Extensions;
+@using MudBlazor
+
+@inherits BaseFormComponent<AddChild>
+
+@inject IChildrenService ChildrenService
+@inject IInstitutionService InstitutionService
+
+@inject UserStateService StateService
+
+@* <EditForm Model="@ChildModel" OnValidSubmit="HandleValidSubmit"> *@
+<MudPaper Class="pa-6" Elevation="0" Outlined="false">
+     @if (ShowLabel)
+     {
+          <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
+               @L[MaktabResources.Add_Child]
+          </MudText>
+     }
+
+     @if (isInitialized && !isDataLoading)
+         {
+         <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)" Spacing="2">
+          <MudGrid Container="true" Spacing="3">
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="ChildModel.FirstName"
+                                       Label=@L[MaktabResources.First_Name]
+                                  Required="true"
+                                  For="@(() => ChildModel.FirstName)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="ChildModel.LastName"
+                                       Label=@L[MaktabResources.Last_Name]
+                                  Required="true"
+                                  For="@(() => ChildModel.LastName)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudDatePicker @bind-Date="DateOfBirth"
+                                        Label=@L[MaktabResources.Date_Of_Birth]
+                                   Required="true"
+                                   For="@(() => DateOfBirth)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudSelect T="Gender" @bind-Value="ChildModel.Gender"
+                               Label=@L[MaktabResources.Gender] Required="true"
+                               For="@(() => ChildModel.Gender)">
+                              @foreach (var rel in Genders)
+                              {
+                                   <MudSelectItem Value="@rel">@(GetGenderLabel(rel))</MudSelectItem>
+                              }
+                    </MudSelect>
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="ChildModel.RAMQNumber"
+                                       Label=@L[MaktabResources.RAMQ_Number]
+                                  Required="true"
+                                  For="@(() => ChildModel.RAMQNumber)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudDatePicker @bind-Date="RAMQExpiry"
+                                        Label=@L[MaktabResources.RAMQ_Expiry]
+                                   Required="true"
+                                   For="@(() => RAMQExpiry)" />
+               </MudItem>
+
+               @* <MudItem xs="12" sm="6">
+                    <MudNumericField @bind-Value="ChildModel.RAMQSequenceNumber"
+                                     Label="RAMQ Sequence #"
+                                     Min="1"
+                                     Required="true"
+                                     For="@(() => ChildModel.RAMQSequenceNumber)" />
+               </MudItem> *@
+
+               <MudItem xs="12">
+                         <MudStack>
+                              <MudSwitch T="bool" Label=@L[MaktabResources.Has_Allergies] @bind-Value="ChildModel.HasAllergy" />
+                              @if (ChildModel.HasAllergy)
+                              {
+                                   <MudTextField
+                                        @bind-Value="ChildModel.Allergies" Variant="Variant.Outlined"
+                                        Lines="2"
+                                        MaxLines="4"
+                                        Placeholder=@L[MaktabResources.Text_Allergies_Placeholder]
+                                        Label=@L[MaktabResources.Allergies]
+                                        Required="true" For="@(() => ChildModel.Allergies)" />
+                              }
+                         </MudStack>
+               </MudItem>
+
+               <MudItem xs="12">
+                    <MudTextField @bind-Value="ChildModel.OtherHealthConditions"
+                                       Label=@L[MaktabResources.Other_Health__Conditions]
+                                  For="@(() => ChildModel.OtherHealthConditions)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6" Class="d-flex align-center">
+                         <MudSelect Required="true" Label=@L[MaktabResources.Academic_Group_In_School] T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
+                         @foreach (var group in acedemicGroups)
+                         {
+                              <MudSelectItem Value="group">@group.ToString()</MudSelectItem>
+                         }
+                    </MudSelect>
+                    @* <MudSwitch @bind-Checked="@(ChildModel.WillUseDayCareServices)"
+                               T="bool"
+                               Label="Will Use Daycare Services"
+                               Color="Color.Primary" /> *@
+               </MudItem>
+          </MudGrid>
+
+               @if (ChildConsents?.Any() == true)
+               {
+                    <MudText Class="mt-2" Typo="Typo.h6">@L[MaktabResources.Child_Consent]</MudText>
+                    <ChildConsentList RequiredChildConsents="@RequiredChildConsents" />
+               }
+
+          <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+               <MudButton Variant="Variant.Outlined" Color="Color.Default"
+                          OnClick="@OnCancelClickedHandler"
+                          StartIcon="@Icons.Material.Filled.Close">
+                         @L[MaktabResources.Cancel]
+               </MudButton>
+               <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary"
+                          Disabled="@(!_isValid || isSaving)"
+                          StartIcon="@Icons.Material.Filled.Check" OnClick="@(HandleSaving)">
+                    @if (isSaving)
+                    {
+                         <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                              <span>@L[MaktabResources.Msg_Processing]</span>
+                    }
+                    else
+                    {
+                              <span>@L[MaktabResources.Save]</span>
+                    }
+               </MudButton>
+          </MudStack>
+          </MudForm>
+     }
+     else
+     {
+          <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+     }
+</MudPaper>
+@* </EditForm> *@
+
+     @code {
+
+     [Parameter, EditorRequired] public AddChildRequest ChildModel { get; set; } = new();
+     [Parameter] public Guid FamilyId { get; set; } = Guid.Empty;
+     [Parameter] public bool ShowLabel { get; set; } = true;
+
+     [Parameter] public EventCallback<ChildResponse> OnSave { get; set; }
+     [Parameter] public EventCallback OnCancel { get; set; }
+     private IReadOnlyCollection<Gender> Genders { get; } = Enum.GetValues(typeof(Gender)).Cast<Gender>().Where(x => x != Gender.Unknown).ToList();
+     private IReadOnlyCollection<Consent> ChildConsents => StateService.InstituteState.ChildConsents;
+     private DateTime? RAMQExpiry { get; set; }
+     private DateTime? DateOfBirth { get; set; }
+     private bool isInitialized = false;
+     private bool isDataLoading = false;
+     private bool isSaving = false;
+     private IEnumerable<AcedemicGroupType> acedemicGroups;
+     private static readonly IEnumerable<AcedemicGroupType> AcedemicGroupsCache = Enum.GetValues(typeof(AcedemicGroupType)).Cast<AcedemicGroupType>().ToList();
+     private IReadOnlyCollection<ChildConsent> RequiredChildConsents { get; set; } = Array.Empty<ChildConsent>();
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+          acedemicGroups = AcedemicGroupsCache;
+          await LoadData();
+
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private async Task HandleSaving()
+     {
+          isSaving = true;
+          RequestRender();
+
+          try
+          {
+               await InvokeUserAction(RequestSaving);
+          }
+          finally
+          {
+               isSaving = false;
+               RequestRender();
+          }
+     }
+
+     private async Task LoadData(bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadStudentConsentData(InstitutionService, forceReload);
+
+          RequiredChildConsents = GenerateChildConsents();
+
+          isDataLoading = false;
+     }
+
+     private IReadOnlyCollection<ChildConsent> GenerateChildConsents()
+     {
+          var requiredConsents = new List<ChildConsent>();
+          foreach (var consent in ChildConsents)
+          {
+               var childConsent = new ChildConsent()
+               {
+                    ConsentType = consent.ConsentType,
+                    Name = consent.Name,
+                    NameFr = consent.NameFr,
+                    PolicyLink = consent.PolicyLink,
+                    IsAllowed = false,
+               };
+
+               requiredConsents.Add(childConsent);
+          }
+
+          return requiredConsents;
+     }
+
+     private async Task RequestSaving()
+     {
+          if (FamilyId == Guid.Empty)
+          {
+               _errorMessage = L[MaktabResources.Msg_Error_No_Family_Id];//"Please provide valid family id to connect.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          var isAlreadyExists = await ChildrenService.IsChildExistWithRamQNumberAsync(FamilyId, ChildModel.RAMQNumber);
+          if (isAlreadyExists)
+          {
+               _errorMessage = @L[MaktabResources.Msg_Error_Add_Child_RAMQ_Already_Added];//"Child is already registered with system. Please contact support";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          if (!RAMQExpiry.HasValue)
+          {
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.RAMQ_Expiry];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          if (!DateOfBirth.HasValue)
+          {
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Date_Of_Birth];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          if (ChildModel.AcedemicGroup == AcedemicGroupType.None)
+          {
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Academic_Group];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          ChildModel.RAMQExpiry = RAMQExpiry.Value;
+          ChildModel.DateOfBirth = DateOfBirth.Value;
+          ChildModel.FamilyId = FamilyId;
+          ChildModel.RAMQSequenceNumber = -1;
+          
+          var result = await ChildrenService.AddChildToFamilyAsync(FamilyId, ChildModel, RequiredChildConsents);
+          if (result?.ChildId == null || result.ChildId == Guid.Empty)
+          {
+               _errorMessage = @L[MaktabResources.Msg_Error_Add_Child_Save];//"Child can not be registered with system. Please try again in few minutes";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          Snackbar.Add(L[MaktabResources.Msg_Success_Child_Added], Severity.Success);
+
+          if (OnSave.HasDelegate)
+          {
+               await OnSave.InvokeAsync(result);
+          }
+     }
+
+     private async Task OnCancelClickedHandler()
+     {
+          if (OnCancel.HasDelegate)
+          {
+               await OnCancel.InvokeAsync();
+          }
+     }
+}

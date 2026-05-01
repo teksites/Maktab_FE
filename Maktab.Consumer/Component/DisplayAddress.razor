@@ -1,0 +1,33 @@
+﻿@using MudBlazor
+@inherits LocalizeableBaseComponent<DisplayAddress>
+
+
+<MudPaper Class="pa-4 mb-4" Elevation="1">
+     <MudText Typo="Typo.h6" Class="mb-2">@L[MaktabResources.Address_Details]</MudText>
+
+     @if (Address != null)
+     {
+          <MudGrid Container="true" Spacing="2">
+               <MudItem xs="12" sm="6"><b>@L[MaktabResources.Address_Unit_No]</b> @Address.UnitNo</MudItem>
+               <MudItem xs="12" sm="6"><b>@L[MaktabResources.Address_Apartment_No]</b> @Address.ApartmentNo</MudItem>
+               <MudItem xs="12"><b>@L[MaktabResources.Address_Line_1]</b> @Address.AddressLine1</MudItem>
+               <MudItem xs="12"><b>@L[MaktabResources.Address_Line_1]</b> @Address.AddressLine2</MudItem>
+               <MudItem xs="12" sm="4"><b>@L[MaktabResources.Postal_Code]</b> @Address.PostalCode</MudItem>
+               <MudItem xs="12" sm="4"><b>@L[MaktabResources.City]</b> @Address.City</MudItem>
+               <MudItem xs="12" sm="4"><b>@L[MaktabResources.Province]</b> @Address.Province</MudItem>
+               <MudItem xs="12" sm="6"><b>@L[MaktabResources.Country]</b> @Address.Country</MudItem>
+               <MudItem xs="12" sm="6">
+                    <b>@L[MaktabResources.Home_Address]</b> @(Address.HomeAddress? @L[MaktabResources.Yes] : @L[MaktabResources.No])
+               </MudItem>
+               <MudItem xs="12"><b>@L[MaktabResources.Address_Type]</b> @(GetAddressTypeLabel(Address.AddressType))</MudItem>
+          </MudGrid>
+     }
+     else
+     {
+          <MudText>>@L[MaktabResources.Msg_Info_No_Address_Selected]</MudText>
+     }
+</MudPaper>
+
+@code {
+     [Parameter] public MaktabDataContracts.Requests.Addresses.AddAddress Address { get; set; }
+}

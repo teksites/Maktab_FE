@@ -1,0 +1,25 @@
+﻿@inherits BaseDialog<EditContactDialog>
+@using MaktabDataContracts.Requests.OtherContacts
+@using MaktabDataContracts.Responses.OtherContacts
+@using MudBlazor
+
+<MudDialog>
+     <DialogContent>
+          <EditContact Contact="@Contact" OnSave="@ContactSaved" OnCancel="@CancelDialog" />
+     </DialogContent>
+</MudDialog>
+
+@code {
+
+     [Parameter, EditorRequired] public OtherContactResponse? Contact { get; set; }
+
+     private void ContactSaved(OtherContactResponse contact)
+     {
+          MudDialog.Close(DialogResult.Ok(contact));
+     }
+
+     private void CancelDialog()
+     {
+          MudDialog.Close(DialogResult.Cancel());
+     }
+}

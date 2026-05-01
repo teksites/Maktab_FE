@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36310.24
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Consumer", "Maktab.Consumer\Maktab.Consumer.csproj", "{BBAC9263-DEE8-4258-9F06-8527FC30E149}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Core", "Maktab.Core\Maktab.Core.csproj", "{C63E5C16-E2EE-CFCD-FCA9-D8BB562A0EBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Domain", "Maktab.Domain\Maktab.Domain.csproj", "{FF1D1B03-D373-CD12-419A-1732E99E9AF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Infrastructure", "Maktab.Infrastructure\Maktab.Infrastructure.csproj", "{8867C9BE-274F-3EC0-81DA-F66BC55A3F38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maktab.Models", "Maktab.Models\Maktab.Models.csproj", "{99E6791F-4714-6781-A346-A49F9826BEE1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BBAC9263-DEE8-4258-9F06-8527FC30E149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBAC9263-DEE8-4258-9F06-8527FC30E149}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBAC9263-DEE8-4258-9F06-8527FC30E149}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBAC9263-DEE8-4258-9F06-8527FC30E149}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C63E5C16-E2EE-CFCD-FCA9-D8BB562A0EBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C63E5C16-E2EE-CFCD-FCA9-D8BB562A0EBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C63E5C16-E2EE-CFCD-FCA9-D8BB562A0EBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C63E5C16-E2EE-CFCD-FCA9-D8BB562A0EBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF1D1B03-D373-CD12-419A-1732E99E9AF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF1D1B03-D373-CD12-419A-1732E99E9AF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF1D1B03-D373-CD12-419A-1732E99E9AF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF1D1B03-D373-CD12-419A-1732E99E9AF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8867C9BE-274F-3EC0-81DA-F66BC55A3F38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8867C9BE-274F-3EC0-81DA-F66BC55A3F38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8867C9BE-274F-3EC0-81DA-F66BC55A3F38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8867C9BE-274F-3EC0-81DA-F66BC55A3F38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99E6791F-4714-6781-A346-A49F9826BEE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99E6791F-4714-6781-A346-A49F9826BEE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99E6791F-4714-6781-A346-A49F9826BEE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99E6791F-4714-6781-A346-A49F9826BEE1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C63E5C16-E2EE-CFCD-FCA9-D8BB562A0EBF} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{FF1D1B03-D373-CD12-419A-1732E99E9AF0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{8867C9BE-274F-3EC0-81DA-F66BC55A3F38} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{99E6791F-4714-6781-A346-A49F9826BEE1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {594C31C5-E7F8-402E-B4C9-E547FB413BF9}
+	EndGlobalSection
+EndGlobal

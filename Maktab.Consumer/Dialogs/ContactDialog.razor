@@ -1,0 +1,20 @@
+﻿@using MaktabDataContracts.Requests.OtherContacts
+@using MudBlazor
+
+<MudDialog>
+     <DialogContent>
+          <ContactForm Contact="Contact" OnValidSubmit="HandleSubmit" />
+     </DialogContent>
+</MudDialog>
+
+@code {
+     [CascadingParameter]
+     IMudDialogInstance MudDialog { get; set; } = default!;
+
+     [Parameter] public AddOtherContact? Contact { get; set; }
+
+     private void HandleSubmit(AddOtherContact contact)
+     {
+          MudDialog.Close(DialogResult.Ok(contact));
+     }
+}

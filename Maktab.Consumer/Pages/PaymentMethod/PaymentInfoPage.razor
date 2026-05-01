@@ -1,0 +1,541 @@
+﻿@page "/payment/payment-info"
+@using Maktab.Consumer.Extensions
+@using Maktab.Consumer.State
+@using MaktabDataContracts.Responses.Course
+@using MaktabDataContracts.Responses.Institute
+@using MaktabDataContracts.Responses.Transactions
+@using MaktabDataContracts.Responses.Users
+@using Maktab.Consumer.Dialogs
+
+@inherits BasePaymentComponent<PaymentInfoPage>
+
+@inject IDialogService DialogService
+@inject UserStateService StateService
+@inject IUserService UserService
+@inject ICourseEnrollmentService CourseEnrollmentService
+@inject ICourseEnrollmentTransactionService CourseEnrollmentTransactionService
+@inject ICourseService CourseService
+@inject IInstitutionService InstitutionService
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
+
+     <!-- Breadcrumbs Navigation -->
+     <MudBreadcrumbs Items="breadcrumbItems" Class="mb-6" />
+
+     <!-- Page Header with Alert -->
+     <MudStack Spacing="2" Class="mb-8">
+          <MudText Typo="Typo.h4" Class="font-weight-bold">@L[MaktabResources.Payment]</MudText>
+          <MudText Typo="Typo.body2" Style="opacity: 0.7;">
+               @L[MaktabResources.Msg_Info_Manage_Course_Transaction_Payments]
+          </MudText>
+
+          <!-- Alert for Outstanding Amount -->
+          @*  @if (Outstanding > 0)
+        {
+            <MudAlert Severity="Severity.Warning" Dense="true" Class="mt-2">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                    <MudText Typo="Typo.body2">
+                        You have <strong>@Outstanding</strong> outstanding payment.
+                    </MudText>
+                    <MudSpacer />
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small"
+                               OnClick="@ScrollToOutstanding">
+                        View Now
+                    </MudButton>
+                </MudStack>
+            </MudAlert>
+        } *@
+     </MudStack>
+
+     @if (!isInitialized || isDataLoading)
+     {
+          <!-- Loading State -->
+          <MudStack Spacing="3">
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="120px" Class="rounded-lg" />
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="300px" Class="rounded-lg" />
+          </MudStack>
+     }
+     else
+     {
+          <!-- Summary Section with Enhanced Cards -->
+          <MudGrid Class="my-6" Spacing="3">
+               <!-- Total Amount Card -->
+               <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%); border-left: 4px solid #2196F3;">
+                         <MudStack Spacing="2">
+                              <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudText Typo="Typo.body2" Class="font-weight-medium" Style="opacity: 0.7;">
+                                             @L[MaktabResources.Total_Amount]
+                                        </MudText>
+                                        <MudTooltip Text=@L[MaktabResources.Msg_Info_Total_Amount]>
+                                             <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" />
+                                        </MudTooltip>
+                                   </MudStack>
+                                   <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Info" />
+                              </MudStack>
+                              <MudText Typo="Typo.h5" Class="font-weight-bold">
+                                   @TotalPayable
+                              </MudText>
+                              @* <MudProgressLinear Value="100" Color="Color.Info" Class="mt-2" /> *@
+                         </MudStack>
+                    </MudPaper>
+               </MudItem>
+
+               <!-- Amount Paid Card -->
+               <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%); border-left: 4px solid #4CAF50;">
+                         <MudStack Spacing="2">
+                              <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudText Typo="Typo.body2" Class="font-weight-medium" Style="opacity: 0.7;">
+                                             @L[MaktabResources.Amount_Paid]
+                                        </MudText>
+                                        <MudTooltip Text=@L[MaktabResources.Msg_Info_Amount_Paid]>
+                                             <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" />
+                                        </MudTooltip>
+                                   </MudStack>
+                                   <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success" />
+                              </MudStack>
+                              <MudText Typo="Typo.h5" Class="font-weight-bold" Color="Color.Success">
+                                   @TotalPaid
+                              </MudText>
+                              @* <MudProgressLinear Value="@GetProgressPercentage()" Color="Color.Success" Class="mt-2" /> *@
+                         </MudStack>
+                    </MudPaper>
+               </MudItem>
+
+               <!-- Amount Due Card -->
+               <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%); border-left: 4px solid #F44336;">
+                         <MudStack Spacing="2">
+                              <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudText Typo="Typo.body2" Class="font-weight-medium" Style="opacity: 0.7;">
+                                             @L[MaktabResources.Amount_Due]
+                                        </MudText>
+                                        <MudTooltip Text=@L[MaktabResources.Msg_Info_Amount_Due]>
+                                             <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" />
+                                        </MudTooltip>
+                                   </MudStack>
+                                   <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Error" />
+                              </MudStack>
+                              <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                   <MudText Typo="Typo.h5" Class="font-weight-bold" Color="Color.Error">
+                                        @Outstanding
+                                   </MudText>
+                                   @* <MudProgressCircular Value="@GetProgressPercentage()" Color="Color.Success" Size="Size.Small" /> *@
+                              </MudStack>
+                              @* <MudProgressLinear Value="@GetProgressPercentage()" Color="Color.Error" Class="mt-2" Rounded="true" /> *@
+                         </MudStack>
+                    </MudPaper>
+               </MudItem>
+          </MudGrid>
+
+          <!-- Transactions Section -->
+          <MudStack Spacing="3" Class="mt-8">
+               <MudText Typo="Typo.h5" Class="font-weight-bold">@L[MaktabResources.Payment_Transaction]</MudText>
+
+               @if (GroupedData.Any())
+               {
+                    <!-- Payment Transactions Table -->
+                    <MudTable Items="@GetFlatTransactionList()" Hover="true" Striped="true" Dense="false" Class="mt-4">
+                         <HeaderContent>
+                              <MudTh>@L[MaktabResources.Institute]</MudTh>
+                              <MudTh>@L[MaktabResources.Course]</MudTh>
+                              <MudTh>@L[MaktabResources.Status]</MudTh>
+                              <MudTh Style="text-align: right;">@L[MaktabResources.Total_Amount]</MudTh>
+                              <MudTh Style="text-align: right;">@L[MaktabResources.Amount_Paid]</MudTh>
+                              <MudTh Style="text-align: right;">@L[MaktabResources.Discount]</MudTh>
+                              <MudTh Style="text-align: right;">@L[MaktabResources.Amount_Due]</MudTh>
+                              <MudTh Style="text-align: right;">@L[MaktabResources.Minimum_Amount_Due]</MudTh>
+                              <MudTh Style="text-align: center;">@L[MaktabResources.Action]</MudTh>
+                         </HeaderContent>
+                         <RowTemplate>
+                              <MudTd DataLabel="@L[MaktabResources.Institute]">
+                                   <MudText Typo="Typo.body2" Class="font-weight-medium">
+                                        @GetInstituteName(context.InstituteId)
+                                   </MudText>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Course]">
+                                   <MudText Typo="Typo.body2">
+                                        @GetCourseName(context.CourseId)
+                                   </MudText>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Status]">
+                                   <MudChip T="String"
+                                            Color="@GetStatusColor(context.Transaction)"
+                                            Variant="Variant.Filled"
+                                            Size="Size.Small"
+                                            Icon="@GetStatusIcon(context.Transaction)">
+                                        @GetStatusText(context.Transaction)
+                                   </MudChip>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Total_Amount]" Style="text-align: right;">
+                                   <MudText Typo="Typo.body2" Color="Color.Info" Class="font-weight-medium">
+                                        @context.Transaction.TotalPayable
+                                   </MudText>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Amount_Paid]" Style="text-align: right;">
+                                   <MudText Typo="Typo.body2" Color="Color.Success" Class="font-weight-medium">
+                                        @context.Transaction.TotalAmountPaid
+                                   </MudText>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Discount]" Style="text-align: right;">
+                                   <MudText Typo="Typo.body2" Color="Color.Success" Class="font-weight-medium">
+                                        @(context.Transaction.DayCareDiscount + context.Transaction.FeeAmountDiscount)
+                                   </MudText>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Amount_Due]" Style="text-align: right;">
+                                   <MudText Typo="Typo.body2"
+                                            Color="Color.Error"
+                                            Class="font-weight-bold">
+                                        @(context.Transaction.TotalPayable - (context.Transaction.TotalAmountPaid + context.Transaction.DayCareDiscount + context.Transaction.FeeAmountDiscount))
+                                   </MudText>
+                              </MudTd>
+                              <MudTd DataLabel="@L[MaktabResources.Minimum_Amount_Due]" Style="text-align: right;">
+                                   <MudText Typo="Typo.body2"
+                                            Color="Color.Error"
+                                            Class="font-weight-bold">
+                                        @(DisplayMinumumAmountDue(context.Transaction))
+                                   </MudText>
+                              </MudTd>
+
+
+                              <MudTd DataLabel="@L[MaktabResources.Action]" Style="text-align: center;">
+                                   <MudStack Row="true" StretchItems="StretchItems.All" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
+                                        @if (context.Transaction?.FeeInstallments?.Any() == true)
+                                        {
+                                             <MudTooltip Text=@L[MaktabResources.Payment_Schedule]>
+                                                  <MudIconButton Variant="Variant.Outlined" Color="Color.Info" OnClick="() => OpenPaymentScheduleDialog(context.Transaction)" Icon="@Icons.Material.Outlined.Schedule" Size="Size.Small" />
+                                             </MudTooltip>
+                                        }
+
+                                   @if (context.Transaction.TotalPayable > context.Transaction.TotalAmountPaid)
+                                   {
+                                        <MudButton Variant="Variant.Filled"
+                                                   Color="Color.Primary"
+                                                   Size="Size.Small"
+                                                   OnClick="@(() => OpenZeffyPaymentDialog(context.Transaction, GetCourseResponseDetailed(context.CourseId), userInfo.Email))">
+                                             @L[MaktabResources.Pay_Now]
+                                        </MudButton>
+                                   }
+                                   else
+                                   {
+                                        <MudButton Variant="Variant.Filled"
+                                                   Color="Color.Success"
+                                                   Size="Size.Small"
+                                                   StartIcon="@Icons.Material.Filled.CheckCircle"
+                                                   Disabled="true">
+                                             @L[MaktabResources.Paid]
+                                        </MudButton>
+                                   }
+                                   </MudStack>
+
+                              </MudTd>
+                         </RowTemplate>
+                    </MudTable>
+               }
+               else
+               {
+                    <!-- Empty State -->
+                    <MudPaper Class="pa-8 rounded-lg text-center mt-6" Elevation="0" Style="background: rgba(0,0,0,0.02);">
+                         <MudStack Spacing="3" AlignItems="AlignItems.Center">
+                              <MudIcon Icon="@Icons.Material.Filled.ReceiptLong" Size="Size.Large" Color="Color.Default" Style="font-size: 48px; opacity: 0.5;" />
+                              <MudStack Spacing="1" AlignItems="AlignItems.Center">
+                                   <MudText Typo="Typo.h6" Class="font-weight-bold">@L[MaktabResources.No_Transaction]</MudText>
+                                   <MudText Typo="Typo.body2" Style="opacity: 0.7;">
+                                        @L[MaktabResources.Msg_Error_No_Payment_Tranaction]
+                                   </MudText>
+                              </MudStack>
+                              <MudButton Variant="Variant.Outlined"
+                                         Color="Color.Primary"
+                                         OnClick="@(() => NavigationManager.NavigateTo(Constants.ParentDashboardRoute))">
+                                   @L[MaktabResources.Back_To_Dashboard]
+                              </MudButton>
+                         </MudStack>
+                    </MudPaper>
+               }
+          </MudStack>
+     }
+</MudContainer>
+
+
+
+@code {
+
+     private bool isInitialized;
+     private bool isDataLoading;
+     private Guid userId = Guid.Empty;
+     private UserInformationResponse userInfo => StateService.ParentState.Profile;
+     private IReadOnlyCollection<StudentCourseEnrollmentResponse> _CourseEnrollments => StateService.ParentState.CourseEnrollments ?? Array.Empty<StudentCourseEnrollmentResponse>();
+     private IReadOnlyCollection<StudentCourseTransactionResponse> _CourseTransactions => StateService.ParentState.CourseTransactions ?? Array.Empty<StudentCourseTransactionResponse>();
+     private IReadOnlyCollection<CourseResponseDetailed> _Courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
+     private IReadOnlyCollection<InstituteResponse> _Institutes => StateService.InstituteState.Institutes ?? Array.Empty<InstituteResponse>();
+
+     private List<InstituteGroupViewModel> GroupedData = new();
+     private List<BreadcrumbItem> breadcrumbItems = new();
+
+     private decimal TotalPayable => _CourseTransactions.Sum(x => x.TotalPayable);
+     private decimal TotalPaid => _CourseTransactions.Sum(x => x.TotalAmountPaid);
+     private decimal TotalFeeDiscount => _CourseTransactions.Sum(x => x.FeeAmountDiscount);
+     private decimal TotalDayCareFeeDiscount => _CourseTransactions.Sum(x => x.DayCareDiscount);
+     private decimal Outstanding => TotalPayable - (TotalPaid + TotalFeeDiscount + TotalDayCareFeeDiscount);
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.ParentState.OnChange += HandleStateChange;
+          StateService.InstituteState.OnChange += HandleStateChange;
+          InitializeBreadcrumbs();
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.ParentState.OnChange -= HandleStateChange;
+          StateService.InstituteState.OnChange -= HandleStateChange;
+     }
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          userId = await SessionService.GetLoggedInUserIdAsync();
+          await LoadData(userId);
+
+          GroupData();
+
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private async Task LoadData(Guid userId, bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadUserProfileData(UserService, userId, forceReload);
+          await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, forceReload);
+          await StateService.LoadActiveCoursesData(CourseService, forceReload);
+          await StateService.LoadActiveInstitutesData(InstitutionService, forceReload);
+          if (_CourseEnrollments?.Any() == true)
+          {
+               await StateService.LoadCourseTransactionsByCourse(CourseEnrollmentTransactionService, _CourseEnrollments, userInfo.FamilyId, forceReload);
+          }
+
+          isDataLoading = false;
+     }
+
+     private void GroupData()
+     {
+          GroupedData = new List<InstituteGroupViewModel>();
+          if (_CourseTransactions == null || !_CourseTransactions.Any())
+          {
+               return;
+          }
+
+          var coursesVM = new List<CourseGroupViewModel>();
+
+          foreach (var transaction in _CourseTransactions)
+          {
+               if (transaction.Enrollments?.Any() == true)
+               {
+                    var courseVM = new CourseGroupViewModel
+                    {
+                         CourseId = transaction.Enrollments.First().CourseId,
+                         Transactions = new List<StudentCourseTransactionResponse> { transaction }
+                    };
+
+                    coursesVM.Add(courseVM);
+               }
+          }
+
+          foreach (var vm in coursesVM)
+          {
+               var course = _Courses.FirstOrDefault(c => c.CourseId == vm.CourseId);
+               if (course != null)
+               {
+                    var institute = _Institutes.FirstOrDefault(i => i.InstituteId == course.InstituteId);
+                    if (institute != null)
+                    {
+                         var instituteGroup = GroupedData.FirstOrDefault(g => g.InstituteId == institute.InstituteId);
+                         if (instituteGroup == null)
+                         {
+                              instituteGroup = new InstituteGroupViewModel
+                              {
+                                   InstituteId = institute.InstituteId,
+                                   Courses = new List<CourseGroupViewModel> { vm }
+                              };
+                              GroupedData.Add(instituteGroup);
+                         }
+                         else
+                         {
+                              instituteGroup.Courses.Add(vm);
+                         }
+                    }
+               }
+          }
+     }
+
+     private List<TransactionRow> GetFlatTransactionList()
+     {
+          var rows = new List<TransactionRow>();
+
+          foreach (var instituteGroup in GroupedData)
+          {
+               foreach (var courseGroup in instituteGroup.Courses)
+               {
+                    foreach (var transaction in courseGroup.Transactions)
+                    {
+                         rows.Add(new TransactionRow
+                         {
+                              InstituteId = instituteGroup.InstituteId,
+                              CourseId = courseGroup.CourseId,
+                              Transaction = transaction
+                         });
+                    }
+               }
+          }
+
+          return rows;
+     }
+
+     private Color GetStatusColor(StudentCourseTransactionResponse tx)
+     {
+          if (tx.IsCompletelyPaid)
+               return Color.Success;
+
+          if (tx.TotalAmountPaid > 0)
+               return Color.Warning;
+
+          return Color.Error;
+     }
+
+     private string GetStatusIcon(StudentCourseTransactionResponse tx)
+     {
+          if (tx.IsCompletelyPaid)
+               return Icons.Material.Filled.CheckCircle;
+
+          if (tx.TotalAmountPaid > 0)
+               return Icons.Material.Filled.HourglassTop;
+
+          return Icons.Material.Filled.Cancel;
+     }
+
+     private Color GetAmountDueColor(StudentCourseTransactionResponse tx)
+     {
+          if (tx.IsCompletelyPaid)
+               return Color.Success;
+
+          if (tx.TotalPayable - tx.TotalAmountPaid > 0)
+               return Color.Error;
+
+          return Color.Default;
+     }
+
+     private string GetStatusText(StudentCourseTransactionResponse tx)
+     {
+          if (tx.IsCompletelyPaid)
+               return L[MaktabResources.Paid];
+
+          if (tx.TotalAmountPaid > 0)
+               return L[MaktabResources.Partially_Paid];
+
+          return L[MaktabResources.Unpaid];
+     }
+
+     public class InstituteGroupViewModel
+     {
+          public Guid InstituteId { get; set; }
+          public List<CourseGroupViewModel> Courses { get; set; } = new();
+     }
+
+     public class CourseGroupViewModel
+     {
+          public Guid CourseId { get; set; }
+          public List<StudentCourseTransactionResponse> Transactions { get; set; } = new();
+     }
+
+     public class TransactionRow
+     {
+          public Guid InstituteId { get; set; }
+          public Guid CourseId { get; set; }
+          public StudentCourseTransactionResponse Transaction { get; set; }
+     }
+
+     private string GetCourseName(Guid courseId)
+     {
+          if (courseId == Guid.Empty) return string.Empty;
+
+          var course = _Courses.FirstOrDefault(x => x.CourseId == courseId);
+          if (course != null)
+          {
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return course.NameFr;
+               }
+               else
+               {
+                    return course.Name;
+               }
+          }
+
+          return string.Empty;
+     }
+
+     private string GetInstituteName(Guid instituteId)
+     {
+          if (instituteId == Guid.Empty) return string.Empty;
+
+          var institute = _Institutes.FirstOrDefault(x => x.InstituteId == instituteId);
+          if (institute != null)
+          {
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return institute.NameFr;
+               }
+               else
+               {
+                    return institute.Name;
+               }
+          }
+
+          return string.Empty;
+     }
+
+     private string DisplayMinumumAmountDue(StudentCourseTransactionResponse transaction)
+     {
+          decimal minAmountDue = CalculateMinumumAmountDue(transaction);
+          if (minAmountDue > 0)
+          {
+               return minAmountDue.ToString();
+          }
+
+          return string.Empty;
+     }
+
+     private void InitializeBreadcrumbs()
+     {
+          breadcrumbItems = new List<BreadcrumbItem>
+          {
+               new BreadcrumbItem( L[MaktabResources.Dashboard], Constants.ParentDashboardRoute),
+               new BreadcrumbItem( L[MaktabResources.Payment], null, true)
+          };
+     }
+
+     private CourseResponseDetailed GetCourseResponseDetailed(Guid courseId)
+     {
+          if (courseId == Guid.Empty) return null;
+
+          return _Courses.FirstOrDefault(x => x.CourseId == courseId);
+     }
+
+     protected async Task OpenPaymentScheduleDialog(StudentCourseTransactionResponse studentCourseTransactionResponse)
+     {
+          await OpenPaymentScheduleDialog(DialogService, studentCourseTransactionResponse);
+     }
+}

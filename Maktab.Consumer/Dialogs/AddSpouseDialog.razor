@@ -1,0 +1,33 @@
+﻿@inherits BaseDialog<AddSpouseDialog>
+@using MaktabDataContracts.Requests.Children
+@using MaktabDataContracts.Requests.Users
+@using MaktabDataContracts.Responses.Children
+@using MudBlazor
+
+<MudDialog>
+     <DialogContent>
+          <AddSpouse Spouse="@Spouse" FamilyId=@FamilyId
+                     OnSave="SaveSpouse"
+                     OnCancel="CancelDialog" />
+     </DialogContent>
+</MudDialog>
+
+@code {
+     [Parameter] public Guid FamilyId { get; set; }
+     [Parameter] public AddUserInformation Spouse { get; set; } = new AddUserInformation();
+
+     protected override void OnInitialized()
+     {
+          Spouse.FamilyId = FamilyId;
+     }
+
+     private void SaveSpouse(MaktabDataContracts.Responses.Users.UserInformationResponse spouse)
+     {
+          MudDialog.Close(DialogResult.Ok(spouse));
+     }
+
+     private void CancelDialog()
+     {
+          MudDialog.Close(DialogResult.Cancel());
+     }
+}

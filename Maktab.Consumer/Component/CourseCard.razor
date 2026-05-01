@@ -1,0 +1,115 @@
+﻿@using Maktab.Consumer.Helpers
+@using Maktab.Domain.Extensions
+@using Maktab.Consumer.State
+@using MaktabDataContracts.Responses.Course
+
+@inherits LocalizeableBaseComponent<CourseCard>
+
+@inject UserStateService StateService
+
+<MudCard Class="flex-auto mb-4">
+     <MudCardHeader>
+          <MudText Typo="Typo.h5">@GetCourseName()</MudText>
+     </MudCardHeader>
+     <MudCardContent>
+          @* <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@Course.Instructor</MudText> *@
+          <MudText Typo="Typo.body2" Class="truncate-2">@(GetCourseDescription())</MudText>
+
+          @if (ShowInstituteName)
+          {
+               <!-- Institute -->
+               <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
+                    <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Info" />
+                    <MudText Typo="Typo.subtitle1">
+                         <b>@L[MaktabResources.Institute]</b> @(GetInstituteName())
+                    </MudText>
+               </MudStack>
+          }
+
+          @if (ShowProgress)
+          {
+               <CourseProgress Course="@Course" />
+               @* <MudStack>
+                    <MudText Typo="Typo.subtitle2" Color="Color.Secondary">
+                         Progress: @Course.GetProgress().ToString("0")%
+                    </MudText>
+
+                    <MudProgressLinear Value="@Course.GetProgress()" Color="Color.Primary"
+                                       Rounded="true" Class="my-1" />
+
+                    @if (Course.GetProgress() >= 100)
+                    {
+                         <MudChip T="string" Color="Color.Success" Variant="Variant.Filled">Completed</MudChip>
+                    }
+                    else
+                    {
+                         <MudText Typo="Typo.caption" Color="Color.Secondary">
+                              Ends on @Course.EndDate.ToString("dd MMM yyyy")
+                         </MudText>
+                    }
+               </MudStack> *@
+          }
+
+
+
+     </MudCardContent>
+     <MudCardActions>
+          @if (HighlightButton)
+          {
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToDetails">
+                    @L[MaktabResources.View_Details]
+               </MudButton>
+          }
+          else
+          {
+               <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="NavigateToDetails">
+                    @L[MaktabResources.View_Details]
+               </MudButton>
+          }
+     </MudCardActions>
+</MudCard>
+
+@code {
+     [Parameter] public CourseResponseDetailed Course { get; set; } = new();
+     [Parameter] public bool ShowProgress { get; set; } = false;
+     //[Parameter] public string ViewDetailsButtonText { get; set; }// = this.L[MaktabResources.View_Details];
+     [Parameter] public bool HighlightButton { get; set; } = false;
+     [Parameter] public bool ShowInstituteName { get; set; } = false;
+
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+     }
+
+     private void NavigateToDetails()
+     {
+          NavigationManager.NavigateTo(string.Format(Constants.CourseDetailsRoute, Course.CourseId));
+     }
+
+     private string GetCourseName()
+     {
+          return GetCourseName(Course);
+     }
+
+     private string GetCourseDetails()
+     {
+          return GetCourseDetails(Course);
+     }
+
+     private string GetCourseDescription()
+     {
+          return GetCourseDescription(Course);
+     }
+
+     private string GetInstituteName()
+     {
+          var institute = StateService.InstituteState.Institutes?.FirstOrDefault(i => i.InstituteId == Course.InstituteId);
+          if(institute == null)
+          {
+               return string.Empty;
+          }
+
+          return GetInstituteName(institute);
+     }
+}

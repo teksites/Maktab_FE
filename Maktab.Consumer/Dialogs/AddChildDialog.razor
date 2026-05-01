@@ -1,0 +1,33 @@
+﻿@inherits BaseDialog<AddChildDialog>
+@using MaktabDataContracts.Requests.Children
+@using MaktabDataContracts.Responses.Children
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <AddChild ChildModel="@child" FamilyId=@FamilyId
+                           OnSave="SaveChild"
+                           OnCancel="CancelDialog" />
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [Parameter] public Guid FamilyId { get; set; }
+
+    private AddChildRequest child { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        child.FamilyId = FamilyId;
+    }
+
+     private void SaveChild(ChildResponse child)
+    {
+        MudDialog.Close(DialogResult.Ok(child));
+    }
+
+     private void CancelDialog()
+    {
+          MudDialog.Close(DialogResult.Cancel());
+    }
+}

@@ -1,0 +1,409 @@
+﻿@page "/parent/profile"
+@attribute [Authorize]
+
+@using Maktab.Consumer.Dialogs
+@using Maktab.Consumer.State
+@using Maktab.Consumer.Extensions;
+@using MaktabDataContracts.Responses.Addresses
+@using MaktabDataContracts.Responses.Children
+@using MaktabDataContracts.Responses.Course
+@using MaktabDataContracts.Responses.OtherContacts
+@using MaktabDataContracts.Responses.Users
+@using Microsoft.AspNetCore.Authorization
+
+@inherits BaseParentComponent<ParentProfile>
+
+@inject IUserService UserService
+@inject IChildrenService ChildrenService
+@inject ICourseService CourseService
+@inject ICourseEnrollmentService CourseEnrollmentService
+@inject IDialogService DialogService
+@inject IAddressService AddressService
+@inject IContactService ContactService
+@inject UserStateService StateService
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-6">
+     @if (isInitialized && !isDataLoading)
+     {
+          <MudGrid>
+               <MudItem xs="12" md="12">
+                    <ParentInfoCard Parent="@userInfo" ShowEditButton="false" OnEdit="OnEditUserProfile" />
+               </MudItem>
+
+               <!-- Extended Info Section -->
+               <MudItem xs="12" md="12">
+                    <MudCard Class="mb-4 pa-4">
+
+                         <MudStack Row="true">
+
+                              <MudStack>
+
+                                   <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Tax_Info]</MudText>
+                                   @if (_ExtendedInfoResponse != null)
+                                   {
+                                        <MudStack Row="true">
+                                             <MudText>@L[MaktabResources.SIN_Number]</MudText>
+
+                                             <MudText>@_ExtendedInfoResponse.SIN</MudText>
+                                        </MudStack>
+                                        <MudSwitch @bind-Value="_ExtendedInfoResponse.IsActiveTaxCreditRecipient"
+                                                   T="bool"
+                                                   Disabled="true"
+                                                   Label=@L[MaktabResources.Active_TaxCredit_Recipient]
+                                                   Color="Color.Primary" />
+                                   }
+
+                              </MudStack>
+
+                              <MudSpacer />
+                              <MudStack>
+                                   @if (_ExtendedInfoResponse == null)
+                                   {
+                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddExtendedInfoDialog" Class="mb-4">
+                                             @L[MaktabResources.Add]
+                                        </MudButton>
+                                   }
+                                   else
+                                   {
+                                        <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="OpenEditExtendedInfoDialog" Class="mb-4">
+                                             @L[MaktabResources.Edit]
+                                        </MudButton>
+                                   }
+                              </MudStack>
+
+                         </MudStack>
+
+                    </MudCard>
+               </MudItem>
+
+               <MudItem xs="12" md="12">
+                    <MudCard Class="mb-4 pa-4">
+
+                         <!-- Password Section -->
+                         <MudStack Row="true">
+                              <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Password]</MudText>
+
+                              <MudSpacer />
+
+                              <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Edit" OnClick="OpenChangePasswordDialog" Class="mb-4">
+                                   @L[MaktabResources.Change_Password]
+                              </MudButton>
+                         </MudStack>
+
+
+                    </MudCard>
+               </MudItem>
+
+               <MudItem xs="12" md="12">
+                    <MudCard Class="mb-4 pa-4">
+
+                         <!-- Spouse Section -->
+                         <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Spouse]</MudText>
+                         @if (_SpouseInfo != null)
+                         {
+                              <ParentInfoCard Parent="@_SpouseInfo" ShowEditButton="false" />
+                         }
+                         else
+                         {
+                              <MudStack Row="true">
+                                   <MudSpacer />
+                                   <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddSpouseDialog" Class="mb-4">
+                                        @L[MaktabResources.Add_Spouse]
+                                   </MudButton>
+                              </MudStack>
+                         }
+
+                    </MudCard>
+               </MudItem>
+
+               <MudItem xs="12" md="12">
+                    <MudCard Class="mb-4 pa-4">
+                         <MudStack Row="true">
+                              <!-- Children Overview via reusable component -->
+                              <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Children]</MudText>
+                              <MudSpacer />
+                              <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
+                                   @L[MaktabResources.Add_Child]
+                              </MudButton>
+                         </MudStack>
+                         <ChildList ShowEnrollMenu="true" ShowHeader="false" FamilyId="@userInfo.FamilyId" />
+                    </MudCard>
+               </MudItem>
+
+               @* <CourseList Courses=@_courses />
+    @* <ChildSimplifiedList Children="@Children" OnViewCourses="ViewCourses" OnAddChild="AddChild" /> *@
+               @* <CourseSimplifiedTable Courses="@Courses" /> *@
+
+               <MudItem xs="12" md="12">
+                    <MudCard Class="mb-4 pa-4">
+                         <MudStack Row="true">
+
+                              <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Contacts]</MudText>
+                              <MudSpacer />
+
+                              <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddContactDialog" Class="mb-4">
+                                   @L[MaktabResources.Add_Contact]
+                              </MudButton>
+
+                         </MudStack>
+
+                         <ContactSimplifiedList ShowHeader="false" Contacts="@_OtherContacts" OnAdd="OpenAddContactDialog" OnDelete="OnContactDelete" OnEdit="OnContactEdit" />
+                    </MudCard>
+               </MudItem>
+
+               <MudItem xs="12" md="12">
+                    <MudCard Class="mb-4 pa-4">
+                         <MudStack Row="true">
+
+                              <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Addresses]</MudText>
+                              <MudSpacer />
+
+                              <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddAddressDialog" Class="mb-4">
+                                   @L[MaktabResources.Add]
+                              </MudButton>
+
+                         </MudStack>
+                         <AddressList Addresses="@_Addresses" OnEdit="OpenEditAddressDialog" OnDelete="OnDeleteAddress" ShowHeader="false" />
+                    </MudCard>
+               </MudItem>
+
+          </MudGrid>
+     }
+     else
+     {
+          <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+     }
+</MudContainer>
+
+     @code {
+     private UserInformationResponse userInfo => StateService.ParentState.Profile;
+     private UserInformationResponse _SpouseInfo => StateService.ParentState.Spouse;
+     private ExtendedUserInformationResponse _ExtendedInfoResponse => StateService.ParentState.ExtendedProfileInfo;
+
+
+     private IReadOnlyCollection<ChildResponse> _Children => StateService.ParentState.Children ?? Array.Empty<ChildResponse>();
+     private IReadOnlyCollection<OtherContactResponse> _OtherContacts => StateService.ParentState.Contacts ?? Array.Empty<OtherContactResponse>();
+     private IReadOnlyCollection<AddressResponse> _Addresses => StateService.ParentState.Addresses ?? Array.Empty<AddressResponse>();
+     private bool isInitialized;
+     private bool isDataLoading;
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.ParentState.OnChange += HandleStateChange;
+     }
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          var userId = await SessionService.GetLoggedInUserIdAsync();
+
+          await LoadProfileData(userId);
+
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private async Task LoadProfileData(Guid userId, bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadUserProfileData(UserService, userId, forceReload);
+
+          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, forceReload);
+
+          //Can be moved to child component if we want to load it on demand when user click on children section
+          await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, forceReload);
+
+          await StateService.LoadUserSpouseData(UserService, userId, userInfo.FamilyId, forceReload);
+
+          await StateService.LoadUserExtendedProfileData(UserService, userId, forceReload);
+
+          await StateService.LoadContactsData(ContactService, userInfo.FamilyId, forceReload);
+
+          await StateService.LoadAddressesData(AddressService, userId, forceReload);
+
+          isDataLoading = false;
+     }
+
+     // private async Task LoadChildrenData(Guid familyId, bool forceReload = false)
+     // {
+     //      if (StateService.ParentState.Children == null || forceReload)
+     //      {
+     //           var children = await ChildrenService.GetChildrenByFamilyIdAsync(familyId);
+     //           StateService.ParentState.SetChildren(children);
+     //      }
+     // }
+
+     private async Task OnEditUserProfile(UserInformationResponse parent)
+     {
+          var parameters = new DialogParameters { ["Profile"] = userInfo };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<EditUserInfoDialog>(L[MaktabResources.Edit_Profile], parameters, options);
+          var dialogResult = await dialog.Result;
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is UserInformationResponse userResponse)
+          {
+               StateService.ParentState.SetProfile(userResponse);
+               this.RequestRender();
+          }
+     }
+
+     private void ViewCourses(Guid id) { }
+
+     private async Task OpenAddContactDialog()
+     {
+          var dialogResult = await this.OpenAddContactDialog(DialogService, userInfo.FamilyId);
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is OtherContactResponse contact)
+          {
+               StateService.ParentState.ClearContact();
+               await StateService.LoadContactsData(ContactService, userInfo.FamilyId, true);
+
+               this.RequestRender();
+          }
+     }
+
+     private async Task OpenAddSpouseDialog()
+     {
+          var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<AddSpouseDialog>(L[MaktabResources.Add_Spouse], parameters, options);
+          var dialogResult = await dialog.Result;
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is UserInformationResponse spouse)
+          {
+               StateService.ParentState.SetSpouse(spouse);
+               this.RequestRender();
+          }
+     }
+
+     private async Task OpenAddAddressDialog()
+     {
+          var dialogResult = await this.OpenAddAddressDialog(DialogService, userInfo.UserId);
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is AddressResponse address)
+          {
+               //StateService.ParentState.AddAddress(address);
+               await ReloadAddressesAsync();
+          }
+     }
+
+     private async Task ReloadAddressesAsync()
+     {
+          StateService.ParentState.ClearAddress();
+          await StateService.LoadAddressesData(AddressService, userInfo.UserId, true);
+          this.RequestRender();
+     }
+
+     private async Task OpenAddChildDialog()
+     {
+          var dialogResult = await this.OpenAddChildDialog(DialogService, userInfo.FamilyId);
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
+          {
+               //await LoadChildrenData(userInfo.FamilyId, true);
+               await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, true);
+               RequestRender();
+          }
+     }
+
+     private async Task OpenAddExtendedInfoDialog()
+     {
+          var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId, ["AddessId"] = userInfo.FamilyId, ["UserId"] = userInfo.UserId };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<AddExtendedInfoDialog>(L[MaktabResources.Add_Extended_Info], parameters, options);
+          var dialogResult = await dialog.Result;
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ExtendedUserInformationResponse extendedInfo)
+          {
+               StateService.ParentState.SetExtendedInfo(extendedInfo);
+               this.RequestRender();
+          }
+     }
+
+     private async Task OpenEditExtendedInfoDialog()
+     {
+          var parameters = new DialogParameters { ["ExtendedInfo"] = _ExtendedInfoResponse };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<EditExtendedInfoDialog>(L[MaktabResources.Edit_Extended_Info], parameters, options);
+
+          var dialogResult = await dialog.Result;
+          if (dialogResult !=null && !dialogResult.Canceled && dialogResult.Data is ExtendedUserInformationResponse extendedInfo)
+          {
+               StateService.ParentState.SetExtendedInfo(extendedInfo);
+               this.RequestRender();
+          }
+     }
+
+     private async Task OpenEditAddressDialog(AddressResponse address)
+     {
+          var parameters = new DialogParameters { ["EditAddress"] = address };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<EditAddressDialog>(L[MaktabResources.Edit_Extended_Info], parameters, options);
+
+          var dialogResult = await dialog.Result;
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is AddressResponse addressResponse)
+          {
+               //StateService.ParentState.AddAddress(address);
+               await ReloadAddressesAsync();
+          }
+     }
+
+     private async Task OnDeleteAddress(AddressResponse address)
+     {
+          if(address != null)
+          {
+               await ReloadAddressesAsync();
+          }
+     }
+
+     private async Task OpenChangePasswordDialog()
+     {
+          var parameters = new DialogParameters { ["UserId"] = userInfo.UserId };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<ChangePasswordDialog>(L[MaktabResources.Change_Password], parameters, options);
+          var dialogResult = await dialog.Result;
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is bool passwordChanged)
+          {
+               this.RequestRender();
+          }
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.ParentState.OnChange -= HandleStateChange;
+     }
+
+     private async Task OnContactEdit(OtherContactResponse contact)
+     {
+          var parameters = new DialogParameters { ["Contact"] = contact };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<EditContactDialog>(L[MaktabResources.Edit_Contact], parameters, options);
+          var dialogResult = await dialog.Result;
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is OtherContactResponse updatedContact)
+          {
+               StateService.ParentState.ClearContact();
+               await StateService.LoadContactsData(ContactService, userInfo.FamilyId, true);
+               this.RequestRender();
+          }
+     }
+
+     private async Task OnContactDelete(OtherContactResponse contact)
+     {
+          if(contact != null)
+          {
+               StateService.ParentState.ClearContact();
+               await StateService.LoadContactsData(ContactService, userInfo.FamilyId, true);
+               this.RequestRender();
+          }
+     }
+
+}

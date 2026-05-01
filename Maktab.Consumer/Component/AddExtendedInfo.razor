@@ -1,0 +1,162 @@
+﻿@inherits BaseFormComponent<AddExtendedInfo>
+
+@using Maktab.Consumer.Dialogs
+
+@using MaktabDataContracts.Requests.Users
+@using MaktabDataContracts.Responses.Users
+@using MudBlazor
+@using System.ComponentModel.DataAnnotations
+
+@inject IUserService UserService
+
+
+@* <EditForm Model="@ExtendedModel" OnValidSubmit="HandleValidSubmit"> *@
+     <MudPaper Class="pa-6" Elevation="0" Outlined="true">
+          <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
+               @L[MaktabResources.Add_SIN]
+          </MudText>
+
+     <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleExtendedInfoSave)" Validated="@(OnFormValidated)">
+
+          <MudGrid Container="true" Spacing="3">
+              @*  <MudItem xs="12" sm="6">
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddAddressDialog" Class="mb-4">
+                         Add Address
+                    </MudButton>
+                    <DisplayAddress Address="@SelectedAddress" />
+               </MudItem> *@
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="ExtendedModel.SIN"
+                                  Label=@L[MaktabResources.SIN_Number]
+                                  Required="true"
+                                  Validation="@(new Func<string, IEnumerable<string>>(ValidateCanadianIndividualTaxCode))"
+                                  For="@(() => ExtendedModel.SIN)" />
+               </MudItem>
+
+
+               <MudItem xs="12" sm="6" Class="d-flex align-center">
+                    <MudSwitch @bind-Value="ExtendedModel.IsActiveTaxCreditRecipient"
+                               T="bool"
+                               Label=@L[MaktabResources.Active_Tax_Payer]
+                               Color="Color.Primary" />
+               </MudItem>
+          </MudGrid>
+
+
+          @if (!string.IsNullOrWhiteSpace(_errorMessage))
+          {
+               <MudAlert Severity="Severity.Error" Elevation="0" Class="my-4">
+                    @_errorMessage
+               </MudAlert>
+          }
+
+          <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+               <MudButton Variant="Variant.Outlined" Color="Color.Default"
+                          OnClick="@OnCancelClickedHandler"
+                          StartIcon="@Icons.Material.Filled.Close">
+                    Cancel
+               </MudButton>
+               <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" 
+                          StartIcon="@Icons.Material.Filled.Check" 
+                          OnClick="@(HandleExtendedInfoSave)"
+                          Disabled="@(!_isValid || isSaving)">
+                    @if (isSaving)
+                    {
+                         <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                         <span>@L[MaktabResources.Msg_Processing]</span>
+                    }
+                    else
+                    {
+                         <span>@L[MaktabResources.Save]</span>
+                    }
+               </MudButton>
+          </MudStack>
+     </MudForm>
+     </MudPaper>
+@* </EditForm> *@
+
+@code {
+     //[Parameter]
+     public AddExtendedUserInformationRequest ExtendedModel { get; set; } = new();
+
+     [Parameter] public EventCallback<ExtendedUserInformationResponse> OnSave { get; set; }
+     [Parameter] public EventCallback OnCancel { get; set; }
+     [Parameter, EditorRequired] public Guid FamilyId { get; set; }
+     [Parameter, EditorRequired] public Guid AddessId { get; set; }
+     [Parameter, EditorRequired] public Guid UserId { get; set; }
+
+     private bool isSaving = false;
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+     }
+
+     private async Task HandleExtendedInfoSave()
+     {
+          try
+          {
+               isSaving = true;
+               RequestRender();
+               await InvokeUserAction(RequestSaveExtendedInfo);
+          }
+          finally
+          {
+               isSaving = false;
+               RequestRender();
+          }
+     }
+
+     private async Task RequestSaveExtendedInfo()
+     {
+          if (FamilyId == Guid.Empty)
+          {
+               _errorMessage = @L[MaktabResources.Msg_Error_No_Family_Id];//"Please provide valid Family.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          if (AddessId == Guid.Empty)
+          {
+               _errorMessage = @L[MaktabResources.Msg_Error_No_Address_Id];//"Please provide valid address Id.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+
+          this.ExtendedModel.FamilyId = FamilyId;
+          this.ExtendedModel.AddressId = AddessId;
+          var result = await this.UserService.SaveExtendedInfoAsync(this.UserId, this.ExtendedModel);
+          if (result == null)
+          {
+               _errorMessage = @L[MaktabResources.Msg_Error_Add_ExtendedInfo_Save];//"Error saving extended info. please try in few moments.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+
+          await OnSave.InvokeAsync(result);
+     }
+
+     private async Task OnCancelClickedHandler()
+     {
+          await OnCancel.InvokeAsync();
+     }
+
+     
+
+     // private async Task OpenAddAddressDialog()
+     // {
+     //      var parameters = new DialogParameters { ["ConnectedId"] = ConnectedId };
+
+     //      var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+     //      var dialog = await DialogService.ShowAsync<AddAddressDialog>("Add Address", parameters, options);
+     //      var result = await dialog.Result;
+
+     //      if (!result.Canceled && result.Data is MaktabDataContracts.Requests.Addresses.AddAddress newAddress)
+     //      {
+     //           SelectedAddress = newAddress;
+     //      }
+     // }
+}

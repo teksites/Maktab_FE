@@ -1,0 +1,151 @@
+﻿@page "/courses/search"
+@using Maktab.Consumer.Helpers
+@using Maktab.Consumer.State
+@using MaktabDataContracts.Responses.Course
+@using MaktabDataContracts.Responses.Institute
+@using Maktab.Consumer.Extensions;
+
+@inherits LocalizeableBaseComponent<CourseSearch>
+
+@* @inject IAccountService AccountService *@
+@inject IUserService UserService
+@inject IInstitutionService InstitutionService
+@inject ICourseService CourseService
+@inject ISystemService SystemService
+
+
+@inject UserStateService StateService
+@* @inject IAlertService AlertService *@
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-8">
+     <MudText Typo="Typo.h4" GutterBottom="true">@L[MaktabResources.Available_Courses]</MudText>
+
+     @if (isInitialized && !isDataLoading)
+     {
+          <!-- Search & Category Filter -->
+          <MudGrid Class="mb-4">
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="_searchText"
+                                  Placeholder=@L[MaktabResources.Search_Courses]
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search"
+                                  Immediate="true"
+                                  OnBlur="@((_) => ApplyFilters())"
+                                  OnKeyUp="@((_) => ApplyFilters())" />
+               </MudItem>
+               <MudItem xs="12" sm="6" Class="d-flex justify-end">
+                    <MudChipSet T="InstituteResponse"
+                                @bind-SelectedValue="SelectedInstitute"
+                                SelectionMode="SelectionMode.ToggleSelection"
+                         CheckMark="true" 
+                    
+                    >
+                         @* <MudChip T="string" Selected="@(_selectedCategory == null)">All</MudChip> *@
+                         @foreach (var cat in _institutes)
+                         {
+                              <MudChip T="InstituteResponse" Value="@cat" >@cat.Name</MudChip>
+                         }
+                    </MudChipSet>
+               </MudItem>
+          </MudGrid>
+
+
+          <!-- Reusable CourseList -->
+          <CourseList Courses="@_filteredCourses" />
+     }
+     else
+     {
+          <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+     }
+</MudContainer>
+
+     @code {
+     private IEnumerable<InstituteResponse> _institutes => StateService.InstituteState.Institutes ?? Array.Empty<InstituteResponse>();
+
+     private IEnumerable<CourseResponseDetailed> _courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
+     private IEnumerable<CourseResponseDetailed> _filteredCourses = Array.Empty<CourseResponseDetailed>();
+     // private IEnumerable<InstituteReponse> _categories = new();
+     private InstituteResponse? _selectedInstitute;// = "All";
+     private string _searchText = string.Empty;
+     private bool isInitialized = false;
+     private bool isDataLoading = false;
+
+     protected InstituteResponse? SelectedInstitute
+     {
+          get { return _selectedInstitute; }
+          set
+          {
+               _selectedInstitute = value;
+               OnCategoryChanged(_selectedInstitute);
+          }
+     }
+
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.InstituteState.OnChange += HandleStateChange;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.InstituteState.OnChange -= HandleStateChange;
+     }
+
+
+     protected override async Task OnInitializedAsync()
+     {
+
+          await LoadData();
+
+          isInitialized = true;
+
+          RequestRender();
+          //_selectedCategory = "All";
+     }
+
+     private async Task LoadData(bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadActiveInstitutesData(InstitutionService, forceReload);
+          await StateService.LoadActiveCoursesData(CourseService, forceReload);
+
+          ApplyFilters();
+
+          isDataLoading = false;
+     }
+
+     private void OnCategoryChanged(InstituteResponse? category)
+     {
+          //_selectedCategory = chip.Text == "All" ? null : chip.Text;
+          ApplyFilters();
+     }
+
+     private void ApplyFilters()
+     {
+          var filtered = _courses;
+
+          if (_selectedInstitute != null)
+          {
+
+               filtered = filtered.Where(c => c.InstituteId == _selectedInstitute.InstituteId);
+          }
+
+          if (!string.IsNullOrWhiteSpace(_searchText))
+          {
+               filtered = filtered
+               .Where(
+                    c => c.Details.Contains(_searchText, StringComparison.OrdinalIgnoreCase) ||
+                         c.Description.Contains(_searchText, StringComparison.OrdinalIgnoreCase));
+
+          }
+
+          _filteredCourses = filtered;
+     }
+}

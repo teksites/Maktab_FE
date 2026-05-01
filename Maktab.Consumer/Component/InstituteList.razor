@@ -1,0 +1,29 @@
+﻿@using MaktabDataContracts.Responses.Institute
+@inherits LocalizeableBaseComponent<InstituteList>
+
+<MudGrid>
+     @if (Institutes?.Any() == true)
+     {
+          @foreach (var institute in Institutes)
+          {
+               <MudItem Class="d-flex flex-grow-1" xs="12" sm="6" md="4" lg="3">
+                    <InstituteCard HighlightButton="@HighlightButton" Institute="@institute" />
+               </MudItem>
+          }
+     }
+     else
+     {
+          <MudItem xs="12">
+               <MudPaper Class="pa-4 d-flex justify-center">
+                    <MudText Typo="Typo.body1" Color="Color.Secondary">
+                         @L[MaktabResources.Msg_Info_No_Institute_Found]
+                    </MudText>
+               </MudPaper>
+          </MudItem>
+     }
+</MudGrid>
+
+@code {
+     [Parameter] public IEnumerable<InstituteResponse> Institutes { get; set; } = Enumerable.Empty<InstituteResponse>();
+     [Parameter] public bool HighlightButton { get; set; } = false;
+}

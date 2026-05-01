@@ -1,0 +1,125 @@
+﻿@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Requests.OtherContacts
+@inherits BaseFormComponent<ContactForm>
+
+@inject IChildrenService ChildrenService
+
+
+<MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)">
+     <MudStack Spacing="2">
+          <MudTextField @bind-Value="_contact.FirstName" Label=@L[MaktabResources.First_Name] Required="true" />
+          <MudTextField @bind-Value="_contact.LastName" Label=@L[MaktabResources.Last_Name] Required="true" />
+          <MudTextField @bind-Value="_contact.Phone" Label=@L[MaktabResources.Phone] Required="true" />
+
+          <MudSelect T="ContactType" Label=@L[MaktabResources.Contact_Type] @bind-Value="_contact.ContactType" Required="true">
+               @foreach (var type in Enum.GetValues<ContactType>())
+               {
+                    <MudSelectItem Value="@type">@(GetContactTypeLabel(type))</MudSelectItem>
+               }
+          </MudSelect>
+
+          <MudSelect T="Relationship" Label=@L[MaktabResources.Relationship] @bind-Value="_contact.Relationship" Required="true">
+               @foreach (var rel in Enum.GetValues<Relationship>())
+               {
+                    <MudSelectItem Value="@rel">@(GetRelationshipLabel(rel))</MudSelectItem>
+               }
+          </MudSelect>
+
+          <MudStack Row="true" JustifyContent="flex-end" Class="mt-4">
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isSaving)" OnClick="@HandleSaving">
+                    Save
+               </MudButton>
+          </MudStack>
+     </MudStack>
+</MudForm>
+
+@code {
+     private MudForm _form = default!;
+     private AddOtherContact _contact = new();
+
+     [Parameter] public AddOtherContact? Contact { get; set; }
+     [Parameter]
+     public Guid FamilyId { get; set; } = Guid.Empty;
+
+     [Parameter] public EventCallback<AddOtherContact> OnSave { get; set; }
+     [Parameter] public EventCallback OnCancel { get; set; }
+
+     private bool isSaving = false;
+
+     protected override void OnParametersSet()
+     {
+          _contact = Contact != null
+              ? new AddOtherContact
+              {
+                   FamilyId = Contact.FamilyId,
+                   FirstName = Contact.FirstName,
+                   LastName = Contact.LastName,
+                   Phone = Contact.Phone,
+                   ContactType = Contact.ContactType,
+                   Relationship = Contact.Relationship
+              }
+              : new AddOtherContact { FamilyId = Guid.NewGuid() };
+     }
+
+
+     private async Task HandleSaving()
+     {
+          try
+          {
+               isSaving = true;
+               RequestRender();
+               await InvokeUserAction(RequestSaving);
+          }
+          finally
+          {
+               isSaving = false;
+               RequestRender();
+          }
+     }
+
+     // private async Task Save()
+     // {
+     //      await _form.Validate();
+     //      if (_form.IsValid)
+     //      {
+     //           await OnValidSubmit.InvokeAsync(_contact);
+     //      }
+     // }
+
+     private async Task RequestSaving()
+     {
+          if (FamilyId == Guid.Empty)
+          {
+               _errorMessage = L[MaktabResources.Msg_Warning_Provide_Family_Id];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          // // var isUserExists = await UserService.ValidateUsernameAsync(addUserInformation.UserName);
+          // // if (isUserExists)
+          // // {
+          // //      _errorMessage = "User is already registered with system. Please contact support";
+          // //      Snackbar.Add(_errorMessage, Severity.Error);
+          // //      return;
+          // // }
+
+          // // addUserInformation.FamilyId = FamilyId;
+          // // addUserInformation.Password = "Test1234!";
+
+          // // var result = await UserService.RegisterUserAsync(addUserInformation);
+          // // if (result == null)
+          // // {
+          // //      _errorMessage = "User can not be registered with system. Please try again in few minutes";
+          // //      Snackbar.Add(_errorMessage, Severity.Error);
+          // //      return;
+          // // }
+
+          Snackbar.Add(L[MaktabResources.Msg_Sucess_User_Linked], Severity.Success);
+          // await OnSave.InvokeAsync(result);
+     }
+
+     private async Task OnCancelClickedHandler()
+     {
+          await OnCancel.InvokeAsync();
+     }
+}

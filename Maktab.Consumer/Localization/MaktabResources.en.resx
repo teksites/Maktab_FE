@@ -1,0 +1,1193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>ICC Maktab</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Signup" xml:space="preserve">
+    <value>Signup</value>
+  </data>
+  <data name="MainPage_Title" xml:space="preserve">
+    <value>Welcome to ICC Maktab</value>
+  </data>
+  <data name="MainPage_Description" xml:space="preserve">
+    <value>Explore our wide range of courses and programs</value>
+  </data>
+  <data name="ViewAllCourses" xml:space="preserve">
+    <value>View All Courses</value>
+  </data>
+  <data name="Msg_Initializing" xml:space="preserve">
+    <value>Initializing...</value>
+  </data>
+  <data name="FeaturedCourses" xml:space="preserve">
+    <value>Featured Courses</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Email_Required" xml:space="preserve">
+    <value>Email is required</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Password_Required" xml:space="preserve">
+    <value>Password is required</value>
+  </data>
+  <data name="Email_Invalid" xml:space="preserve">
+    <value>The email address is invalid</value>
+  </data>
+  <data name="Password_Forgot" xml:space="preserve">
+    <value>Forgot Password</value>
+  </data>
+  <data name="Msg_Info_Authenticating" xml:space="preserve">
+    <value>Authenticating...</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Processing...</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Create_New_Account" xml:space="preserve">
+    <value>Create new account</value>
+  </data>
+  <data name="Provide_Valid_Credentials" xml:space="preserve">
+    <value>Please provide valid credentials</value>
+  </data>
+  <data name="Msg_Info_No_Course_Found" xml:space="preserve">
+    <value>No Course Found</value>
+  </data>
+  <data name="View_Details" xml:space="preserve">
+    <value>View Details</value>
+  </data>
+  <data name="Add_Address" xml:space="preserve">
+    <value>Add Address</value>
+  </data>
+  <data name="Address_Line_1" xml:space="preserve">
+    <value>Address Line 1</value>
+  </data>
+  <data name="Address_Line_2" xml:space="preserve">
+    <value>Address Line 2</value>
+  </data>
+  <data name="Address_Unit_Number" xml:space="preserve">
+    <value>Unit Number</value>
+  </data>
+  <data name="Address_Apartment_Number" xml:space="preserve">
+    <value>Apartment Number</value>
+  </data>
+  <data name="Postal_Code" xml:space="preserve">
+    <value>Postal Code</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="Province" xml:space="preserve">
+    <value>Province</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="Home_Address" xml:space="preserve">
+    <value>Home Address</value>
+  </data>
+  <data name="Msg_Processing" xml:space="preserve">
+    <value>Processing...</value>
+  </data>
+  <data name="Msg_Error_Address_No_AddressType" xml:space="preserve">
+    <value>Please provide valid address type</value>
+  </data>
+  <data name="Msg_Error_Address_No_Assignee" xml:space="preserve">
+    <value>Please provide valid address assignee</value>
+  </data>
+  <data name="Msg_Error_Address_Save" xml:space="preserve">
+    <value>Error saving address please try in few moments</value>
+  </data>
+  <data name="First_Name" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="Last_Name" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="Date_Of_Birth" xml:space="preserve">
+    <value>Date of Birth</value>
+  </data>
+  <data name="Gender" xml:space="preserve">
+    <value>Gender</value>
+  </data>
+  <data name="RAMQ_Number" xml:space="preserve">
+    <value>RAMQ Number</value>
+  </data>
+  <data name="RAMQ_Expiry" xml:space="preserve">
+    <value>RAMQ Expiry</value>
+  </data>
+  <data name="Allergies" xml:space="preserve">
+    <value>Allergies</value>
+  </data>
+  <data name="Other_Health _Conditions" xml:space="preserve">
+    <value>Other Health Conditions</value>
+  </data>
+  <data name="Academic_Group" xml:space="preserve">
+    <value>Academic Group</value>
+  </data>
+  <data name="Msg_Error_No_Family_Id" xml:space="preserve">
+    <value>Please provide valid family id</value>
+  </data>
+  <data name="Msg_Error_Add_Child_RAMQ_Already_Added" xml:space="preserve">
+    <value>RAMQ Number already exists</value>
+  </data>
+  <data name="Msg_Error_Add_Child_Save" xml:space="preserve">
+    <value>Child can not be registered with system. Please try again in few minutes</value>
+  </data>
+  <data name="Msg_Success_Child_Added" xml:space="preserve">
+    <value>Child has been added</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="Contact_Type" xml:space="preserve">
+    <value>Contact type</value>
+  </data>
+  <data name="Relationship" xml:space="preserve">
+    <value>Relationship</value>
+  </data>
+  <data name="Msg_Error_Add_Contact_Save" xml:space="preserve">
+    <value>Contact can not be added with system. Please try again in few minutes</value>
+  </data>
+  <data name="Msg_Success_Contact_Added" xml:space="preserve">
+    <value>Contact has been added</value>
+  </data>
+  <data name="Add_SIN" xml:space="preserve">
+    <value>Add SIN</value>
+  </data>
+  <data name="SIN_Number" xml:space="preserve">
+    <value>SIN number</value>
+  </data>
+  <data name="Active_Tax_Payer" xml:space="preserve">
+    <value>Active tax payer</value>
+  </data>
+  <data name="Msg_Error_Add_ExtendedInfo_Save" xml:space="preserve">
+    <value>Error saving extended info. please try in few moments</value>
+  </data>
+  <data name="Msg_Error_No_Address_Id" xml:space="preserve">
+    <value>Please provide valid address Id</value>
+  </data>
+  <data name="Addresses" xml:space="preserve">
+    <value>Addresses</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="Msg_Question_Remove_Address" xml:space="preserve">
+    <value>Would you like to remove address?</value>
+  </data>
+  <data name="Msg_Success_Address_Removed" xml:space="preserve">
+    <value>Address Remove successfully!</value>
+  </data>
+  <data name="Msg_Error_Address_Removed" xml:space="preserve">
+    <value>Address can not be removed at the moment, please try in few minutes</value>
+  </data>
+  <data name="Relashion_With_Children" xml:space="preserve">
+    <value>Relationship with children</value>
+  </data>
+  <data name="Msg_Error_Email_Address_Invalid" xml:space="preserve">
+    <value>Email address is invalid</value>
+  </data>
+  <data name="Msg_Error_Phone_Number_Invalid" xml:space="preserve">
+    <value>Phone number is invalid</value>
+  </data>
+  <data name="Msg_Info_Value_Is_Required" xml:space="preserve">
+    <value>{0} is required</value>
+  </data>
+  <data name="Msg_Error_Email_Already_Registered" xml:space="preserve">
+    <value>Email provided is already registered with system. Please contact support</value>
+  </data>
+  <data name="Msg_Error_Spouse_Save" xml:space="preserve">
+    <value>User can not be registered with system. Please try again in few minutes</value>
+  </data>
+  <data name="Msg_Success_Spouse_Save" xml:space="preserve">
+    <value>User has been linked</value>
+  </data>
+  <data name="Tax_Info" xml:space="preserve">
+    <value>Tax info</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+  <data name="Welcome_User" xml:space="preserve">
+    <value>Welcome {0}</value>
+  </data>
+  <data name="Msg_Loading_Course_Details" xml:space="preserve">
+    <value>Loading course details...</value>
+  </data>
+  <data name="Date_Start" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="Date_End" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="Registration_Open" xml:space="preserve">
+    <value>Registration open</value>
+  </data>
+  <data name="Enroll_Now" xml:space="preserve">
+    <value>Enroll now</value>
+  </data>
+  <data name="Policy" xml:space="preserve">
+    <value>Policy</value>
+  </data>
+  <data name="Search_Courses" xml:space="preserve">
+    <value>Search courses</value>
+  </data>
+  <data name="Enrollments" xml:space="preserve">
+    <value>Enrollments</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Msg_Question_Remove_Enrollment" xml:space="preserve">
+    <value>Would you like to remove enrollment?</value>
+  </data>
+  <data name="Msg_Error_Remove_Enrollment" xml:space="preserve">
+    <value>Enrollment can not be removed at the moment, please try in few minutes</value>
+  </data>
+  <data name="Msg_Success_Remove_Enrollment" xml:space="preserve">
+    <value>Enrollment Remove successfully</value>
+  </data>
+  <data name="Course" xml:space="preserve">
+    <value>Course</value>
+  </data>
+  <data name="Child" xml:space="preserve">
+    <value>Child</value>
+  </data>
+  <data name="Fee" xml:space="preserve">
+    <value>Fee</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="Daycare" xml:space="preserve">
+    <value>Daycare</value>
+  </data>
+  <data name="Enrollment" xml:space="preserve">
+    <value>Enrollment</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Available_Courses" xml:space="preserve">
+    <value>Available courses</value>
+  </data>
+  <data name="Current_Password" xml:space="preserve">
+    <value>Current password</value>
+  </data>
+  <data name="Add_Child" xml:space="preserve">
+    <value>Add Child</value>
+  </data>
+  <data name="Children" xml:space="preserve">
+    <value>Children</value>
+  </data>
+  <data name="Change_Password" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Old_Password" xml:space="preserve">
+    <value>Old Password</value>
+  </data>
+  <data name="Old_Password_HelperText" xml:space="preserve">
+    <value>Provide old password</value>
+  </data>
+  <data name="Msg_Validation_Old_Password" xml:space="preserve">
+    <value>Old Password is required!</value>
+  </data>
+  <data name="New_Password" xml:space="preserve">
+    <value>New Password</value>
+  </data>
+  <data name="New_Password_HelperText" xml:space="preserve">
+    <value>Choose a strong password</value>
+  </data>
+  <data name="Msg_Validation_New_Password" xml:space="preserve">
+    <value>Password is required!</value>
+  </data>
+  <data name="Repeat_Password_HelperText" xml:space="preserve">
+    <value>Repeat the password</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Amount_Paid" xml:space="preserve">
+    <value>Amount Paid</value>
+  </data>
+  <data name="Amount_Due" xml:space="preserve">
+    <value>Amount Due</value>
+  </data>
+  <data name="Msg_Info_Add_Children_To_Enroll" xml:space="preserve">
+    <value>Please Add child to start enrollments</value>
+  </data>
+  <data name="Enrollment_Details" xml:space="preserve">
+    <value>Enrollment Details</value>
+  </data>
+  <data name="Enroll_Child" xml:space="preserve">
+    <value>Enroll Child</value>
+  </data>
+  <data name="Add_Home_Address" xml:space="preserve">
+    <value>Add Home Address</value>
+  </data>
+  <data name="Add_Spouse" xml:space="preserve">
+    <value>Add Spouse</value>
+  </data>
+  <data name="Add_RL24" xml:space="preserve">
+    <value>Add RL 24</value>
+  </data>
+  <data name="Step_Number" xml:space="preserve">
+    <value>Step {0}</value>
+  </data>
+  <data name="Add_Emergency_Contact" xml:space="preserve">
+    <value>Add Emergency Contact</value>
+  </data>
+  <data name="Parent_Registration_Success" xml:space="preserve">
+    <value>Registration Successful</value>
+  </data>
+  <data name="Msg_Success_Parent_Registration" xml:space="preserve">
+    <value>Thank you {0} for registration with {1}.</value>
+  </data>
+  <data name="Start_Exploring" xml:space="preserve">
+    <value>Start Exploring</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Msg_Error_Add_Home_Address" xml:space="preserve">
+    <value>Please add home address</value>
+  </data>
+  <data name="Msg_Error_Complete_Step_Number" xml:space="preserve">
+    <value>Please complete step {0}</value>
+  </data>
+  <data name="Active_TaxCredit_Recipient" xml:space="preserve">
+    <value>Is active tax credit recipient</value>
+  </data>
+  <data name="Add_Contact" xml:space="preserve">
+    <value>Add Contact</value>
+  </data>
+  <data name="Add_Extended_Info" xml:space="preserve">
+    <value>Add Extended Info</value>
+  </data>
+  <data name="Edit_Profile" xml:space="preserve">
+    <value>Edit Profile</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Msg_Question_Remove_Variable" xml:space="preserve">
+    <value>Would you like to remove {0} ?</value>
+  </data>
+  <data name="Msg_Success_Child_Removed" xml:space="preserve">
+    <value>Child has been Remove successfully!</value>
+  </data>
+  <data name="Msg_Error_Child_Not_Removed" xml:space="preserve">
+    <value>Child can not be removed. please try in few moments</value>
+  </data>
+  <data name="Msg_Warning_Provide_Family_Id" xml:space="preserve">
+    <value>Please provide valid family identifier</value>
+  </data>
+  <data name="Msg_Sucess_User_Linked" xml:space="preserve">
+    <value>User has been linked</value>
+  </data>
+  <data name="Contacts" xml:space="preserve">
+    <value>Contacts</value>
+  </data>
+  <data name="Course_Outline" xml:space="preserve">
+    <value>Course Outline</value>
+  </data>
+  <data name="Msg_Info_No_Course_Modules" xml:space="preserve">
+    <value>No modules available</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="Progress_Variable" xml:space="preserve">
+    <value>Progress: {0}%</value>
+  </data>
+  <data name="Course_Upcoming_Starts_Date_Variable" xml:space="preserve">
+    <value>Upcoming — Starts {0}</value>
+  </data>
+  <data name="Course_Ends_Date_Variable" xml:space="preserve">
+    <value>Ends on {0}</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="End" xml:space="preserve">
+    <value>End</value>
+  </data>
+  <data name="Enrolled_Courses" xml:space="preserve">
+    <value>Enrolled Courses</value>
+  </data>
+  <data name="Address_Details" xml:space="preserve">
+    <value>Address Details</value>
+  </data>
+  <data name="Address_Unit_No" xml:space="preserve">
+    <value>Unit No</value>
+  </data>
+  <data name="Address_Apartment_No" xml:space="preserve">
+    <value>Apartment No</value>
+  </data>
+  <data name="Address_Type" xml:space="preserve">
+    <value>Address Type</value>
+  </data>
+  <data name="Msg_Info_No_Address_Selected" xml:space="preserve">
+    <value>No address selected</value>
+  </data>
+  <data name="Msg_Error_Contact_Not_Added" xml:space="preserve">
+    <value>Contact can not be added with system. Please try in few moments</value>
+  </data>
+  <data name="Msg_Success_Address_Added" xml:space="preserve">
+    <value>Address has been added successfully</value>
+  </data>
+  <data name="Msg_Success_Child_Enrolled_Course_Variable" xml:space="preserve">
+    <value>{0} has been enrolled in {1}</value>
+  </data>
+  <data name="Enrollment_Successful" xml:space="preserve">
+    <value>Enrollment Successful</value>
+  </data>
+  <data name="Enroll_Another" xml:space="preserve">
+    <value>Enroll Another</value>
+  </data>
+  <data name="Enrollment_Failed" xml:space="preserve">
+    <value>Enrollment Failed</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>Review</value>
+  </data>
+  <data name="Select_Child" xml:space="preserve">
+    <value>Select Child</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Select_Course" xml:space="preserve">
+    <value>Select Course</value>
+  </data>
+  <data name="Select_Enrollment_Group" xml:space="preserve">
+    <value>Select Enrollment Group</value>
+  </data>
+  <data name="Msg_Info_No_Course_Groups_Found" xml:space="preserve">
+    <value>No groups found for this course</value>
+  </data>
+  <data name="Groups" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="Review_Enrollment" xml:space="preserve">
+    <value>Review Enrollment</value>
+  </data>
+  <data name="Use_Daycare" xml:space="preserve">
+    <value>Use Daycare</value>
+  </data>
+  <data name="Confirm_Enrollment" xml:space="preserve">
+    <value>Confirm Enrollment</value>
+  </data>
+  <data name="Msg_Error_Not_All_Child_Valid_Group" xml:space="preserve">
+    <value>Not all child have valid group assigned</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Msg_Success_Add_Enrollment" xml:space="preserve">
+    <value>Enrollments have been added successfully</value>
+  </data>
+  <data name="Msg_Error_Enrollment_Not_Added" xml:space="preserve">
+    <value>Enrollments can not be added. Please try in a moment or contact support</value>
+  </data>
+  <data name="Daycare_Fee" xml:space="preserve">
+    <value>Daycare Fee</value>
+  </data>
+  <data name="Msg_Info_No_Enrollment" xml:space="preserve">
+    <value>No Enrollments</value>
+  </data>
+  <data name="Msg_Info_Choose_Strong_Password" xml:space="preserve">
+    <value>Choose a strong password</value>
+  </data>
+  <data name="Msg_Info_Provide_Old_Password" xml:space="preserve">
+    <value>Provide old password</value>
+  </data>
+  <data name="Msg_Info_Repeat_Password" xml:space="preserve">
+    <value>Repeat the password</value>
+  </data>
+  <data name="Msg_Error_Request_Not_Processed" xml:space="preserve">
+    <value>Request was not processed. Please retry in few moments</value>
+  </data>
+  <data name="Msg_Error_Use_Diffent_New_Password" xml:space="preserve">
+    <value>Please use different new password</value>
+  </data>
+  <data name="Msg_Error_New_Password_Not_Match" xml:space="preserve">
+    <value>Passwords don't match</value>
+  </data>
+  <data name="Forgot_Password" xml:space="preserve">
+    <value>Forgot Password</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="Msg_Error_Email_Not_Valid" xml:space="preserve">
+    <value>Please provide valid email</value>
+  </data>
+  <data name="Validate_Code" xml:space="preserve">
+    <value>Validate Code</value>
+  </data>
+  <data name="Validate" xml:space="preserve">
+    <value>Validate</value>
+  </data>
+  <data name="Msg_Info_Enter_Code" xml:space="preserve">
+    <value>Please enter code</value>
+  </data>
+  <data name="Msg_Info_Enter_Code_Email" xml:space="preserve">
+    <value>Please enter code sent in your email</value>
+  </data>
+  <data name="Sending_Code" xml:space="preserve">
+    <value>Sending code</value>
+  </data>
+  <data name="Send_Code_Again" xml:space="preserve">
+    <value>Send code again</value>
+  </data>
+  <data name="Msg_Error_Invalid_Code" xml:space="preserve">
+    <value>Code can not be validated</value>
+  </data>
+  <data name="Academic_Levels" xml:space="preserve">
+    <value>Academic Levels</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="Registration_Fee" xml:space="preserve">
+    <value>Registration Fee</value>
+  </data>
+  <data name="Msg_Info_Select_One_More_Enrollment_Group" xml:space="preserve">
+    <value>Please select one or more enrollment groups</value>
+  </data>
+  <data name="Total_Amount" xml:space="preserve">
+    <value>Total  Amount</value>
+  </data>
+  <data name="Payment_Code" xml:space="preserve">
+    <value>Payment Code</value>
+  </data>
+  <data name="Discount" xml:space="preserve">
+    <value>Discount</value>
+  </data>
+  <data name="Daycare_Discount" xml:space="preserve">
+    <value>Daycare Discount</value>
+  </data>
+  <data name="Pay_Now" xml:space="preserve">
+    <value>Pay Now</value>
+  </data>
+  <data name="Payment_Details" xml:space="preserve">
+    <value>Payment Details</value>
+  </data>
+  <data name="Msg_Info_Manage_Course_Transaction_Payments" xml:space="preserve">
+    <value>Manage and track your course payment transactions</value>
+  </data>
+  <data name="Msg_Info_Amount_Paid" xml:space="preserve">
+    <value>Total amount paid so far</value>
+  </data>
+  <data name="Msg_Info_Amount_Due" xml:space="preserve">
+    <value>Remaining amount to pay</value>
+  </data>
+  <data name="Msg_Info_Payment_Code" xml:space="preserve">
+    <value>Unique payment code for this transaction</value>
+  </data>
+  <data name="Msg_Info_Total_Amount" xml:space="preserve">
+    <value>Total amount across all courses</value>
+  </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Paid</value>
+  </data>
+  <data name="Partially_Paid" xml:space="preserve">
+    <value>Partially Paid</value>
+  </data>
+  <data name="Unpaid" xml:space="preserve">
+    <value>Unpaid</value>
+  </data>
+  <data name="Back_To_Dashboard" xml:space="preserve">
+    <value>Back to Dashboard</value>
+  </data>
+  <data name="Msg_Error_No_Payment_Tranaction" xml:space="preserve">
+    <value>You don't have any payment transactions yet. Once you enroll in a course, your transactions will appear here</value>
+  </data>
+  <data name="No_Transaction" xml:space="preserve">
+    <value>No Transactions</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Payment_Transaction" xml:space="preserve">
+    <value>Your Payment Transactions</value>
+  </data>
+  <data name="Fee_Payment" xml:space="preserve">
+    <value>Fee Payment</value>
+  </data>
+  <data name="Msg_Info_Zeffy_Payment_Mandatory_Fields" xml:space="preserve">
+    <value>Please use following payment code and email in mandatory fields on Zeffy payment</value>
+  </data>
+  <data name="Msg_Info_Zeffy_Payment_donation_section" xml:space="preserve">
+    <value>On the next page, please select "Other" in the Summary portion dropdown menu and set Contribution to $0</value>
+  </data>
+  <data name="Pay" xml:space="preserve">
+    <value>Pay</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="Payment" xml:space="preserve">
+    <value>Payment</value>
+  </data>
+  <data name="Institute" xml:space="preserve">
+    <value>Institute</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="Msg_Question_Remove_Contact" xml:space="preserve">
+    <value>Would you like to remove contact?</value>
+  </data>
+  <data name="Msg_Error_Contact_Not_Removed" xml:space="preserve">
+    <value>Contact can not be removed. please try in few moments</value>
+  </data>
+  <data name="Msg_Error_Contact_Invalid_Details" xml:space="preserve">
+    <value>Please provide valid contact info</value>
+  </data>
+  <data name="Edit_Contact" xml:space="preserve">
+    <value>Edit Contact</value>
+  </data>
+  <data name="Edit_Extended_Info" xml:space="preserve">
+    <value>Edit Extended info</value>
+  </data>
+  <data name="Extended_Info" xml:space="preserve">
+    <value>Extended Info</value>
+  </data>
+  <data name="Edit_Address" xml:space="preserve">
+    <value>Edit Address</value>
+  </data>
+  <data name="Total_Course_Fee" xml:space="preserve">
+    <value>Total course fee</value>
+  </data>
+  <data name="Course_Fee" xml:space="preserve">
+    <value>Course fee</value>
+  </data>
+  <data name="Tooltip_Course_Discount" xml:space="preserve">
+    <value>Course fee discount applied</value>
+  </data>
+  <data name="Msg_Error_Cannot_Remove_Home_Address" xml:space="preserve">
+    <value>Address can not be removed, System requires default address for communication.</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="Msg_Info_No_Address_Available" xml:space="preserve">
+    <value>No Address has been added</value>
+  </data>
+  <data name="Msg_Info_Add_Address_Guidance" xml:space="preserve">
+    <value>Please use add button to add address</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Msg_Success_Contact_Removed" xml:space="preserve">
+    <value>Contact has been removed</value>
+  </data>
+  <data name="Msg_Info_No_Contact_Available" xml:space="preserve">
+    <value>No Contact has been added</value>
+  </data>
+  <data name="Msg_Info_Add_Contact_Guidance" xml:space="preserve">
+    <value>Please use add button to add contacts</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Registration_Progress" xml:space="preserve">
+    <value>Registration Progress</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Required</value>
+  </data>
+  <data name="Optional" xml:space="preserve">
+    <value>Optional</value>
+  </data>
+  <data name="Completion" xml:space="preserve">
+    <value>Completion</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="Tip" xml:space="preserve">
+    <value>Tip</value>
+  </data>
+  <data name="Complete_Required_Steps_To_Finish" xml:space="preserve">
+    <value>Complete all required steps to finish registration</value>
+  </data>
+  <data name="Step_Instruction_Family_Address" xml:space="preserve">
+    <value>Please enter your home address so the school can contact you if needed.</value>
+  </data>
+  <data name="Step_Instruction_Spouse" xml:space="preserve">
+    <value>Add information about your spouse or co-guardian. This step is optional but recommended.</value>
+  </data>
+  <data name="Step_Instruction_Extended_Info" xml:space="preserve">
+    <value>Add additional family information for school records. This step is optional.</value>
+  </data>
+  <data name="Step_Instruction_Emergency_Contact" xml:space="preserve">
+    <value>Add an emergency contact person. The school will use this contact if we cannot reach you. This step is optional.</value>
+  </data>
+  <data name="Confirm_Skip" xml:space="preserve">
+    <value>Skip This Step?</value>
+  </data>
+  <data name="Skip_Anyway" xml:space="preserve">
+    <value>Skip Anyway</value>
+  </data>
+  <data name="Go_Back" xml:space="preserve">
+    <value>Go Back</value>
+  </data>
+  <data name="Spouse_Info_Can_Be_Added_Later" xml:space="preserve">
+    <value>Spouse information can be added later from your profile.</value>
+  </data>
+  <data name="Extended_Info_Can_Be_Added_Later" xml:space="preserve">
+    <value>Extended family information can be added later from your profile.</value>
+  </data>
+  <data name="Information_Added" xml:space="preserve">
+    <value>Information Added</value>
+  </data>
+  <data name="Information_Can_Be_Edited_Anytime" xml:space="preserve">
+    <value>You can edit this information anytime from your profile.</value>
+  </data>
+  <data name="Msg_Error_User_Resgister_No_RelationShip_Defined" xml:space="preserve">
+    <value>Please provide a valid relationship with child</value>
+  </data>
+  <data name="Msg_Error_User_Resgister_Already_Registered" xml:space="preserve">
+    <value>User is already registered with system; Please login to continue</value>
+  </data>
+  <data name="Msg_Success_User_Added_To_System" xml:space="preserve">
+    <value>User has been added to system</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Msg_Error_Password_Not_Match" xml:space="preserve">
+    <value>Passwords don't match</value>
+  </data>
+  <data name="Agree_Terms_Conditions" xml:space="preserve">
+    <value>I agree to terms and conditions</value>
+  </data>
+  <data name="Read_Terms_Conditions" xml:space="preserve">
+    <value>Read terms and conditions</value>
+  </data>
+  <data name="Msg_Info_Password_Policy" xml:space="preserve">
+    <value>Minimum 8 characters, 1 uppercase, 1 number</value>
+  </data>
+  <data name="Accept" xml:space="preserve">
+    <value>Accept</value>
+  </data>
+  <data name="Terms_And_Conditions" xml:space="preserve">
+    <value>Terms and Conditions</value>
+  </data>
+  <data name="Terms_And_Conditions_Content" xml:space="preserve">
+    <value>&lt;strong&gt;1. Acceptance of Terms&lt;/strong&gt;
+&lt;p&gt;By accessing and using this platform, you accept and agree to be bound by the terms and provision of this agreement.&lt;/p&gt;
+
+&lt;strong&gt;2. Use License&lt;/strong&gt;
+&lt;p&gt;Permission is granted to temporarily download one copy of the materials (information or software) on this platform for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
+&lt;ul&gt;
+&lt;li&gt;Modify or copy the materials&lt;/li&gt;
+&lt;li&gt;Use the materials for any commercial purpose or for any public display&lt;/li&gt;
+&lt;li&gt;Attempt to decompile or reverse engineer any software contained on the platform&lt;/li&gt;
+&lt;li&gt;Remove any copyright or other proprietary notations from the materials&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/p&gt;
+
+&lt;strong&gt;3. Disclaimer&lt;/strong&gt;
+&lt;p&gt;The materials on this platform are provided on an "as-is" basis. We make no warranties, expressed or implied, and hereby disclaim and negate all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.&lt;/p&gt;
+
+&lt;strong&gt;4. Limitations&lt;/strong&gt;
+&lt;p&gt;In no event shall our platform or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on the platform.&lt;/p&gt;
+
+&lt;strong&gt;5. Accuracy of Materials&lt;/strong&gt;
+&lt;p&gt;The materials appearing on the platform could include technical, typographical, or photographic errors. We do not warrant that any of the materials on the platform are accurate, complete, or current. We may make changes to the materials contained on the platform at any time without notice.&lt;/p&gt;
+
+&lt;strong&gt;6. Links&lt;/strong&gt;
+&lt;p&gt;We have not reviewed all of the sites linked to our website and are not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by us of the site. Use of any such linked website is at the user's own risk.&lt;/p&gt;
+
+&lt;strong&gt;7. Modifications&lt;/strong&gt;
+&lt;p&gt;We may revise these terms of service for the platform at any time without notice. By using this platform, you are agreeing to be bound by the then current version of these terms of service.&lt;/p&gt;
+
+&lt;strong&gt;8. Governing Law&lt;/strong&gt;
+&lt;p&gt;These terms and conditions are governed by and construed in accordance with the laws of the jurisdiction in which the platform operates, and you irrevocably submit to the exclusive jurisdiction of the courts in that location.&lt;/p&gt;</value>
+  </data>
+  <data name="EnrollmentStatus_Awaiting" xml:space="preserve">
+    <value>In waiting</value>
+  </data>
+  <data name="EnrollmentStatus_Registered" xml:space="preserve">
+    <value>Registered</value>
+  </data>
+  <data name="EnrollmentStatus_Refunded" xml:space="preserve">
+    <value>Refunded</value>
+  </data>
+  <data name="EnrollmentStatus_Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="EnrollmentStatus_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Type_Of_Allergy" xml:space="preserve">
+    <value>Type of allergy</value>
+  </data>
+  <data name="Skip" xml:space="preserve">
+    <value>Skip</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>Female</value>
+  </data>
+  <data name="Male" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="Emergency" xml:space="preserve">
+    <value>Emergency</value>
+  </data>
+  <data name="Pickup" xml:space="preserve">
+    <value>Pickup</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Msg_Info_No_Institute_Found" xml:space="preserve">
+    <value>No institute information was found</value>
+  </data>
+  <data name="Msg_Info_Loading_Institute_Details" xml:space="preserve">
+    <value>Loading institute details</value>
+  </data>
+  <data name="FeaturedInstitutes" xml:space="preserve">
+    <value>Featured Institutes</value>
+  </data>
+  <data name="Select_Institute" xml:space="preserve">
+    <value>Select Institute</value>
+  </data>
+  <data name="Address_Type_Billing" xml:space="preserve">
+    <value>Billing</value>
+  </data>
+  <data name="Address_Type_Institute" xml:space="preserve">
+    <value>Institute</value>
+  </data>
+  <data name="Address_Type_Parent" xml:space="preserve">
+    <value>Parent</value>
+  </data>
+  <data name="Address_Type_OtherContact" xml:space="preserve">
+    <value>Other contract</value>
+  </data>
+  <data name="Address_Type_Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Address_Type_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Contact_Type_Pickup" xml:space="preserve">
+    <value>Pickup</value>
+  </data>
+  <data name="Contact_Type_Emergency" xml:space="preserve">
+    <value>Emergency</value>
+  </data>
+  <data name="Contact_Type_Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="Contact_Type_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Relationship_Type_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Relationship_Type_Father" xml:space="preserve">
+    <value>Father</value>
+  </data>
+  <data name="Relationship_Type_Mother" xml:space="preserve">
+    <value>Mother</value>
+  </data>
+  <data name="Relationship_Type_Grandparent" xml:space="preserve">
+    <value>Grand parent</value>
+  </data>
+  <data name="Relationship_Type_Relative" xml:space="preserve">
+    <value>Relative</value>
+  </data>
+  <data name="Relationship_Type_Guardian" xml:space="preserve">
+    <value>Guardian</value>
+  </data>
+  <data name="Relationship_Type_Teacher" xml:space="preserve">
+    <value>Teacher</value>
+  </data>
+  <data name="Relationship_Type_FamilyFriend" xml:space="preserve">
+    <value>Family friend</value>
+  </data>
+  <data name="Relationship_Type_Uncle" xml:space="preserve">
+    <value>Uncle</value>
+  </data>
+  <data name="Relationship_Type_Aunt" xml:space="preserve">
+    <value>Aunt</value>
+  </data>
+  <data name="Relationship_Type_Cousin" xml:space="preserve">
+    <value>Cousin</value>
+  </data>
+  <data name="Gender_Type_Male" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="Gender_Type_Female" xml:space="preserve">
+    <value>Female</value>
+  </data>
+  <data name="Gender_Type_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Msg_Info_Has_Awaiting_Enrollment" xml:space="preserve">
+    <value>Enrollments marked “In Waiting” will be confirmed only if spots open. Fees currently include these. To exclude them, delete the waiting entries and fees will update.</value>
+  </data>
+  <data name="EnrollmentStatus_Enrolled" xml:space="preserve">
+    <value>Enrolled</value>
+  </data>
+  <data name="Msg_Error_Can_Only_Remove_Awaiting_Enrollment" xml:space="preserve">
+    <value>Please contact school administration to process these enrollments</value>
+  </data>
+  <data name="Text_Allergies_Placeholder" xml:space="preserve">
+    <value>Type of allergy,  precautions to take, needs an EpiPen, other</value>
+  </data>
+  <data name="CourseGroup_Registration_Open" xml:space="preserve">
+    <value>Registration open</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="CourseGroup_Registration_Awaiting" xml:space="preserve">
+    <value>In waiting</value>
+  </data>
+  <data name="Msg_Info_CourseGroup_Registration_Full" xml:space="preserve">
+    <value>One of the group is full. If you proceed, children will be placed on the waiting list and fees will include them</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Minimum_Amount_Due" xml:space="preserve">
+    <value>Minimum Amount Due</value>
+  </data>
+  <data name="Due_Date" xml:space="preserve">
+    <value>Due Date</value>
+  </data>
+  <data name="Payment_Schedule" xml:space="preserve">
+    <value>Payment Schedule</value>
+  </data>
+  <data name="Minimum_Amount_Due_To_Hold_Registration" xml:space="preserve">
+    <value>Minimum amount due to keep the registration</value>
+  </data>
+  <data name="Msg_Wait_For_Seconds" xml:space="preserve">
+    <value>Wait {0} seconds...</value>
+  </data>
+  <data name="Msg_Warning_Account_Locked_Seconds" xml:space="preserve">
+    <value>Account locked. Please wait {0} seconds</value>
+  </data>
+  <data name="Msg_Warning_Failed_Attempt_Account_Locked_Seconds" xml:space="preserve">
+    <value>Too many failed attempts. Account locked for {0} seconds</value>
+  </data>
+  <data name="Msg_Warning_Failed_Login_Attempt_Counter" xml:space="preserve">
+    <value>Invalid credentials. {0} attempt(s) remaining before lockout</value>
+  </data>
+  <data name="Msg_Warning_Registration_Attempt_Wait_Seconds" xml:space="preserve">
+    <value>Too many registration attempts. Please wait {0} seconds</value>
+  </data>
+  <data name="Msg_Warning_Failed_Registration_Attempt_Wait_Seconds" xml:space="preserve">
+    <value>Too many failed registration attempts. Please wait {0} seconds</value>
+  </data>
+  <data name="Academic_Group_In_School" xml:space="preserve">
+    <value>Academic Group In School</value>
+  </data>
+  <data name="Has_Allergies" xml:space="preserve">
+    <value>Has Allergies</value>
+  </data>
+  <data name="Enroll" xml:space="preserve">
+    <value>Enroll</value>
+  </data>
+  <data name="Registration_Closed" xml:space="preserve">
+    <value>Registration Closed</value>
+  </data>
+  <data name="Msg_Donation_Amount_Equals_Course_Amount" xml:space="preserve">
+    <value>Please note that "donation amount" is the payment amount required</value>
+  </data>
+  <data name="Child_Consent" xml:space="preserve">
+    <value>Child consent</value>
+  </data>
+  <data name="Consent" xml:space="preserve">
+    <value>Consent</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="Acknowledgement" xml:space="preserve">
+    <value>Acknowledgement</value>
+  </data>
+  <data name="Msg_Acknowledge_Child_Consent_Completion" xml:space="preserve">
+    <value>I acknowledge that I have completed the various consent questions for my child</value>
+  </data>
+  <data name="Msg_Acknowledge_Read_Course_Policy" xml:space="preserve">
+    <value>I acknowledge that I have read the policy documentsof the camp / school linked above and accept all the policies and rules indicated within</value>
+  </data>
+  <data name="Parent_Dashboard" xml:space="preserve">
+    <value>Parent Dashboard</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Activties" xml:space="preserve">
+    <value>Activties</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="Spouse" xml:space="preserve">
+    <value>Spouse</value>
+  </data>
+  <data name="Msg_Child_Has_Active_Enrollments" xml:space="preserve">
+    <value>{0} has active enrollments and can not be deleted</value>
+  </data>
+</root>

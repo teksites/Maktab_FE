@@ -1,0 +1,30 @@
+﻿@inherits BaseDialog<EnrollChildInCourseDialog>
+@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Responses.Children
+@using MaktabDataContracts.Responses.Users
+@using MudBlazor
+
+<MudDialog>
+     <DialogContent>
+          <EnrollChildInCourse SelectedChild="@Child" OnCompleted="SaveDialog" />
+     </DialogContent>
+</MudDialog>
+
+@code {
+     [Parameter] public ChildResponse? Child { get; set; } = null;
+
+     protected async override Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+     }
+
+     private void SaveDialog()
+     {
+          MudDialog.Close(DialogResult.Ok(true));
+     }
+
+     private void CancelDialog()
+     {
+          MudDialog.Cancel();
+     }
+}

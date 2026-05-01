@@ -1,0 +1,32 @@
+﻿@inherits BaseDialog<AddExtendedInfoDialog>
+@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Responses.Users
+@using MudBlazor
+
+<MudDialog>
+     <DialogContent>
+          <AddExtendedInfo UserId="@(UserId)" FamilyId="@(FamilyId)" AddessId="@(AddessId)" OnSave="SaveDialog" OnCancel="CancelDialog" />
+     </DialogContent>
+</MudDialog>
+
+@code {
+
+     [Parameter, EditorRequired] public Guid FamilyId { get; set; }
+     [Parameter, EditorRequired] public Guid AddessId { get; set; }
+     [Parameter, EditorRequired] public Guid UserId { get; set; }
+
+     protected async override Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+     }
+
+     private void SaveDialog(ExtendedUserInformationResponse userInfo)
+     {
+          MudDialog.Close(DialogResult.Ok(userInfo));
+     }
+
+     private void CancelDialog()
+     {
+          MudDialog.Cancel();
+     }
+}

@@ -1,0 +1,62 @@
+﻿@using MaktabDataContracts.Responses.Course
+@using Maktab.Domain.Extensions
+@using MudBlazor
+
+@inherits LocalizeableBaseComponent<CourseProgress>
+
+@if (Course != null)
+{
+    @if (Course.StartDate > DateTime.Today)
+    {
+     <MudChip T="string" Variant="Variant.Outlined" Color="Color.Primary">@L[MaktabResources.Course_Upcoming_Starts_Date_Variable , @Course.StartDate.ToString("dd MMM yyyy")]</MudChip>
+    }
+    else
+    {
+        <MudStack Spacing="1">
+               <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@L[MaktabResources.Progress_Variable, @Progress.ToString("0")]</MudText>
+            <MudProgressLinear Value="@Progress"
+                               Color="@ProgressColor"
+                               Rounded="true"
+                               BufferValue="100" />
+            @if (Progress >= 100)
+            {
+                    <MudChip T="string" Color="Color.Success" Variant="Variant.Filled" Class="mt-1"> @L[MaktabResources.Completed]</MudChip>
+            }
+            else
+            {
+               <MudText Typo="Typo.caption" Color="Color.Secondary">@L[MaktabResources.Course_Ends_Date_Variable, @Course.EndDate.ToString("dd MMM yyyy")]</MudText>
+            }
+        </MudStack>
+    }
+}
+
+@code {
+     [Parameter] public CourseResponseDetailed Course { get; set; }
+    //[Parameter] public DateTime? EndDate { get; set; }
+    /// <summary>Show or hide the whole progress block.</summary>
+    //[Parameter] public bool ShowProgress { get; set; } = true;
+
+    //private DateTime Today => DateTime.Today;
+
+    // Compute progress as days elapsed / total days, clamped 0..100.
+    private double Progress
+    {
+        get
+        {
+            if (Course == null ) return 0;
+
+            return Course.GetProgress();
+        }
+    }
+
+    // Color thresholds: <40 = Warning, 40-80 = Info, >80 = Success
+    private Color ProgressColor
+    {
+        get
+        {
+            if (Progress >= 80) return Color.Success;
+            if (Progress >= 40) return Color.Info;
+            return Color.Warning;
+        }
+    }
+}

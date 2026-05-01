@@ -1,0 +1,155 @@
+﻿@inherits LocalizeableBaseComponent<ChildList>
+
+@using Maktab.Consumer.Dialogs
+@using Maktab.Consumer.Helpers
+@using Maktab.Consumer.State
+@using Maktab.Consumer.Extensions
+@using MaktabDataContracts.Requests.Children
+@using MaktabDataContracts.Responses.Children
+@using MudBlazor
+
+@inject IDialogService DialogService
+@inject IChildrenService ChildrenService
+@inject UserStateService StateService
+
+@if (ShowHeader)
+{
+     <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
+          <MudText Typo="Typo.h6">@L[MaktabResources.Children]</MudText>
+          @if (ShowAddButton)
+          {
+               <MudSpacer />
+               <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
+                    @L[MaktabResources.Add_Child]
+               </MudButton>
+          }
+     </MudStack>
+
+}
+
+<MudTable Items="Children" Elevation="1" Dense="true" Bordered="false" Hover="false">
+     <HeaderContent>
+          <MudTh>@L[MaktabResources.First_Name]</MudTh>
+          <MudTh>@L[MaktabResources.Last_Name]</MudTh>
+          <MudTh>@L[MaktabResources.Date_Of_Birth]</MudTh>
+          <MudTh>@L[MaktabResources.Gender]</MudTh>
+          <MudTh>@L[MaktabResources.RAMQ_Number]</MudTh>
+          <MudTh>@L[MaktabResources.RAMQ_Expiry]</MudTh>
+          @* <MudTh>Allergies</MudTh>
+          <MudTh>Other Health</MudTh> *@
+          <MudTh> </MudTh>
+          @* <MudTh>Daycare</MudTh> *@
+     </HeaderContent>
+     <RowTemplate>
+          <MudTd>@context.FirstName</MudTd>
+          <MudTd>@context.LastName</MudTd>
+          <MudTd>@context.DateOfBirth.ToShortDateString()</MudTd>
+          <MudTd>@(GetGenderLabel(context.Gender))</MudTd>
+          <MudTd>@context.RAMQNumber</MudTd>
+          <MudTd>@context.RAMQExpiry.ToShortDateString()</MudTd>
+          @* <MudTd>@context.Allergies</MudTd>
+          <MudTd>@context.OtherHealthConditions</MudTd> *@
+          <MudTd>
+               <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
+                    <MudMenuItem Disabled="true" >@L[MaktabResources.Edit]</MudMenuItem>
+                    @if (ShowEnrollMenu)
+                    {
+                         <MudMenuItem OnClick="@(() => OpenAssignCourseDialog(context))">@L[MaktabResources.Enroll]</MudMenuItem>
+                    }
+                    <MudMenuItem OnClick="@(() => RemoveChild(context))">@L[MaktabResources.Delete]</MudMenuItem>
+               </MudMenu>
+
+          </MudTd>
+          @* <MudTd>@(context.WillUseDayCareServices ? "Yes" : "No")</MudTd> *@
+     </RowTemplate>
+</MudTable>
+
+@code {
+     [Parameter] public Guid FamilyId { get; set; } = Guid.Empty;
+     protected  IReadOnlyCollection<ChildResponse> Children => StateService.ParentState.Children ?? Array.Empty<ChildResponse>();
+     [Parameter] public bool ShowAddButton { get; set; } = true;
+     [Parameter] public bool ShowHeader { get; set; } = true;
+     [Parameter] public bool ShowEnrollMenu { get; set; } = false;
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.ParentState.OnChange += HandleStateChange;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.ParentState.OnChange -= HandleStateChange;
+     }
+
+     private async Task OpenAddChildDialog()
+     {
+          var parameters = new DialogParameters { ["FamilyId"] = FamilyId };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<AddChildDialog>(@L[MaktabResources.Add_Child], parameters, options);
+          var result = await dialog.Result;
+
+          if (!result.Canceled && result.Data is ChildResponse child)
+          {
+               await StateService.LoadChildrenData(ChildrenService, FamilyId, true);
+               RequestRender();
+          }
+     }
+
+     private async Task OpenAssignCourseDialog(ChildResponse childResponse)
+     {
+          var parameters = new DialogParameters { }; //["Child"] = childResponse };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+
+          var dialog = await DialogService.ShowAsync<EnrollChildInCourseDialog>(L[MaktabResources.Enroll_Child], parameters, options);
+          var result = await dialog.Result;
+
+          //Updated enrollments if enrollment was successful, even if dialog was closed with close button
+          RequestRender();
+     }
+
+     private bool HasCourseEnrollments(ChildResponse child)
+     {
+          return StateService.ParentState.CourseEnrollments?
+                    .Any(enrollment => enrollment.IsActive && enrollment.ChildId == child.ChildId) == true;
+     }
+
+     private async Task RemoveChild(ChildResponse child)
+     {
+          bool hasEnrollments = HasCourseEnrollments(child);
+          if(hasEnrollments)
+          {
+               await DialogService.ShowMessageBox(
+                    L[MaktabResources.Warning],
+                    L[MaktabResources.Msg_Child_Has_Active_Enrollments, child.FirstName], L[MaktabResources.OK]);
+
+                    return;
+          }
+
+          bool? result = await DialogService.ShowMessageBox(
+               L[MaktabResources.Warning],
+               L[MaktabResources.Msg_Question_Remove_Variable, child.FirstName],
+               yesText: L[MaktabResources.Delete], cancelText: L[MaktabResources.Cancel]);
+          if (result.HasValue && result.Value)
+          {
+               var deleted = await ChildrenService.RemoveChildByIdAsync(child.ChildId);
+               if (deleted)
+               {
+                    await StateService.LoadChildrenData(ChildrenService, FamilyId, true);
+                    Snackbar.Add(L[MaktabResources.Msg_Success_Child_Removed], Severity.Success);
+               }
+               else
+               {
+                    Snackbar.Add(L[MaktabResources.Msg_Error_Child_Not_Removed], Severity.Error);
+               }
+          }
+
+          RequestRender();
+     }
+}

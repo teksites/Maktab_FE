@@ -1,0 +1,174 @@
+﻿@inherits BaseFormComponent<EditAddress>
+@using System.ComponentModel.DataAnnotations
+@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Responses.Addresses
+
+@inject IAddressService AddressService
+
+@* <EditForm Model="@AddressModel" OnValidSubmit="HandleValidSubmit"> *@
+     <MudPaper Class="pa-4">
+     <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Edit_Address]</MudText>
+     <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleAddressSave)" Validated="@(OnFormValidated)">
+
+          <MudGrid Container="true" Spacing="3">
+              
+
+               <MudItem xs="12" sm="12">
+                    <MudTextField @bind-Value="AddressModel.AddressLine1"
+                                  Label=@L[MaktabResources.Address_Line_1]
+                                  Required="true"
+                                  For="@(() => AddressModel.AddressLine1)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="12">
+                    <MudTextField @bind-Value="AddressModel.AddressLine2"
+                                  Label=@L[MaktabResources.Address_Line_2]
+                                  For="@(() => AddressModel.AddressLine2)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="AddressModel.UnitNo"
+                                  Label=@L[MaktabResources.Address_Unit_Number]
+                                  Required="false"
+                                  For="@(() => AddressModel.UnitNo)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="AddressModel.ApartmentNo"
+                                  Label=@L[MaktabResources.Address_Apartment_Number]
+                                  For="@(() => AddressModel.ApartmentNo)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="4">
+                    <MudTextField @bind-Value="AddressModel.PostalCode"
+                                  Label=@L[MaktabResources.Postal_Code]
+                                  Required="true"
+                                  For="@(() => AddressModel.PostalCode)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="4">
+                    <MudTextField @bind-Value="AddressModel.City"
+                                  Label=@L[MaktabResources.City]
+                                  Required="true"
+                                  For="@(() => AddressModel.City)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="4">
+                    <MudTextField @bind-Value="AddressModel.Province"
+                                  Label=@L[MaktabResources.Province]
+                                  Required="true"
+                                  For="@(() => AddressModel.Province)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudTextField @bind-Value="AddressModel.Country"
+                                  Label=@L[MaktabResources.Country]
+                                  Required="true"
+                                  For="@(() => AddressModel.Country)" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6" Class="d-flex align-center">
+                    <MudSwitch @bind-Value="AddressModel.HomeAddress"
+                               T="bool"
+                               Label=@L[MaktabResources.Home_Address]
+                               Color="Color.Primary" />
+               </MudItem>
+
+               <MudItem xs="12" sm="6">
+                    <MudSelect T="AddressType" Label=@L[MaktabResources.Address_Type] @bind-Value="AddressModel.AddressType" Required="true">
+                         @foreach (var rel in AddressTypes)
+                         {
+                              <MudSelectItem Value="@rel">@(GetAddressTypeLabel(rel))</MudSelectItem>
+                         }
+                    </MudSelect> 
+               </MudItem>
+          </MudGrid>
+
+          @if (!string.IsNullOrWhiteSpace(_errorMessage))
+          {
+               <MudAlert Severity="Severity.Error" Elevation="0" Class="my-4">
+                    @_errorMessage
+               </MudAlert>
+          }
+
+          <MudStack Direction="Row" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
+               <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isSaving)" StartIcon="@Icons.Material.Filled.Check" OnClick="@(HandleAddressSave)">
+                    @if (isSaving)
+                    {
+                         <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                         <span>@L[MaktabResources.Msg_Processing]</span>
+                    }
+                    else
+                    {
+                         <span>@L[MaktabResources.Update]</span>
+                    }
+               </MudButton>
+               
+               <MudButton OnClick="@OnCancelClickedHandler" Color="Color.Secondary" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Close">Cancel</MudButton>
+          </MudStack>
+          </MudForm>
+     </MudPaper>
+@* </EditForm> *@
+
+@code {
+     [Parameter, EditorRequired] public AddressResponse AddressModel { get; set; }
+     [Parameter] public EventCallback<AddressResponse> OnSave { get; set; }
+     [Parameter] public EventCallback OnCancel { get; set; }
+     private IReadOnlyCollection<AddressType> AddressTypes { get; } = Enum.GetValues(typeof(AddressType)).Cast<AddressType>().Where(x => x != AddressType.Unknown || x != AddressType.Institute).ToList();
+     private bool isSaving = false;
+     private bool isInitialized = false;
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private async Task HandleAddressSave()
+     {
+          try
+          {
+               isSaving = true;
+               RequestRender();
+               await InvokeUserAction(RequestSavingAddress);
+          }
+          finally
+          {
+               isSaving = false;
+               RequestRender();
+          }
+     }
+
+     private async Task RequestSavingAddress()
+     {
+          if (AddressModel == null || AddressModel?.AddressType == AddressType.Unknown)
+          {
+               _errorMessage = L[MaktabResources.Msg_Error_Address_No_AddressType];//"Please provide valid address type.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          var savedAddress = await AddressService.UpdateAddressAsync(AddressModel);
+          if (savedAddress == null)
+          {
+               _errorMessage = L[MaktabResources.Msg_Error_Address_Save];//"Error saving address please try in few moments.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          if (OnSave.HasDelegate)
+          {
+               await OnSave.InvokeAsync(savedAddress);
+          }
+     }
+
+     private async Task OnCancelClickedHandler()
+     {
+          if (OnCancel.HasDelegate)
+          {
+               await OnCancel.InvokeAsync();
+          }
+     }
+}

@@ -1,0 +1,187 @@
+﻿@page "/landing/mainpage"
+@using Maktab.Consumer.Helpers
+@using Maktab.Consumer.State
+@using MaktabDataContracts.Responses.Course
+@using Maktab.Consumer.Extensions;
+@using MaktabDataContracts.Responses.Institute
+
+@inherits LocalizeableBaseComponent<MainPage>
+
+@* @inject IAccountService AccountService *@
+@* @inject IUserService UserService *@
+@inject IInstitutionService InstitutionService
+@inject ICourseService CourseService
+
+
+@inject UserStateService StateService
+
+<MudContainer Class="mt-10 mb-10" >
+
+     <!-- Hero Section -->
+     <MudPaper Class="pa-8 d-flex flex-column align-center justify-center text-center" Elevation="0">
+          <MudText Typo="Typo.h3" GutterBottom="true">@L[MaktabResources.MainPage_Title]</MudText>
+          <MudText Typo="Typo.subtitle1" Class="mb-6">@L[MaktabResources.MainPage_Description]</MudText>
+          <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@Constants.CourseSearchRoute">@L[MaktabResources.ViewAllCourses]</MudButton>
+     </MudPaper>
+
+     <!-- Courses Section -->
+     <MudText Typo="Typo.h5" Class="mt-10 mb-6">@L[MaktabResources.FeaturedInstitutes]</MudText>
+     @if (isInitialized && !isDataLoading)
+     {
+          <InstituteList Institutes=@_institute/>
+          @* ShowCourseCount="true" /> *@
+          @* <CourseList Courses=@_courses ShowProgress="false"
+          /> *@
+          @*  <MudGrid GutterSize="3">
+        @foreach (var course in _courses)
+        {
+            <MudItem xs="12" sm="6" md="4" lg="3">
+                <MudCard Class="h-100 d-flex flex-column">
+                    <MudCardMedia Image="@course.ImageUrl" Height="180" />
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6">@course.Title</MudText>
+                        <MudText Typo="Typo.body2" Class="mb-2">@course.Description</MudText>
+                        <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined">@(course.Category)</MudChip>
+                    </MudCardContent>
+                    <MudCardActions Class="mt-auto">
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"/courses/{course.Id}")">
+                            Learn More
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid> *@
+     }
+     else
+     {
+          <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+     }
+
+
+
+</MudContainer>
+
+@code {
+     // string username;
+     // Guid userId = Guid.Empty;
+     // bool success;
+     // bool isCodeValidating = false;
+     // bool isSendingCodeAgain = false;
+     bool isInitialized = false;
+     bool isDataLoading;
+     // string emailValidationCode = string.Empty;
+
+     //private IEnumerable<CourseResponseDetailed> _courses = Enumerable.Empty<CourseResponseDetailed>();
+     //private IReadOnlyCollection<CourseResponseDetailed> _courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
+     private IReadOnlyCollection<InstituteResponse> _institute => StateService.InstituteState.Institutes ?? Array.Empty<InstituteResponse>();
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.InstituteState.OnChange += HandleStateChange;
+     }
+
+     protected override async Task OnInitializedAsync()
+     {
+          //isInitialized = true;
+          await base.OnInitializedAsync();
+
+          //_courses = await CourseService.GetCurrentActiveCoursesAsync();
+
+          await LoadData();
+
+          isInitialized = true;
+          RequestRender();
+
+     }
+
+     private async Task LoadData(bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          //await StateService.LoadActiveCoursesData(CourseService, forceReload);
+          await StateService.LoadActiveInstitutesData(InstitutionService, forceReload);
+
+          // if (StateService.InstituteState.Courses == null || forceReload)
+          // {
+          //      var courses = await CourseService.GetCurrentActiveCoursesAsync();
+          //      StateService.InstituteState.SetCourses(courses);
+          // }
+
+          isDataLoading = false;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.InstituteState.OnChange -= HandleStateChange;
+     }
+
+     // private async void HandleCodeValidation()
+     // {
+     //      try
+     //      {
+     //           isCodeValidating = true;
+     //           RequestRender();
+
+     //           await InvokeUserAction(ValidateUserCode);
+
+     //      }
+     //      finally
+     //      {
+     //           isCodeValidating = false;
+     //           RequestRender();
+     //      }
+     // }
+
+     // private async Task ValidateUserCode()
+     // {
+
+     //      var activated = await UserService.ActivateUserByCodeAsync(userId,
+     //           new MaktabDataContracts.Requests.Users.UserVerificationRequest()
+     //           {
+     //                EmailVerificationCode = emailValidationCode,
+     //           });
+
+     //      if (activated)
+     //      {
+     //           NavigationManager.NavigateTo(Constants.CustomerAddProfileDetailRoute);
+     //      }
+     //      else
+     //      {
+     //           _errorMessage = "Code can not be validated.";
+     //           Snackbar.Add(_errorMessage, Severity.Error);
+     //      }
+     // }
+
+
+     // private async void HandleSendUserCode()
+     // {
+     //      try
+     //      {
+     //           isSendingCodeAgain = true;
+     //           RequestRender();
+     //           await InvokeUserAction(SendUserCode);
+     //      }
+     //      finally
+     //      {
+     //           isSendingCodeAgain = false;
+     //           RequestRender();
+     //      }
+     // }
+
+     // private async Task SendUserCode()
+     // {
+     //      var codeSent = await UserService.SendUserActivationCodeAsync(userId);
+     //      if (!codeSent)
+     //      {
+     //           _errorMessage = "Can not process, please try again in few minutes.";
+     //           Snackbar.Add(_errorMessage, Severity.Error);
+     //      }
+     // }
+}

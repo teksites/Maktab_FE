@@ -1,0 +1,51 @@
+@inherits BaseDialog<TermsAndConditionsDialog>
+
+
+<MudDialog>
+
+     <TitleContent>
+          <MudText Typo="Typo.h6">@L[MaktabResources.Terms_And_Conditions]</MudText>
+     </TitleContent>
+
+     <DialogContent>
+          <MudPaper Class="pa-4" Style="max-height: 500px; overflow-y: auto;">
+               @if (isInitialized)
+               {
+                    <div style="font-size: 14px; line-height: 1.6;">
+                         @(markupString)
+                    </div>
+               }
+               else
+               {
+                    <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+               }
+
+          </MudPaper>
+     </DialogContent>
+
+     <DialogActions>
+          <MudButton OnClick="Cancel" Variant="Variant.Text">@L[MaktabResources.Close]</MudButton>
+          <MudButton OnClick="Accept" Color="Color.Primary" Variant="Variant.Filled">@L[MaktabResources.Accept]</MudButton>
+     </DialogActions>
+
+</MudDialog>
+
+@code {
+     // [CascadingParameter]
+     // public IMudDialogInstance MudDialog { get; set; } = default!;
+
+     private bool isInitialized = false;
+     private MarkupString markupString;
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+          markupString = new MarkupString(L[MaktabResources.Terms_And_Conditions_Content]);
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private void Cancel() => MudDialog.Cancel();
+
+     private void Accept() => MudDialog.Close(true);
+}

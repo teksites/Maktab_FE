@@ -1,0 +1,20 @@
+﻿@page "/account/logout"
+@using Maktab.Consumer.Helpers
+@using Maktab.Core.Interfaces.Services
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject ISessionService SessionService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthProvider
+
+@code {
+     protected override async void OnInitialized()
+     {
+          await SessionService.LogoutAsync(true);
+          if (AuthProvider is AuthStateProvider asp)
+          {
+               asp.NotifyUserLogout();
+          }
+          NavigationManager.NavigateTo(Constants.AppLandingPage, forceLoad: true);
+     }
+}

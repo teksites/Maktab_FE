@@ -1,0 +1,350 @@
+﻿@inherits LocalizeableBaseComponent<EnrollmentNotification>
+@using Maktab.Consumer.State
+@using Maktab.Consumer.Extensions
+@using MaktabDataContracts.Responses.Children
+@using MaktabDataContracts.Responses.Course
+@using MaktabDataContracts.Responses.Users
+@using MudBlazor
+
+@* @typeparam TEnrollment *@
+@inject ICourseEnrollmentService CourseEnrollmentService
+@inject ICourseEnrollmentTransactionService CourseEnrollmentTransactionService
+
+@inject IDialogService DialogService
+@inject UserStateService StateService
+
+<MudPaper Class="pa-4 rounded-lg" Elevation="2">
+     <MudExpansionPanel Expanded="true">
+          <TitleContent>
+               <MudContainer>
+                    <MudStack Row="true" AlignItems="AlignItems.Center">
+                         <MudText Typo="Typo.h6">@L[MaktabResources.Enrollments]</MudText>
+                         <MudSpacer />
+                         <MudIcon Icon="@Icons.Material.Filled.NotificationsActive" Color="Color.Warning" Size="Size.Medium" />
+                    </MudStack>
+
+                    @* <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="ViewAll">View All</MudButton>
+    </MudStack> *@
+               </MudContainer>
+          </TitleContent>
+
+          <ChildContent>
+               @if (Enrollments?.Any() == true)
+               {
+                    <MudStack>
+                    <MudTable Items="NonActionableEnrollments" Elevation="1" Dense="true" Bordered="true" Hover="true">
+                         <HeaderContent>
+                              <MudTh>@L[MaktabResources.Child]</MudTh>
+                              <MudTh Style="text-align:center">@L[MaktabResources.Course]</MudTh>
+                              <MudTh Style="text-align:center">@L[MaktabResources.Group]</MudTh>
+                              <MudTh Style="text-align:center">@L[MaktabResources.Enrollment]</MudTh>
+                              @* <MudTh>@L[MaktabResources.Fee]</MudTh>
+                              <MudTh>@L[MaktabResources.Daycare_Fee]</MudTh>*@
+                              <MudTh Style="text-align:center">@L[MaktabResources.Use_Daycare]</MudTh>
+                              <MudTh Style="text-align:center"> </MudTh>
+                         </HeaderContent>
+                         <RowTemplate>
+                              <MudTd>@GetChildName(context.ChildId)</MudTd>
+                              <MudTd Style="text-align:center">@GetCourseName(context.CourseId)</MudTd>
+                              <MudTd Style="text-align:center">@GetCourseEnrollmentGroupTitle(context.CourseEnrollmentGroupId)</MudTd>
+                              <MudTd Style="text-align:center">
+                                   @* @context.IsActive *@
+                                        <MudChip T="string" Color="@(GetEnrollmentStatusColor(context.EnrollmentStatus))" Variant="Variant.Filled" Size="Size.Small">@GetEnrollmentStatusLabel(context.EnrollmentStatus)</MudChip>
+                              
+                              </MudTd>
+                            @*   <MudTd Style="text-align:right">@GetCourseEnrollmentGroup(context.CourseEnrollmentGroupId)?.Fee</MudTd>
+                              <MudTd Style="text-align:right">@GetDayCareFee(context)</MudTd>*@
+                              <MudTd Style="text-align:center">@GetUseDayCareStatusText(context)</MudTd> 
+                             @*  <MudTd>@context.DayCareDays</MudTd> *@
+                             @*  <MudTd>@context.RAMQNumber</MudTd>
+                              <MudTd>@context.RAMQExpiry.ToShortDateString()</MudTd> *@
+                              @* <MudTd>@context.Allergies</MudTd>
+          <MudTd>@context.OtherHealthConditions</MudTd> *@
+                              <MudTd Style="text-align:center">
+                                   <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
+                                        @* <MudMenuItem OnClick="@(() => ViewDetails(context))">View</MudMenuItem> *@
+                                       @*  @if (ShowEnrollMenu)
+                                        {
+                                             <MudMenuItem OnClick="OpenAssignCourseDialog">Enroll</MudMenuItem>
+                                        } *@
+                                        <MudMenuItem OnClick="@(() => RemoveEnrollment(context))">@L[MaktabResources.Delete]</MudMenuItem>
+                                   </MudMenu>
+
+                              </MudTd>
+                              @* <MudTd>@(context.WillUseDayCareServices ? "Yes" : "No")</MudTd> *@
+                         </RowTemplate>
+                    </MudTable>
+
+                     @* Actionable Enrollment *@
+                         @if (AwatingEnrollments?.Any() == true)
+                         {
+                              <MudAlert Severity="Severity.Warning" Variant="Variant.Filled" Class="my-4">
+                                   @L[MaktabResources.Msg_Info_Has_Awaiting_Enrollment]
+                              </MudAlert>
+
+                              <MudTable Items="AwatingEnrollments" Elevation="1" Dense="true" Bordered="true" Hover="true">
+                                   <HeaderContent>
+                                        <MudTh>@L[MaktabResources.Child]</MudTh>
+                                        <MudTh Style="text-align:center">@L[MaktabResources.Course]</MudTh>
+                                        <MudTh Style="text-align:center">@L[MaktabResources.Group]</MudTh>
+                                        <MudTh Style="text-align:center">@L[MaktabResources.Enrollment]</MudTh>
+                                        @* <MudTh>@L[MaktabResources.Fee]</MudTh>
+                              <MudTh>@L[MaktabResources.Daycare_Fee]</MudTh>*@
+                                        <MudTh Style="text-align:center">@L[MaktabResources.Use_Daycare]</MudTh>
+                                        <MudTh Style="text-align:center"> </MudTh>
+                                   </HeaderContent>
+                                   <RowTemplate>
+                                        <MudTd>@GetChildName(context.ChildId)</MudTd>
+                                        <MudTd Style="text-align:center">@GetCourseName(context.CourseId)</MudTd>
+                                        <MudTd Style="text-align:center">@GetCourseEnrollmentGroupTitle(context.CourseEnrollmentGroupId)</MudTd>
+                                        <MudTd Style="text-align:center">
+                                             @* @context.IsActive *@
+                                             <MudChip T="string" Color="@(GetEnrollmentStatusColor(context.EnrollmentStatus))" Variant="Variant.Filled" Size="Size.Small">@GetEnrollmentStatusLabel(context.EnrollmentStatus)</MudChip>
+
+                                        </MudTd>
+                                        @*   <MudTd Style="text-align:right">@GetCourseEnrollmentGroup(context.CourseEnrollmentGroupId)?.Fee</MudTd>
+                              <MudTd Style="text-align:right">@GetDayCareFee(context)</MudTd>*@
+                                        <MudTd Style="text-align:center">@GetUseDayCareStatusText(context)</MudTd>
+                                        @*  <MudTd>@context.DayCareDays</MudTd> *@
+                                        @*  <MudTd>@context.RAMQNumber</MudTd>
+                              <MudTd>@context.RAMQExpiry.ToShortDateString()</MudTd> *@
+                                        @* <MudTd>@context.Allergies</MudTd>
+          <MudTd>@context.OtherHealthConditions</MudTd> *@
+                                        <MudTd Style="text-align:center">
+                                             <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
+                                                  @* <MudMenuItem OnClick="@(() => ViewDetails(context))">View</MudMenuItem> *@
+                                                  @*  @if (ShowEnrollMenu)
+                                        {
+                                             <MudMenuItem OnClick="OpenAssignCourseDialog">Enroll</MudMenuItem>
+                                        } *@
+                                                  <MudMenuItem OnClick="@(() => RemoveEnrollment(context))">@L[MaktabResources.Delete]</MudMenuItem>
+                                             </MudMenu>
+
+                                        </MudTd>
+                                        @* <MudTd>@(context.WillUseDayCareServices ? "Yes" : "No")</MudTd> *@
+                                   </RowTemplate>
+                              </MudTable>
+                         }
+                    </MudStack>
+                   @*  <MudList T="StudentCourseEnrollmentResponse" Dense="true" ReadOnly="true" >
+                         @foreach (var enrollment in Enrollments.Take(MaxItems))
+                         {
+                              <MudListItem Class="py-2">
+                                   <AvatarContent>
+                                        <MudChip>@GetChildName(enrollment.ChildId)</MudChip>
+                                   </AvatarContent>
+                                   <ChildContent>
+                                        <MudGrid Justify="Justify.Center">
+                                             <MudItem xs="6" sm="3">
+                                                  <MudText  Align="Align.Center" Class="text-truncate">@GetCourseTitle(enrollment.CourseId)</MudText>
+                                             </MudItem>
+
+                                             <MudItem xs="6" sm="3">
+                                                  @if (enrollment.WillUseDayCare)
+                                                  {
+                                                       <MudChip Variant="Variant.Outlined" Size="Size.Small">Day Care</MudChip>
+                                                  }
+                                             </MudItem>
+
+                                             <MudItem xs="6" sm="3">
+                                                  <MudIconButton Icon="@Icons.Material.Filled.Pageview" OnClick="@(() => ViewDetails(enrollment))" Edge="Edge.End" Color="Color.Default" />
+                                             </MudItem>
+
+                                        </MudGrid> *@
+                                        @* <MudStack Row="false"> *@
+                                       @*  <MudContainer>
+                                             <MudText Typo="Typo.caption" Color="Color.Default">@($"Enrolled on {enrollment.CreatedAt:d}")</MudText>
+                                        </MudContainer> *@
+
+                                        @* <MudSpacer/> *@
+                                                
+                                   @* </MudStack> *@
+                                   @* </ChildContent> *@
+
+                                 @*   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width:100%">
+                                        <MudAvatar Size="Size.Small" Color="Color.Inherit">@GetChildName(enrollment.ChildId)[0]</MudAvatar>
+                                        <div style="flex:1; min-width:0">
+                                             <MudText Typo="Typo.subtitle1" Class="text-truncate">@GetChildName(enrollment.ChildId)</MudText>
+                                             <MudText Typo="Typo.subtitle2" Class="text-truncate">@GetCourseTitle(enrollment.CourseId)</MudText>
+                                             <MudText Typo="Typo.caption" Color="Color.Default">@($"Enrolled on {enrollment.CreatedAt:d}")</MudText>
+                                        </div>
+
+                                        <MudIconButton Icon="@Icons.Material.Filled.Pageview" OnClick="@(() => ViewDetails(enrollment))" Edge="Edge.End" Color="Color.Default" />
+                                   </MudStack> *@
+                             @*  </MudListItem>
+                         }
+                    </MudList> *@
+               }
+               else
+               {
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">@L[MaktabResources.Msg_Info_No_Enrollment]</MudText>
+               }
+          </ChildContent>
+     </MudExpansionPanel>
+</MudPaper>
+
+@code {
+     private IReadOnlyCollection<StudentCourseEnrollmentResponse> Enrollments => StateService.ParentState.CourseEnrollments ?? Array.Empty<StudentCourseEnrollmentResponse>();
+     private IReadOnlyCollection<ChildResponse>? Children => StateService.ParentState.Children ?? Array.Empty<ChildResponse>();
+     private IReadOnlyCollection<CourseResponseDetailed>? Courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
+     private IReadOnlyCollection<StudentCourseEnrollmentResponse> NonActionableEnrollments => Enrollments.Where(x => x.EnrollmentStatus != MaktabDataContracts.Enums.EnrollmentStatus.Awaiting).ToArray() ?? Array.Empty<StudentCourseEnrollmentResponse>();
+     private IReadOnlyCollection<StudentCourseEnrollmentResponse> AwatingEnrollments => Enrollments.Where(x => x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Awaiting).ToArray() ?? Array.Empty<StudentCourseEnrollmentResponse>();
+
+
+     [Parameter] public EventCallback<StudentCourseEnrollmentResponse> OnViewDetails { get; set; }
+     //[Parameter] public EventCallback OnViewAll { get; set; }
+     [Parameter] public int MaxItems { get; set; } = 5;
+
+     private UserInformationResponse userInfo => StateService.ParentState.Profile;
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.ParentState.OnChange += HandleStateChange;
+          StateService.InstituteState.OnChange += HandleStateChange;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.ParentState.OnChange -= HandleStateChange;
+          StateService.InstituteState.OnChange -= HandleStateChange;
+
+     }
+
+     private Task ViewDetails(StudentCourseEnrollmentResponse e) => OnViewDetails.InvokeAsync(e);
+
+     //private Task ViewAll() => OnViewAll.InvokeAsync();
+
+     // placeholder - replace with a real resolver from services
+     private string GetCourseName(Guid courseId)
+     {
+          var course = Courses?.FirstOrDefault(x => x.CourseId == courseId);
+
+          if (course != null)
+          {
+
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return course.NameFr;
+               }
+               else
+               {
+                    return course.Name;
+               }
+          }
+
+          return string.Empty;
+
+     }
+
+     private CourseEnrollmentGroupResponse GetCourseEnrollmentGroup(Guid groupId)
+     {
+          var group = Courses.SelectMany(x => x.CourseEnrollmentGroups).FirstOrDefault(y => y.CourseEnrollmentGroupId == groupId);
+
+          // if(string.IsNullOrEmpty(courseName))
+          // {
+          //      return $"Course {courseId.ToString()[..5]}";
+          // }
+
+          return group;
+
+     }
+
+     private string GetCourseEnrollmentGroupTitle(Guid groupId)
+     {
+          var group = GetCourseEnrollmentGroup(groupId);
+
+          if (group != null)
+          {
+
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return group.GroupTitleFr;
+               }
+               else
+               {
+                    return group.GroupTitle;
+               }
+          }
+
+          return string.Empty;
+
+     }
+
+
+     private int GetDayCareFee(StudentCourseEnrollmentResponse enrollmentResponse)
+     {
+          if (!enrollmentResponse.WillUseDayCare)
+          {
+               return 0;
+          }
+          var group = Courses?.SelectMany(x => x.CourseEnrollmentGroups).FirstOrDefault(y => y.CourseEnrollmentGroupId == enrollmentResponse.CourseEnrollmentGroupId);
+          if (group != null)
+          {
+               return group.DayCareFee;
+          }
+
+          return 0;
+     }
+
+     private string GetChildName(Guid childId)
+     {
+          var child = Children?.FirstOrDefault(x => x.ChildId == childId);
+
+          if (child == null)
+          {
+               return $"Child {childId.ToString()[..5]}";
+          }
+
+          return $"{child.FirstName} {child.LastName}";
+     }
+
+     private string GetUseDayCareStatusText(StudentCourseEnrollmentResponse studentCourseEnrollment) => studentCourseEnrollment.WillUseDayCare ? L[MaktabResources.Yes] : L[MaktabResources.No];
+
+     private async Task RemoveEnrollment(StudentCourseEnrollmentResponse e)
+     {
+          if (CanRemoveEnrollment(e))
+          {
+               bool? result = await DialogService.ShowMessageBox(
+                      L[MaktabResources.Warning],
+                     L[MaktabResources.Msg_Question_Remove_Enrollment],
+                      yesText: L[MaktabResources.Remove], cancelText: L[MaktabResources.Cancel]);
+               if (result.HasValue && result.Value)
+               {
+                    var enrollmentRemoved = await CourseEnrollmentService.RemoveCourseEnrollmentByIdAsync(e.StudentCourseEnrollmentId);
+                    if (enrollmentRemoved)
+                    {
+                         await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, true);
+                         await StateService.LoadCourseTransactionsByCourse(
+                                   CourseEnrollmentTransactionService,
+                                   Enrollments,
+                                   userInfo.FamilyId,
+                                   true);
+                         Snackbar.Add(L[MaktabResources.Msg_Success_Remove_Enrollment], Severity.Success);
+                    }
+                    else
+                    {
+                         Snackbar.Add(L[MaktabResources.Msg_Error_Remove_Enrollment], Severity.Error);
+                    }
+               }
+          }
+          else
+          {
+               Snackbar.Add(L[MaktabResources.Msg_Error_Can_Only_Remove_Awaiting_Enrollment], Severity.Error);
+          }
+     }
+
+     private bool CanRemoveEnrollment(StudentCourseEnrollmentResponse enrollment)
+     {
+          // Implement any logic to determine if the enrollment can be removed
+          // For example, you might check if the enrollment is active or if there are any pending transactions
+          return enrollment.IsActive && enrollment.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Awaiting; // Placeholder - allow all removals for now
+     }
+}
+
+

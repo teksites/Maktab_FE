@@ -1,0 +1,22 @@
+﻿@page "/"
+
+@inject NavigationManager Navigation
+@inject ISessionService SessionService
+
+
+<PageTitle>Home</PageTitle>
+
+@code {
+     protected async override void OnInitialized()
+     {
+          bool isAuthorized = await SessionService.IsAuthenticatedAsync();
+          if (isAuthorized)
+          {
+               Navigation.NavigateTo( Constants.CodeValidationRoute);
+          }
+          else
+          {
+               Navigation.NavigateTo(Constants.AppLandingPage);
+          }
+     }
+}

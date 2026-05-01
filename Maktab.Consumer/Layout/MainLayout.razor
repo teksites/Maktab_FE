@@ -1,0 +1,305 @@
+﻿@using System.Security.Claims
+@using Maktab.Consumer.Helpers
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Globalization;
+
+@inherits LayoutComponentBase
+
+@inject IStringLocalizer<MaktabResources> Loc
+@inject ThemeService ThemeService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IGlobalizationService GlobalizationService
+
+@if (isInitialized)
+{
+<MudRTLProvider RightToLeft="@_rightToLeft">
+
+@* Required *@
+<MudThemeProvider Theme="IccBrossardTheme" IsDarkMode="ThemeService.IsDarkMode" />
+<MudPopoverProvider />
+
+@* Needed for dialogs *@
+<MudDialogProvider />
+
+@* Needed for snackbars *@
+<MudSnackbarProvider />
+
+<MudLayout >
+     <MudAppBar Elevation="1" Color="Color.Primary">
+          
+              
+          <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+                    <MudText Typo="Typo.h5" Class="ml-3">@Loc[MaktabResources.AppTitle]</MudText>
+          <MudSpacer />
+          <MudToolBar Edge="Edge.End">
+               @* <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" /> *@
+               <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="@ToggleTheme" />
+
+                        @*  <MudMenu Color="Color.Inherit"
+                                  AriaLabel="Language"
+                                  Icon="@Icons.Material.TwoTone.Translate">
+                              <MudMenuItem Label="Profile" />
+                              <MudMenuItem Label="My account" />
+                              <MudMenuItem Label="Logout" />
+                         </MudMenu>
+
+                    <MudSelect T="string" Label="Language" Value="@selectedCulture" ValueChanged="OnCultureChanged">
+                         <MudSelectItem Value="@("en")">English</MudSelectItem>
+                         <MudSelectItem Value="@("fr-CA")">Français</MudSelectItem>
+                    </MudSelect> *@
+
+                         <MudMenu Class="me-2">
+                              @* Class="IconDia"> *@
+                              <ActivatorContent>
+                                   <MudImage Src="@_SelectedFlag" Style="width: 24px" />
+                              </ActivatorContent>
+
+                              <ChildContent>
+                                   <MudMenuItem OnClick="@(async () => await SelectLanguage("en"))">
+                                        <MudImage Src="/images/flag_canada.png" Style="width: 24px" Class="me-2" /> English
+                                   </MudMenuItem>
+                                   <MudMenuItem OnClick="@(async () => await SelectLanguage("fr"))">
+                                        <MudImage Src="/images/flag_france.png" Style="width: 24px" Class="me-2" /> French
+                                   </MudMenuItem>
+                              </ChildContent>
+                         </MudMenu>
+
+               @* <MudMenu Dense
+                        Variant="Variant.Text"
+                        Color="Color.Inherit"
+                        Icon="@Icons.Material.TwoTone.Language">
+                   
+                   </MudMenu>
+                         *@
+
+               @if (_isAuthenticated)
+               {
+                    @*  <MudMenu Dense
+                        Variant="Variant.Text"
+                        Color="Color.Inherit"
+                        Icon="@Icons.Material.TwoTone.MoreVert"> *@
+
+                    @* <MudMenu StartIcon="@Icons.Material.TwoTone.Settings"
+                             IconColor="Color.Primary"
+                             Label="Settings">
+                         <MudMenuItem Icon="@Icons.Material.TwoTone.DarkMode"
+                                      IconColor="Color.Secondary"
+                                      Label="Dark Theme" />
+                    </MudMenu> 
+
+                    <MudDivider />*@
+
+                    @* <MudMenuItem Href="@Constants.LoginRoute"
+                                 ForceLoad
+                                 Icon="@Icons.Material.TwoTone.Login"
+                                 IconColor="Color.Primary"
+                                 Label="Sign In" />
+
+
+
+               </MudMenu> *@
+
+                    @* <MudTooltip Text="Notification">
+                         <MudBadge Dot="true" Visible="false" Class="mx-6 my-4" Overlap="true" Bordered="true">
+                              <MudIconButton Icon="@Icons.Material.Outlined.Notifications" Color="Color.Inherit" Edge="Edge.End" />
+                         </MudBadge>
+                    </MudTooltip> *@
+
+                    <MudMenu Dense>
+                         <ActivatorContent>
+                              <MudAvatar Color="Color.Tertiary" Variant="Variant.Outlined">@_userInitials</MudAvatar>
+                         </ActivatorContent>
+                         <ChildContent>
+                              <MudMenuItem Href="@Constants.ParentProfileRoute"
+                                           Icon="@Icons.Material.Filled.AccountCircle"
+                                           IconColor="Color.Primary"
+                                           Label="@Loc[MaktabResources.Profile]" />
+                              <MudMenuItem Href="@Constants.LogoutRoute"
+                                           ForceLoad
+                                           Icon="@Icons.Material.Filled.Logout"
+                                           IconColor="Color.Primary"
+                                           Label="@Loc[MaktabResources.LogOut]" />
+                         </ChildContent>
+                    </MudMenu>
+               }
+               else
+               {
+                    <MudStack Row="true">
+                                   <MudButton Href="@Constants.RegisterParentRoute" Variant="Variant.Outlined" Color="Color.Inherit">@Loc[MaktabResources.Signup]</MudButton>
+                                   <MudButton Href="@Constants.LoginRoute" Variant="Variant.Outlined" Color="Color.Inherit">@Loc[MaktabResources.Login]</MudButton>
+                    </MudStack>
+               }
+          </MudToolBar>
+
+     </MudAppBar>
+     <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+          <NavMenu />
+     </MudDrawer>
+
+     <MudMainContent>
+          <ErrorBoundary>
+               <MudAlert hidden="true" />
+                  @*   <ul>
+                         <li><b>CurrentCulture</b>: @CultureInfo.CurrentCulture</li>
+                         <li><b>CurrentUICulture</b>: @CultureInfo.CurrentUICulture</li>
+                    </ul> *@
+                   @*  @foreach (var s in localizer.GetAllStrings(includeParentCultures: true))
+                    {
+                         <li><b>@s.Name</b>: @s.Value</li>
+                    } *@
+                   @*  @foreach (var m in manifestName)
+                    {
+                         <li><b>@m</b></li>
+                    } *@
+               <MudContainer MaxWidth="MaxWidth.Large">
+                    <ChildContent>
+                         @Body
+                    </ChildContent>
+               </MudContainer>
+          </ErrorBoundary>
+     </MudMainContent>
+</MudLayout>
+</MudRTLProvider>
+}
+else
+{
+     <BusyContent DisplayText="Initializing" />
+}
+
+
+@code {
+     bool _drawerOpen = false;
+     private bool _rightToLeft = false;
+     private bool _isAuthenticated;
+     private bool isInitialized = false;
+     private string? _userName;
+     private string? _userRole;
+     private string _userInitials = "?";
+     private string _defaultCulture = "en";
+     private string _SelectedFlag = "/images/flag_canada.png";
+
+     private string[] manifestName;
+     private IStringLocalizer localizer;
+
+     protected override async Task OnInitializedAsync()
+     {
+          _defaultCulture = await GlobalizationService.GetPersistedCultureName() ?? "en";
+          UpdateLanguageFlag(_defaultCulture);
+
+          var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+          var user = authState.User;
+
+          _isAuthenticated = user?.Identity?.IsAuthenticated ?? false;
+
+          if (_isAuthenticated)
+          {
+               if (string.IsNullOrEmpty(user.Identity?.Name) &&
+                    AuthStateProvider is AuthStateProvider au)
+               {
+                    _userName = au.Username;
+               }
+
+               if (string.IsNullOrEmpty(_userName))
+               {
+                    _userName = "?";
+               }
+
+               _userRole = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Unknown";
+               _userInitials = new string(_userName
+                   .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                   .Select(n => n[0])
+                   .ToArray()).ToUpper();
+          }
+
+          AuthStateProvider.AuthenticationStateChanged += async task =>
+         {
+              var state = await task;
+              _isAuthenticated = state.User.Identity?.IsAuthenticated ?? false;
+
+              if (_isAuthenticated && AuthStateProvider is AuthStateProvider au)
+              {
+                   _userName = au.Username;
+              }
+
+              if (string.IsNullOrEmpty(_userName))
+              {
+                   _userName = "?";
+              }
+
+              _userRole = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "Unknown";
+              _userInitials = new string(_userName
+                  .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                  .Select(n => n[0])
+                  .ToArray()).ToUpper();
+              StateHasChanged();
+         };
+
+          isInitialized = true;
+          StateHasChanged();
+     }
+
+     void DrawerToggle()
+     {
+          _drawerOpen = !_drawerOpen;
+     }
+
+     private async Task ToggleTheme()
+     {
+          await ThemeService.ToggleThemeAsync();
+          StateHasChanged();
+     }
+
+     MudTheme IccBrossardTheme = new MudTheme()
+     {
+          PaletteLight = new PaletteLight()
+          {
+               Primary = Colors.BlueGray.Darken2,
+          },
+          PaletteDark = new PaletteDark()
+          {
+               Primary = Colors.BlueGray.Lighten1
+          },
+
+     };
+
+     private async Task UpdateLanguageFlag(string lang)
+     {
+          if (!string.IsNullOrWhiteSpace(lang))
+          {
+
+               switch (lang)
+               {
+                    case "fr":
+                         _SelectedFlag = "/images/flag_france.png";
+                         break;
+                    default:
+                         _SelectedFlag = "/images/flag_canada.png";
+                         break;
+               }
+          }
+     }
+
+     private async Task SelectLanguage(string lang)
+     {
+          if (!string.IsNullOrWhiteSpace(lang))
+          {
+
+               UpdateLanguageFlag(lang);
+
+               await OnCultureChanged(lang);
+          }
+     }
+
+     private async Task OnCultureChanged(string culture)
+     {
+
+          await GlobalizationService.SaveCultureAsync(culture);
+
+          // var ci = new CultureInfo(culture);
+          // CultureInfo.DefaultThreadCurrentCulture = ci;
+          // CultureInfo.DefaultThreadCurrentUICulture = ci;
+
+          // Force UI refresh
+          //StateHasChanged();
+     }
+}

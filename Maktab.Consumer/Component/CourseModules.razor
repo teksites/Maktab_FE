@@ -1,0 +1,36 @@
+﻿@using Maktab.Models.Models
+@inherits LocalizeableBaseComponent<CourseModules>
+
+<MudPaper Class="pa-4 mt-4">
+     <MudText Typo="Typo.h6" Class="mb-2">@L[MaktabResources.Course_Outline]</MudText>
+
+     @if (Modules?.Any() == true)
+     {
+          @* <MudList T="string" Dense="true">
+               @foreach (var module in Modules)
+               {
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                         <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Primary" />
+                         <MudText>@module</MudText>
+                    </MudStack>
+               }
+          </MudList> *@
+
+          <MudTimeline TimelinePosition="TimelinePosition.Start">
+               @foreach (var module in Modules)
+               {
+                    <MudTimelineItem TimelineAlign="TimelineAlign.Default">
+                         <MudText>@module</MudText>
+                    </MudTimelineItem>
+               }
+               </MudTimeline>
+     }
+     else
+     {
+          <MudText Typo="Typo.body2" Color="Color.Secondary">L[MaktabResources.Msg_Info_No_Course_Modules]</MudText>
+     }
+</MudPaper>
+
+@code {
+     [Parameter] public IEnumerable<string> Modules { get; set; }
+}

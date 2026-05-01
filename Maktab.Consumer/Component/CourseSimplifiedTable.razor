@@ -1,0 +1,39 @@
+﻿@using MaktabDataContracts.Responses.Course
+@inherits LocalizeableBaseComponent<CourseSimplifiedTable>
+
+<MudCard Class="mb-4">
+    <MudCardContent>
+        <MudText Typo="Typo.h6">@L[MaktabResources.Enrolled_Courses]</MudText>
+          <MudTable T="CourseResponseDetailed" Items="Courses" >
+            <HeaderContent>
+                <MudTh>@L[MaktabResources.Course]</MudTh>
+                <MudTh>@L[MaktabResources.Category]</MudTh>
+                <MudTh>@L[MaktabResources.Status]</MudTh>
+                <MudTh>@L[MaktabResources.Start]</MudTh>
+                <MudTh>@L[MaktabResources.End]</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.Name</MudTd>
+                <MudTd>@context.InstituteId</MudTd>
+                <MudTd>
+                         <MudChip T="CourseResponseDetailed" Color="@GetCourseStatusColor(context)">
+                        @context.Name
+                    </MudChip>
+                </MudTd>
+                <MudTd>@context.StartDate.ToShortDateString()</MudTd>
+                <MudTd>@context.EndDate.ToShortDateString()</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudCardContent>
+</MudCard>
+
+@code {
+     [Parameter] public IEnumerable<CourseResponseDetailed> Courses { get; set; }
+
+     private Color GetCourseStatusColor(CourseResponseDetailed status) => status.IsCourseCompleted switch
+     {
+          false => Color.Success,
+          true => Color.Info,
+          //_ => Color.Default
+     };
+}

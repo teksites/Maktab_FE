@@ -1,0 +1,41 @@
+﻿@inherits BaseDialog<EditExtendedInfoDialog>
+@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Responses.Users
+@using MudBlazor
+
+<MudDialog>
+     <DialogContent>
+          @if (isInitialized)
+          {
+               <EditExtendedInfo ExtendedModel="@(ExtendedInfo)" OnSave="SaveDialog" OnCancel="CancelDialog" />
+          }
+          else
+          {
+               <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+          }
+     </DialogContent>
+</MudDialog>
+
+@code {
+
+     [Parameter, EditorRequired] public ExtendedUserInformationResponse ExtendedInfo { get; set; }
+     private bool isInitialized = false;
+
+
+     protected async override Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private void SaveDialog(ExtendedUserInformationResponse userInfo)
+     {
+          MudDialog.Close(DialogResult.Ok(userInfo));
+     }
+
+     private void CancelDialog()
+     {
+          MudDialog.Cancel();
+     }
+}

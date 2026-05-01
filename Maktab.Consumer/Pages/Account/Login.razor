@@ -1,0 +1,169 @@
+﻿@page "/account/login"
+
+@inherits BaseFormComponent<Login>
+
+@using System.ComponentModel.DataAnnotations
+@using Maktab.Consumer.Helpers
+@using Maktab.Consumer.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthProvider
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="py-8">
+     <MudPaper Class="pa-6" Elevation="0" Outlined="true">
+
+               @if (isInitialized)
+               {
+               <MudText Typo="Typo.h5" Class="mb-6 text-center">@L[MaktabResources.Login]</MudText>
+
+                    <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleLogin)" Validated="@(OnFormValidated)">
+
+                         <MudTextField T="string" Label=@L[MaktabResources.Email]
+                                       @bind-Value="username"
+                                       Required="true"
+                                       RequiredError=@L[MaktabResources.Email_Required]
+                                       Validation="@(new EmailAddressAttribute() {ErrorMessage = @L[MaktabResources.Email_Invalid]})"
+                                       Immediate="true" />
+                         <MudStack Spacing="0">
+                              <MudTextField T="string" Label=@L[MaktabResources.Password]
+                                            @bind-Value="password"
+                                            InputType="InputType.Password"
+                                            Required="true"
+                                            RequiredError=@L[MaktabResources.Password_Required]
+                                            Immediate="true"
+                                            @onkeydown="@(async (KeyboardEventArgs e) => await OnKeyDown(e))" />
+                              <MudText Class="mt-2" Align="Align.End">
+                                   <MudLink Href="@Constants.ForgotPasswordRoute" Color="Color.Default">@L[MaktabResources.Password_Forgot]</MudLink>
+                              </MudText>
+                         </MudStack>
+
+                         @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                         {
+                              <MudAlert Severity="Severity.Error" Elevation="0" Class="my-4">
+                                   @_errorMessage
+                              </MudAlert>
+                         }
+
+                    <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+                         <MudButton Href="@Constants.RegisterParentRoute" Variant="Variant.Outlined" 
+                                    Color="Color.Default" StartIcon="@Icons.Material.Filled.AppRegistration"
+                                    Disabled="@(authenticating || rateLimiter.IsLockedOut)">@L[MaktabResources.Create_New_Account]</MudButton>
+                         <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" 
+                                    StartIcon="@Icons.Material.Filled.Login"
+                                    Disabled="@(!_isValid || authenticating || rateLimiter.IsLockedOut)" OnClick="@(HandleLogin)">
+                                   @if (authenticating)
+                                   {
+                                        <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                                        <span>@L[MaktabResources.Msg_Info_Authenticating]</span>
+                                   }
+                                   else if (rateLimiter.IsLockedOut)
+                                   {
+                                        <span>@L[MaktabResources.Msg_Wait_For_Seconds,rateLimiter.RemainingSeconds]</span>
+                                   }
+                                   else
+                                   {
+                                        <span>@L[MaktabResources.Login]</span>
+                                   }
+                              </MudButton>
+                         </MudStack>
+
+                    </MudForm>
+               }
+               else
+               {
+                    <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+               }
+
+          </MudPaper>
+</MudContainer>
+
+@code {
+
+     bool isInitialized = false;
+     private string username = string.Empty;
+     private string password = string.Empty;
+     private bool authenticating = false;
+     private RateLimitHandler rateLimiter = new RateLimitHandler(maxAttempts: 3, lockoutDurationSeconds: 30);
+
+     protected async override Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+          bool isAuthorized = await SessionService.IsAuthenticatedAsync();
+          if (isAuthorized)
+          {
+               NavigationManager.NavigateTo(Constants.CodeValidationRoute);
+          }
+
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private async Task OnKeyDown(KeyboardEventArgs e)
+     {
+          if (e.Key == "Enter" && _isValid && !authenticating && !rateLimiter.IsLockedOut)
+          {
+               await HandleLogin();
+          }
+     }
+
+     private async Task HandleLogin()
+     {
+          // Check if locked out before attempting login
+          if (rateLimiter.CheckLockout())
+          {
+               _errorMessage = L[MaktabResources.Msg_Warning_Account_Locked_Seconds, rateLimiter.RemainingSeconds];
+               RequestRender();
+               return;
+          }
+
+          authenticating = true;
+          RequestRender();
+          await InvokeUserAction(LoginToSystem);
+          authenticating = false;
+          RequestRender();
+     }
+
+     private async Task LoginToSystem()
+     {
+          var logInfo = new MaktabDataContracts.Requests.Authentication.UserLoginInformation
+          {
+               UserName = username,
+               Password = password
+          };
+
+          var result = await SessionService.Login(logInfo);
+          if (result)
+          {
+               // Clear failed attempts on successful login
+               rateLimiter.RecordSuccess();
+
+               if (AuthProvider is AuthStateProvider asp)
+               {
+                    asp.NotifyUserAuthentication();
+               }
+               // Redirect after successful login
+               NavigationManager.NavigateTo(Constants.CodeValidationRoute);
+          }
+          else
+          {
+               // Record failed attempt
+               rateLimiter.RecordFailedAttempt();
+
+               if (rateLimiter.IsLockedOut)
+               {
+                    _errorMessage = L[MaktabResources.Msg_Warning_Failed_Attempt_Account_Locked_Seconds, rateLimiter.RemainingSeconds];
+                    rateLimiter.StartCountdownTimer(() => RequestRender());
+               }
+               else
+               {
+                    _errorMessage = L[MaktabResources.Msg_Warning_Failed_Login_Attempt_Counter, rateLimiter.RemainingAttempts];
+               }
+
+               RequestRender();
+          }
+     }
+
+     public void Dispose()
+     {
+          rateLimiter?.Dispose();
+     }
+}

@@ -1,0 +1,220 @@
+@using Maktab.Consumer.State
+@using Maktab.Consumer.Extensions
+@using MaktabDataContracts.Responses.OtherContacts
+@using MaktabDataContracts.Enums
+@using MudBlazor
+
+@inherits LocalizeableBaseComponent<ContactSimplifiedList>
+
+@inject IDialogService DialogService
+@inject IContactService ContactService
+@inject IContactFormattingService ContactFormatter
+@inject ISnackbar Snackbar
+@inject UserStateService StateService
+
+@if (ShowHeader)
+{
+     <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="space-between" Class="mb-2">
+          <MudText Typo="Typo.h6">@L[MaktabResources.Contacts]</MudText>
+          @if (ShowAddButton)
+          {
+               <MudButton Variant="Variant.Outlined"
+                          Color="Color.Primary"
+                          StartIcon="@Icons.Material.Filled.Add"
+                          OnClick="OnAddClicked">
+                    @L[MaktabResources.Add_Contact]
+               </MudButton>
+          }
+     </MudStack>
+}
+
+@if (IsLoading)
+{
+     <MudStack Spacing="2">
+          @for (int i = 0; i < 2; i++)
+          {
+               <MudCard Class="pa-3">
+                    <MudStack Spacing="1">
+                         <MudSkeleton SkeletonType="SkeletonType.Text" Height="20px" Width="40%" />
+                         <MudSkeleton SkeletonType="SkeletonType.Text" Height="16px" Width="100%" />
+                         <MudSkeleton SkeletonType="SkeletonType.Text" Height="16px" Width="80%" />
+                    </MudStack>
+               </MudCard>
+          }
+     </MudStack>
+}
+else if (Contacts is not null && Contacts.Any())
+{
+     <MudList T="OtherContactResponse" ReadOnly="true" Dense="false" Class="px-0">
+          @foreach (var contact in Contacts)
+          {
+               <MudListItem Class="contact-list-item pa-3 my-2 rounded-lg" Style="border: 1px solid var(--mud-palette-divider);">
+                    <MudStack Spacing="2" Style="width: 100%;">
+                         <!-- Header Row: Icon, Title, Relationship Badge, Menu -->
+                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width: 100%;">
+                              <!-- Icon -->
+                              <MudIcon Color="@ContactFormatter.GetRelationshipColor(contact)"
+                                       Icon="@ContactFormatter.GetContactIcon(contact)"
+                                       Size="Size.Medium" />
+
+                              <!-- Name and Relationship -->
+                              <MudStack Spacing="0">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudText Typo="Typo.subtitle2" Class="font-weight-600">
+                                             @contact.FirstName @contact.LastName
+                                        </MudText>
+                                        @if (contact.Relationship != Relationship.Unknown)
+                                        {
+                                             <MudChip T="string"
+                                                     Size="Size.Small"
+                                                     Color="@ContactFormatter.GetRelationshipColor(contact)"
+                                                     Variant="Variant.Filled"
+                                                     Label="true">
+                                                  @(GetRelationshipLabel(contact.Relationship))
+                                             </MudChip>
+                                        }
+                                   </MudStack>
+                              </MudStack>
+
+                              <MudSpacer />
+
+                              <!-- Menu -->
+                              <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
+                                   <MudMenuItem OnClick="() => OnEditClicked(contact)">
+                                        @L[MaktabResources.Edit]
+                                   </MudMenuItem>
+                                   <MudMenuItem OnClick="() => OnDeleteClicked(contact)">
+                                        @L[MaktabResources.Remove]
+                                   </MudMenuItem>
+                              </MudMenu>
+                         </MudStack>
+
+                         <!-- Contact Details -->
+                         <MudStack Spacing="0" Class="contact-content">
+                              <!-- Phone -->
+                              @if (!string.IsNullOrWhiteSpace(contact.Phone))
+                              {
+                                   <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                        <MudIcon Icon="@Icons.Material.Filled.Phone"
+                                                 Size="Size.Small"
+                                                 Class="text-secondary" />
+                                        <MudText Typo="Typo.body2">
+                                             @contact.Phone
+                                        </MudText>
+                                   </MudStack>
+                              }
+
+                              <!-- Email -->
+                              @* @if (!string.IsNullOrWhiteSpace(contact.Email))
+                              {
+                                   <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                                        <MudIcon Icon="@Icons.Material.Filled.Email"
+                                                 Size="Size.Small"
+                                                 Class="text-secondary" />
+                                        <MudText Typo="Typo.body2">
+                                             @contact.Email
+                                        </MudText>
+                                   </MudStack>
+                              } *@
+
+                              <!-- Contact Type if present -->
+                              @if (!string.IsNullOrWhiteSpace(contact?.ContactType.ToString()))
+                              {
+                                   <MudText Typo="Typo.caption">
+                                        @(GetContactTypeLabel(contact.ContactType))
+                                   </MudText>
+                              }
+                         </MudStack>
+                    </MudStack>
+               </MudListItem>
+          }
+     </MudList>
+}
+else
+{
+     <MudAlert Severity="Severity.Info" Class="mt-4">
+          <MudStack Spacing="2">
+               <MudText Typo="Typo.body2" Class="font-weight-600">
+                    @L[MaktabResources.Msg_Info_No_Contact_Available]
+               </MudText>
+               <MudText Typo="Typo.body2">
+                    @L[MaktabResources.Msg_Info_Add_Contact_Guidance]
+               </MudText>
+          </MudStack>
+     </MudAlert>
+}
+
+@code {
+     [Parameter]
+     public IEnumerable<OtherContactResponse>? Contacts { get; set; }
+
+     [Parameter]
+     public EventCallback OnAdd { get; set; }
+
+     [Parameter]
+     public EventCallback<OtherContactResponse> OnEdit { get; set; }
+
+     [Parameter]
+     public EventCallback<OtherContactResponse> OnDelete { get; set; }
+
+     [Parameter]
+     public bool ShowAddButton { get; set; } = true;
+
+     [Parameter]
+     public bool ShowHeader { get; set; } = true;
+
+     [Parameter]
+     public bool IsLoading { get; set; } = false;
+
+     private Task OnAddClicked() => OnAdd.InvokeAsync();
+
+     private Task OnEditClicked(OtherContactResponse contact) => OnEdit.InvokeAsync(contact);
+
+     private async Task OnDeleteClicked(OtherContactResponse contact)
+     {
+          // Show confirmation dialog
+          bool? result = await DialogService.ShowMessageBox(
+               title: L[MaktabResources.Warning],
+               message: L[MaktabResources.Msg_Question_Remove_Contact],
+               yesText: L[MaktabResources.Remove],
+               cancelText: L[MaktabResources.Cancel]);
+
+          if (result.HasValue && result.Value)
+          {
+               try
+               {
+                    var deleted = await ContactService.DeleteContactById(contact.ContactId);
+                    if (deleted)
+                    {
+                         Snackbar.Add(L[MaktabResources.Msg_Success_Contact_Removed], Severity.Success);
+                         await OnDelete.InvokeAsync(contact);
+                    }
+                    else
+                    {
+                         Snackbar.Add(L[MaktabResources.Msg_Error_Contact_Not_Removed], Severity.Error);
+                    }
+               }
+               catch (Exception ex)
+               {
+                    Snackbar.Add(L[MaktabResources.Msg_Error_Contact_Not_Removed], Severity.Error);
+                    Console.Error.WriteLine($"Error deleting contact: {ex.Message}");
+               }
+          }
+     }
+}
+
+<style>
+.contact-list-item {
+    transition: all 0.2s ease;
+}
+
+.contact-list-item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.contact-content {
+    line-height: 1.5;
+    word-break: break-word;
+}
+</style>

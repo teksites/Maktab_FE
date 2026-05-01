@@ -1,0 +1,29 @@
+﻿@using MaktabDataContracts.Responses.Children
+@inherits LocalizeableBaseComponent<ChildSimplifiedList>
+
+
+<MudExpansionPanel Text=@L[MaktabResources.Children]>
+     <MudList T="ChildResponse">
+        @foreach (var child in Children)
+        {
+            <MudListItem>
+                    <MudAvatar Size="Size.Small" Color="Color.Secondary">@child.FirstName[0]</MudAvatar>
+                <MudText>@child.FirstName (Age: @child.)</MudText>
+                <MudSpacer />
+                <MudButton Variant="Variant.Text" OnClick="@(() => OnViewCourses.InvokeAsync(child.ChildId))">
+                    @L[MaktabResources.ViewAllCourses]
+                </MudButton>
+            </MudListItem>
+        }
+    </MudList>
+    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add"
+               OnClick="OnAddChild">
+         @L[MaktabResources.Add_Child]
+    </MudButton>
+</MudExpansionPanel>
+
+@code {
+     [Parameter] public IEnumerable<ChildResponse> Children { get; set; }
+     [Parameter] public EventCallback<Guid> OnViewCourses { get; set; }
+    [Parameter] public EventCallback OnAddChild { get; set; }
+}

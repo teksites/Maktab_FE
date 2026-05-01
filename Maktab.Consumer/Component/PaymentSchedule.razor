@@ -1,0 +1,92 @@
+﻿@using Maktab.Consumer.State
+@using Maktab.Consumer.Extensions
+@using MaktabDataContracts.Responses.Course
+@using MaktabDataContracts.Responses.Transactions
+@using MaktabDataContracts.Responses.Users
+
+@inherits LocalizeableBaseComponent<PaymentSchedule>
+
+@inject ICourseService CourseService
+@inject IUserService UserService
+@inject UserStateService StateService
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="py-8">
+     <!-- Loading Overlay -->
+          <LoadingOverlay IsLoading="@IsLoadingData" />
+
+     @if (isInitialized && !IsLoadingData)
+     {
+          <MudPaper Class="pa-8 text-center" Elevation="0">
+
+               <MudSimpleTable Outlined="false" Hover="false" Dense="false" Striped="true" FixedHeader="true">
+                    <thead>
+                         <tr>
+                              <th>@L[MaktabResources.Description]</th>
+                              <th>@L[MaktabResources.Due_Date]</th>
+                              <th>@L[MaktabResources.Amount_Due]</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+                         
+                         @foreach (var g in FeeInstallments)
+                         {
+                              <tr>
+                                   <td>@(GetPaymentDescription(g))</td>
+                                   <td>@g.DueDate</td>
+                                   <td>@g.Amount</td>
+                              </tr>
+                         }
+                    </tbody>
+               </MudSimpleTable>
+          </MudPaper>
+
+     }
+</MudContainer>
+
+     @code {
+     [Parameter] public IList<FeeInstallment> FeeInstallments { get; set; } = Array.Empty<FeeInstallment>();
+
+     protected bool IsLoadingData = false;
+     protected bool isInitialized = false;
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.ParentState.OnChange += HandleStateChange;
+          StateService.InstituteState.OnChange += HandleStateChange;
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.ParentState.OnChange -= HandleStateChange;
+          StateService.InstituteState.OnChange -= HandleStateChange;
+     }
+
+
+     protected override async Task OnInitializedAsync()
+     {
+
+          await base.OnInitializedAsync();
+
+          var userId = await SessionService.GetLoggedInUserIdAsync();
+
+          await LoadData(userId, true);
+
+          isInitialized = true;
+     }
+
+     protected async Task LoadData(Guid userId, bool forceLoad = false)
+     {
+          IsLoadingData = true;
+
+
+          IsLoadingData = false;
+     }
+
+     
+}

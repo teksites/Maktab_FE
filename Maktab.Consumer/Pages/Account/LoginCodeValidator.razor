@@ -1,0 +1,168 @@
+﻿@page "/account/usercodevalidation"
+@using Maktab.Consumer.Helpers
+
+@inherits BaseFormComponent<LoginCodeValidator>
+
+@* @inject IAccountService AccountService *@
+@inject IUserService UserService
+@inject IAddressService AddressService
+
+@* @inject IAlertService AlertService *@
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="py-8">
+     <MudPaper Class="pa-6" Elevation="0" Outlined="false">
+
+               @if(isInitialized)
+               {
+               <MudText Typo="Typo.h5" Class="mb-6 text-center">@L[MaktabResources.Validate_Code]</MudText>
+                         <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleCodeValidation)" Validated="@(OnFormValidated)">
+
+                    <MudAlert Severity="Severity.Info" Elevation="0" Class="mb-4">@L[MaktabResources.Msg_Info_Enter_Code_Email]</MudAlert>
+
+                                   <MudTextField Immediate="true" T="string" Label="Code" @bind-Text="@emailValidationCode" Required="true" RequiredError=@L[MaktabResources.Msg_Info_Enter_Code] />
+
+                    @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                    {
+                         <MudAlert Severity="Severity.Error" Elevation="0" Class="mt-4">@_errorMessage</MudAlert>
+                    }
+
+                    <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+                         <MudButton OnClick="@(HandleSendUserCode)" Variant="Variant.Text"
+                                    Color="Color.Primary" StartIcon="@Icons.Material.Filled.Refresh"
+                                    Disabled="@isSendingCodeAgain">
+                                        @if (isSendingCodeAgain)
+                                        {
+                                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                                  <MudText Class="ms-2">@L[MaktabResources.Sending_Code]</MudText>
+                                        }
+                                        else
+                                        {
+                                                  <MudText>@L[MaktabResources.Send_Code_Again]</MudText>
+                                        }
+                                   </MudButton>
+
+                         <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" 
+                                    StartIcon="@Icons.Material.Filled.Check"
+                                    Disabled="@(!_isValid || isCodeValidating)" OnClick="@(HandleCodeValidation)">
+                              @if (isCodeValidating)
+                              {
+                                   <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                   <MudText Class="ms-2">@L[MaktabResources.Msg_Processing]</MudText>
+                              }
+                              else
+                              {
+                                   <MudText>@L[MaktabResources.Validate]</MudText>
+                              }
+                         </MudButton>
+                                   </MudStack>
+
+                    </MudForm>
+               }
+               else
+               {
+                    <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing]/>
+               }
+          </MudPaper>
+</MudContainer>
+@code {
+     string username;
+     Guid userId = Guid.Empty;
+     bool success;
+     bool isCodeValidating = false;
+     bool isSendingCodeAgain = false;
+     bool isInitialized = false;
+     string emailValidationCode =string.Empty;
+
+     protected override async Task OnInitializedAsync()
+     {
+          //isInitialized = true;
+          await base.OnInitializedAsync();
+
+          username = await SessionService.GetUserNameAsync();
+          userId = await SessionService.GetLoggedInUserIdAsync();
+          var userInfo = await UserService.GetUserByIdAsync(userId);
+
+          if (userInfo == null || !userInfo.IsActive)
+          {
+               NavigationManager.NavigateTo(Constants.LoginRoute);
+          }
+          else if (!userInfo.IfTempUser)
+          {
+               var userAddress = await AddressService.GetAddressesByConnectedId(userInfo.UserId);
+               if (userAddress?.Any(x => x.HomeAddress) == true)
+               {
+                    NavigationManager.NavigateTo(Constants.ParentDashboardRoute);
+               }
+               else
+               {
+                    NavigationManager.NavigateTo(Constants.AddParentProfileDetailRoute);
+               }
+          }
+
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private async void HandleCodeValidation()
+     {
+          try
+          {
+               isCodeValidating = true;
+               RequestRender();
+
+               await InvokeUserAction(ValidateUserCode);
+
+          }
+          finally
+          {
+               isCodeValidating = false;
+               RequestRender();
+          }
+     }
+
+     private async Task ValidateUserCode()
+     {
+
+          var activated = await UserService.ActivateUserByCodeAsync(userId,
+               new MaktabDataContracts.Requests.Users.UserVerificationRequest()
+               {
+                    EmailVerificationCode = emailValidationCode,
+               });
+
+          if(activated)
+          {
+               NavigationManager.NavigateTo(Constants.AddParentProfileDetailRoute);
+          }
+          else
+          {
+               _errorMessage = L[MaktabResources.Msg_Error_Invalid_Code];
+               Snackbar.Add(_errorMessage, Severity.Error);
+          }
+     }
+
+
+     private async void HandleSendUserCode()
+     {
+          try
+          {
+               isSendingCodeAgain = true;
+               RequestRender();
+               await InvokeUserAction(SendUserCode);
+          }
+          finally
+          {
+               isSendingCodeAgain = false;
+               RequestRender();
+          }
+     }
+
+     private async Task SendUserCode()
+     {
+          var codeSent = await UserService.SendUserActivationCodeAsync(userId);
+          if (!codeSent)
+          {
+               _errorMessage = L[MaktabResources.Msg_Error_Request_Not_Processed];
+               Snackbar.Add(_errorMessage, Severity.Error);
+          }
+     }
+}

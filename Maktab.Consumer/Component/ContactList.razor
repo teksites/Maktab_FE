@@ -1,0 +1,25 @@
+﻿@using MaktabDataContracts.Requests.OtherContacts
+
+@* <MudList Dense="true">
+    @foreach (var contact in Contacts)
+    {
+        <MudListItem T="AddOtherContact">
+            <MudListItemText>
+                <MudText Typo="Typo.body1">@contact.FirstName @contact.LastName</MudText>
+                <MudText Typo="Typo.caption">📞 @contact.Phone</MudText>
+                <MudText Typo="Typo.caption">Type: @contact.ContactType | Relation: @contact.Relationship</MudText>
+            </MudListItemText>
+
+            <MudListItemIcon>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                               Color="Color.Primary"
+                               OnClick="@(() => OnEdit.InvokeAsync(contact))" />
+            </MudListItemIcon>
+        </MudListItem>
+    }
+</MudList> *@
+
+@code {
+    [Parameter] public List<AddOtherContact> Contacts { get; set; } = new();
+    [Parameter] public EventCallback<AddOtherContact> OnEdit { get; set; }
+}

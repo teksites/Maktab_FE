@@ -1,0 +1,640 @@
+﻿@page "/payment/payment-details"
+@using Maktab.Consumer.Extensions
+@using Maktab.Consumer.State
+@using MaktabDataContracts.Responses.Course
+@using MaktabDataContracts.Responses.Institute
+@using MaktabDataContracts.Responses.Transactions
+@using MaktabDataContracts.Responses.Users
+@using Maktab.Consumer.Dialogs
+
+@inherits BasePaymentComponent<PaymentDetailPage>
+
+@inject IDialogService DialogService
+@inject UserStateService StateService
+@inject IUserService UserService
+@inject ICourseEnrollmentService CourseEnrollmentService
+@inject ICourseEnrollmentTransactionService CourseEnrollmentTransactionService
+@inject ICourseService CourseService
+@inject IInstitutionService InstitutionService
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
+
+     <!-- Breadcrumbs Navigation -->
+     <MudBreadcrumbs Items="breadcrumbItems" Class="mb-6" />
+
+     <!-- Page Header with Alert -->
+     <MudStack Spacing="2" Class="mb-8">
+          <MudText Typo="Typo.h4" Class="font-weight-bold">@L[MaktabResources.Payment_Details]</MudText>
+          <MudText Typo="Typo.body2" Style="opacity: 0.7;">
+               @L[MaktabResources.Msg_Info_Manage_Course_Transaction_Payments]
+          </MudText>
+
+          <!-- Alert for Outstanding Amount -->
+          @* @if (Outstanding > 0)
+        {
+            <MudAlert Severity="Severity.Warning" Dense="true" Class="mt-2">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                    <MudText Typo="Typo.body2">
+                        You have <strong>@Outstanding.ToString("C2")</strong> outstanding payment.
+                    </MudText>
+                    <MudSpacer />
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" Size="Size.Small"
+                               OnClick="@ScrollToOutstanding">
+                        View Now
+                    </MudButton>
+                </MudStack>
+            </MudAlert>
+        } *@
+     </MudStack>
+
+     @if (!isInitialized || isDataLoading)
+     {
+          <!-- Loading State -->
+          <MudStack Spacing="3">
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="120px" Class="rounded-lg" />
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="300px" Class="rounded-lg" />
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="300px" Class="rounded-lg" />
+          </MudStack>
+     }
+     else
+     {
+          <!-- Summary Section with Enhanced Cards -->
+          <MudGrid Class="my-6" Spacing="3">
+               <!-- Total Amount Card -->
+               <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%); border-left: 4px solid #2196F3;">
+                         <MudStack Spacing="2">
+                              <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudText Typo="Typo.body2" Class="font-weight-medium" Style="opacity: 0.7;">
+                                             @L[MaktabResources.Total_Amount]
+                                        </MudText>
+                                        <MudTooltip Text=@L[MaktabResources.Msg_Info_Total_Amount]>
+                                             <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" />
+                                        </MudTooltip>
+                                   </MudStack>
+                                   <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Info" />
+                              </MudStack>
+                              <MudText Typo="Typo.h5" Class="font-weight-bold">
+                                   @TotalPayable
+                              </MudText>
+                              @* <MudProgressLinear Value="100" Color="Color.Info" Class="mt-2" /> *@
+                         </MudStack>
+                    </MudPaper>
+               </MudItem>
+
+               <!-- Amount Paid Card -->
+               <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%); border-left: 4px solid #4CAF50;">
+                         <MudStack Spacing="2">
+                              <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudText Typo="Typo.body2" Class="font-weight-medium" Style="opacity: 0.7;">
+                                             @L[MaktabResources.Amount_Paid]
+                                        </MudText>
+                                        <MudTooltip Text=@L[MaktabResources.Msg_Info_Amount_Paid]>
+                                             <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" />
+                                        </MudTooltip>
+                                   </MudStack>
+                                   <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Color="Color.Success" />
+                              </MudStack>
+                              <MudText Typo="Typo.h5" Class="font-weight-bold" Color="Color.Success">
+                                   @TotalPaid
+                              </MudText>
+                              @* <MudProgressLinear Value="@GetProgressPercentage()" Color="Color.Success" Class="mt-2" /> *@
+                         </MudStack>
+                    </MudPaper>
+               </MudItem>
+
+               <!-- Amount Due Card -->
+               <MudItem xs="12" sm="6" md="4">
+                    <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%); border-left: 4px solid #F44336;">
+                         <MudStack Spacing="2">
+                              <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                        <MudText Typo="Typo.body2" Class="font-weight-medium" Style="opacity: 0.7;">
+                                             @L[MaktabResources.Amount_Due]
+                                        </MudText>
+                                        <MudTooltip Text=@L[MaktabResources.Msg_Info_Amount_Due]>
+                                             <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Small" />
+                                        </MudTooltip>
+                                   </MudStack>
+                                   <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Error" />
+                              </MudStack>
+                              <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                   <MudText Typo="Typo.h5" Class="font-weight-bold" Color="Color.Error">
+                                        @Outstanding
+                                   </MudText>
+                                   @* <MudProgressCircular Value="@GetProgressPercentage()" Color="Color.Success" Size="Size.Small" /> *@
+                              </MudStack>
+                              @* <MudProgressLinear Value="@GetProgressPercentage()" Color="Color.Error" Class="mt-2" Rounded="true" /> *@
+                         </MudStack>
+                    </MudPaper>
+               </MudItem>
+          </MudGrid>
+
+          <!-- Transactions Section -->
+          <MudStack Spacing="3" Class="mt-8">
+               <MudText Typo="Typo.h5" Class="font-weight-bold">@L[MaktabResources.Payment_Transaction]</MudText>
+
+               @if (GroupedData.Any())
+               {
+                    <!-- Use Expansion Panels for better organization -->
+                    <MudExpansionPanels Elevation="1" Class="mb-6">
+                         @foreach (var instituteGroup in GroupedData)
+                         {
+                              <MudExpansionPanel Text="@GetInstituteName(instituteGroup.InstituteId)" Expanded="true">
+                                   <MudGrid Spacing="2">
+                                        @foreach (var courseGroup in instituteGroup.Courses)
+                                        {
+                                             @foreach (var transaction in courseGroup.Transactions)
+                                             {
+                                                  <!-- Transaction Card with Menu -->
+                                                  <MudItem xs="12" md="6" lg="4">
+                                                       <MudCard Class="h-100" Elevation="0" Style="border: 1px solid rgba(0,0,0,0.08);">
+                                                            <!-- Card Header with Menu -->
+                                                            <MudCardHeader Class="pb-2">
+                                                                 <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="1" Class="w-100">
+                                                                           <MudText Typo="Typo.subtitle2" Class="font-weight-bold">
+                                                                                @GetCourseName(courseGroup.CourseId)
+                                                                           </MudText>
+                                                                           @*  <MudMenu AnchorOrigin="Origin.TopRight" TransformOrigin="Origin.TopRight" Dense="true">
+                                                                    <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small" />
+                                                                    <MudMenuItem Icon="@Icons.Material.Filled.Visibility">
+                                                                        View Details
+                                                                    </MudMenuItem>
+                                                                    @if (transaction.TotalPayable > transaction.TotalAmountPaid)
+                                                                    {
+                                                                        <MudMenuItem Icon="@Icons.Material.Filled.Payment" OnClick="@(() => OpenZeffyPaymentDialog(transaction))">
+                                                                            Make Payment
+                                                                        </MudMenuItem>
+                                                                    }
+                                                                    <MudMenuItem Icon="@Icons.Material.Filled.Download">
+                                                                        Download Invoice
+                                                                    </MudMenuItem>
+                                                                </MudMenu> *@
+                                                                           <MudSpacer />
+                                                                      <MudChip T="String" Color="@GetStatusColor(transaction)"
+                                                                               Variant="Variant.Filled"
+                                                                               Size="Size.Small"
+                                                                               Style="width: fit-content;">
+                                                                           @GetStatusText(transaction)
+                                                                      </MudChip>
+                                                                 </MudStack>
+                                                            </MudCardHeader>
+
+                                                            <!-- Card Content -->
+                                                            <MudCardContent Class="py-2">
+                                                                 <MudStack Spacing="2">
+                                                                      <!-- Payment Code with Tooltip -->
+                                                                      <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                                                           <MudTooltip Text=@L[MaktabResources.Msg_Info_Payment_Code]>
+                                                                                <MudText Typo="Typo.caption" Style="opacity: 0.7;">
+                                                                                     @L[MaktabResources.Payment_Code]
+                                                                                </MudText>
+                                                                           </MudTooltip>
+                                                                           <MudSpacer />
+                                                                           <MudText Typo="Typo.body2" Class="font-weight-medium">
+                                                                                @transaction.PaymentCode
+                                                                           </MudText>
+                                                                      </MudStack>
+
+                                                                      <!-- Amount Details -->
+                                                                      <MudDivider DividerType="DividerType.FullWidth" />
+
+                                                                      <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                                                           <MudTooltip Text=@L[MaktabResources.Total_Course_Fee]>
+                                                                                     <MudText Typo="Typo.caption" Style="opacity: 0.7;">
+                                                                                          @L[MaktabResources.Course_Fee]
+                                                                                     </MudText>
+                                                                           </MudTooltip>
+                                                                               
+                                                                           <MudSpacer />
+
+                                                                           <MudText Typo="Typo.body2" Class="font-weight-medium" Color="Color.Info">
+                                                                                @transaction.PayableFee.ToString("F2")
+                                                                           </MudText> 
+                                                                      </MudStack>
+
+                                                                      <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                                                           <MudTooltip Text=@L[MaktabResources.Registration_Fee]>
+                                                                                <MudText Typo="Typo.caption" Style="opacity: 0.7;">
+                                                                                     @L[MaktabResources.Registration_Fee]
+                                                                                </MudText>
+                                                                           </MudTooltip>
+                                                                           <MudSpacer />
+
+                                                                           <MudText Typo="Typo.body2" Class="font-weight-medium" Color="Color.Info">
+                                                                                @transaction.RegistrationFee.ToString("F2")
+                                                                           </MudText>
+                                                                      </MudStack>
+
+
+                                                                      <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                                                           <MudTooltip Text=@L[MaktabResources.Daycare_Fee]>
+                                                                                <MudText Typo="Typo.caption" Style="opacity: 0.7;">
+                                                                                     @L[MaktabResources.Daycare_Fee]
+                                                                                </MudText>
+                                                                           </MudTooltip>
+                                                                           <MudSpacer />
+
+                                                                           <MudText Typo="Typo.body2" Class="font-weight-medium" Color="Color.Info">
+                                                                                @transaction.DayCareFee.ToString("F2")
+                                                                           </MudText>
+                                                                      </MudStack>
+
+                                                                      <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                                                           <MudTooltip Text=@L[MaktabResources.Amount_Paid]>
+                                                                                <MudText Typo="Typo.caption" Style="opacity: 0.7;">
+                                                                                     @L[MaktabResources.Amount_Paid]
+                                                                                </MudText>
+                                                                           </MudTooltip>
+                                                                           <MudSpacer />
+
+                                                                           <MudText Typo="Typo.body2" Class="font-weight-medium" Color="Color.Success">
+                                                                                @transaction.TotalAmountPaid.ToString("F2")
+                                                                           </MudText>
+                                                                      </MudStack>
+
+                                                                      @* @if (transaction.FeeAmountDiscount > 0) 
+                                                            {*@
+                                                                      <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                                                           <MudTooltip Text=@L[MaktabResources.Tooltip_Course_Discount]>
+                                                                                <MudText Typo="Typo.caption" Style="opacity: 0.7;">
+                                                                                     @L[MaktabResources.Discount]
+                                                                                </MudText>
+                                                                           </MudTooltip>
+                                                                           <MudSpacer />
+
+                                                                           <MudText Typo="Typo.body2" Class="font-weight-medium" Color="Color.Success">
+                                                                                @transaction.FeeAmountDiscount.ToString("F2")
+                                                                           </MudText>
+                                                                      </MudStack>
+                                                                      @* } *@
+
+                                                                      @*  @if (transaction.DayCareDiscount > 0)
+                                                            { *@
+                                                                      <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                                                           <MudTooltip Text="Daycare program discount applied">
+                                                                                <MudText Typo="Typo.caption" Style="opacity: 0.7;">
+                                                                                     @L[MaktabResources.Daycare_Discount]
+                                                                                </MudText>
+                                                                           </MudTooltip>
+
+                                                                           <MudSpacer />
+
+                                                                           <MudText Typo="Typo.body2" Class="font-weight-medium" Color="Color.Success">
+                                                                                @transaction.DayCareDiscount.ToString("F2")
+                                                                           </MudText>
+                                                                      </MudStack>
+                                                                      @* } *@
+
+                                                                      <!-- Amount Due -->
+                                                                      <MudDivider DividerType="DividerType.FullWidth" />
+
+                                                                      <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                                                                           <MudText Typo="Typo.body2" Class="font-weight-bold">
+                                                                                @L[MaktabResources.Amount_Due]
+                                                                           </MudText>
+                                                                           <MudSpacer />
+
+                                                                           <MudText Typo="Typo.body2" Class="font-weight-bold">
+                                                                                @((transaction.TotalPayable - (transaction.TotalAmountPaid + transaction.FeeAmountDiscount + transaction.DayCareDiscount)).ToString("F2"))
+                                                                           </MudText>
+                                                                      </MudStack>
+
+                                                                      <!-- Progress Bar -->
+                                                                      @* <MudStack Spacing="1">
+                                                                <MudLinearProgress Value="@GetTransactionProgress(transaction)" Rounded="true" />
+                                                                <MudText Typo="Typo.caption" Align="Align.Center" Style="opacity: 0.7;">
+                                                                    @GetProgressPercentageText(transaction)
+                                                                </MudText>
+                                                            </MudStack> *@
+                                                                 </MudStack>
+                                                            </MudCardContent>
+
+                                                            <!-- Card Actions -->
+                                                            @if (transaction.TotalPayable > transaction.TotalAmountPaid)
+                                                            {
+                                                                 <MudCardActions>
+                                                                           @if (transaction?.FeeInstallments?.Any() == true)
+                                                                           {
+                                                                                <MudTooltip Text=@L[MaktabResources.Payment_Schedule]>
+                                                                                     <MudIconButton Class="mr-1" Variant="Variant.Outlined" Color="Color.Info" OnClick="() => OpenPaymentScheduleDialog(transaction)" Icon="@Icons.Material.Outlined.Schedule" Size="Size.Small" />
+                                                                                </MudTooltip>
+                                                                           }
+                                                                      <MudButton Variant="Variant.Filled"
+                                                                                 Color="Color.Primary"
+                                                                                 FullWidth="true"
+                                                                                 Size="Size.Small"
+                                                                                 OnClick="@(() => OpenZeffyPaymentDialog(transaction, GetCourseResponseDetailed(courseGroup.CourseId), userInfo.Email))">
+                                                                           @L[MaktabResources.Pay_Now]
+                                                                      </MudButton>
+                                                                 </MudCardActions>
+                                                            }
+                                                            else
+                                                            {
+                                                                 <MudCardActions>
+                                                                      <MudButton Variant="Variant.Outlined"
+                                                                                 Color="Color.Success"
+                                                                                 FullWidth="true"
+                                                                                 Size="Size.Small"
+                                                                                 Disabled="true">
+                                                                           ✓ @L[MaktabResources.Paid]
+                                                                      </MudButton>
+                                                                 </MudCardActions>
+                                                            }
+                                                       </MudCard>
+                                                  </MudItem>
+                                             }
+                                        }
+                                   </MudGrid>
+                              </MudExpansionPanel>
+                         }
+                    </MudExpansionPanels>
+               }
+               else
+               {
+                    <!-- Empty State -->
+                    <MudPaper Class="pa-8 rounded-lg text-center mt-6" Elevation="0" Style="background: rgba(0,0,0,0.02);">
+                         <MudStack Spacing="3" AlignItems="AlignItems.Center">
+                              <MudIcon Icon="@Icons.Material.Filled.ReceiptLong" Size="Size.Large" Color="Color.Default" Style="font-size: 48px; opacity: 0.5;" />
+                              <MudStack Spacing="1" AlignItems="AlignItems.Center">
+                                   <MudText Typo="Typo.h6" Class="font-weight-bold">@L[MaktabResources.No_Transaction]</MudText>
+                                   <MudText Typo="Typo.body2" Style="opacity: 0.7;">
+                                        @L[MaktabResources.Msg_Error_No_Payment_Tranaction]
+                                   </MudText>
+                              </MudStack>
+                              <MudButton Variant="Variant.Outlined"
+                                         Color="Color.Primary"
+                                         OnClick="@(() => NavigationManager.NavigateTo(Constants.ParentDashboardRoute))">
+                                   @L[MaktabResources.Back_To_Dashboard]
+                              </MudButton>
+                         </MudStack>
+                    </MudPaper>
+               }
+          </MudStack>
+     }
+</MudContainer>
+
+
+
+     @code {
+
+     private bool isInitialized;
+     private bool isDataLoading;
+     private Guid userId = Guid.Empty;
+     private UserInformationResponse userInfo => StateService.ParentState.Profile;
+     private IReadOnlyCollection<StudentCourseEnrollmentResponse> _CourseEnrollments => StateService.ParentState.CourseEnrollments ?? Array.Empty<StudentCourseEnrollmentResponse>();
+     private IReadOnlyCollection<StudentCourseTransactionResponse> _CourseTransactions => StateService.ParentState.CourseTransactions ?? Array.Empty<StudentCourseTransactionResponse>();
+     private IReadOnlyCollection<CourseResponseDetailed> _Courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
+     private IReadOnlyCollection<InstituteResponse> _Institutes => StateService.InstituteState.Institutes ?? Array.Empty<InstituteResponse>();
+
+     private List<InstituteGroupViewModel> GroupedData = new();
+     private List<BreadcrumbItem> breadcrumbItems = new();
+
+     private decimal TotalPayable => _CourseTransactions.Sum(x => x.TotalPayable);
+     private decimal TotalPaid => _CourseTransactions.Sum(x => x.TotalAmountPaid);
+     private decimal TotalFeeDiscount => _CourseTransactions.Sum(x => x.FeeAmountDiscount);
+     private decimal TotalDayCareFeeDiscount => _CourseTransactions.Sum(x => x.DayCareDiscount);
+     private decimal Outstanding => TotalPayable - (TotalPaid + TotalFeeDiscount + TotalDayCareFeeDiscount);
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          StateService.ParentState.OnChange += HandleStateChange;
+          StateService.InstituteState.OnChange += HandleStateChange;
+          InitializeBreadcrumbs();
+     }
+
+     protected virtual void HandleStateChange()
+     {
+          RequestRender();
+     }
+
+     public void OnDispose()
+     {
+          StateService.ParentState.OnChange -= HandleStateChange;
+          StateService.InstituteState.OnChange -= HandleStateChange;
+     }
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          userId = await SessionService.GetLoggedInUserIdAsync();
+          await LoadData(userId);
+
+          GroupData();
+
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private async Task LoadData(Guid userId, bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadUserProfileData(UserService, userId, forceReload);
+          await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, forceReload);
+          await StateService.LoadActiveCoursesData(CourseService, forceReload);
+          await StateService.LoadActiveInstitutesData(InstitutionService, forceReload);
+          if (_CourseEnrollments?.Any() == true)
+          {
+               await StateService.LoadCourseTransactionsByCourse(CourseEnrollmentTransactionService, _CourseEnrollments, userInfo.FamilyId, forceReload);
+          }
+
+          isDataLoading = false;
+     }
+
+     private void GroupData()
+     {
+          GroupedData = new List<InstituteGroupViewModel>();
+          if (_CourseTransactions == null || !_CourseTransactions.Any())
+          {
+               return;
+          }
+
+          var coursesVM = new List<CourseGroupViewModel>();
+
+          foreach (var transaction in _CourseTransactions)
+          {
+               if (transaction.Enrollments?.Any() == true)
+               {
+                    var courseVM = new CourseGroupViewModel
+                    {
+                         CourseId = transaction.Enrollments.First().CourseId,
+                         Transactions = new List<StudentCourseTransactionResponse> { transaction }
+                    };
+
+                    coursesVM.Add(courseVM);
+               }
+          }
+
+          foreach (var vm in coursesVM)
+          {
+               var course = _Courses.FirstOrDefault(c => c.CourseId == vm.CourseId);
+               if (course != null)
+               {
+                    var institute = _Institutes.FirstOrDefault(i => i.InstituteId == course.InstituteId);
+                    if (institute != null)
+                    {
+                         var instituteGroup = GroupedData.FirstOrDefault(g => g.InstituteId == institute.InstituteId);
+                         if (instituteGroup == null)
+                         {
+                              instituteGroup = new InstituteGroupViewModel
+                              {
+                                   InstituteId = institute.InstituteId,
+                                   Courses = new List<CourseGroupViewModel> { vm }
+                              };
+                              GroupedData.Add(instituteGroup);
+                         }
+                         else
+                         {
+                              instituteGroup.Courses.Add(vm);
+                         }
+                    }
+               }
+          }
+     }
+
+     private Color GetStatusColor(StudentCourseTransactionResponse tx)
+     {
+          if (tx.IsCompletelyPaid)
+               return Color.Success;
+
+          if (tx.TotalAmountPaid > 0)
+               return Color.Warning;
+
+          return Color.Error;
+     }
+
+     private Color GetAmountDueColor(StudentCourseTransactionResponse tx)
+     {
+          if (tx.IsCompletelyPaid)
+               return Color.Success;
+
+          if (tx.TotalPayable - tx.TotalAmountPaid > 0)
+               return Color.Error;
+
+          return Color.Default;
+     }
+
+     private string GetStatusText(StudentCourseTransactionResponse tx)
+     {
+          if (tx.IsCompletelyPaid)
+               return L[MaktabResources.Paid];
+
+          if (tx.TotalAmountPaid > 0)
+               return L[MaktabResources.Partially_Paid];
+
+          return L[MaktabResources.Unpaid];
+     }
+
+     // private double GetTransactionProgress(StudentCourseTransactionResponse tx)
+     // {
+     //      if (tx.TotalPayable == 0)
+     //           return 0;
+
+     //      return (double)(tx.TotalAmountPaid / tx.TotalPayable) * 100;
+     // }
+
+     // private string GetProgressPercentageText(StudentCourseTransactionResponse tx)
+     // {
+     //      var percentage = GetTransactionProgress(tx);
+     //      return $"{percentage:F0}% paid";
+     // }
+
+     // private double GetProgressPercentage()
+     // {
+     //      if (TotalPayable == 0)
+     //           return 0;
+
+     //      return (double)(TotalPaid / TotalPayable) * 100;
+     // }
+
+     // private void OpenInvoice(StudentCourseTransactionResponse transaction)
+     // {
+     //      var parameters = new DialogParameters
+     //      {
+     //           { "Transaction", transaction }
+     //      };
+
+     //      DialogService.Show<InvoiceDialog>("Invoice", parameters,
+     //          new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true });
+     // }
+
+     public class InstituteGroupViewModel
+     {
+          public Guid InstituteId { get; set; }
+          public List<CourseGroupViewModel> Courses { get; set; } = new();
+     }
+
+     public class CourseGroupViewModel
+     {
+          public Guid CourseId { get; set; }
+          public List<StudentCourseTransactionResponse> Transactions { get; set; } = new();
+     }
+
+     private CourseResponseDetailed GetCourseResponseDetailed(Guid courseId)
+     {
+          if (courseId == Guid.Empty) return null;
+
+          return _Courses.FirstOrDefault(x => x.CourseId == courseId);
+     }
+
+     private string GetCourseName(Guid courseId)
+     {
+          if (courseId == Guid.Empty) return string.Empty;
+
+          var course = GetCourseResponseDetailed(courseId);
+          if (course != null)
+          {
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return course.NameFr;
+               }
+               else
+               {
+                    return course.Name;
+               }
+          }
+
+          return string.Empty;
+     }
+
+     private string GetInstituteName(Guid instituteId)
+     {
+          if (instituteId == Guid.Empty) return string.Empty;
+
+          var institute = _Institutes.FirstOrDefault(x => x.InstituteId == instituteId);
+          if (institute != null)
+          {
+               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
+               {
+                    return institute.NameFr;
+               }
+               else
+               {
+                    return institute.Name;
+               }
+          }
+
+          return string.Empty;
+     }
+
+     private void InitializeBreadcrumbs()
+     {
+          breadcrumbItems = new List<BreadcrumbItem>
+          {
+               new BreadcrumbItem( L[MaktabResources.Dashboard], Constants.ParentDashboardRoute),
+               new BreadcrumbItem( L[MaktabResources.Payment_Details], null, true)
+          };
+     }
+
+     protected async Task OpenPaymentScheduleDialog(StudentCourseTransactionResponse studentCourseTransactionResponse)
+     {
+          await OpenPaymentScheduleDialog(DialogService, studentCourseTransactionResponse);
+     }
+
+}

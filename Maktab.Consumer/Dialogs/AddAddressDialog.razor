@@ -1,0 +1,31 @@
+﻿@inherits BaseDialog<AddAddressDialog>
+@using MaktabDataContracts.Enums
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <AddAddress AddressModel="Address"  ConnectedId="@(ConnectedId)" OnSave="SaveAddress" OnCancel="CancelDialog" />
+    </DialogContent>
+</MudDialog>
+
+@code {
+
+     [Parameter, EditorRequired] public Guid ConnectedId { get; set; } = Guid.Empty;
+
+     private MaktabDataContracts.Requests.Addresses.AddAddress Address { get; set; } = new();
+
+     protected override void OnInitialized()
+     {
+          Address.ConnectedId = ConnectedId;
+     }
+
+     private async Task SaveAddress(MaktabDataContracts.Responses.Addresses.AddressResponse address)
+     {
+          MudDialog.Close(DialogResult.Ok(address));
+     }
+
+     private async void CancelDialog()
+     {
+          MudDialog.Cancel();
+     }
+}
