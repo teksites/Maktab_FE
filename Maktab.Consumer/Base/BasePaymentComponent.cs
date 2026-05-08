@@ -1,9 +1,9 @@
 ﻿using Maktab.Consumer.Dialogs;
+using Maktab.Consumer.Helpers;
 using Maktab.Consumer.Localization;
 using MaktabDataContracts.Responses.Course;
 using MaktabDataContracts.Responses.Transactions;
 using MudBlazor;
-using static Maktab.Consumer.Pages.PaymentMethod.PaymentDetailPage;
 
 namespace Maktab.Consumer.Base
 {
@@ -11,15 +11,36 @@ namespace Maktab.Consumer.Base
      where T : class
      {
 
-          protected async Task OpenZeffyPaymentDialog(StudentCourseTransactionResponse courseTransaction, CourseResponseDetailed course, string userEmail)
+          protected async Task OpenZeffyPaymentPage(StudentCourseTransactionResponse courseTransaction, CourseResponseDetailed course, string userEmail)
           {
-               const string url = "/PaymentMethod/Payment?amount={0}&code={1}&email={2}&course={3}";
+               const string url =  Constants.ZeffyPaymentMethodRoute + "?amount={0}&code={1}&email={2}&course={3}";
                if (courseTransaction != null)
                {
                     string paymentCode = courseTransaction.PaymentCode;
                     decimal amountPayable = courseTransaction.TotalPayable - courseTransaction.TotalAmountPaid;
 
                     var navigationUrl = string.Format(url, amountPayable.ToString(), paymentCode, userEmail, GetCourseName(course));
+
+                    //check if minimum amount due is greater than zero and less than total amount due, if so pass it as query param
+                    decimal minimumPayable = CalculateMinumumAmountDue(courseTransaction);
+                    if (minimumPayable > 0)
+                    {
+                         navigationUrl += $"&minimumAmount={minimumPayable.ToString()}";
+                    }
+
+                    NavigationManager.NavigateTo(navigationUrl, false);
+               }
+          }
+
+          protected async Task OpenHelcimPaymentPage(StudentCourseTransactionResponse courseTransaction, CourseResponseDetailed course, string userEmail)
+          {
+               const string url = Constants.HelcimPaymentMethodRoute + "?amount={0}&code={1}&email={2}&course={3}&transactionId={4}";
+               if (courseTransaction != null)
+               {
+                    string paymentCode = courseTransaction.PaymentCode;    
+                    decimal amountPayable = courseTransaction.TotalPayable - courseTransaction.TotalAmountPaid;
+
+                    var navigationUrl = string.Format(url, amountPayable.ToString(), paymentCode, userEmail, GetCourseName(course), courseTransaction.StudentCourseTransactionId);
 
                     //check if minimum amount due is greater than zero and less than total amount due, if so pass it as query param
                     decimal minimumPayable = CalculateMinumumAmountDue(courseTransaction);

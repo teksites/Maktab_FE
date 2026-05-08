@@ -47,7 +47,8 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddSingleton<UserStateService>()
                 .AddSingleton<ISystemService, SystemService>()
                 .AddScoped<IGlobalizationService,GlobalizationService>()
-                .AddSingleton<IClipboardService, ClipboardService>();
+                .AddSingleton<IClipboardService, ClipboardService>()
+                .AddScoped<IHelcimPaymentMethodService, HelcimPaymentMethodService>();
 
 builder.Services.AddScoped(x => {
      var apiUrl = new Uri(builder.Configuration["apiUrl"]);

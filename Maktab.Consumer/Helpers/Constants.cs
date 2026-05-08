@@ -21,5 +21,9 @@
 
           public const string PaymentDetailsRoute = "/payment/payment-details";
           public const string PaymentInfoRoute = "/payment/payment-info";
+
+          public const string ZeffyPaymentMethodRoute = "/payment/paymentmethod/zeffy";
+          public const string HelcimPaymentMethodRoute = "/payment/paymentmethod/helcim";
+
      }
 }
