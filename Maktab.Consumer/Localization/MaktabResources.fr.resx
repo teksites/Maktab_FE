@@ -1208,4 +1208,49 @@
   <data name="Msg_Info_Amount_Outstanding_Due" xml:space="preserve">
     <value>Montant impayé à payer</value>
   </data>
+  <data name="Choose_Your_Amount" xml:space="preserve">
+    <value>Choisissez votre montant</value>
+  </data>
+  <data name="Msg_Info_Choose_Amount_Or_Custom_Value" xml:space="preserve">
+    <value>Choisissez un préréglage ou entrez un montant personnalisé</value>
+  </data>
+  <data name="Selected_Amount" xml:space="preserve">
+    <value>Montant sélectionné</value>
+  </data>
+  <data name="Payment_Successful" xml:space="preserve">
+    <value>Le paiement a été traité</value>
+  </data>
+  <data name="Payment_Failed" xml:space="preserve">
+    <value>Paiement non traité</value>
+  </data>
+  <data name="Msg_Error_Payment_Not_Processed" xml:space="preserve">
+    <value>Votre paiement ne peut pas être traité</value>
+  </data>
+  <data name="Msg_Info_Payment_Successfully_Processed" xml:space="preserve">
+    <value>Votre paiement a été traité avec succès</value>
+  </data>
+  <data name="Enter_Amount" xml:space="preserve">
+    <value>Entrez le montant</value>
+  </data>
+  <data name="Custom_Amount" xml:space="preserve">
+    <value>Montant personnalisé</value>
+  </data>
+  <data name="Pay_Securely" xml:space="preserve">
+    <value>Payez en toute sécurité</value>
+  </data>
+  <data name="Msg_Error_Failed_Initiate_Payment" xml:space="preserve">
+    <value>Failed to initiate payment. Veuillez réessayer plus tard</value>
+  </data>
+  <data name="Custom_Amount_Helper_Text_With_Between" xml:space="preserve">
+    <value>Entre {0} et {1}</value>
+  </data>
+  <data name="Msg_Error_Custom_Amount_Between_Min_Max_Values" xml:space="preserve">
+    <value>La valeur doit être comprise entre {0} et {1}</value>
+  </data>
+  <data name="Custom_Amount_Helper_Text_Under_Max_Value" xml:space="preserve">
+    <value>La valeur doit être inférieure ou égale à {0}</value>
+  </data>
+  <data name="Msg_Error_Custom_Amount_Under_Max_Value" xml:space="preserve">
+    <value>La valeur fournie doit être inférieure ou égale à {0}</value>
+  </data>
 </root>

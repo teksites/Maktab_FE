@@ -1209,4 +1209,49 @@
   <data name="Courses_Offered" xml:space="preserve">
     <value>Activities / Courses Offered</value>
   </data>
+  <data name="Choose_Your_Amount" xml:space="preserve">
+    <value>Choose Your Amount</value>
+  </data>
+  <data name="Msg_Info_Choose_Amount_Or_Custom_Value" xml:space="preserve">
+    <value>Pick a preset or enter a custom amount</value>
+  </data>
+  <data name="Selected_Amount" xml:space="preserve">
+    <value>Selected Amount</value>
+  </data>
+  <data name="Payment_Successful" xml:space="preserve">
+    <value>Payment has been processed</value>
+  </data>
+  <data name="Payment_Failed" xml:space="preserve">
+    <value>Payment not processed</value>
+  </data>
+  <data name="Msg_Error_Payment_Not_Processed" xml:space="preserve">
+    <value>Your payment can not be processed</value>
+  </data>
+  <data name="Msg_Info_Payment_Successfully_Processed" xml:space="preserve">
+    <value>Your payment has been successfully processed</value>
+  </data>
+  <data name="Enter_Amount" xml:space="preserve">
+    <value>Enter amount</value>
+  </data>
+  <data name="Custom_Amount" xml:space="preserve">
+    <value>Custom Amount</value>
+  </data>
+  <data name="Pay_Securely" xml:space="preserve">
+    <value>Pay Securely</value>
+  </data>
+  <data name="Msg_Error_Failed_Initiate_Payment" xml:space="preserve">
+    <value>Failed to initiate payment. Please try again later</value>
+  </data>
+  <data name="Custom_Amount_Helper_Text_With_Between" xml:space="preserve">
+    <value>Between {0} and {1}</value>
+  </data>
+  <data name="Msg_Error_Custom_Amount_Between_Min_Max_Values" xml:space="preserve">
+    <value>Value must be between {0} and {1}</value>
+  </data>
+  <data name="Custom_Amount_Helper_Text_Under_Max_Value" xml:space="preserve">
+    <value>Value must be under or equal to {0}</value>
+  </data>
+  <data name="Msg_Error_Custom_Amount_Under_Max_Value" xml:space="preserve">
+    <value>Value provide must be under or equal to {0}</value>
+  </data>
 </root>

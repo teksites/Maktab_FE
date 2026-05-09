@@ -13,20 +13,7 @@
 @inject IJSRuntime JS
 @inject IDialogService DialogService
 
-<MudContainer MaxWidth="MaxWidth.Medium" Class="py-8">
-
-     <!-- Breadcrumbs Navigation -->
-     <MudBreadcrumbs Items="breadcrumbItems" Class="mb-6" />
-
-     <!-- Page Header with Alert -->
-     <MudStack Spacing="2" Class="mb-8">
-          <MudText Typo="Typo.h4" Class="font-weight-bold">Choose Your Amount</MudText>
-          <MudText Typo="Typo.body2" Style="opacity: 0.7;">
-               Pick a preset or enter a custom amount
-          </MudText>
-          @* between
-          <strong>@MinAmount.ToString()</strong> and <strong>@MaxAmount.ToString()</strong> *@
-     </MudStack>
+<MudContainer MaxWidth="MaxWidth.Small" Class="py-8">
 
      @if (!isInitialized || isDataLoading)
      {
@@ -39,6 +26,88 @@
      }
      else
      {
+
+          <!-- Success Screen -->
+          @if (IsPaymentSuccessful)
+          {
+               <MudPaper Class="pa-8 text-center" Elevation="1">
+                    <MudStack Spacing="4" AlignItems="AlignItems.Center">
+                         <MudIcon Icon="@Icons.Material.Filled.CheckCircle"
+                         Color="Color.Success" Size="Size.Large" />
+
+                         <MudText Typo="Typo.h5" GutterBottom="false">
+                              @L[MaktabResources.Payment_Successful]
+                         </MudText>
+
+                         <MudAlert Severity="Severity.Success" Elevation="0" Dense="true">
+                              @L[MaktabResources.Msg_Info_Payment_Successfully_Processed]
+                         </MudAlert>
+
+                         @* <MudStack Row="true" Spacing="2" Class="mt-4">
+                              <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                              StartIcon="@Icons.Material.Filled.AddCircle"
+                              OnClick="Reset">
+                                   @L[MaktabResources.Enroll_Another]
+                              </MudButton>
+
+                              <MudButton Variant="Variant.Outlined" Color="Color.Primary"
+                              StartIcon="@Icons.Material.Filled.Close"
+                              OnClick="OnCompletedClickedHandler">
+                                   @L[MaktabResources.Close]
+                              </MudButton>
+                         </MudStack> *@
+                    </MudStack>
+               </MudPaper>
+
+          }
+          else if (HasErrorDuringPaymentProcess)
+          {
+               <MudPaper Class="pa-8 text-center" Elevation="1">
+                    <MudStack Spacing="4" AlignItems="AlignItems.Center">
+                         <MudIcon Icon="@Icons.Material.Filled.ErrorOutline"
+                         Color="Color.Error" Size="Size.Large" />
+
+                         <MudText Typo="Typo.h5" GutterBottom="false">
+                              @L[MaktabResources.Payment_Failed]
+                         </MudText>
+
+                         <MudAlert Severity="Severity.Error" Elevation="0" Dense="true">
+                              @L[MaktabResources.Msg_Error_Payment_Not_Processed]
+                         </MudAlert>
+
+                         @* <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                         StartIcon="@Icons.Material.Filled.Close"
+                         OnClick="OnCompletedClickedHandler"
+                         FullWidth="true">
+                              @L[MaktabResources.Close]
+                         </MudButton> *@
+                    </MudStack>
+               </MudPaper>
+
+          }
+          else
+          {
+               <!-- Loading Overlay -->
+               <LoadingOverlay IsLoading="@IsPaymentBeingProcessed" />
+
+               <!-- Breadcrumbs Navigation -->
+               <MudBreadcrumbs Items="breadcrumbItems" Class="mb-6" />
+
+               <!-- Page Header with Alert -->
+               <MudStack Spacing="2" Class="mb-8">
+                    <MudText Typo="Typo.h4" Class="font-weight-bold">@L[MaktabResources.Choose_Your_Amount]</MudText>
+                    <MudText Typo="Typo.body1" >
+                         @L[MaktabResources.Msg_Info_Choose_Amount_Or_Custom_Value]
+                    </MudText>
+
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                         <MudIcon Icon="@Icons.Material.Filled.MenuBook" Color="Color.Primary" Size="Size.Small" />
+                         <MudText Typo="Typo.h6" Color="Color.Primary">
+                              @CourseName
+                         </MudText>
+                    </MudStack>
+
+               </MudStack>
           <!-- ── Header ── -->
           @* <MudStack Spacing="2" Class="mb-6">
                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
@@ -60,10 +129,10 @@
           <MudPaper Elevation="4" Class="pa-6 mb-4" Style="border-radius:20px; background:var(--mud-palette-primary); color:#fff;">
                <MudStack AlignItems="AlignItems.Center" Spacing="1">
                     <MudText Typo="Typo.overline" Style="color:rgba(255,255,255,0.6); letter-spacing:0.15em;">
-                         SELECTED AMOUNT
+                              @L[MaktabResources.Selected_Amount]
                     </MudText>
                     <MudText Typo="Typo.h2" Style="font-weight:800; color:#fff; letter-spacing:-2px; line-height:1;">
-                         @SelectedAmount.ToString()
+                              @SelectedAmount
                     </MudText>
             
                </MudStack>
@@ -76,9 +145,13 @@
                          <MudIcon Icon="@Icons.Material.Filled.Bolt" Color="Color.Warning" Size="Size.Small" />
                          <MudText Typo="Typo.subtitle2" Style="font-weight:700;">Quick Select</MudText>
                     </MudStack>
-                    <MudGrid Spacing="2" Justify="Justify.FlexStart">
+                         <MudGrid Spacing="2" Justify="Justify.SpaceBetween" >
                          @foreach (var preset in PresetAmounts)
                          {
+                                   if(preset <= 0 )
+                                   {
+                                        continue; // Skip invalid presets
+                                   }
                               bool active = SelectedAmount == preset && !IsCustomMode;
                               <MudItem xs="6" sm="4">
                                    <MudButton FullWidth="true"
@@ -102,28 +175,28 @@
                <MudStack Spacing="3">
                     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
                          <MudIcon Icon="@Icons.Material.Filled.EditNote" Color="Color.Primary" Size="Size.Small" />
-                         <MudText Typo="Typo.subtitle2" Style="font-weight:700;">Custom Amount</MudText>
+                              <MudText Typo="Typo.subtitle2" Style="font-weight:700;">@L[MaktabResources.Custom_Amount]</MudText>
                     </MudStack>
                     <MudNumericField T="double"
                                      @bind-Value="SelectedAmount"
-                                     Label="Enter your amount"
-                                     HelperText="@($"Between {MinAmount} and {MaxAmount}")"
+                                          Label="@L[MaktabResources.Enter_Amount]"
+                                          HelperText="@customAmountHelperText"
                                      Variant="Variant.Outlined"
                                      Adornment="Adornment.Start"
-                                     AdornmentText="$"
+                         AdornmentText="CAD"
                                      AdornmentColor="Color.Primary"
                                      Min="MinAmount"
                                      Max="MaxAmount"
                                      Immediate="true"
-                                     Error="ShowValidationMessage"
-                                     ErrorText="@($"Value must be between {MinAmount} and {MaxAmount}")" />
-                    @if (IsCustomMode && !ShowValidationMessage)
+                         Error="@(SelectedAmount == 0 ||SelectedAmount < MinAmount || SelectedAmount > MaxAmount)"
+                                          ErrorText="@customAmountErrorText" />
+                        @*  @if (IsCustomMode && !ShowValidationMessage)
                     {
                          <MudAlert Severity="Severity.Success" Variant="Variant.Text" Dense="true"
                                    Icon="@Icons.Material.Filled.CheckCircle">
                               Custom amount <strong>@SelectedAmount.ToString()</strong> applied.
                          </MudAlert>
-                    }
+                         } *@
                </MudStack>
           </MudPaper>
 
@@ -134,40 +207,40 @@
                           Color="Color.Primary"
                           Size="Size.Large"
                           FullWidth="true"
-                          StartIcon="@Icons.Material.Filled.Lock"
                           Disabled="ShowValidationMessage"
                           Style="border-radius:14px; height:54px; font-size:1rem; font-weight:700;"
                           OnClick="ProceedToPayment">
-                    Pay @SelectedAmount.ToString() Securely
+                    <MudStack Row="true">
+                              <MudIcon Icon="@Icons.Material.Filled.Lock" Color="Color.Warning" Size="Size.Small" />
+                         <MudText>@L[MaktabResources.Pay_Securely]</MudText>
+                         </MudStack>
                </MudButton>
 
-        
           </MudStack>
 
-          <MudButton Variant="Variant.Outlined"
+               @* <MudButton Variant="Variant.Outlined"
                      Color="Color.Primary"
                      OnClick="@(GoBackHome)">
                @L[MaktabResources.Back_To_Dashboard]
-          </MudButton>
+          </MudButton> *@
+     }
      }
 </MudContainer>
-
-
-    
-
-
 
      @code {
      [Parameter] public string PaymentCode { get; set; } = string.Empty;
      [Parameter] public string CourseName { get; set; } = string.Empty;
      [Parameter] public string UserEmail { get; set; } = string.Empty;
      [Parameter] public string AmountDue { get; set; } = "0";
-     [Parameter] public string MinimumAmountDueToKeepRegistration { get; set; } = "-1";
+     [Parameter] public string MinimumAmountDueToKeepRegistration { get; set; } = "0";
      [Parameter] public Guid TranactionId { get; set; } = Guid.Empty;
 
      private List<BreadcrumbItem> breadcrumbItems = new();
      private bool isInitialized;
      private bool isDataLoading;
+     private bool IsPaymentSuccessful { get; set; } = false;
+     private bool HasErrorDuringPaymentProcess { get; set; } = false;
+     private bool IsPaymentBeingProcessed { get; set; } = false;
      private UserInformationResponse userInfo => StateService.ParentState.Profile;
      private double SelectedAmount { get; set; }
      private double MinAmount { get; set; }
@@ -177,10 +250,11 @@
      private double[] PresetAmounts = Array.Empty<double>();
      private string CheckoutToken { get; set; } = string.Empty;
      private DotNetObjectReference<HelcimPaymentMethod>? _dotNetRef;
+     private string customAmountHelperText = string.Empty;
+     private string customAmountErrorText = string.Empty;
 
      protected override void OnInitialized()
      {
-
           base.OnInitialized();
           // Parse query string
           //var uri = new Uri(NavigationManager.Uri);
@@ -190,8 +264,8 @@
           PaymentCode = query.Get("code") ?? string.Empty;
           CourseName = query.Get("course") ?? string.Empty;
           UserEmail = query.Get("email") ?? string.Empty;
-          AmountDue = query.Get("amount") ?? "-1";
-          MinimumAmountDueToKeepRegistration = query.Get("minimumAmount") ?? "-1";
+          AmountDue = query.Get("amount") ?? "0";
+          MinimumAmountDueToKeepRegistration = query.Get("minimumAmount") ?? "0";
           var transactionIdStr = query.Get("transactionId") ?? Guid.Empty.ToString();
           TranactionId = Guid.TryParse(transactionIdStr, out var transactionId) ? transactionId : Guid.Empty;
      }
@@ -210,6 +284,17 @@
                MaxAmount = amount; // Arbitrary max limit for custom input
           }
 
+          if(MinAmount <= 0)
+          {
+               customAmountHelperText = L[MaktabResources.Custom_Amount_Helper_Text_Under_Max_Value, MaxAmount];
+               customAmountErrorText = L[MaktabResources.Msg_Error_Custom_Amount_Under_Max_Value, MaxAmount];
+          }
+          else
+          {
+               customAmountHelperText = L[MaktabResources.Custom_Amount_Helper_Text_With_Between, MinAmount, MaxAmount];
+               customAmountErrorText = L[MaktabResources.Msg_Error_Custom_Amount_Between_Min_Max_Values, MinAmount, MaxAmount];
+          }
+
           // Initialize breadcrumbs
           InitializeBreadcrumbs();
           InitializePresets();
@@ -225,7 +310,6 @@
                true);
           NavigationManager.NavigateTo(Constants.ParentDashboardRoute, forceLoad: false);
      }
-
 
      private void InitializeBreadcrumbs()
      {
@@ -243,7 +327,6 @@
                PresetAmounts = new double[]
                {
                     MinAmount,
-                    Math.Round((MinAmount + MaxAmount) / 2, 2),
                     MaxAmount
                };
           }
@@ -262,6 +345,11 @@
 
      private async Task ProceedToPayment()
      {
+          try
+          {
+               IsPaymentBeingProcessed = true;
+               RequestRender();
+
           // NavigationManager.NavigateTo($"/checkout?amount={SelectedAmount}");
           var request = new InitiatePaymentRequest()
           {
@@ -273,10 +361,10 @@
           var responseWithCode = await HelcimPaymentMethodService.InitializePaymentAsync(request);
           CheckoutToken = responseWithCode.CheckoutToken;
 
-          if(string.IsNullOrEmpty(CheckoutToken))
+               if (string.IsNullOrEmpty(CheckoutToken))
           {
                // Handle error case
-               await DialogService.ShowMessageBox("Error", "Failed to initiate payment. Please try again later.", "OK");
+                    await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Failed_Initiate_Payment], L[MaktabResources.OK]);
                return;
           }
           else
@@ -284,10 +372,20 @@
                var jsResult = await JS.InvokeAsync<string>("blazerHelcimPay", CheckoutToken, _dotNetRef);
                if (!string.IsNullOrEmpty(jsResult) && jsResult.StartsWith("ERROR"))
                {
-                    await DialogService.ShowMessageBox("Error", "Failed to initiate payment. Please try again later.", "OK");
+                         await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Failed_Initiate_Payment], L[MaktabResources.OK]);
                }
           }
-
+     }
+          catch(Exception ex)
+          {
+               Console.WriteLine($"Error during payment initiation: {ex.Message}");
+               await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Failed_Initiate_Payment], L[MaktabResources.OK]);
+          }
+          finally
+          {
+               IsPaymentBeingProcessed = false;
+               RequestRender();
+          }
      }
 
      // [JSInvokable]
@@ -300,6 +398,21 @@
      [JSInvokable]
      public async Task OnPaymentSuccess()
      {
+          IsPaymentSuccessful = true;
+          RequestRender();
+
+          var t1 = Task.Delay(7 * 1000);
+
+          var t2 = StateService.LoadCourseTransactionsByCourse(
+               CourseEnrollmentTransactionService,
+               StateService.ParentState.CourseEnrollments,
+               StateService.ParentState.Profile.FamilyId,
+               true);
+
+          await Task.WhenAll(t1, t2);
+          NavigationManager.NavigateTo(Constants.ParentDashboardRoute, forceLoad: false);
+
+
      //      ApprovedTx = tx;
      //      SummaryStatus = "APPROVED";
      //      SetStatus($"✅ Payment approved! Transaction #{tx.transactionId}", "success");
@@ -308,8 +421,16 @@
      }
 
      [JSInvokable]
-     public void OnPaymentDeclined()
+     public async Task OnPaymentDeclined()
      {
+          HasErrorDuringPaymentProcess = true;
+          RequestRender();
+
+          await Task.Delay(7 * 1000);
+
+          NavigationManager.NavigateTo(Constants.ParentDashboardRoute, forceLoad: false);
+               
+
      //      SummaryStatus = "DECLINED";
      //      SetStatus("❌ Payment was declined. Please try again.", "error");
      //      StateHasChanged();
@@ -318,7 +439,10 @@
      [JSInvokable]
      public void OnPaymentHide()
      {
-     //      StatusMessage = "";
-     //      StateHasChanged();
+          if (IsPaymentBeingProcessed)
+          {
+               IsPaymentBeingProcessed = false;
+               RequestRender();
+          }
      }
 }

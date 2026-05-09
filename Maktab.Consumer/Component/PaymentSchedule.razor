@@ -32,7 +32,7 @@
                          {
                               <tr>
                                    <td>@(GetPaymentDescription(g))</td>
-                                   <td>@g.DueDate</td>
+                                   <td>@g.DueDate.ToShortDateString()</td>
                                    <td>@g.Amount</td>
                               </tr>
                          }
