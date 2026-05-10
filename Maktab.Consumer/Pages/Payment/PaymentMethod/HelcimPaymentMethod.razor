@@ -401,16 +401,9 @@
           IsPaymentSuccessful = true;
           RequestRender();
 
-          var t1 = Task.Delay(7 * 1000);
+          await Task.Delay(7 * 1000);
 
-          var t2 = StateService.LoadCourseTransactionsByCourse(
-               CourseEnrollmentTransactionService,
-               StateService.ParentState.CourseEnrollments,
-               StateService.ParentState.Profile.FamilyId,
-               true);
-
-          await Task.WhenAll(t1, t2);
-          NavigationManager.NavigateTo(Constants.ParentDashboardRoute, forceLoad: false);
+          NavigationManager.NavigateTo(Constants.ParentDashboardRoute, forceLoad: true,);
 
 
      //      ApprovedTx = tx;
