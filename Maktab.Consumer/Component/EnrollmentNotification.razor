@@ -15,22 +15,25 @@
 @inject IDialogService DialogService
 @inject UserStateService StateService
 
-<MudPaper Class="pa-4 rounded-lg" Elevation="2">
-     <MudExpansionPanel Expanded="true">
+<MudPaper Class="pa-4 rounded-lg" Elevation="1">
+     <MudStack>
+          <MudText Typo="Typo.h6">@L[MaktabResources.Enrollments]</MudText>
+
+          @* <MudExpansionPanel Expanded="true">
           <TitleContent>
                <MudContainer>
                     <MudStack Row="true" AlignItems="AlignItems.Stretch">
                          <MudText Typo="Typo.h6">@L[MaktabResources.Enrollments]</MudText>
                          <MudSpacer />
                          <MudIcon Icon="@Icons.Material.Filled.NotificationsActive" Color="Color.Warning" Size="Size.Medium" />
-                    </MudStack>
+                    </MudStack> *@
 
                     @* <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="ViewAll">View All</MudButton>
     </MudStack> *@
-               </MudContainer>
+          @* </MudContainer>
           </TitleContent>
 
-          <ChildContent>
+          <ChildContent> *@
                @if (Enrollments?.Any() == true)
                {
                     @if (GetAwatingEnrollmentCount(Enrollments) > 0)
@@ -43,11 +46,28 @@
                     <MudExpansionPanels MultiExpansion="true" Outlined="true" Elevation="1">
                          @foreach (var childItem in Enrollments?.GroupBy(x => x.ChildName))
                          {
-                              <MudExpansionPanel Text="@GetChildPanelTitle(childItem)">
+                         <MudExpansionPanel>
+                              <TitleContent>
+                                   <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                                        <MudText Typo="Typo.body1">@childItem.Key.ToTitleCase() <MudChip T="string" Variant="Variant.Text" Color="Color.Info">@GetChildPanelTitle(childItem)</MudChip></MudText>
+                                   </MudStack>
+
+                              </TitleContent>
+
+                              <ChildContent>
                                    <MudExpansionPanels MultiExpansion="true" Outlined="true" Elevation="0">
                                         @foreach (var courseItem in childItem?.GroupBy(x => x.CourseId))
                                         {
                                              <MudExpansionPanel Text=@GetCoursePanelTitle(courseItem)>
+
+                                                  <TitleContent>
+                                                       <MudStack Row="true" AlignItems="AlignItems.Stretch">
+                                                            <MudText Typo="Typo.body1">@GetCourseName(courseItem.Key).ToTitleCase() <MudChip T="string" Variant="Variant.Text" Color="Color.Info">@GetChildPanelTitle(childItem)</MudChip></MudText>
+                                                       </MudStack>
+
+                                                  </TitleContent>
+
+                                                  <ChildContent>
                                                   <MudTable Items="GetOrderedEnrollments(courseItem)" Striped="true" Elevation="1" Dense="true" Outlined="true" Bordered="false" Hover="true">
                                                             <HeaderContent>
                                                                  @* <MudTh>@L[MaktabResources.Child]</MudTh> *@
@@ -90,9 +110,11 @@
                                                                  @* <MudTd>@(context.WillUseDayCareServices ? "Yes" : "No")</MudTd> *@
                                                             </RowTemplate>
                                                        </MudTable>
+                                                  </ChildContent>
                                              </MudExpansionPanel>
                                         }
                                    </MudExpansionPanels>
+                              </ChildContent>
                               </MudExpansionPanel>
                          }
                     </MudExpansionPanels>
@@ -101,8 +123,9 @@
                {
                     <MudText Typo="Typo.body2" Color="Color.Secondary">@L[MaktabResources.Msg_Info_No_Enrollment]</MudText>
                }
-          </ChildContent>
-     </MudExpansionPanel>
+          @* </ChildContent>
+     </MudExpansionPanel> *@
+     </MudStack>
 </MudPaper>
 
 @code {
@@ -176,7 +199,6 @@
           // }
 
           return group;
-
      }
 
      private string GetCourseEnrollmentGroupTitle(Guid groupId)
@@ -197,7 +219,6 @@
           }
 
           return string.Empty;
-
      }
 
 
@@ -272,7 +293,7 @@
 
      private IList<StudentCourseEnrollmentResponse> GetOrderedEnrollments(IEnumerable<StudentCourseEnrollmentResponse> enrollments)
      {
-          if(enrollments?.Any() != true)
+          if (enrollments?.Any() != true)
           {
                return Array.Empty<StudentCourseEnrollmentResponse>();
           }
@@ -299,57 +320,11 @@
           var countOfRegistedEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Enrolled || x.EnrollmentStatus == EnrollmentStatus.Registered);
           var countOfCancelledEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Refunded || x.EnrollmentStatus == EnrollmentStatus.Cancelled);
 
-          var titleBuilder = new StringBuilder(group.Key.ToTitleCase());
-
-          if( countOfRegistedEnrollments > 0 || countOfCancelledEnrollments > 0 || countOfAwaitingEnrollments > 0)
-          {
-               titleBuilder.Append(" (");
-               bool addedSeparator = false;
-               if (countOfRegistedEnrollments> 0)
-               {
-                    titleBuilder.Append($" {countOfRegistedEnrollments}: {L[MaktabResources.EnrollmentStatus_Enrolled]} ");
-                    addedSeparator = true;
-               }
-
-               if (countOfAwaitingEnrollments > 0)
-               {
-                    if (addedSeparator)
-                    {
-                         titleBuilder.Append(" / ");
-                         addedSeparator = false;
-                    }
-
-                    titleBuilder.Append($" {countOfAwaitingEnrollments}: {L[MaktabResources.EnrollmentStatus_Awaiting]} ");
-               }
-
-               if (countOfCancelledEnrollments > 0)
-               {
-                    if(addedSeparator)
-                    {
-                         titleBuilder.Append(" / ");
-                         addedSeparator = false;
-                    }
-
-                    titleBuilder.Append($" {countOfCancelledEnrollments}: {L[MaktabResources.EnrollmentStatus_Cancelled]} ");
-               }
-
-               titleBuilder.Append(" )");
-          }
-
-          return titleBuilder.ToString();
-     }
-
-     private string GetCoursePanelTitle(IGrouping<Guid, StudentCourseEnrollmentResponse> group)
-     {
-          var countOfAwaitingEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Awaiting);
-          var countOfRegistedEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Enrolled || x.EnrollmentStatus == EnrollmentStatus.Registered);
-          var countOfCancelledEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Refunded || x.EnrollmentStatus == EnrollmentStatus.Cancelled);
-
-          var titleBuilder = new StringBuilder(GetCourseName(group.Key).ToTitleCase());
+          var titleBuilder = new StringBuilder();
 
           if (countOfRegistedEnrollments > 0 || countOfCancelledEnrollments > 0 || countOfAwaitingEnrollments > 0)
           {
-               titleBuilder.Append(" (");
+               //titleBuilder.Append(" (");
                bool addedSeparator = false;
                if (countOfRegistedEnrollments > 0)
                {
@@ -379,7 +354,53 @@
                     titleBuilder.Append($" {countOfCancelledEnrollments}: {L[MaktabResources.EnrollmentStatus_Cancelled]} ");
                }
 
-               titleBuilder.Append(" )");
+               //titleBuilder.Append(" )");
+          }
+
+          return titleBuilder.ToString();
+     }
+
+     private string GetCoursePanelTitle(IGrouping<Guid, StudentCourseEnrollmentResponse> group)
+     {
+          var countOfAwaitingEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Awaiting);
+          var countOfRegistedEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Enrolled || x.EnrollmentStatus == EnrollmentStatus.Registered);
+          var countOfCancelledEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Refunded || x.EnrollmentStatus == EnrollmentStatus.Cancelled);
+
+          var titleBuilder = new StringBuilder();
+
+          if (countOfRegistedEnrollments > 0 || countOfCancelledEnrollments > 0 || countOfAwaitingEnrollments > 0)
+          {
+               //titleBuilder.Append(" (");
+               bool addedSeparator = false;
+               if (countOfRegistedEnrollments > 0)
+               {
+                    titleBuilder.Append($" {countOfRegistedEnrollments}: {L[MaktabResources.EnrollmentStatus_Enrolled]} ");
+                    addedSeparator = true;
+               }
+
+               if (countOfAwaitingEnrollments > 0)
+               {
+                    if (addedSeparator)
+                    {
+                         titleBuilder.Append(" / ");
+                         addedSeparator = false;
+                    }
+
+                    titleBuilder.Append($" {countOfAwaitingEnrollments}: {L[MaktabResources.EnrollmentStatus_Awaiting]} ");
+               }
+
+               if (countOfCancelledEnrollments > 0)
+               {
+                    if (addedSeparator)
+                    {
+                         titleBuilder.Append(" / ");
+                         addedSeparator = false;
+                    }
+
+                    titleBuilder.Append($" {countOfCancelledEnrollments}: {L[MaktabResources.EnrollmentStatus_Cancelled]} ");
+               }
+
+               //titleBuilder.Append(" )");
           }
 
           return titleBuilder.ToString();
