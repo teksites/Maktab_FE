@@ -122,33 +122,38 @@
 
      private async Task RemoveChild(ChildResponse child)
      {
-          bool hasEnrollments = HasCourseEnrollments(child);
-          if(hasEnrollments)
-          {
+          // bool hasEnrollments = HasCourseEnrollments(child);
+          // if(hasEnrollments)
+          // {
+          //      await DialogService.ShowMessageBox(
+          //           L[MaktabResources.Warning],
+          //           L[MaktabResources.Msg_Child_Has_Active_Enrollments, child.FirstName], L[MaktabResources.OK]);
+
+          //           return;
+          // }
+
                await DialogService.ShowMessageBox(
-                    L[MaktabResources.Warning],
-                    L[MaktabResources.Msg_Child_Has_Active_Enrollments, child.FirstName], L[MaktabResources.OK]);
+                   L[MaktabResources.Error],
+                   L[MaktabResources.Msg_Error_Child_Cannot_Be_Removed], L[MaktabResources.OK]);
 
-                    return;
-          }
 
-          bool? result = await DialogService.ShowMessageBox(
-               L[MaktabResources.Warning],
-               L[MaktabResources.Msg_Question_Remove_Variable, child.FirstName],
-               yesText: L[MaktabResources.Delete], cancelText: L[MaktabResources.Cancel]);
-          if (result.HasValue && result.Value)
-          {
-               var deleted = await ChildrenService.RemoveChildByIdAsync(child.ChildId);
-               if (deleted)
-               {
-                    await StateService.LoadChildrenData(ChildrenService, FamilyId, true);
-                    Snackbar.Add(L[MaktabResources.Msg_Success_Child_Removed], Severity.Success);
-               }
-               else
-               {
-                    Snackbar.Add(L[MaktabResources.Msg_Error_Child_Not_Removed], Severity.Error);
-               }
-          }
+          // bool? result = await DialogService.ShowMessageBox(
+          //      L[MaktabResources.Warning],
+          //      L[MaktabResources.Msg_Question_Remove_Variable, child.FirstName],
+          //      yesText: L[MaktabResources.Delete], cancelText: L[MaktabResources.Cancel]);
+          // if (result.HasValue && result.Value)
+          // {
+          //      var deleted = await ChildrenService.RemoveChildByIdAsync(child.ChildId);
+          //      if (deleted)
+          //      {
+          //           await StateService.LoadChildrenData(ChildrenService, FamilyId, true);
+          //           Snackbar.Add(L[MaktabResources.Msg_Success_Child_Removed], Severity.Success);
+          //      }
+          //      else
+          //      {
+          //           Snackbar.Add(L[MaktabResources.Msg_Error_Child_Not_Removed], Severity.Error);
+          //      }
+          // }
 
           RequestRender();
      }

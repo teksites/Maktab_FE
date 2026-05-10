@@ -1289,4 +1289,7 @@
   <data name="Msg_Error_Year_Is_Invalid" xml:space="preserve">
     <value>L'année n'est pas valide</value>
   </data>
+  <data name="Msg_Error_Child_Cannot_Be_Removed" xml:space="preserve">
+    <value>L'enfant ne peut pas être retiré, veuillez contacter la direction de l'école</value>
+  </data>
 </root>

@@ -1600,6 +1600,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Child can not be removed, please contact school administration.
+        /// </summary>
+        public static string Msg_Error_Child_Cannot_Be_Removed {
+            get {
+                return ResourceManager.GetString("Msg_Error_Child_Cannot_Be_Removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Child can not be removed. please try in few moments.
         /// </summary>
         public static string Msg_Error_Child_Not_Removed {
