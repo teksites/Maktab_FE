@@ -1429,6 +1429,42 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current month only.
+        /// </summary>
+        public static string MonthYear_Current_Month_Only {
+            get {
+                return ResourceManager.GetString("MonthYear_Current_Month_Only", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Format: MM/YY.
+        /// </summary>
+        public static string MonthYear_Default_Format {
+            get {
+                return ResourceManager.GetString("MonthYear_Default_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Format: MM/YY — future or current dates only.
+        /// </summary>
+        public static string MonthYear_Future_Or_Current_Dates_Only {
+            get {
+                return ResourceManager.GetString("MonthYear_Future_Or_Current_Dates_Only", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Format: MM/YY — past or current dates only.
+        /// </summary>
+        public static string MonthYear_Past_Or_Current_Dates_Only {
+            get {
+                return ResourceManager.GetString("MonthYear_Past_Or_Current_Dates_Only", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to I acknowledge that I have completed the various consent questions for my child.
         /// </summary>
         public static string Msg_Acknowledge_Child_Consent_Completion {
@@ -1627,6 +1663,24 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date cannot be in the future.
+        /// </summary>
+        public static string Msg_Error_Data_Cannot_Be_In_Future {
+            get {
+                return ResourceManager.GetString("Msg_Error_Data_Cannot_Be_In_Future", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date Cannot Be In The Past.
+        /// </summary>
+        public static string Msg_Error_Date_Cannot_Be_In_The_Past {
+            get {
+                return ResourceManager.GetString("Msg_Error_Date_Cannot_Be_In_The_Past", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email address is invalid.
         /// </summary>
         public static string Msg_Error_Email_Address_Invalid {
@@ -1807,6 +1861,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Year is invalid.
+        /// </summary>
+        public static string Msg_Error_Year_Is_Invalid {
+            get {
+                return ResourceManager.GetString("Msg_Error_Year_Is_Invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please use add button to add address.
         /// </summary>
         public static string Msg_Info_Add_Address_Guidance {
@@ -1947,6 +2010,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Info_Manage_Course_Transaction_Payments {
             get {
                 return ResourceManager.GetString("Msg_Info_Manage_Course_Transaction_Payments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Month must be between 01 and 12.
+        /// </summary>
+        public static string Msg_Info_Month_Between_1_12 {
+            get {
+                return ResourceManager.GetString("Msg_Info_Month_Between_1_12", resourceCulture);
             }
         }
         
@@ -2136,6 +2208,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Initializing {
             get {
                 return ResourceManager.GetString("Msg_Initializing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid format. Use {0}.
+        /// </summary>
+        public static string Msg_Invalid_Format_With_Suggestion {
+            get {
+                return ResourceManager.GetString("Msg_Invalid_Format_With_Suggestion", resourceCulture);
             }
         }
         
@@ -2343,6 +2424,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Warning_Account_Locked_Seconds {
             get {
                 return ResourceManager.GetString("Msg_Warning_Account_Locked_Seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please complete the date (MM/YY).
+        /// </summary>
+        public static string Msg_Warning_Complete_the_date {
+            get {
+                return ResourceManager.GetString("Msg_Warning_Complete_the_date", resourceCulture);
             }
         }
         
@@ -2977,6 +3067,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Saved as {0}.
+        /// </summary>
+        public static string Saved_As_Param {
+            get {
+                return ResourceManager.GetString("Saved_As_Param", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search courses.
         /// </summary>
         public static string Search_Courses {
@@ -3223,6 +3322,15 @@ namespace Maktab.Consumer.Localization {
         public static string Text_Allergies_Placeholder {
             get {
                 return ResourceManager.GetString("Text_Allergies_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This field is required.
+        /// </summary>
+        public static string This_Field_Required {
+            get {
+                return ResourceManager.GetString("This_Field_Required", resourceCulture);
             }
         }
         

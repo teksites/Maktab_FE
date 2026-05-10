@@ -1253,4 +1253,40 @@
   <data name="Msg_Error_Custom_Amount_Under_Max_Value" xml:space="preserve">
     <value>Value provide must be under or equal to {0}</value>
   </data>
+  <data name="MonthYear_Default_Format" xml:space="preserve">
+    <value>Format: MM/YY</value>
+  </data>
+  <data name="Msg_Error_Date_Cannot_Be_In_The_Past" xml:space="preserve">
+    <value>Date Cannot Be In The Past</value>
+  </data>
+  <data name="MonthYear_Future_Or_Current_Dates_Only" xml:space="preserve">
+    <value>Format: MM/YY — future or current dates only</value>
+  </data>
+  <data name="MonthYear_Past_Or_Current_Dates_Only" xml:space="preserve">
+    <value>Format: MM/YY — past or current dates only</value>
+  </data>
+  <data name="MonthYear_Current_Month_Only" xml:space="preserve">
+    <value>Current month only</value>
+  </data>
+  <data name="Saved_As_Param" xml:space="preserve">
+    <value>Saved as {0}</value>
+  </data>
+  <data name="This_Field_Required" xml:space="preserve">
+    <value>This field is required</value>
+  </data>
+  <data name="Msg_Warning_Complete_the_date" xml:space="preserve">
+    <value>Please complete the date (MM/YY)</value>
+  </data>
+  <data name="Msg_Invalid_Format_With_Suggestion" xml:space="preserve">
+    <value>Invalid format. Use {0}</value>
+  </data>
+  <data name="Msg_Info_Month_Between_1_12" xml:space="preserve">
+    <value>Month must be between 01 and 12</value>
+  </data>
+  <data name="Msg_Error_Data_Cannot_Be_In_Future" xml:space="preserve">
+    <value>Date cannot be in the future</value>
+  </data>
+  <data name="Msg_Error_Year_Is_Invalid" xml:space="preserve">
+    <value>Year is invalid</value>
+  </data>
 </root>
