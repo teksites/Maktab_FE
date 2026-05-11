@@ -279,7 +279,6 @@
 
           if (double.TryParse(AmountDue, out double amount))
           {
-               SelectedAmount = amount;
                MinAmount = double.TryParse(MinimumAmountDueToKeepRegistration, out double min) ? min : 0;
                MaxAmount = amount; // Arbitrary max limit for custom input
           }
@@ -288,11 +287,14 @@
           {
                customAmountHelperText = L[MaktabResources.Custom_Amount_Helper_Text_Under_Max_Value, MaxAmount];
                customAmountErrorText = L[MaktabResources.Msg_Error_Custom_Amount_Under_Max_Value, MaxAmount];
+               SelectedAmount = MaxAmount;
+
           }
           else
           {
                customAmountHelperText = L[MaktabResources.Custom_Amount_Helper_Text_With_Between, MinAmount, MaxAmount];
                customAmountErrorText = L[MaktabResources.Msg_Error_Custom_Amount_Between_Min_Max_Values, MinAmount, MaxAmount];
+               SelectedAmount = MinAmount;
           }
 
           // Initialize breadcrumbs

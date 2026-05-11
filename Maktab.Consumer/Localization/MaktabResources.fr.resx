@@ -1292,4 +1292,37 @@
   <data name="Msg_Error_Child_Cannot_Be_Removed" xml:space="preserve">
     <value>L'enfant ne peut pas être retiré, veuillez contacter la direction de l'école</value>
   </data>
+  <data name="Msg_RAMQ_Length_Not_Valid" xml:space="preserve">
+    <value>Le numéro RAMQ doit contenir exactement 12 caractères</value>
+  </data>
+  <data name="Msg_RAMQ_Pattern_Not_Valid" xml:space="preserve">
+    <value>La RAMQ doit commencer par 4 lettres suivies de 8 chiffres</value>
+  </data>
+  <data name="Msg_RAMQ_Pattern_Mismatch_Last_Name" xml:space="preserve">
+    <value>Les positions 1 à 3 de la RAMQ ({0}) doivent correspondre aux 3 premières lettres du nom de famille {1}</value>
+  </data>
+  <data name="Msg_RAMQ_Pattern_Mismatch_First_Name" xml:space="preserve">
+    <value>La position 4 RAMQ ({0}) doit correspondre à la première lettre du prénom {1}</value>
+  </data>
+  <data name="Msg_RAMQ_Birth_Month_Invalid" xml:space="preserve">
+    <value>Le mois de naissance de la RAMQ est invalide</value>
+  </data>
+  <data name="Msg_RAMQ_Pattern_Mismatch_Gender" xml:space="preserve">
+    <value>Le mois de naissance RAMQ ('{0}') ne correspond pas au sexe {1}</value>
+  </data>
+  <data name="Msg_RAMQ_Invalid_Birth_Year" xml:space="preserve">
+    <value>L'année de naissance de la RAMQ n'est pas valide</value>
+  </data>
+  <data name="Msg_RAMQ_Invalid_Birth_Month" xml:space="preserve">
+    <value>Le mois de naissance de la RAMQ est invalide</value>
+  </data>
+  <data name="Msg_RAMQ_Invalid_Birth_Day" xml:space="preserve">
+    <value>Le jour de naissance de la RAMQ est invalide</value>
+  </data>
+  <data name="Msg_RAMQ_Pattern_Mismatch_Date_Of_Birth" xml:space="preserve">
+    <value>La date de naissance de la RAMQ ne correspond pas à la date de naissance ({0})</value>
+  </data>
+  <data name="Msg_RAMQ_Invalid_Sequence_Number" xml:space="preserve">
+    <value>Le numéro de séquence RAMQ n'est pas valide</value>
+  </data>
 </root>

@@ -69,12 +69,16 @@
                                        Adornment="Adornment.End"
                                        AdornmentIcon="@Icons.Material.Filled.Badge"
                                   Required="true"
-                                  For="@(() => ChildModel.RAMQNumber)" />
+                                       Error="@_ramqError"
+                                       ErrorText="@_ramqErrorText"
+                                       For="@(() => ChildModel.RAMQNumber)"
+                                       OnBlur="OnRamqBlur" />
                </MudItem>
 
                <MudItem xs="12" sm="6">
                          <MonthYearPicker @bind-Value="RAMQExpiry"
                                         Label=@L[MaktabResources.RAMQ_Expiry]
+                                        AllowPastDates="false"
                                    Required="true"
                                           For="@(() => ChildModel.RAMQExpiry)" />
                </MudItem>
@@ -175,6 +179,8 @@
      private IEnumerable<AcedemicGroupType> acedemicGroups;
      private static readonly IEnumerable<AcedemicGroupType> AcedemicGroupsCache = Enum.GetValues(typeof(AcedemicGroupType)).Cast<AcedemicGroupType>().ToList();
      private IReadOnlyCollection<ChildConsent> RequiredChildConsents { get; set; } = Array.Empty<ChildConsent>();
+     private bool _ramqError = false;
+     private string _ramqErrorText = string.Empty;
 
      protected override async Task OnInitializedAsync()
      {
@@ -271,6 +277,13 @@
                return;
           }
 
+          if (ChildModel.Gender == Gender.Unknown)
+          {
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Gender];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
           ChildModel.RAMQExpiry = RAMQExpiry.Value;
           ChildModel.DateOfBirth = DateOfBirth.Value;
           ChildModel.FamilyId = FamilyId;
@@ -310,4 +323,33 @@
           CleanDelimiters = false,
           Transformation = c => char.ToUpperInvariant(c)
      };
+
+     private void OnRamqBlur()
+     {
+          if(DateOfBirth == null)
+          {
+               _ramqError = true;
+               _ramqErrorText = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Date_Of_Birth];
+               return;
+          };
+
+          // Runs all rules in order — stops at first error found
+          var error = RamqValidationHelper.ValidateAll(
+              ramq: ChildModel.RAMQNumber,
+              firstName: ChildModel.FirstName,
+              lastName: ChildModel.LastName,
+              dateOfBirth: DateOfBirth.Value,
+              gender: ChildModel.Gender,
+              L
+          );
+
+          _ramqError = error is not null;
+          _ramqErrorText = error ?? string.Empty;
+     }
+
+     // override protected void OnFormValidated()
+     // {
+     //      base.OnFormValidated();
+     //      OnRamqBlur();
+     // }
 }

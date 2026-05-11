@@ -1292,4 +1292,37 @@
   <data name="Msg_Error_Child_Cannot_Be_Removed" xml:space="preserve">
     <value>Child can not be removed, please contact school administration</value>
   </data>
+  <data name="Msg_RAMQ_Length_Not_Valid" xml:space="preserve">
+    <value>RAMQ number must be exactly 12 characters</value>
+  </data>
+  <data name="Msg_RAMQ_Pattern_Not_Valid" xml:space="preserve">
+    <value>RAMQ must start with 4 letters followed by 8 digits</value>
+  </data>
+  <data name="Msg_RAMQ_Pattern_Mismatch_Last_Name" xml:space="preserve">
+    <value>RAMQ positions 1–3 ('{0}') must match the first 3 letters of last name '{1}'</value>
+  </data>
+  <data name="Msg_RAMQ_Pattern_Mismatch_First_Name" xml:space="preserve">
+    <value>RAMQ position 4 ('{0}') must match the first letter of first name '{1}'</value>
+  </data>
+  <data name="Msg_RAMQ_Birth_Month_Invalid" xml:space="preserve">
+    <value>RAMQ birth month is invalid</value>
+  </data>
+  <data name="Msg_RAMQ_Pattern_Mismatch_Gender" xml:space="preserve">
+    <value>RAMQ birth month ('{0}') does not match gender {1}</value>
+  </data>
+  <data name="Msg_RAMQ_Invalid_Birth_Year" xml:space="preserve">
+    <value>RAMQ birth year is invalid</value>
+  </data>
+  <data name="Msg_RAMQ_Invalid_Birth_Month" xml:space="preserve">
+    <value>RAMQ birth month is invalid</value>
+  </data>
+  <data name="Msg_RAMQ_Invalid_Birth_Day" xml:space="preserve">
+    <value>RAMQ birth day is invalid</value>
+  </data>
+  <data name="Msg_RAMQ_Invalid_Sequence_Number" xml:space="preserve">
+    <value>RAMQ sequence number is not valid</value>
+  </data>
+  <data name="Msg_RAMQ_Pattern_Mismatch_Date_Of_Birth" xml:space="preserve">
+    <value>RAMQ birth date does not match date of birth ({0})</value>
+  </data>
 </root>

@@ -2284,6 +2284,105 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to RAMQ birth month is invalid.
+        /// </summary>
+        public static string Msg_RAMQ_Birth_Month_Invalid {
+            get {
+                return ResourceManager.GetString("Msg_RAMQ_Birth_Month_Invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RAMQ birth day is invalid.
+        /// </summary>
+        public static string Msg_RAMQ_Invalid_Birth_Day {
+            get {
+                return ResourceManager.GetString("Msg_RAMQ_Invalid_Birth_Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RAMQ birth month is invalid.
+        /// </summary>
+        public static string Msg_RAMQ_Invalid_Birth_Month {
+            get {
+                return ResourceManager.GetString("Msg_RAMQ_Invalid_Birth_Month", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RAMQ birth year is invalid.
+        /// </summary>
+        public static string Msg_RAMQ_Invalid_Birth_Year {
+            get {
+                return ResourceManager.GetString("Msg_RAMQ_Invalid_Birth_Year", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RAMQ sequence number is not valid.
+        /// </summary>
+        public static string Msg_RAMQ_Invalid_Sequence_Number {
+            get {
+                return ResourceManager.GetString("Msg_RAMQ_Invalid_Sequence_Number", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RAMQ number must be exactly 12 characters.
+        /// </summary>
+        public static string Msg_RAMQ_Length_Not_Valid {
+            get {
+                return ResourceManager.GetString("Msg_RAMQ_Length_Not_Valid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RAMQ birth date does not match date of birth ({0}).
+        /// </summary>
+        public static string Msg_RAMQ_Pattern_Mismatch_Date_Of_Birth {
+            get {
+                return ResourceManager.GetString("Msg_RAMQ_Pattern_Mismatch_Date_Of_Birth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RAMQ position 4 (&apos;{0}&apos;) must match the first letter of first name &apos;{1}&apos;.
+        /// </summary>
+        public static string Msg_RAMQ_Pattern_Mismatch_First_Name {
+            get {
+                return ResourceManager.GetString("Msg_RAMQ_Pattern_Mismatch_First_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RAMQ birth month (&apos;{0}&apos;) does not match gender {1}.
+        /// </summary>
+        public static string Msg_RAMQ_Pattern_Mismatch_Gender {
+            get {
+                return ResourceManager.GetString("Msg_RAMQ_Pattern_Mismatch_Gender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RAMQ positions 1–3 (&apos;{0}&apos;) must match the first 3 letters of last name &apos;{1}&apos;.
+        /// </summary>
+        public static string Msg_RAMQ_Pattern_Mismatch_Last_Name {
+            get {
+                return ResourceManager.GetString("Msg_RAMQ_Pattern_Mismatch_Last_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RAMQ must start with 4 letters followed by 8 digits.
+        /// </summary>
+        public static string Msg_RAMQ_Pattern_Not_Valid {
+            get {
+                return ResourceManager.GetString("Msg_RAMQ_Pattern_Not_Valid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enrollments have been added successfully.
         /// </summary>
         public static string Msg_Success_Add_Enrollment {
