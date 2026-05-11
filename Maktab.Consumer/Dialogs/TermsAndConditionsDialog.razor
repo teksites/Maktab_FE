@@ -12,7 +12,7 @@
                @if (isInitialized)
                {
                     <div style="font-size: 14px; line-height: 1.6;">
-                         @(markupString)
+                         @(MarkupString)
                     </div>
                }
                else
@@ -33,14 +33,13 @@
 @code {
      // [CascadingParameter]
      // public IMudDialogInstance MudDialog { get; set; } = default!;
-
+     [Parameter, EditorRequired] public MarkupString MarkupString { get; set; }
      private bool isInitialized = false;
-     private MarkupString markupString;
 
      protected override async Task OnInitializedAsync()
      {
           await base.OnInitializedAsync();
-          markupString = new MarkupString(L[MaktabResources.Terms_And_Conditions_Content]);
+          
           isInitialized = true;
           RequestRender();
      }
