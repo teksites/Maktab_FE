@@ -21,7 +21,7 @@
                     <MudTextField @bind-Value="AddressModel.AddressLine1"
                                   Label=@L[MaktabResources.Address_Line_1]
                                   Required="true"
-                                  ReadOnly="@(_searchMode && _addressSelected && !string.IsNullOrWhiteSpace(AddressModel.AddressLine1))"
+                                  ReadOnly="@(_searchMode && (!_addressSelected || !string.IsNullOrWhiteSpace(AddressModel.AddressLine1)))"
                                   For="@(() => AddressModel.AddressLine1)" />
                </MudItem>
 
@@ -48,7 +48,7 @@
                     <MudTextField @bind-Value="AddressModel.PostalCode"
                                   Label=@L[MaktabResources.Postal_Code]
                                   Required="true"
-                                  ReadOnly="@(_searchMode && _addressSelected && !string.IsNullOrWhiteSpace(AddressModel.PostalCode))"
+                                  ReadOnly="@(_searchMode && (!_addressSelected || !string.IsNullOrWhiteSpace(AddressModel.PostalCode)))"
                                   For="@(() => AddressModel.PostalCode)" />
                </MudItem>
 
@@ -56,7 +56,7 @@
                     <MudTextField @bind-Value="AddressModel.City"
                                   Label=@L[MaktabResources.City]
                                   Required="true"
-                                  ReadOnly="@(_searchMode && _addressSelected && !string.IsNullOrWhiteSpace(AddressModel.City))"
+                                  ReadOnly="@(_searchMode && (!_addressSelected || !string.IsNullOrWhiteSpace(AddressModel.City)))"
                                   For="@(() => AddressModel.City)" />
                </MudItem>
 
@@ -64,7 +64,7 @@
                     <MudTextField @bind-Value="AddressModel.Province"
                                   Label=@L[MaktabResources.Province]
                                   Required="true"
-                                  ReadOnly="@(_searchMode && _addressSelected && !string.IsNullOrWhiteSpace(AddressModel.Province))"
+                                  ReadOnly="@(_searchMode && (!_addressSelected || !string.IsNullOrWhiteSpace(AddressModel.Province)))"
                                   For="@(() => AddressModel.Province)" />
                </MudItem>
 
@@ -72,7 +72,7 @@
                     <MudTextField @bind-Value="AddressModel.Country"
                                   Label=@L[MaktabResources.Country]
                                   Required="true"
-                                  ReadOnly="@(_searchMode && _addressSelected && !string.IsNullOrWhiteSpace(AddressModel.Country))"
+                                  ReadOnly="@(_searchMode && (!_addressSelected || !string.IsNullOrWhiteSpace(AddressModel.Country)))"
                                   For="@(() => AddressModel.Country)" />
                </MudItem>
 
