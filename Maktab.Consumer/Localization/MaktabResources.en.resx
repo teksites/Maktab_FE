@@ -1366,4 +1366,13 @@
 &lt;strong&gt;8. Governing Law&lt;/strong&gt;
 &lt;p&gt;These terms and conditions are governed by and construed in accordance with the laws of the jurisdiction in which the platform operates, and you irrevocably submit to the exclusive jurisdiction of the courts in that location.&lt;/p&gt;</value>
   </data>
+  <data name="Selected_Values_Single_Text" xml:space="preserve">
+    <value>{0} has been selected</value>
+  </data>
+  <data name="Selected_Values_Multiple_Text" xml:space="preserve">
+    <value>{0} have been selected</value>
+  </data>
+  <data name="Selected_Values_None_Text" xml:space="preserve">
+    <value>{0} has been selected</value>
+  </data>
 </root>

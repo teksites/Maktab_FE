@@ -1366,4 +1366,13 @@
   <data name="Read_Company_Terms_Conditions" xml:space="preserve">
     <value>Lire {0} termes et conditions</value>
   </data>
+  <data name="Selected_Values_Single_Text" xml:space="preserve">
+    <value>{0} a été sélectionné</value>
+  </data>
+  <data name="Selected_Values_Multiple_Text" xml:space="preserve">
+    <value>{0} ont été sélectionnés</value>
+  </data>
+  <data name="Selected_Values_None_Text" xml:space="preserve">
+    <value>{0} a été sélectionné</value>
+  </data>
 </root>

@@ -3297,6 +3297,33 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} have been selected.
+        /// </summary>
+        public static string Selected_Values_Multiple_Text {
+            get {
+                return ResourceManager.GetString("Selected_Values_Multiple_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has been selected.
+        /// </summary>
+        public static string Selected_Values_None_Text {
+            get {
+                return ResourceManager.GetString("Selected_Values_None_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has been selected.
+        /// </summary>
+        public static string Selected_Values_Single_Text {
+            get {
+                return ResourceManager.GetString("Selected_Values_Single_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Send code again.
         /// </summary>
         public static string Send_Code_Again {
