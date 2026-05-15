@@ -590,14 +590,7 @@
           var course = GetCourseResponseDetailed(courseId);
           if (course != null)
           {
-               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-               {
-                    return course.NameFr;
-               }
-               else
-               {
-                    return course.Name;
-               }
+               return GetCourseName(course);
           }
 
           return string.Empty;
@@ -610,14 +603,7 @@
           var institute = _Institutes.FirstOrDefault(x => x.InstituteId == instituteId);
           if (institute != null)
           {
-               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-               {
-                    return institute.NameFr;
-               }
-               else
-               {
-                    return institute.Name;
-               }
+               return GetInstituteName(institute);
           }
 
           return string.Empty;

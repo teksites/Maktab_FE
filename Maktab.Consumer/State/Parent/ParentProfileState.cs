@@ -313,6 +313,34 @@ namespace Maktab.Consumer.State.Parent
                }
           }
 
+          public bool UpdateCourseTransaction(StudentCourseTransactionResponse newTransaction)
+          {
+               if (newTransaction == null)
+               {
+                    return false;
+               }
+
+               lock (TransactionSyncLock)
+               {
+
+                    if (_courseTransactions == null)
+                    {
+                         _courseTransactions = new List<StudentCourseTransactionResponse>();
+                    }
+                    else
+                    {
+                         var oldTransaction = _courseTransactions.Find(x => x.StudentCourseTransactionId == newTransaction.StudentCourseTransactionId);
+                         if (oldTransaction != null)
+                         {
+                              _courseTransactions.Remove(oldTransaction);
+                         }
+                    }
+
+                    _courseTransactions.Add(newTransaction);
+                    return true;
+               }
+          } 
+
           public void ClearCourseTransactions()
           {
                lock (TransactionSyncLock)

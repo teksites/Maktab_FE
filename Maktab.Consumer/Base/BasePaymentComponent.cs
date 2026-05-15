@@ -1,6 +1,7 @@
 ﻿using Maktab.Consumer.Dialogs;
 using Maktab.Consumer.Helpers;
 using Maktab.Consumer.Localization;
+using MaktabDataContracts.Requests.Policies;
 using MaktabDataContracts.Responses.Course;
 using MaktabDataContracts.Responses.Transactions;
 using MudBlazor;
@@ -34,20 +35,10 @@ namespace Maktab.Consumer.Base
 
           protected async Task OpenHelcimPaymentPage(StudentCourseTransactionResponse courseTransaction, CourseResponseDetailed course, string userEmail)
           {
-               const string url = Constants.HelcimPaymentMethodRoute + "?amount={0}&code={1}&email={2}&course={3}&transactionId={4}";
+               const string url = Constants.HelcimPaymentMethodRoute + "?course={0}&transactionId={1}";
                if (courseTransaction != null)
                {
-                    string paymentCode = courseTransaction.PaymentCode;    
-                    decimal amountPayable = courseTransaction.TotalPayable - courseTransaction.TotalAmountPaid;
-
-                    var navigationUrl = string.Format(url, amountPayable.ToString(), paymentCode, userEmail, GetCourseName(course), courseTransaction.StudentCourseTransactionId);
-
-                    //check if minimum amount due is greater than zero and less than total amount due, if so pass it as query param
-                    decimal minimumPayable = CalculateMinumumAmountDue(courseTransaction);
-                    if (minimumPayable > 0)
-                    {
-                         navigationUrl += $"&minimumAmount={minimumPayable.ToString()}";
-                    }
+                    var navigationUrl = string.Format(url, GetCourseName(course), courseTransaction.StudentCourseTransactionId);
 
                     NavigationManager.NavigateTo(navigationUrl, false);
                }
@@ -68,6 +59,12 @@ namespace Maktab.Consumer.Base
                }
 
                return minimumAmount;
+          }
+
+          protected decimal CalculateAmountDue(StudentCourseTransactionResponse transaction)
+          {
+               var amount = transaction.TotalPayable - (transaction.TotalAmountPaid);
+               return amount;
           }
 
           protected async Task OpenPaymentScheduleDialog(IDialogService dialogService, StudentCourseTransactionResponse studentCourseTransactionResponse)

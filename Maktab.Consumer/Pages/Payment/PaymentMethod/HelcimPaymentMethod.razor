@@ -1,10 +1,12 @@
 @page "/payment/paymentmethod/helcim"
 @using Maktab.Consumer.State
 @using Maktab.Consumer.Extensions
+@using MaktabDataContracts.Responses.Transactions
 @using MaktabDataContracts.Responses.Users
 @using MaktabDataContracts.Requests.Helcim
 
-@inherits LocalizeableBaseComponent<HelcimPaymentMethod>
+@inherits BasePaymentComponent<HelcimPaymentMethod>
+@inject IUserService UserService
 @inject ICourseEnrollmentService CourseEnrollmentService
 @inject ICourseEnrollmentTransactionService CourseEnrollmentTransactionService
 @inject UserStateService StateService
@@ -96,7 +98,7 @@
                <!-- Page Header with Alert -->
                <MudStack Spacing="2" Class="mb-8">
                     <MudText Typo="Typo.h4" Class="font-weight-bold">@L[MaktabResources.Choose_Your_Amount]</MudText>
-                    <MudText Typo="Typo.body1" >
+                    <MudText Typo="Typo.body1">
                          @L[MaktabResources.Msg_Info_Choose_Amount_Or_Custom_Value]
                     </MudText>
 
@@ -105,6 +107,12 @@
                          <MudText Typo="Typo.h6" Color="Color.Primary">
                               @CourseName
                          </MudText>
+                         @if (transactionResponse?.FeeInstallments?.Any() == true)
+                         {
+                              <MudTooltip Text=@L[MaktabResources.Payment_Schedule]>
+                                   <MudIconButton Class="mr-1" Variant="Variant.Outlined" Color="Color.Info" OnClick="() => OpenPaymentScheduleDialog(transactionResponse)" Icon="@Icons.Material.Outlined.Schedule" Size="Size.Small" />
+                              </MudTooltip>
+                         }
                     </MudStack>
 
                </MudStack>
@@ -145,10 +153,10 @@
                          <MudIcon Icon="@Icons.Material.Filled.Bolt" Color="Color.Warning" Size="Size.Small" />
                          <MudText Typo="Typo.subtitle2" Style="font-weight:700;">Quick Select</MudText>
                     </MudStack>
-                         <MudGrid Spacing="2" Justify="Justify.SpaceBetween" >
+                         <MudGrid Spacing="2" Justify="Justify.SpaceBetween">
                          @foreach (var preset in PresetAmounts)
                          {
-                                   if(preset <= 0 )
+                                   if (preset <= 0)
                                    {
                                         continue; // Skip invalid presets
                                    }
@@ -209,7 +217,7 @@
                           FullWidth="true"
                           Disabled="ShowValidationMessage"
                           Style="border-radius:14px; height:54px; font-size:1rem; font-weight:700;"
-                          OnClick="ProceedToPayment">
+                               OnClick="HandlePayment">
                     <MudStack Row="true">
                               <MudIcon Icon="@Icons.Material.Filled.Lock" Color="Color.Warning" Size="Size.Small" />
                          <MudText>@L[MaktabResources.Pay_Securely]</MudText>
@@ -230,7 +238,6 @@
      @code {
      [Parameter] public string PaymentCode { get; set; } = string.Empty;
      [Parameter] public string CourseName { get; set; } = string.Empty;
-     [Parameter] public string UserEmail { get; set; } = string.Empty;
      [Parameter] public string AmountDue { get; set; } = "0";
      [Parameter] public string MinimumAmountDueToKeepRegistration { get; set; } = "0";
      [Parameter] public Guid TranactionId { get; set; } = Guid.Empty;
@@ -252,6 +259,7 @@
      private DotNetObjectReference<HelcimPaymentMethod>? _dotNetRef;
      private string customAmountHelperText = string.Empty;
      private string customAmountErrorText = string.Empty;
+     private StudentCourseTransactionResponse transactionResponse = null;
 
      protected override void OnInitialized()
      {
@@ -261,11 +269,7 @@
           var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
           var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
 
-          PaymentCode = query.Get("code") ?? string.Empty;
           CourseName = query.Get("course") ?? string.Empty;
-          UserEmail = query.Get("email") ?? string.Empty;
-          AmountDue = query.Get("amount") ?? "0";
-          MinimumAmountDueToKeepRegistration = query.Get("minimumAmount") ?? "0";
           var transactionIdStr = query.Get("transactionId") ?? Guid.Empty.ToString();
           TranactionId = Guid.TryParse(transactionIdStr, out var transactionId) ? transactionId : Guid.Empty;
      }
@@ -277,13 +281,32 @@
 
           var userId = await SessionService.GetLoggedInUserIdAsync();
 
-          if (double.TryParse(AmountDue, out double amount))
+          if (TranactionId == Guid.Empty)
           {
-               MinAmount = double.TryParse(MinimumAmountDueToKeepRegistration, out double min) ? min : 0;
-               MaxAmount = amount; // Arbitrary max limit for custom input
+               isInitialized = true;
+               OnPaymentDeclined();
+               return;
           }
 
-          if(MinAmount <= 0)
+          await LoadData(userId, TranactionId, true);
+
+          transactionResponse = StateService.ParentState.CourseTransactions.FirstOrDefault(x => x.StudentCourseTransactionId == TranactionId);
+          if (transactionResponse != null)
+          {
+               var minValue = CalculateMinumumAmountDue(transactionResponse);
+               MinAmount = Convert.ToDouble(minValue);
+               var maxValue = CalculateAmountDue(transactionResponse);
+               MaxAmount = Convert.ToDouble(maxValue);
+          }
+
+          else
+          {
+               isInitialized = true;
+               OnPaymentDeclined();
+               return;
+          }
+
+          if (MinAmount <= 0)
           {
                customAmountHelperText = L[MaktabResources.Custom_Amount_Helper_Text_Under_Max_Value, MaxAmount];
                customAmountErrorText = L[MaktabResources.Msg_Error_Custom_Amount_Under_Max_Value, MaxAmount];
@@ -324,7 +347,7 @@
 
      private void InitializePresets()
      {
-          if(MinAmount < MaxAmount)
+          if (MinAmount < MaxAmount)
           {
                PresetAmounts = new double[]
                {
@@ -338,6 +361,16 @@
           }
      }
 
+     private async Task LoadData(Guid userId, Guid transactionId, bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadUserProfileData(UserService, userId, forceReload);
+          await StateService.LoadCourseTransactionByTransactionId(CourseEnrollmentTransactionService, transactionId, forceReload);
+
+          isDataLoading = false;
+     }
+
      private void SelectPreset(double amount)
      {
           SelectedAmount = amount;
@@ -345,20 +378,33 @@
           ShowValidationMessage = false;
      }
 
+     private async Task HandlePayment()
+     {
+          IsPaymentBeingProcessed = true;
+          RequestRender();
+
+          try
+          {
+               await InvokeUserAction(ProceedToPayment);
+          }
+          finally
+          {
+               IsPaymentBeingProcessed = false;
+               RequestRender();
+          }
+     }
+
      private async Task ProceedToPayment()
      {
           try
           {
-               IsPaymentBeingProcessed = true;
-               RequestRender();
-
           // NavigationManager.NavigateTo($"/checkout?amount={SelectedAmount}");
           var request = new InitiatePaymentRequest()
           {
                PaymentCode = PaymentCode,
                Amount = SelectedAmount,
                TransactionId = this.TranactionId,
-               UserIp = "192.168.0.121"
+                    UserIp = "-----"
           };
           var responseWithCode = await HelcimPaymentMethodService.InitializePaymentAsync(request);
           CheckoutToken = responseWithCode.CheckoutToken;
@@ -378,15 +424,12 @@
                }
           }
      }
-          catch(Exception ex)
+          catch (Exception ex)
           {
                Console.WriteLine($"Error during payment initiation: {ex.Message}");
                await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Failed_Initiate_Payment], L[MaktabResources.OK]);
-          }
-          finally
-          {
-               IsPaymentBeingProcessed = false;
-               RequestRender();
+
+               OnPaymentDeclined();
           }
      }
 
@@ -439,5 +482,10 @@
                IsPaymentBeingProcessed = false;
                RequestRender();
           }
+     }
+
+     protected async Task OpenPaymentScheduleDialog(StudentCourseTransactionResponse studentCourseTransactionResponse)
+     {
+          await OpenPaymentScheduleDialog(DialogService, studentCourseTransactionResponse);
      }
 }

@@ -1,6 +1,7 @@
 ﻿using Maktab.Consumer.State;
 using Maktab.Core.Interfaces.Services;
 using MaktabDataContracts.Responses.Course;
+using MaktabDataContracts.Responses.Transactions;
 using MudBlazor;
 
 namespace Maktab.Consumer.Extensions
@@ -143,6 +144,22 @@ namespace Maktab.Consumer.Extensions
                          }
                     }
                }
+          }
+
+          public static async Task<StudentCourseTransactionResponse> LoadCourseTransactionByTransactionId(this UserStateService userStateService, ICourseEnrollmentTransactionService courseEnrollmentTransactionService, Guid courseTransactionId, bool forceReload = false)
+          {
+               if (forceReload)
+               {
+                    var courseTransaction = await courseEnrollmentTransactionService.GetCourseEnrollmentTranasctionByIdAsync(courseTransactionId);
+                    if (courseTransaction != null)
+                    {
+                         userStateService.ParentState.UpdateCourseTransaction(courseTransaction);
+                         return courseTransaction;
+                    }
+               }
+
+               var transaction = userStateService.ParentState.CourseTransactions.FirstOrDefault(x => x.StudentCourseTransactionId == courseTransactionId);
+               return transaction;
           }
 
           public static async Task LoadAddressesData(this UserStateService userStateService, IAddressService addressService, Guid connectedId, bool forceReload = false)
