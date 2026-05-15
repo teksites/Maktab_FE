@@ -46,12 +46,12 @@
           <MudTd>@context.DateOfBirth.ToShortDateString()</MudTd>
           <MudTd>@(GetGenderLabel(context.Gender))</MudTd>
           <MudTd>@context.RAMQNumber</MudTd>
-          <MudTd>@context.RAMQExpiry.ToShortDateString()</MudTd>
+          <MudTd>@context.RAMQExpiry.ToString("MM/yy")</MudTd>
           @* <MudTd>@context.Allergies</MudTd>
           <MudTd>@context.OtherHealthConditions</MudTd> *@
           <MudTd>
                <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Default">
-                    <MudMenuItem Disabled="true" >@L[MaktabResources.Edit]</MudMenuItem>
+                    <MudMenuItem OnClick="@(() => OpenEditChildDialog(context))" >@L[MaktabResources.Edit]</MudMenuItem>
                     @if (ShowEnrollMenu)
                     {
                          <MudMenuItem OnClick="@(() => OpenAssignCourseDialog(context))">@L[MaktabResources.Enroll]</MudMenuItem>
@@ -156,5 +156,16 @@
           // }
 
           RequestRender();
+     }
+
+     private async Task OpenEditChildDialog(ChildResponse childResponse)
+     {
+          var dialogResult = await this.OpenEditChildDialog(DialogService, childResponse);
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
+          {
+               //await LoadChildrenData(userInfo.FamilyId, true);
+               await StateService.LoadChildrenData(ChildrenService, child.FamilyId, true);
+               RequestRender();
+          }
      }
 }

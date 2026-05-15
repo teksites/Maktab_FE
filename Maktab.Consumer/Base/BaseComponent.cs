@@ -2,6 +2,7 @@
 using Maktab.Consumer.Helpers;
 using Maktab.Core.Interfaces.Services;
 using MaktabDataContracts.Enums;
+using MaktabDataContracts.Responses.Children;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -244,6 +245,16 @@ namespace Maktab.Consumer.Base
                var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
 
                var dialog = await dialogService.ShowAsync<AddChildDialog>(null, parameters, options);
+               var result = await dialog.Result;
+               return result;
+          }
+
+          protected async Task<DialogResult?> OpenEditChildDialog(IDialogService dialogService, ChildResponse childResponse)
+          {
+               var parameters = new DialogParameters { ["Child"] = childResponse };
+               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+
+               var dialog = await dialogService.ShowAsync<EditChildDialog>(null, parameters, options);
                var result = await dialog.Result;
                return result;
           }

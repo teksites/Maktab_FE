@@ -305,6 +305,17 @@
           }
      }
 
+     private async Task OpenEditChildDialog(ChildResponse childResponse)
+     {
+          var dialogResult = await this.OpenEditChildDialog(DialogService, childResponse);
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
+          {
+               //await LoadChildrenData(userInfo.FamilyId, true);
+               await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, true);
+               RequestRender();
+          }
+     }
+
      private async Task OpenAddExtendedInfoDialog()
      {
           var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId, ["AddessId"] = userInfo.FamilyId, ["UserId"] = userInfo.UserId };

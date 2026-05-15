@@ -39,5 +39,6 @@ namespace Maktab.Core.Interfaces.Services
           /// Remove child by ID (backend uses POST)
           /// </summary>
           Task<bool> RemoveChildByIdAsync(Guid childId);
+          Task<ChildResponse> UpdateChildAsync(UpdateChildRequest updateChildResponse);
      }
 }

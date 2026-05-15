@@ -957,6 +957,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Child.
+        /// </summary>
+        public static string Edit_Child {
+            get {
+                return ResourceManager.GetString("Edit_Child", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit Contact.
         /// </summary>
         public static string Edit_Contact {
@@ -1884,6 +1893,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Child can not be updated, please try in few moments.
+        /// </summary>
+        public static string Msg_Error_Update_Child {
+            get {
+                return ResourceManager.GetString("Msg_Error_Update_Child", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please use different new password.
         /// </summary>
         public static string Msg_Error_Use_Diffent_New_Password {
@@ -2474,6 +2492,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Success_Child_Removed {
             get {
                 return ResourceManager.GetString("Msg_Success_Child_Removed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Child has been successfully updated.
+        /// </summary>
+        public static string Msg_Success_Child_Updated {
+            get {
+                return ResourceManager.GetString("Msg_Success_Child_Updated", resourceCulture);
             }
         }
         
