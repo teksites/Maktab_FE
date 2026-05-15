@@ -16,12 +16,16 @@
      <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleAddressSave)" Validated="@(OnFormValidated)">
 
           <MudGrid Container="true" Spacing="3">
-              
+
+               <MudItem xs="12" sm="12">
+                    <AzureAddressSearch OnSelected="@PopulateFromAzure" OnManualToggle="@(v => SetAddressMode(!v))" />
+               </MudItem>
 
                <MudItem xs="12" sm="12">
                     <MudTextField @bind-Value="AddressModel.AddressLine1"
                                   Label=@L[MaktabResources.Address_Line_1]
                                   Required="true"
+                                  ReadOnly="@(_searchMode && (!_addressSelected || !string.IsNullOrWhiteSpace(AddressModel.AddressLine1)))"
                                   For="@(() => AddressModel.AddressLine1)" />
                </MudItem>
 
@@ -48,6 +52,7 @@
                     <MudTextField @bind-Value="AddressModel.PostalCode"
                                   Label=@L[MaktabResources.Postal_Code]
                                   Required="true"
+                                  ReadOnly="@(_searchMode && (!_addressSelected || !string.IsNullOrWhiteSpace(AddressModel.PostalCode)))"
                                   For="@(() => AddressModel.PostalCode)" />
                </MudItem>
 
@@ -55,6 +60,7 @@
                     <MudTextField @bind-Value="AddressModel.City"
                                   Label=@L[MaktabResources.City]
                                   Required="true"
+                                  ReadOnly="@(_searchMode && (!_addressSelected || !string.IsNullOrWhiteSpace(AddressModel.City)))"
                                   For="@(() => AddressModel.City)" />
                </MudItem>
 
@@ -62,6 +68,7 @@
                     <MudTextField @bind-Value="AddressModel.Province"
                                   Label=@L[MaktabResources.Province]
                                   Required="true"
+                                  ReadOnly="@(_searchMode && (!_addressSelected || !string.IsNullOrWhiteSpace(AddressModel.Province)))"
                                   For="@(() => AddressModel.Province)" />
                </MudItem>
 
@@ -69,24 +76,28 @@
                     <MudTextField @bind-Value="AddressModel.Country"
                                   Label=@L[MaktabResources.Country]
                                   Required="true"
+                                  ReadOnly="@(_searchMode && (!_addressSelected || !string.IsNullOrWhiteSpace(AddressModel.Country)))"
                                   For="@(() => AddressModel.Country)" />
                </MudItem>
 
-               <MudItem xs="12" sm="6" Class="d-flex align-center" @bind-hidden="HideAddressType">
-                    <MudSwitch @bind-Value="AddressModel.HomeAddress"
-                               T="bool"
-                               Label=@L[MaktabResources.Home_Address]
-                               Color="Color.Primary" />
-               </MudItem>
+               @if (!HideAddressType)
+               {
+                    <MudItem xs="12" sm="6" Class="d-flex align-center">
+                         <MudSwitch @bind-Value="AddressModel.HomeAddress"
+                                    T="bool"
+                                    Label=@L[MaktabResources.Home_Address]
+                                    Color="Color.Primary" />
+                    </MudItem>
 
-               <MudItem xs="12" sm="6" @bind-hidden="HideAddressType" Class="d-flex align-center">
-                    <MudSelect @bind-Hidden="HideAddressType" T="AddressType" Label=@L[MaktabResources.Address_Type] @bind-Value="AddressModel.AddressType" Required="true">
-                         @foreach (var rel in AddressTypes)
-                         {
-                              <MudSelectItem Value="@rel">@(GetAddressTypeLabel(rel))</MudSelectItem>
-                         }
-                    </MudSelect> 
-               </MudItem>
+                    <MudItem xs="12" sm="6" Class="d-flex align-center">
+                         <MudSelect T="AddressType" Label=@L[MaktabResources.Address_Type] @bind-Value="AddressModel.AddressType" Required="true" For="@(() => AddressModel.AddressType)">
+                              @foreach (var rel in AddressTypes)
+                              {
+                                   <MudSelectItem Value="@rel">@(GetAddressTypeLabel(rel))</MudSelectItem>
+                              }
+                         </MudSelect>
+                    </MudItem>
+               }
           </MudGrid>
 
           @if (!string.IsNullOrWhiteSpace(_errorMessage))
@@ -125,6 +136,29 @@
      private IReadOnlyCollection<AddressType> AddressTypes { get; } = Enum.GetValues(typeof(AddressType)).Cast<AddressType>().Where(x=>x != AddressType.Unknown || x != AddressType.Institute).ToList();
      private bool isSaving = false;
      private bool isInitialized = false;
+     private bool _searchMode = true;
+     private bool _addressSelected = false;
+
+     private void SetAddressMode(bool searchMode)
+     {
+          _searchMode = searchMode;
+          if (!searchMode) _addressSelected = false;
+          RequestRender();
+     }
+
+     private async Task PopulateFromAzure(Maktab.Consumer.Services.AzureAddressResult result)
+     {
+          AddressModel.AddressLine1 = result.StreetLine;
+          AddressModel.City         = result.City;
+          AddressModel.Province     = result.Province;
+          AddressModel.PostalCode   = result.PostalCode;
+          AddressModel.Country      = result.Country;
+          _addressSelected          = true;
+          StateHasChanged();
+          await Task.Yield();
+          await _form.Validate();
+          StateHasChanged();
+     }
 
      protected override async Task OnInitializedAsync()
      {

@@ -50,6 +50,14 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddSingleton<IClipboardService, ClipboardService>()
                 .AddScoped<IHelcimPaymentMethodService, HelcimPaymentMethodService>();
 
+// Azure Maps – dedicated HttpClient + service
+builder.Services.AddScoped<IAzureAddressService>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var http   = new HttpClient { BaseAddress = new Uri("https://atlas.microsoft.com/") };
+    return new AzureAddressService(http, config);
+});
+
 builder.Services.AddScoped(x => {
      var apiUrl = new Uri(builder.Configuration["apiUrl"]);
 
