@@ -2,7 +2,6 @@
 using Maktab.Infrastructure.Converters;
 using Maktab.Infrastructure.Helpers;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -17,7 +16,6 @@ namespace Maktab.Infrastructure.Services
           private HttpClient _httpClient;
           private NavigationManager _navigationManager;
           private ILocalStorageService _localStorageService;
-          private IConfiguration _configuration;
 
           private static readonly JsonSerializerOptions _serializerOptions = new()
           {
@@ -27,25 +25,26 @@ namespace Maktab.Infrastructure.Services
                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
           };
 
-          public HttpService(
-              HttpClient httpClient,
-              NavigationManager navigationManager,
-              ILocalStorageService localStorageService,
-              IConfiguration configuration)
+          static HttpService()
           {
-               _httpClient = httpClient;
-               _navigationManager = navigationManager;
-               _localStorageService = localStorageService;
-               _configuration = configuration;
-
                _serializerOptions.Converters.Add(new JsonStringEnumConverter());
                _serializerOptions.Converters.Add(new BoolConverter());
           }
 
-          public async Task<T> Get<T>(string uri)
+          public HttpService(
+              HttpClient httpClient,
+              NavigationManager navigationManager,
+              ILocalStorageService localStorageService)
+          {
+               _httpClient = httpClient;
+               _navigationManager = navigationManager;
+               _localStorageService = localStorageService;
+          }
+
+          public async Task<T> Get<T>(string uri, CancellationToken ct = default)
           {
                var request = createRequest(HttpMethod.Get, uri);
-               return await sendRequest<T>(request);
+               return await sendRequest<T>(request, cancellationToken:ct);
           }
 
           public async Task Post(string uri, object value)

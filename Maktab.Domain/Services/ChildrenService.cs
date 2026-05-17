@@ -292,9 +292,16 @@ namespace Maktab.Domain.Services
                {
                     _logger.LogInformation("Updating children for child {ChildId}", childResponse.ChildId);
                     var formattedUrl = string.Format(updateChildById, childResponse.ChildId);
-                    var result = await _httpService.Put<ChildResponse>(formattedUrl, childResponse);
+                    var result = await _httpService.Put<MaktabApiResult<ChildResponse>>(formattedUrl, childResponse);
+                    // Validate response
+                    if (result == null || result.Result == null)
+                    {
+                         _logger.LogError("Server returned null response when updating child");
+                         throw new InvalidOperationException("Server did not return child updation confirmation");
+                    }
+
                     _logger.LogInformation("Successfully updated child with {ChildId}", childResponse.ChildId);
-                    return result;
+                    return result.Result;
                }
                catch (Exception ex)
                {

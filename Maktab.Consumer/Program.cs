@@ -5,6 +5,7 @@ using Maktab.Consumer.State;
 using Maktab.Core.Interfaces.Services;
 using Maktab.Domain.Services;
 using Maktab.Infrastructure.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -46,19 +47,25 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddScoped<AuthenticationStateProvider, AuthStateProvider>()
                 .AddSingleton<UserStateService>()
                 .AddSingleton<ISystemService, SystemService>()
-                .AddScoped<IGlobalizationService,GlobalizationService>()
+                .AddScoped<IGlobalizationService, GlobalizationService>()
                 .AddSingleton<IClipboardService, ClipboardService>()
                 .AddScoped<IHelcimPaymentMethodService, HelcimPaymentMethodService>();
 
 // Azure Maps – dedicated HttpClient + service
-builder.Services.AddScoped<IAzureAddressService>(sp =>
+builder.Services.AddScoped<IAddressLookupService>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();
-    var http   = new HttpClient { BaseAddress = new Uri("https://atlas.microsoft.com/") };
-    return new AzureAddressService(http, config);
+     var httpService = sp.GetRequiredService(typeof(IHttpService));
+
+     var http = new HttpClient { BaseAddress = new Uri("https://atlas.microsoft.com/") };
+     var navManager = sp.GetService<NavigationManager>();
+     var localizationService = sp.GetService<ILocalStorageService>();
+     var httpServive = new HttpService(http, navManager, localizationService);
+     return new AzureAddressLookupService(httpServive, localizationService, config);
 });
 
-builder.Services.AddScoped(x => {
+builder.Services.AddScoped(x =>
+{
      var apiUrl = new Uri(builder.Configuration["apiUrl"]);
 
      // use fake backend if "fakeBackend" is "true" in appsettings.json

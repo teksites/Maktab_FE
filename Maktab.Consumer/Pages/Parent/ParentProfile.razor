@@ -350,7 +350,7 @@
           var parameters = new DialogParameters { ["EditAddress"] = address };
           var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
 
-          var dialog = await DialogService.ShowAsync<EditAddressDialog>(L[MaktabResources.Edit_Extended_Info], parameters, options);
+          var dialog = await DialogService.ShowAsync<EditAddressDialog>(L[MaktabResources.Edit_Address], parameters, options);
 
           var dialogResult = await dialog.Result;
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is AddressResponse addressResponse)

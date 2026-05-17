@@ -1,76 +1,75 @@
-using System.Net.Http.Json;
+using Maktab.Core.Interfaces.Models;
+using Maktab.Core.Interfaces.Services;
+using Maktab.Domain.Services;
+using MaktabDataContracts.Responses.Addresses;
 using System.Text.Json.Serialization;
 using System.Web;
-using Microsoft.Extensions.Configuration;
 
 namespace Maktab.Consumer.Services
 {
-    // ── Result model returned to the UI ──────────────────────────────────────
-    public class AzureAddressResult
-    {
-        public string FormattedAddress { get; init; } = string.Empty;
-        public string StreetLine        { get; init; } = string.Empty;
-        public string City              { get; init; } = string.Empty;
-        public string Province          { get; init; } = string.Empty;
-        public string County            { get; init; } = string.Empty;
-        public string PostalCode        { get; init; } = string.Empty;
-        public string Country           { get; init; } = string.Empty;
-    }
-
-    // ── Service interface ─────────────────────────────────────────────────────
-    public interface IAzureAddressService
-    {
-        Task<IReadOnlyList<AzureAddressResult>> SearchAsync(string query, CancellationToken ct = default);
-    }
-
     // ── Service implementation ────────────────────────────────────────────────
-    public class AzureAddressService : IAzureAddressService
-    {
+    public class AzureAddressLookupService : BaseService, IAddressLookupService
+     {
         private const string BaseUrl      = "https://atlas.microsoft.com/geocode:autocomplete";
         private const string ApiVersion   = "2026-01-01";
         private const string CountryCode  = "CA";
         private const string Language     = "en-CA";
         private const string CanadaBbox   = "-141.0,41.7,-52.6,83.1";
 
-        private readonly HttpClient    _http;
+        private readonly IHttpService _httpService;
         private readonly string        _subscriptionKey;
 
-        public AzureAddressService(HttpClient http, IConfiguration config)
-        {
-            _http            = http;
-            _subscriptionKey = config["AzureMaps:SubscriptionKey"] ?? string.Empty;
-        }
+          public AzureAddressLookupService(IHttpService httpService, ILocalStorageService localStorageService, IConfiguration config)
+          : base(httpService, localStorageService)
+          {
+               _httpService = httpService;
+               _subscriptionKey = config["AzureMaps:SubscriptionKey"] ?? string.Empty;
+          }
 
-        public async Task<IReadOnlyList<AzureAddressResult>> SearchAsync(string query, CancellationToken ct = default)
-        {
-            if (string.IsNullOrWhiteSpace(query) || query.Length < 3)
-                return [];
+          public async Task<IReadOnlyList<AddressLookupResult>> SearchAdderssAsync(string query, CancellationToken ct = default)
+          {
+               if (string.IsNullOrWhiteSpace(query) || query.Length < 3)
+                    return Array.Empty<AddressLookupResult>();
 
-            var qs = HttpUtility.ParseQueryString(string.Empty);
-            qs["api-version"]      = ApiVersion;
-            qs["query"]            = query;
-            qs["bbox"]             = CanadaBbox;
-            qs["resultTypes"]      = "Address";
-            qs["countryRegion"]    = CountryCode;
-            qs["language"]         = Language;
-            qs["top"]              = "8";
-            qs["subscription-key"] = _subscriptionKey;
+               var qs = HttpUtility.ParseQueryString(string.Empty);
+               qs["api-version"] = ApiVersion;
+               qs["query"] = query;
+               qs["bbox"] = CanadaBbox;
+               qs["resultTypes"] = "Address";
+               qs["countryRegion"] = CountryCode;
+               qs["language"] = Language;
+               qs["top"] = "8";
+               qs["subscription-key"] = _subscriptionKey;
 
-            var url = $"{BaseUrl}?{qs}";
+               var url = $"{BaseUrl}?{qs}";
 
-            try
-            {
-                var response = await _http.GetFromJsonAsync<AzureGeoResponse>(url, ct);
-                return response?.Features?.Select(Parse).ToList() ?? [];
-            }
-            catch
-            {
-                return [];
-            }
-        }
+               try
+               {
+                    var response = await _httpService.Get<AzureGeoResponse>(url, ct);
+                    return response?.Features?.Select(Parse).ToList() ?? [];
+               }
+               catch
+               {
+                    return Array.Empty<AddressLookupResult>();
+               }
+          }
 
-        // ── Private helpers ───────────────────────────────────────────────────
-        private static AzureAddressResult Parse(AzureFeature feature)
+          public async Task<AddressResponse> GetAddressFromLookupResultAsync(AddressLookupResult result)
+          {
+               var address = new AddressResponse
+               {
+                    AddressLine1 = result.StreetLine,
+                    City = result.City,
+                    Province = result.Province,
+                    PostalCode = result.PostalCode,
+                    Country = result.Country
+               };
+
+               return await Task.FromResult(address);
+          }
+
+          // ── Private helpers ───────────────────────────────────────────────────
+          private static AddressLookupResult Parse(AzureFeature feature)
         {
             var addr   = feature.Properties?.Address ?? new AzureAddress();
             var street = $"{addr.StreetNumber} {addr.StreetName}".Trim();
@@ -79,7 +78,7 @@ namespace Maktab.Consumer.Services
             var province = addr.AdminDistricts?.ElementAtOrDefault(0)?.Name ?? string.Empty;
             var county   = addr.AdminDistricts?.ElementAtOrDefault(1)?.Name ?? string.Empty;
 
-            return new AzureAddressResult
+            return new AddressLookupResult
             {
                 FormattedAddress = addr.FormattedAddress ?? street,
                 StreetLine       = street,

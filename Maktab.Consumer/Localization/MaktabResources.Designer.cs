@@ -563,14 +563,22 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;strong&gt;1. Acceptance of Terms&lt;/strong&gt;
-        ///&lt;p&gt;By accessing and using this platform, you accept and agree to be bound by the terms and provision of this agreement.&lt;/p&gt;
+        ///   Looks up a localized string similar to &lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;
+        ///     &quot;http://www.w3.org/TR/html4/transitional.dtd&quot;&gt;
+        ///&lt;html&gt;
+        ///&lt;head&gt;
         ///
-        ///&lt;strong&gt;2. Use License&lt;/strong&gt;
-        ///&lt;p&gt;Permission is granted to temporarily download one copy of the materials (information or software) on this platform for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
-        ///&lt;ul&gt;
-        ///&lt;li&gt;Modify or copy the materials&lt;/li&gt;
-        /// [rest of string was truncated]&quot;;.
+        ///  &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=utf-8&quot;/&gt;
+        ///  &lt;title&gt;&lt;/title&gt;
+        ///  &lt;meta name=&quot;generator&quot; content=&quot;LibreOffice 26.2.1.2 (Windows)&quot;/&gt;
+        ///  &lt;meta name=&quot;created&quot; content=&quot;00:00:00&quot;/&gt;
+        ///  &lt;meta name=&quot;changed&quot; content=&quot;00:00:00&quot;/&gt;
+        ///&lt;/head&gt;
+        ///&lt;body&gt;
+        ///&lt;h1&gt;&lt;/h1&gt;
+        ///&lt;p&gt;&lt;b&gt;ICC BROSSARD&lt;/b&gt;&lt;/p&gt;
+        ///&lt;p&gt;Maktab Portal — Electronic Information Consent&lt;/p&gt;
+        ///&lt;p&gt;Document gene [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Company_Terms_And_Conditions_Content {
             get {
@@ -2100,6 +2108,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No addresses were found.
+        /// </summary>
+        public static string Msg_Info_No_Address_Found {
+            get {
+                return ResourceManager.GetString("Msg_Info_No_Address_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No address selected.
         /// </summary>
         public static string Msg_Info_No_Address_Selected {
@@ -2438,6 +2455,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_RAMQ_Pattern_Not_Valid {
             get {
                 return ResourceManager.GetString("Msg_RAMQ_Pattern_Not_Valid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Searching for addresses....
+        /// </summary>
+        public static string Msg_Searching_For_Address {
+            get {
+                return ResourceManager.GetString("Msg_Searching_For_Address", resourceCulture);
             }
         }
         
@@ -2897,6 +2923,33 @@ namespace Maktab.Consumer.Localization {
         public static string Payment_Schedule {
             get {
                 return ResourceManager.GetString("Payment_Schedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paid.
+        /// </summary>
+        public static string Payment_Status_Paid {
+            get {
+                return ResourceManager.GetString("Payment_Status_Paid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Partially Paid.
+        /// </summary>
+        public static string Payment_Status_PartiallyPaid {
+            get {
+                return ResourceManager.GetString("Payment_Status_PartiallyPaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpaid.
+        /// </summary>
+        public static string Payment_Status_Unpaid {
+            get {
+                return ResourceManager.GetString("Payment_Status_Unpaid", resourceCulture);
             }
         }
         
@@ -3590,6 +3643,15 @@ namespace Maktab.Consumer.Localization {
         public static string Type_Of_Allergy {
             get {
                 return ResourceManager.GetString("Type_Of_Allergy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type to search address.
+        /// </summary>
+        public static string Type_To_Search_Address {
+            get {
+                return ResourceManager.GetString("Type_To_Search_Address", resourceCulture);
             }
         }
         

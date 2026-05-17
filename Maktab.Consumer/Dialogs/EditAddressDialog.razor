@@ -8,7 +8,7 @@
      <DialogContent>
           @if (isInitialized)
           {
-               <EditAddress AddressModel="@(EditAddress)" OnSave="SaveDialog" OnCancel="CancelDialog" />
+               <EditAddress ShowHeader="false" AddressModel="@(EditAddress)" OnSave="SaveDialog" OnCancel="CancelDialog" />
           }
           else
           {

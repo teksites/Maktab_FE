@@ -109,7 +109,7 @@ namespace Maktab.Consumer.Base
           /// <summary>
           /// Clean up resources when component is disposed.
           /// </summary>
-          public void Dispose()
+          public virtual void Dispose()
           {
                IsDisposed = true;
                _cts.Cancel();
@@ -297,6 +297,20 @@ namespace Maktab.Consumer.Base
                     default:
                          return Color.Default;
                }
+          }
+
+          protected Color GetPaymentStatusColor(PaymentStatus paymentStatus)
+          {
+               if (paymentStatus == PaymentStatus.Paid)
+                    return Color.Success;
+
+               if (paymentStatus == PaymentStatus.PartiallyPaid)
+                    return Color.Warning;
+
+               if (paymentStatus == PaymentStatus.Unpaid)
+                    return Color.Error; 
+
+               return Color.Default;
           }
      }
 }

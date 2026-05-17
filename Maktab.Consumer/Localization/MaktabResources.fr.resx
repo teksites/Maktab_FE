@@ -1325,38 +1325,6 @@
   <data name="App_Company" xml:space="preserve">
     <value>ICC Brossard</value>
   </data>
-  <data name="Company_Terms_And_Conditions_Content" xml:space="preserve">
-    <value>&lt;strong&gt;1. Acceptation des conditions&lt;/strong&gt;
-&lt;p&gt;En accédant et en utilisant cette plateforme, vous acceptez d'être lié par les termes et dispositions de cet accord.&lt;/p&gt;
-
-&lt;strong&gt;2. Utiliser la licence&lt;/strong&gt;
-&lt;p&gt;L'autorisation est accordée de télécharger temporairement une copie du matériel (informations ou logiciels) sur cette plate-forme à des fins de visualisation transitoire personnelle et non commerciale uniquement. Il s'agit de l'octroi d'une licence, et non d'un transfert de titre, et en vertu de cette licence, vous ne pouvez pas :
-&lt;ul&gt;
-&lt;li&gt;Modifier ou copier les matériaux&lt;/li&gt;
-&lt;li&gt;Utiliser les documents à des fins commerciales ou pour toute exposition publique&lt;/li&gt;
-&lt;li&gt;Tentative de décompilation ou d'ingénierie inverse de tout logiciel contenu sur la plate-forme&lt;/li&gt;
-&lt;li&gt;Supprimez toute mention de droit d'auteur ou toute autre mention de propriété des documents&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;
-
-&lt;strong&gt;3. Avis de non-responsabilité&lt;/strong&gt;
-&lt;p&gt;Les documents présents sur cette plateforme sont fournis « tels quels ». Nous n'offrons aucune garantie, expresse ou implicite, et déclinons et annulons par la présente toutes les autres garanties, y compris, sans limitation, les garanties ou conditions implicites de qualité marchande, d'adéquation à un usage particulier, ou de non-violation de la propriété intellectuelle ou autre violation des droits.&lt;/p&gt;
-
-&lt;strong&gt;4. Limites&lt;/strong&gt;
-&lt;p&gt;En aucun cas, notre plateforme ou ses fournisseurs ne pourront être tenus responsables de tout dommage (y compris, sans limitation, les dommages liés à la perte de données ou de profits, ou à l'interruption des activités) découlant de l'utilisation ou de l'impossibilité d'utiliser les éléments de la plateforme.&lt;/p&gt;
-
-&lt;strong&gt;5. Précision des matériaux&lt;/strong&gt;
-&lt;p&gt;Les éléments apparaissant sur la plateforme peuvent contenir des erreurs techniques, typographiques ou photographiques. Nous ne garantissons pas que les éléments de la plateforme soient exacts, complets ou à jour. Nous pouvons apporter des modifications aux éléments contenus sur la plateforme à tout moment et sans préavis.&lt;/p&gt;
-
-&lt;strong&gt;6. Liens&lt;/strong&gt;
-&lt;p&gt;Nous n'avons pas examiné tous les sites liés à notre site Web et ne sommes pas responsables du contenu de ces sites liés. L'inclusion de tout lien n'implique pas notre approbation du site. L'utilisation de ces sites Web liés se fait aux propres risques de l'utilisateur.&lt;/p&gt;
-
-&lt;strong&gt;7. Modifications&lt;/strong&gt;
-&lt;p&gt;Nous pouvons réviser ces conditions d'utilisation de la plateforme à tout moment et sans préavis. En utilisant cette plateforme, vous acceptez d'être lié par la version alors en vigueur de ces conditions d'utilisation.&lt;/p&gt;
-
-&lt;strong&gt;8. Loi applicable&lt;/strong&gt;
-&lt;p&gt;Ces termes et conditions sont régis et interprétés conformément aux lois de la juridiction dans laquelle la plateforme fonctionne, et vous vous soumettez irrévocablement à la compétence exclusive des tribunaux de cet endroit.&lt;/p&gt;</value>
-  </data>
   <data name="Read_Maktab_Terms_Conditions" xml:space="preserve">
     <value>Lire {0} termes et conditions</value>
   </data>
@@ -1383,5 +1351,126 @@
   </data>
   <data name="Msg_Success_Child_Updated" xml:space="preserve">
     <value>L'enfant a été mis à jour avec succès</value>
+  </data>
+  <data name="Company_Terms_And_Conditions_Content" xml:space="preserve">
+    <value>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+     "http://www.w3.org/TR/html4/transitional.dtd"&gt;
+&lt;html&gt;
+&lt;tête&gt;
+
+  &lt;meta http-equiv="content-type" content="text/html; charset=utf-8"/&gt;
+  &lt;titre&gt;&lt;/titre&gt;
+  &lt;meta name="generator" content="LibreOffice 26.2.1.2 (Windows)"/&gt;
+  &lt;meta name="created" content="00:00:00"/&gt;
+  &lt;meta name="changed" content="00:00:00"/&gt;
+&lt;/tête&gt;
+&lt;corps&gt;
+&lt;h1&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;b&gt;CCI BROSSARD&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Portail Maktab – Consentement aux informations électroniques&lt;/p&gt;
+&lt;p&gt;Document généré à partir de la source du portail Maktab — pour référence uniquement.&lt;/p&gt;
+&lt;p&gt;Page 1&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Consentement relatif aux informations électroniques&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Ce que fait ICC Brossard avec les informations électroniques que vous fournissez&lt;/p&gt;
+&lt;p&gt;Portail Maktab — ICC Brossard&lt;/p&gt;
+&lt;h1 style="page-break-before:always; "&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;b&gt;CCI BROSSARD&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Portail Maktab – Consentement aux informations électroniques&lt;/p&gt;
+&lt;p&gt;Document généré à partir de la source du portail Maktab — pour référence uniquement.&lt;/p&gt;
+&lt;p&gt;Page 2&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Confidentialité ; Consentement au traitement des données&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Il s'agit du consentement présenté sur le portail Maktab que vous acceptez lorsque vous soumettez vos informations électroniques.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Étiquette de case à cocher affichée dans le portail&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;&lt;i&gt;« J'accepte la politique de confidentialité. » &lt;/i&gt;— requis pour créer un compte sur le portail Maktab.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;1. Responsable du traitement&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Le Markaz El Islam de la Rive Sud (ICC Brossard), à travers son portail Maktab, est responsable de &lt;/p&gt;
+&lt;p&gt;collecte et traitement de vos données personnelles aux fins décrites ci-dessous. Personne-ressource : 5905 Boul. &lt;/p&gt;
+&lt;p&gt;Grande Allée, Brossard (Québec) J4Z 3G4 - itsupport@iccbrossard.com&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;2. Informations électroniques que vous fournissez et que nous collectons&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Identité : nom, prénom, date de naissance, lien avec l'enfant.&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Coordonnées : adresse résidentielle, téléphone, e-mail, langue préférée.&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Données fiscales : numéro d'assurance sociale (NAS) — cryptées, jamais affichées en texte clair.&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Données de l'enfant : identité, école, classe, allergies, santé (cryptées RAMQ), contacts d'urgence.&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Données techniques : adresse IP, journaux de connexion, identifiant de session.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;3. Ce qu'ICC fera de ces informations (objectifs)&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Inscrivez les enfants aux programmes ICC (camps, école Maktab, halaqas, etc.).&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Émettre des reçus fiscaux officiels (Relevé 24, ARC).&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Vous contacter en cas d'urgence concernant votre enfant.&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Traitez les paiements et gérez la facturation.&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Sécurisez le portail et prévenez la fraude.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;4. Base légale (Loi 25 du Québec)&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Le traitement repose sur votre consentement explicite, l'exécution du contrat de service et le respect des lois légales&lt;/p&gt;
+&lt;p&gt;obligations (notamment droit fiscal et règles de protection de l'enfance).&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;5. Combien de temps on le garde&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Vos données sont conservées pendant toute la durée de votre relation avec ICC Brossard, puis archivées pendant 7 ans pour répondre aux impôts&lt;/p&gt;
+&lt;p&gt;obligations (Loi sur les impôts du Québec). Les informations médicales des enfants sont supprimées 1 an après leur dernier programme.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;6. Comment nous le protégeons&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Les champs sensibles (SIN, RAMQ) sont chiffrés au repos avec AES-256. Toutes les transmissions utilisent TLS 1.3. L'accès est&lt;/p&gt;
+&lt;p&gt;restreint par rôle (parent/moniteur/administrateur) avec authentification forte. Les champs sensibles ne sont jamais&lt;/p&gt;
+&lt;p&gt;affiché en texte clair après la saisie — seuls les 4 derniers chiffres sont visibles par le personnel autorisé.&lt;/p&gt;
+&lt;h1 style="page-break-before:always; "&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;b&gt;CCI BROSSARD&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Portail Maktab – Consentement aux informations électroniques&lt;/p&gt;
+&lt;p&gt;Document généré à partir de la source du portail Maktab — pour référence uniquement.&lt;/p&gt;
+&lt;p&gt;Page 3&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;7. Avec qui nous le partageons&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Helcim — traitement des paiements (PCI-DSS).&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Postes Canada — validation de l'adresse postale.&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Agence du revenu du Canada / Revenu Québec — délivrance de reçus fiscaux.&lt;/p&gt;
+&lt;p&gt;•&lt;/p&gt;
+&lt;p&gt;Pas de vente ni de location de vos données à des tiers commerciaux.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;8. Consentement spécifique pour votre NAS&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Votre numéro d'assurance sociale est demandé uniquement en raison de la Loi de l'impôt sur le revenu (Canada) et de la Loi sur les impôts &lt;/p&gt;
+&lt;p&gt;(Québec) l'exigent sur les reçus fiscaux officiels (Relevé 24, T4A). Il est crypté, jamais affiché après l'entrée, jamais &lt;/p&gt;
+&lt;p&gt;utilisé à des fins de vérification de crédit, de marketing ou à toute autre fin, et transmis uniquement au fisc compétent &lt;/p&gt;
+&lt;p&gt;autorités. Vous pouvez retirer ce consentement à tout moment ; cela empêche l'émission de futurs reçus mais &lt;/p&gt;
+&lt;p&gt;n'affecte pas les reçus déjà émis.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;9. Vos droits&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Vous pouvez accéder, rectifier, supprimer vos données et retirer votre consentement à tout moment en écrivant à &lt;/p&gt;
+&lt;p&gt;itsupport@iccbrossard.com. Le retrait du consentement peut rendre impossible la poursuite de l'utilisation du service.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;10. Mineurs&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Les données des enfants sont collectées uniquement avec le consentement explicite du parent ou du tuteur légal et ne sont jamais utilisées à des fins &lt;/p&gt;
+&lt;p&gt;marketing.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;11. Déposer une plainte&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;Si vous n'êtes pas d'accord avec le traitement de vos données, vous pouvez déposer une plainte auprès de la Commission d'accès à &lt;/p&gt;
+&lt;p&gt;l'information du Québec (CAI) — www.cai.gouv.qc.ca.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Accusé de réception électronique&lt;/b&gt;&lt;/p&gt;
+&lt;p&gt;En cochant &lt;i&gt;« J'accepte la politique de confidentialité » &lt;/i&gt;sur le portail Maktab, le parent ou tuteur légal confirme&lt;/p&gt;
+&lt;p&gt;qu'ils aient lu ce document, comprennent comment ICC Brossard collecte, utilise, stocke, protège&lt;/p&gt;
+&lt;p&gt;et partage les informations électroniques qu'ils fournissent et donne leur consentement explicite en vertu du Québec&lt;/p&gt;
+&lt;p&gt;Loi 25.&lt;/p&gt;
+&lt;/corps&gt;
+&lt;/html&gt;</value>
+  </data>
+  <data name="Type_To_Search_Address" xml:space="preserve">
+    <value>Tapez pour rechercher l'adresse</value>
+  </data>
+  <data name="Msg_Searching_For_Address" xml:space="preserve">
+    <value>Recherche d'adresses...</value>
+  </data>
+  <data name="Msg_Info_No_Address_Found" xml:space="preserve">
+    <value>Aucune adresse n'a été trouvée</value>
+  </data>
+  <data name="Payment_Status_Paid" xml:space="preserve">
+    <value>Payé</value>
+  </data>
+  <data name="Payment_Status_PartiallyPaid" xml:space="preserve">
+    <value>Partiellement payé</value>
+  </data>
+  <data name="Payment_Status_Unpaid" xml:space="preserve">
+    <value>Impayé</value>
   </data>
 </root>

@@ -70,6 +70,17 @@ namespace Maktab.Consumer.Base
                };
           }
 
+          protected string GetPaymentStatusLabel(PaymentStatus type)
+          {
+               return type switch
+               {
+                    PaymentStatus.Paid => L[MaktabResources.Payment_Status_Paid],
+                    PaymentStatus.PartiallyPaid => L[MaktabResources.Payment_Status_PartiallyPaid],
+                    PaymentStatus.Unpaid => L[MaktabResources.Payment_Status_Unpaid],
+                    _ => L[MaktabResources.Payment_Status_Unpaid]
+               };
+          }
+
           protected string GetGenderLabel(Gender type)
           {
                return type switch
