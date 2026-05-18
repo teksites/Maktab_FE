@@ -157,8 +157,8 @@
      [Parameter] public Margin Margin { get; set; } = Margin.Normal;
 
      // Lookup tuning
-     [Parameter] public int DebounceMs { get; set; } = 450;
-     [Parameter] public int MinChars { get; set; } = 6;
+     [Parameter] public int DebounceMs { get; set; } = 500;
+     [Parameter] public int MinChars { get; set; } = 8;
 
      // Add this parameter in the @code block alongside the others
      [Parameter] public Expression<Func<string?>>? For { get; set; }
@@ -227,7 +227,7 @@
      {
           await Task.Delay(150);
           ClosePopover();
-          StateHasChanged();
+          RequestRender();
      }
 
      // ── Core value change ─────────────────────────────────────
@@ -266,25 +266,25 @@
           if (string.IsNullOrWhiteSpace(query) || query.Length < MinChars) return;
 
           _isSearching = true;
-          //RequestRender();
-          // show skeleton immediately
+          RequestRender();
 
           try
           {
                var results = await AddressLookupService.SearchAdderssAsync(query, ct);
+               // show skeleton immediately
+               _popoverOpen = true;
+               RequestRender();
+
                if(results == null || !results.Any())
                {
                     if (_suggestions.Any())
                     {
                          _suggestions.Clear();
                     }
-                    //_popoverOpen = true; // show "no results" message
                }
                else
                {
                     _suggestions = results.ToList();
-                    _popoverOpen = true;
-                    await InvokeAsync(StateHasChanged);
                }
           }
           catch (OperationCanceledException)
@@ -355,7 +355,7 @@
                     if (_suggestions.Any())
                     {
                          _highlightedIndex = Math.Min(_highlightedIndex + 1, _suggestions.Count - 1);
-                         StateHasChanged();
+                         RequestRender();
                     }
                     break;
 
@@ -363,7 +363,7 @@
                     if (_suggestions.Any())
                     {
                          _highlightedIndex = Math.Max(_highlightedIndex - 1, 0);
-                         StateHasChanged();
+                         RequestRender();
                     }
                     break;
 
@@ -374,7 +374,7 @@
 
                case "Escape":
                     ClosePopover();
-                    StateHasChanged();
+                    RequestRender();
                     break;
           }
      }
