@@ -16,15 +16,7 @@
                                (Blazor native DOM event, always works)
    ✓ OnBlur                  IS a valid MudTextField param (MudBaseInput)
    ✓ Clearable + OnClearButtonClick  built-in — replaces fake adornment hack
-   ✓ UserAttributes          dict passed straight to the inner <input>
-
-   Focus guard strategy (unchanged from v4):
-   ──────────────────────────────────────────
-   _userHasFocus is the single gate. The debouncer only arms
-   when the user physically has focus. Programmatic value
-   changes (parent binding on dialog open, SelectSuggestion
-   auto-fill) arrive without focus → no spurious popup.
-   ============================================================ *@
+   ✓ UserAttributes          dict passed straight to the inner <input>*@
 
 @inject IAddressLookupService AddressLookupService
 
@@ -97,18 +89,16 @@
                              SelectedValue="@(_suggestions.ElementAtOrDefault(_highlightedIndex))"
                              SelectedValueChanged="@((AddressLookupResult s) => SelectSuggestion(s))">
 
-                         @foreach (var s in _suggestions)
+                         @for (int i = 0; i < _suggestions.Count; i++)
                          {
+                              var s = _suggestions[i];
                               <MudListItem T="AddressLookupResult" Value="@s">
                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="py-1">
-                                        <MudIcon Icon="@Icons.Material.Outlined.LocationOn"
-                                                 Color="Color.Info"
-                                                 Size="Size.Small" />
+                                        <MudIcon Icon="@Icons.Material.Filled.LocationOn" Color="Color.Info" Size="Size.Small" />
                                         <MudText Typo="Typo.body2">@s.FormattedAddress</MudText>
                                    </MudStack>
                               </MudListItem>
-
-                              @if (_suggestions.IndexOf(s) < _suggestions.Count - 1)
+                              @if (i < _suggestions.Count - 1)
                               {
                                    <MudDivider />
                               }
@@ -329,7 +319,6 @@
 
           var address = await AddressLookupService.GetAddressFromLookupResultAsync(suggestion);
           await SetValueProgrammaticallyAsync(address.AddressLine1);
-          await ValueChanged.InvokeAsync(address.AddressLine1);
           await OnAddressSelected.InvokeAsync(address);
 
           ClosePopover();
@@ -341,6 +330,14 @@
      {
           await SetValueProgrammaticallyAsync(string.Empty);
           ClosePopover();
+     }
+
+     // Called ONLY by our own code — never triggers debouncer
+     private async Task SetValueProgrammaticallyAsync(string? newValue)
+     {
+          Value = newValue;
+          await ValueChanged.InvokeAsync(newValue);
+          // No debouncer. No suggestions. Just update binding.
      }
 
      // ── Keyboard navigation ───────────────────────────────────
@@ -393,38 +390,9 @@
           RequestRender();
      }
 
-     // private RenderFragment HighlightMatch(string? text, string? query) =>
-     //     builder =>
-     //     {
-     //          if (string.IsNullOrWhiteSpace(text)) return;
-     //          if (string.IsNullOrWhiteSpace(query)) { builder.AddContent(0, text); return; }
-
-     //          var idx = text.IndexOf(query, StringComparison.OrdinalIgnoreCase);
-     //          if (idx < 0) { builder.AddContent(0, text); return; }
-
-     //          builder.AddContent(1, text[..idx]);
-     //          builder.OpenElement(2, "strong");
-     //          builder.AddContent(3, text.Substring(idx, query.Length));
-     //          builder.CloseElement();
-     //          builder.AddContent(4, text[(idx + query.Length)..]);
-     //     };
-
-     // private static string FormatSubtitle(AddressLookupResult s) =>
-     //     new[] { s.City, s.Postcode, s.Country }
-     //         .Where(x => !string.IsNullOrWhiteSpace(x))
-     //         .Aggregate(string.Empty, (a, b) => a.Length == 0 ? b! : $"{a}, {b}");
-
      public override void Dispose()
      {
           base.Dispose();
           _debouncer.Dispose();
-     }
-
-     // Called ONLY by our own code — never triggers debouncer
-     private async Task SetValueProgrammaticallyAsync(string? newValue)
-     {
-          Value = newValue;
-          await ValueChanged.InvokeAsync(newValue);
-          // No debouncer. No suggestions. Just update binding.
      }
 }
