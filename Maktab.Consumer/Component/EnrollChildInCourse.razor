@@ -405,12 +405,12 @@ else if (IsError)
                                    @L[MaktabResources.Msg_Acknowledge_Child_Consent_Completion]
                               </MudCheckBox>
 
-                              @* <MudStack Row="true" Spacing="0" Justify="Justify.FlexStart" AlignItems="AlignItems.Baseline"> *@
                               <MudCheckBox @bind-Value="HasCourseConsent">
-                                   <span>@L[MaktabResources.Msg_Acknowledge_Read_Course_Policy]</span>
-                                   <span><MudLink Href="@SelectedCourse.PolicyHyperLink" Target="_blank">[@L[MaktabResources.Policy]]</MudLink></span>
+                                   <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                                        <span>@L[MaktabResources.Msg_Acknowledge_Read_Course_Policy]</span>
+                                        <MudLink Href="@SelectedCourse.PolicyHyperLink" Color="Color.Info" Target="_blank">[@L[MaktabResources.Policy]]</MudLink>
+                                   </MudStack>
                               </MudCheckBox>
-                              @* </MudStack> *@
 
                          </MudStack>
 
