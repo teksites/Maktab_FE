@@ -1433,12 +1433,15 @@
     <value>Unpaid</value>
   </data>
   <data name="Payment_Min_Max_Amount" xml:space="preserve">
-    <value>minimum ${0} and maximum ${1}</value>
+    <value>minimum ${0} or maximum ${1}</value>
   </data>
   <data name="Payment_Min_Amount" xml:space="preserve">
     <value>minimum ${0}</value>
   </data>
   <data name="Quick_Select" xml:space="preserve">
     <value>Quick Select</value>
+  </data>
+  <data name="Total_Payble" xml:space="preserve">
+    <value>Total Payable</value>
   </data>
 </root>

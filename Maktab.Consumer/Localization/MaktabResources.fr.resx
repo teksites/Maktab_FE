@@ -1367,9 +1367,6 @@
   <data name="Msg_Info_Choose_Amount_Or_Custom_Value" xml:space="preserve">
     <value>Vous devez payer {0} en choisissant un préréglage ou en saisissant un montant personnalisé</value>
   </data>
-  <data name="Payment_Min_Max_Amount" xml:space="preserve">
-    <value>minimum ${0} et maximum ${1}</value>
-  </data>
   <data name="Payment_Min_Amount" xml:space="preserve">
     <value>minimum ${0}</value>
   </data>
@@ -1438,5 +1435,11 @@
   </data>
   <data name="Quick_Select" xml:space="preserve">
     <value>Sélection rapide</value>
+  </data>
+  <data name="Total_Payble" xml:space="preserve">
+    <value>Total à payer</value>
+  </data>
+  <data name="Payment_Min_Max_Amount" xml:space="preserve">
+    <value>minimum ${0} ou maximum ${1}</value>
   </data>
 </root>

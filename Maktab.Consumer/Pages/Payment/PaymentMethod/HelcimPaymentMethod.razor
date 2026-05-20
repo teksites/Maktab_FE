@@ -162,6 +162,7 @@
                                    }
                               bool active = SelectedAmount == preset && !IsCustomMode;
                               <MudItem xs="6" sm="4">
+                                   <MudStack AlignItems="AlignItems.Center" Spacing="1" >
                                    <MudButton FullWidth="true"
                                               Variant="@(active ? Variant.Filled : Variant.Outlined)"
                                               Color="@(active ? Color.Primary : Color.Default)"
@@ -170,6 +171,19 @@
                                               OnClick="() => SelectPreset(preset)">
                                         @preset.ToString()
                                    </MudButton>
+                                             @if (preset == MinAmount)
+                                             {
+                                                  <MudText Typo="Typo.caption" Color="Color.Primary" Align="Align.Center">
+                                                       @L[MaktabResources.Minimum_Amount_Due]
+                                                  </MudText>
+                                             }
+                                             else if (preset == MaxAmount)
+                                             {
+                                                  <MudText Typo="Typo.caption" Color="Color.Primary" Align="Align.Center">
+                                                       @L[MaktabResources.Total_Payble]
+                                                  </MudText>
+                                             }
+                                        </MudStack>
                               </MudItem>
                          }
                     </MudGrid>
@@ -298,6 +312,7 @@
                MinAmount = Convert.ToDouble(minValue);
                var maxValue = CalculateAmountDue(transactionResponse);
                MaxAmount = Convert.ToDouble(maxValue);
+               PaymentCode = transactionResponse.PaymentCode;
           }
 
           else

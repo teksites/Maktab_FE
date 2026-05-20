@@ -203,7 +203,7 @@
      {
           AddressModel.AddressLine1 = address.AddressLine1;
           AddressModel.AddressLine2 = address.AddressLine2;
-          AddressModel.PostalCode = address.PostalCode;
+          AddressModel.PostalCode = string.Empty; // Reset postal code to allow user to enter new one based on selected address
           AddressModel.ApartmentNo = address.ApartmentNo;
           AddressModel.UnitNo = address.UnitNo;
           AddressModel.City = address.City;

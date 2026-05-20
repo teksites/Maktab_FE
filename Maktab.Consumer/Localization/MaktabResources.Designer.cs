@@ -2927,7 +2927,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to minimum ${0} and maximum ${1}.
+        ///   Looks up a localized string similar to minimum ${0} or maximum ${1}.
         /// </summary>
         public static string Payment_Min_Max_Amount {
             get {
@@ -3652,6 +3652,15 @@ namespace Maktab.Consumer.Localization {
         public static string Total_Course_Fee {
             get {
                 return ResourceManager.GetString("Total_Course_Fee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Payable.
+        /// </summary>
+        public static string Total_Payble {
+            get {
+                return ResourceManager.GetString("Total_Payble", resourceCulture);
             }
         }
         
