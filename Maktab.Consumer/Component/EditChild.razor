@@ -251,20 +251,23 @@
 
      private void UpdateConsentBasedOnChild(IReadOnlyCollection<ChildConsent> childConsents)
      {
-          var currentConsents = System.Text.Json.JsonSerializer.Deserialize<List<ChildConsent>>(ChildModel.Consent);
-          if (currentConsents?.Any() == true)
-          {
-               foreach (var consent in childConsents)
+          if (!string.IsNullOrEmpty(ChildModel.Consent))
+               if (!ChildModel.Consent.Equals("string", StringComparison.OrdinalIgnoreCase)) // to avoid deserialization issue when consent has value string instead of null or empty array
                {
-                    var consentObject = currentConsents.FirstOrDefault(x => x.ConsentType == consent.ConsentType && x.Name.Equals(consent.Name, StringComparison.OrdinalIgnoreCase));
-                    if (consentObject != null && consentObject.IsAllowed)
+                    var currentConsents = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<ChildConsent>>(ChildModel.Consent);
+                    if (currentConsents?.Any() == true)
                     {
-                         consent.IsAllowed = true;
+                         foreach (var consent in currentConsents)
+                         {
+                              var consentObject = childConsents.FirstOrDefault(x => x.ConsentType == consent.ConsentType && x.Name.Equals(consent.Name, StringComparison.OrdinalIgnoreCase));
+                              if (consentObject != null && consent.IsAllowed)
+                              {
+                                   consentObject.IsAllowed = true;
+                              }
+                         }
                     }
                }
-          }
      }
-
 
      private async Task RequestSaving()
      {
