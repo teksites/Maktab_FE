@@ -1212,7 +1212,7 @@
     <value>Choose Your Amount</value>
   </data>
   <data name="Msg_Info_Choose_Amount_Or_Custom_Value" xml:space="preserve">
-    <value>Pick a preset or enter a custom amount</value>
+    <value>You must pay {0} by picking a preset or enter a custom amount</value>
   </data>
   <data name="Selected_Amount" xml:space="preserve">
     <value>Selected Amount</value>
@@ -1250,8 +1250,8 @@
   <data name="Custom_Amount_Helper_Text_Under_Max_Value" xml:space="preserve">
     <value>Value must be under or equal to {0}</value>
   </data>
-  <data name="Msg_Error_Custom_Amount_Under_Max_Value" xml:space="preserve">
-    <value>Value provide must be under or equal to {0}</value>
+  <data name="Msg_Error_Custom_Amount_Equal_Max_Value" xml:space="preserve">
+    <value>Value provide must be equal to {0}</value>
   </data>
   <data name="MonthYear_Default_Format" xml:space="preserve">
     <value>Format: MM/YY</value>
@@ -1347,93 +1347,50 @@
   &lt;meta name="changed" content="00:00:00"/&gt;
 &lt;/head&gt;
 &lt;body&gt;
-&lt;h1&gt;&lt;/h1&gt;
-&lt;p&gt;&lt;b&gt;ICC BROSSARD&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;Maktab Portal — Electronic Information Consent&lt;/p&gt;
-&lt;p&gt;Document generated from the Maktab portal source — for reference only.&lt;/p&gt;
-&lt;p&gt;Page 1&lt;/p&gt;
-&lt;p&gt;&lt;b&gt;Electronic Information Consent&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;What ICC Brossard does with the electronic information you provide&lt;/p&gt;
-&lt;p&gt;Maktab Portal — ICC Brossard&lt;/p&gt;
-&lt;h1 style="page-break-before:always; "&gt;&lt;/h1&gt;
-&lt;p&gt;&lt;b&gt;ICC BROSSARD&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;Maktab Portal — Electronic Information Consent&lt;/p&gt;
-&lt;p&gt;Document generated from the Maktab portal source — for reference only.&lt;/p&gt;
-&lt;p&gt;Page 2&lt;/p&gt;
+&lt;h1&gt;ICC BROSSARD&lt;/h1&gt;
+&lt;h2&gt;Maktab Portal — Electronic Information Consent&lt;/h2&gt;
+
 &lt;p&gt;&lt;b&gt;Privacy &amp;amp; Data-Handling Consent&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;This is the consent presented on the Maktab portal that you agree to when you submit your electronic information.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Checkbox label shown in the portal&lt;/b&gt;&lt;/p&gt;
 &lt;p&gt;&lt;i&gt;“I accept the privacy policy.” &lt;/i&gt;— required to create an account on the Maktab portal.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;1. Data controller&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;The Markaz El Islam de la Rive Sud (ICC Brossard), through its Maktab portal, is responsible for &lt;/p&gt;
-&lt;p&gt;collecting and processing your personal data for the purposes described below. Contact: 5905 Boul. &lt;/p&gt;
-&lt;p&gt;Grande Allée, Brossard (Quebec) J4Z 3G4 - itsupport@iccbrossard.com&lt;/p&gt;
+&lt;p&gt;The Markaz El Islam de la Rive Sud (ICC Brossard), through its Maktab portal, is responsible for collecting and processing your personal data for the purposes described below.&lt;/p&gt;
+&lt;p&gt;Contact: 5905 Boul. Grande Allée, Brossard (Quebec) J4Z 3G4 - itsupport@iccbrossard.com&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;2. Electronic information you provide and that we collect&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Identity: last name, first name, date of birth, relationship to the child.&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Contact details: residential address, phone, email, preferred language.&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Tax data: Social Insurance Number (SIN) — encrypted, never displayed in clear text.&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Child data: identity, school, grade, allergies, health (RAMQ encrypted), emergency contacts.&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Technical data: IP address, connection logs, session identifier.&lt;/p&gt;
+&lt;p&gt;• Identity: last name, first name, date of birth, relationship to the child.&lt;/p&gt;
+&lt;p&gt;• Contact details: residential address, phone, email, preferred language.&lt;/p&gt;
+&lt;p&gt;• Tax data: Social Insurance Number (SIN) — encrypted, never displayed in clear text.&lt;/p&gt;
+&lt;p&gt;• Child data: identity, school, grade, allergies, health (RAMQ encrypted), emergency contacts.&lt;/p&gt;
+&lt;p&gt;• Technical data: IP address, connection logs, session identifier.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;3. What ICC will do with this information (purposes)&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Register children for ICC programs (camps, Maktab school, halaqas, etc.).&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Issue official tax receipts (Relevé 24, CRA).&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Contact you in case of an emergency concerning your child.&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Process payments and manage billing.&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Secure the portal and prevent fraud.&lt;/p&gt;
+&lt;p&gt;• Register children for ICC programs (camps, Maktab school, halaqas, etc.).&lt;/p&gt;
+&lt;p&gt;• Issue official tax receipts (Relevé 24, CRA).&lt;/p&gt;
+&lt;p&gt;• Contact you in case of an emergency concerning your child.&lt;/p&gt;
+&lt;p&gt;• Process payments and manage billing.&lt;/p&gt;
+&lt;p&gt;• Secure the portal and prevent fraud.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;4. Legal basis (Quebec Law 25)&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;Processing relies on your explicit consent, the performance of the service contract, and compliance with legal&lt;/p&gt;
-&lt;p&gt;obligations (notably tax law and child-protection rules).&lt;/p&gt;
+&lt;p&gt;Processing relies on your explicit consent, the performance of the service contract, and compliance with legal obligations (notably tax law and child-protection rules).&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;5. How long we keep it&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;Your data is kept for the duration of your relationship with ICC Brossard, then archived for 7 years to meet tax&lt;/p&gt;
-&lt;p&gt;obligations (Quebec Taxation Act). Children's medical information is deleted 1 year after their last program.&lt;/p&gt;
+&lt;p&gt;Your data is kept for the duration of your relationship with ICC Brossard, then archived for 7 years to meet tax obligations (Quebec Taxation Act). Children's medical information is deleted 1 year after their last program.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;6. How we protect it&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;Sensitive fields (SIN, RAMQ) are encrypted at rest with AES-256. All transmissions use TLS 1.3. Access is&lt;/p&gt;
-&lt;p&gt;restricted by role (parent / monitor / administrator) with strong authentication. Sensitive fields are never&lt;/p&gt;
-&lt;p&gt;displayed in clear text after entry — only the last 4 digits are visible to authorised staff.&lt;/p&gt;
-&lt;h1 style="page-break-before:always; "&gt;&lt;/h1&gt;
-&lt;p&gt;&lt;b&gt;ICC BROSSARD&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;Maktab Portal — Electronic Information Consent&lt;/p&gt;
-&lt;p&gt;Document generated from the Maktab portal source — for reference only.&lt;/p&gt;
-&lt;p&gt;Page 3&lt;/p&gt;
+&lt;p&gt;Sensitive fields (SIN, RAMQ) are encrypted at rest with AES-256. All transmissions use TLS 1.3. Access is restricted by role (parent / monitor / administrator) with strong authentication. Sensitive fields are never displayed in clear text after entry — only the last 4 digits are visible to authorised staff.&lt;/p&gt;
+
 &lt;p&gt;&lt;b&gt;7. Who we share it with&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Helcim — payment processing (PCI-DSS).&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Canada Post — postal address validation.&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;Canada Revenue Agency / Revenu Québec — tax-receipt issuance.&lt;/p&gt;
-&lt;p&gt;•&lt;/p&gt;
-&lt;p&gt;No sale or rental of your data to commercial third parties.&lt;/p&gt;
+&lt;p&gt;• Helcim — payment processing (PCI-DSS).&lt;/p&gt;
+&lt;p&gt;• Canada Post — postal address validation.&lt;/p&gt;
+&lt;p&gt;• Canada Revenue Agency / Revenu Québec — tax-receipt issuance.&lt;/p&gt;
+&lt;p&gt;• No sale or rental of your data to commercial third parties.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;8. Specific consent for your SIN&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;Your Social Insurance Number is requested only because the Income Tax Act (Canada) and the Taxation Act &lt;/p&gt;
-&lt;p&gt;(Quebec) require it on official tax receipts (Relevé 24, T4A). It is encrypted, never shown after entry, never &lt;/p&gt;
-&lt;p&gt;used for credit checks, marketing, or any other purpose, and is transmitted only to the competent tax &lt;/p&gt;
-&lt;p&gt;authorities. You can withdraw this consent at any time; this prevents future receipts from being issued but &lt;/p&gt;
-&lt;p&gt;does not affect receipts already issued.&lt;/p&gt;
+&lt;p&gt;Your Social Insurance Number is requested only because the Income Tax Act (Canada) and the Taxation Act (Quebec) require it on official tax receipts (Relevé 24, T4A). It is encrypted, never shown after entry, never used for credit checks, marketing, or any other purpose, and is transmitted only to the competent tax authorities. You can withdraw this consent at any time; this prevents future receipts from being issued but does not affect receipts already issued.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;9. Your rights&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;You may access, rectify, or delete your data, and withdraw your consent at any time by writing to &lt;/p&gt;
-&lt;p&gt;itsupport@iccbrossard.com. Withdrawing consent may make it impossible to continue using the service.&lt;/p&gt;
+&lt;p&gt;You may access, rectify, or delete your data, and withdraw your consent at any time by writing to itsupport@iccbrossard.com. Withdrawing consent may make it impossible to continue using the service.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;10. Minors&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;Children's data is collected only with the explicit consent of the parent or legal guardian, and is never used for &lt;/p&gt;
-&lt;p&gt;marketing.&lt;/p&gt;
+&lt;p&gt;Children's data is collected only with the explicit consent of the parent or legal guardian, and is never used for marketing.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;11. Filing a complaint&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;If you disagree with how your data is handled, you may file a complaint with the Commission d'accès à &lt;/p&gt;
-&lt;p&gt;l'information du Québec (CAI) — www.cai.gouv.qc.ca.&lt;/p&gt;
+&lt;p&gt;If you disagree with how your data is handled, you may file a complaint with the Commission d'accès à l'information du Québec (CAI) — www.cai.gouv.qc.ca.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Electronic acknowledgement&lt;/b&gt;&lt;/p&gt;
-&lt;p&gt;By checking &lt;i&gt;“I accept the privacy policy” &lt;/i&gt;on the Maktab portal, the parent or legal guardian confirms&lt;/p&gt;
-&lt;p&gt;that they have read this document, understand how ICC Brossard collects, uses, stores, protects&lt;/p&gt;
-&lt;p&gt;and shares the electronic information they provide, and gives their explicit consent under Quebec&lt;/p&gt;
-&lt;p&gt;Law 25.&lt;/p&gt;
+&lt;p&gt;By checking &lt;i&gt;“I accept the privacy policy” &lt;/i&gt;on the Maktab portal, the parent or legal guardian confirms that they have read this document, understand how ICC Brossard collects, uses, stores, protects and shares the electronic information they provide, and gives their explicit consent under Quebec Law 25.&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</value>
   </data>
@@ -1472,5 +1429,14 @@
   </data>
   <data name="Payment_Status_Unpaid" xml:space="preserve">
     <value>Unpaid</value>
+  </data>
+  <data name="Payment_Min_Max_Amount" xml:space="preserve">
+    <value>minimum ${0} and  maximum ${1}</value>
+  </data>
+  <data name="Payment_Min_Amount" xml:space="preserve">
+    <value>minimum ${0}</value>
+  </data>
+  <data name="Quick_Select" xml:space="preserve">
+    <value>Quick Select</value>
   </data>
 </root>

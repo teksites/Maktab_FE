@@ -340,7 +340,7 @@
 
           var coursesVM = new List<CourseGroupViewModel>();
 
-          foreach (var transaction in _CourseTransactions)
+          foreach (var transaction in _CourseTransactions?.OrderBy(x=>x.CreatedAt))
           {
                if (transaction.Enrollments?.Any() == true)
                {

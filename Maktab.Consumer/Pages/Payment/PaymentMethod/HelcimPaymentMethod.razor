@@ -99,7 +99,7 @@
                <MudStack Spacing="2" Class="mb-8">
                     <MudText Typo="Typo.h4" Class="font-weight-bold">@L[MaktabResources.Choose_Your_Amount]</MudText>
                     <MudText Typo="Typo.body1">
-                         @L[MaktabResources.Msg_Info_Choose_Amount_Or_Custom_Value]
+                         @L[MaktabResources.Msg_Info_Choose_Amount_Or_Custom_Value, minMaxValueText]
                     </MudText>
 
                     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
@@ -137,10 +137,10 @@
           <MudPaper Elevation="4" Class="pa-6 mb-4" Style="border-radius:20px; background:var(--mud-palette-primary); color:#fff;">
                <MudStack AlignItems="AlignItems.Center" Spacing="1">
                     <MudText Typo="Typo.overline" Style="color:rgba(255,255,255,0.6); letter-spacing:0.15em;">
-                              @L[MaktabResources.Selected_Amount]
+                              @L[MaktabResources.Selected_Amount] (CAD)
                     </MudText>
                     <MudText Typo="Typo.h2" Style="font-weight:800; color:#fff; letter-spacing:-2px; line-height:1;">
-                              @SelectedAmount
+                             $ @SelectedAmount
                     </MudText>
             
                </MudStack>
@@ -151,7 +151,7 @@
                <MudStack Spacing="3">
                     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
                          <MudIcon Icon="@Icons.Material.Filled.Bolt" Color="Color.Warning" Size="Size.Small" />
-                         <MudText Typo="Typo.subtitle2" Style="font-weight:700;">Quick Select</MudText>
+                              <MudText Typo="Typo.subtitle2" Style="font-weight:700;">@L[MaktabResources.Quick_Select]</MudText>
                     </MudStack>
                          <MudGrid Spacing="2" Justify="Justify.SpaceBetween">
                          @foreach (var preset in PresetAmounts)
@@ -260,6 +260,7 @@
      private string customAmountHelperText = string.Empty;
      private string customAmountErrorText = string.Empty;
      private StudentCourseTransactionResponse transactionResponse = null;
+     private string minMaxValueText = string.Empty;
 
      protected override void OnInitialized()
      {
@@ -306,10 +307,12 @@
                return;
           }
 
-          if (MinAmount <= 0)
+          if (MinAmount == MaxAmount || MinAmount <=0 )
           {
                customAmountHelperText = L[MaktabResources.Custom_Amount_Helper_Text_Under_Max_Value, MaxAmount];
-               customAmountErrorText = L[MaktabResources.Msg_Error_Custom_Amount_Under_Max_Value, MaxAmount];
+               customAmountErrorText = L[MaktabResources.Msg_Error_Custom_Amount_Equal_Max_Value, MaxAmount];
+               minMaxValueText = L[MaktabResources.Payment_Min_Amount, MaxAmount];
+
                SelectedAmount = MaxAmount;
 
           }
@@ -317,6 +320,8 @@
           {
                customAmountHelperText = L[MaktabResources.Custom_Amount_Helper_Text_With_Between, MinAmount, MaxAmount];
                customAmountErrorText = L[MaktabResources.Msg_Error_Custom_Amount_Between_Min_Max_Values, MinAmount, MaxAmount];
+               minMaxValueText = L[MaktabResources.Payment_Min_Max_Amount, MinAmount, MaxAmount];
+
                SelectedAmount = MinAmount;
           }
 

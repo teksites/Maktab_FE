@@ -575,10 +575,10 @@ namespace Maktab.Consumer.Localization {
         ///  &lt;meta name=&quot;changed&quot; content=&quot;00:00:00&quot;/&gt;
         ///&lt;/head&gt;
         ///&lt;body&gt;
-        ///&lt;h1&gt;&lt;/h1&gt;
-        ///&lt;p&gt;&lt;b&gt;ICC BROSSARD&lt;/b&gt;&lt;/p&gt;
-        ///&lt;p&gt;Maktab Portal — Electronic Information Consent&lt;/p&gt;
-        ///&lt;p&gt;Document gene [rest of string was truncated]&quot;;.
+        ///&lt;h1&gt;ICC BROSSARD&lt;/h1&gt;
+        ///&lt;h2&gt;Maktab Portal — Electronic Information Consent&lt;/h2&gt;
+        ///
+        ///&lt;p&gt;&lt;b&gt;Privacy &amp;amp; Data-Han [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Company_Terms_And_Conditions_Content {
             get {
@@ -1721,11 +1721,11 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Value provide must be under or equal to {0}.
+        ///   Looks up a localized string similar to Value provide must be equal to {0}.
         /// </summary>
-        public static string Msg_Error_Custom_Amount_Under_Max_Value {
+        public static string Msg_Error_Custom_Amount_Equal_Max_Value {
             get {
-                return ResourceManager.GetString("Msg_Error_Custom_Amount_Under_Max_Value", resourceCulture);
+                return ResourceManager.GetString("Msg_Error_Custom_Amount_Equal_Max_Value", resourceCulture);
             }
         }
         
@@ -2018,7 +2018,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pick a preset or enter a custom amount.
+        ///   Looks up a localized string similar to You must pay {0} by picking a preset or enter a custom amount.
         /// </summary>
         public static string Msg_Info_Choose_Amount_Or_Custom_Value {
             get {
@@ -2918,6 +2918,24 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to minimum ${0}.
+        /// </summary>
+        public static string Payment_Min_Amount {
+            get {
+                return ResourceManager.GetString("Payment_Min_Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to minimum ${0} and maximum ${1}.
+        /// </summary>
+        public static string Payment_Min_Max_Amount {
+            get {
+                return ResourceManager.GetString("Payment_Min_Max_Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Payment Schedule.
         /// </summary>
         public static string Payment_Schedule {
@@ -3049,6 +3067,15 @@ namespace Maktab.Consumer.Localization {
         public static string Province {
             get {
                 return ResourceManager.GetString("Province", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quick Select.
+        /// </summary>
+        public static string Quick_Select {
+            get {
+                return ResourceManager.GetString("Quick_Select", resourceCulture);
             }
         }
         
