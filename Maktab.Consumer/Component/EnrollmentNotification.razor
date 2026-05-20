@@ -62,7 +62,7 @@
 
                                                   <TitleContent>
                                                        <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                                                            <MudText Typo="Typo.body1">@GetCourseName(courseItem.Key).ToTitleCase() <MudChip T="string" Variant="Variant.Text" Color="Color.Info">@GetChildPanelTitle(childItem)</MudChip></MudText>
+                                                            <MudText Typo="Typo.body1">@GetCourseName(courseItem.Key)?.ToTitleCase() <MudChip T="string" Variant="Variant.Text" Color="Color.Info">@GetCoursePanelTitle(courseItem)</MudChip></MudText>
                                                        </MudStack>
 
                                                   </TitleContent>
@@ -301,14 +301,14 @@
           var sortedEnrollments =
            enrollments
            .Where(x => x.EnrollmentStatus != EnrollmentStatus.Awaiting)
-           .OrderBy(x => x.CreatedAt)
+           .OrderBy(x => x.GroupIndex)
            // .ThenBy(x => x.EnrollmentStatus.Equals(EnrollmentStatus.Awaiting) ? 1 : 0)
            //.ThenBy(x => x.EnrollmentStatus)
            .ToList();
 
           sortedEnrollments.AddRange(
                 enrollments.Where(x => x.EnrollmentStatus == EnrollmentStatus.Awaiting)
-           .OrderBy(x => x.GroupTitle)
+           .OrderBy(x => x.GroupIndex)
           );
 
           return sortedEnrollments;
