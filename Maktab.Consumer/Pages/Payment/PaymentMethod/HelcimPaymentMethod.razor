@@ -1,9 +1,12 @@
 @page "/payment/paymentmethod/helcim"
+@attribute [Authorize]
+
 @using Maktab.Consumer.State
 @using Maktab.Consumer.Extensions
 @using MaktabDataContracts.Responses.Transactions
 @using MaktabDataContracts.Responses.Users
 @using MaktabDataContracts.Requests.Helcim
+@using Microsoft.AspNetCore.Authorization
 
 @inherits BasePaymentComponent<HelcimPaymentMethod>
 @inject IUserService UserService

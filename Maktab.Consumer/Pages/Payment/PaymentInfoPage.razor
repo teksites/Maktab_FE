@@ -1,4 +1,6 @@
 ﻿@page "/payment/payment-info"
+@attribute [Authorize]
+
 @using Maktab.Consumer.Extensions
 @using Maktab.Consumer.State
 @using MaktabDataContracts.Responses.Course
@@ -6,6 +8,7 @@
 @using MaktabDataContracts.Responses.Transactions
 @using MaktabDataContracts.Responses.Users
 @using Maktab.Consumer.Dialogs
+@using Microsoft.AspNetCore.Authorization
 
 @inherits BasePaymentComponent<PaymentInfoPage>
 

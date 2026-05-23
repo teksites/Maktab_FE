@@ -3,7 +3,7 @@ using MaktabDataContracts.Responses.Addresses;
 
 namespace Maktab.Core.Interfaces.Services
 {
-     public interface IAddressLookupService
+     public interface IAddressLookupService : IDomainService
      {
           Task<IReadOnlyList<AddressLookupResult>> SearchAdderssAsync(string query, CancellationToken ct = default);
 
