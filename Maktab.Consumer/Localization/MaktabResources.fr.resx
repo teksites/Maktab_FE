@@ -1442,4 +1442,46 @@
   <data name="Payment_Min_Max_Amount" xml:space="preserve">
     <value>minimum ${0} ou maximum ${1}</value>
   </data>
+  <data name="Contact_Us" xml:space="preserve">
+    <value>Contactez-nous</value>
+  </data>
+  <data name="Msg_Contact_Us_Description" xml:space="preserve">
+    <value>Envoyez-nous un e-mail pour toute question ou demande de renseignements. Nous serions heureux de répondre à vos questions</value>
+  </data>
+  <data name="Email_Subject" xml:space="preserve">
+    <value>Sujet</value>
+  </data>
+  <data name="Msg_Enter_Subject" xml:space="preserve">
+    <value>Veuillez entrer le sujet</value>
+  </data>
+  <data name="Email_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="Msg_Enter_Your_Message" xml:space="preserve">
+    <value>Veuillez entrer votre message</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clair</value>
+  </data>
+  <data name="Send_Message" xml:space="preserve">
+    <value>Envoyer un message</value>
+  </data>
+  <data name="Contact_Us_Description" xml:space="preserve">
+    <value>Nous sommes là pour vous</value>
+  </data>
+  <data name="Msg_Success_You_Your_Message_Sent" xml:space="preserve">
+    <value>Votre message a été envoyé</value>
+  </data>
+  <data name="Msg_Error_Message_Not_sent" xml:space="preserve">
+    <value>Le message n'a pas été livré, veuillez essayer dans quelques instants.</value>
+  </data>
+  <data name="Msg_Info_We_Get_Back_To_You" xml:space="preserve">
+    <value>Nous reviendrons vers vous</value>
+  </data>
+  <data name="Send_Another_Message" xml:space="preserve">
+    <value>Envoyer un autre message</value>
+  </data>
+  <data name="Try_Sending_Again" xml:space="preserve">
+    <value>Essayez à nouveau d'envoyer</value>
+  </data>
 </root>

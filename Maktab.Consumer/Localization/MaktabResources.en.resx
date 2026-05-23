@@ -1442,4 +1442,46 @@
   <data name="Total_Payble" xml:space="preserve">
     <value>Total Payable</value>
   </data>
+  <data name="Contact_Us" xml:space="preserve">
+    <value>Contact Us</value>
+  </data>
+  <data name="Msg_Enter_Subject" xml:space="preserve">
+    <value>Please enter subject</value>
+  </data>
+  <data name="Email_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="Email_Subject" xml:space="preserve">
+    <value>Subject</value>
+  </data>
+  <data name="Msg_Enter_Your_Message" xml:space="preserve">
+    <value>Please enter your message</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Send_Message" xml:space="preserve">
+    <value>Send Message</value>
+  </data>
+  <data name="Msg_Contact_Us_Description" xml:space="preserve">
+    <value>Email us with any questions or inquiries. We would be happy to answer your questions</value>
+  </data>
+  <data name="Contact_Us_Description" xml:space="preserve">
+    <value>We are here for you</value>
+  </data>
+  <data name="Msg_Success_You_Your_Message_Sent" xml:space="preserve">
+    <value>Your message have been sent</value>
+  </data>
+  <data name="Msg_Error_Message_Not_sent" xml:space="preserve">
+    <value>Message was not delivered, Please try in few moments.</value>
+  </data>
+  <data name="Msg_Info_We_Get_Back_To_You" xml:space="preserve">
+    <value>We will get back to you</value>
+  </data>
+  <data name="Send_Another_Message" xml:space="preserve">
+    <value>Send another message</value>
+  </data>
+  <data name="Try_Sending_Again" xml:space="preserve">
+    <value>Try sending again</value>
+  </data>
 </root>

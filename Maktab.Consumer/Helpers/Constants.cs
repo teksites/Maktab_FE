@@ -25,5 +25,8 @@
           public const string ZeffyPaymentMethodRoute = "/payment/paymentmethod/zeffy";
           public const string HelcimPaymentMethodRoute = "/payment/paymentmethod/helcim";
 
+          public const string ContactUsRoute = "/contact-us";
+          public const string SupportEmail = "maktab.info@iccbrossard.com";
+
      }
 }

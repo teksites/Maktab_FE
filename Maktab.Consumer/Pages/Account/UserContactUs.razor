@@ -1,0 +1,317 @@
+@page "/contact-us"
+@attribute [Authorize]
+
+@using Maktab.Consumer.Extensions
+@using Maktab.Consumer.State
+@using MaktabDataContracts.Responses.Users
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+
+@inherits BaseFormComponent<UserContactUs>
+
+@inject UserStateService StateService
+@inject IUserService UserService
+@inject IEmailService SendEmailService
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-10 mb-10">
+
+     @if (!isInitialized || isDataLoading)
+     {
+          <!-- Loading State -->
+          <MudStack Spacing="3">
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="120px" Class="rounded-lg" />
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="300px" Class="rounded-lg" />
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="300px" Class="rounded-lg" />
+          </MudStack>
+     }
+     else
+     {
+          @if (!_submitted.HasValue)
+          {
+               <!-- Breadcrumbs Navigation -->
+               <MudBreadcrumbs Items="breadcrumbItems" Class="mb-6" />
+
+               <!-- Header -->
+               <MudStack Spacing="1" Class="mb-8">
+                    <MudText Typo="Typo.h5">
+                         @L[MaktabResources.Contact_Us]
+                    </MudText>
+                    <MudText Typo="Typo.h6">
+                         @L[MaktabResources.Contact_Us_Description]
+                    </MudText>
+                    <MudText Typo="Typo.body2">
+                         @L[MaktabResources.Msg_Contact_Us_Description]
+                    </MudText>
+               </MudStack>
+
+               <!-- Form Card -->
+               <MudCard Elevation="0" Outlined="true">
+
+                    <MudCardContent Class="pa-6">
+                         <MudForm @ref="_form" @bind-IsValid="@_isValid">
+                              <MudStack >
+
+                                   <!-- Subject chips -->
+                                   <MudStack>
+                                        @* <MudText Typo="Typo.caption"
+                                            Class="mb-3 d-block">
+                                        @L[MaktabResources.Email_Subject]
+                                   </MudText> *@
+
+                                        <MudChipSet T="SubjectChip">
+                                             @foreach (var chip in _subjects)
+                                             {
+                                                  <MudChip T="string"
+                                                  Text="@chip.Label"
+                                                  Icon="@chip.Icon"
+                                                  Variant="@(_selectedCategory == chip.Value ? Variant.Filled : Variant.Outlined)"
+                                                  Color="@(_selectedCategory == chip.Value ? Color.Primary : Color.Default)"
+                                                  Size="Size.Medium"
+                                                  OnClick="@(() => SelectCategory(chip.Value))" />
+                                             }
+                                        </MudChipSet>
+
+                                        @if (_showCategoryError)
+                                        {
+                                             <MudText Typo="Typo.caption" Color="Color.Error" Class="mt-1 d-block">
+                                                  @L[MaktabResources.Required, MaktabResources.Email_Subject]
+                                             </MudText>
+                                        }
+                                   </MudStack>
+
+                                   <!-- Custom subject — only when "Other" is selected -->
+                                   @if (_selectedCategory == "other")
+                                   {
+                                        <MudTextField T="string"
+                                        @bind-Value="EmailRequest.Subject"
+                                        Label="@L[MaktabResources.Email_Subject]"
+                                        Placeholder="@L[MaktabResources.Msg_Enter_Subject]"
+                                        Variant="Variant.Outlined"
+                                        FullWidth="true"
+                                        Required="true"
+                                        For="@(() => EmailRequest.Subject)"
+                                        MaxLength="100"
+                                        Counter="100"
+                                        Clearable="true"
+                                        Immediate="true" />
+                                   }
+
+                                   @* <MudDivider /> *@
+
+                                   <!-- Message -->
+                                   <MudTextField T="string"
+                                   @bind-Value="EmailRequest.Body"
+                                   For="@(() => EmailRequest.Body)"
+                                   Label="@L[MaktabResources.Email_Message]"
+                                   Placeholder="@L[MaktabResources.Msg_Enter_Your_Message]"
+                                   Variant="Variant.Outlined"
+                                   FullWidth="true"
+                                   Lines="6"
+                                   MaxLines="10"
+                                   Required="true"
+                                   MaxLength="2000"
+                                   Counter="2000"
+                                   Clearable="true"
+                                   Immediate="true" />
+
+                                   <!-- Actions -->
+                                   <MudStack Row="true" Justify="Justify.FlexEnd">
+                                        <MudButton Variant="Variant.Filled"
+                                        Color="Color.Primary"
+                                        StartIcon="@Icons.Material.Filled.Send"
+                                        OnClick="SubmitForm"
+                                        Disabled="@(!_isValid || _isSubmitting)"
+                                        Size="Size.Large"
+                                        Style="min-width:160px;">
+                                             @if (_isSubmitting)
+                                             {
+                                                  <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                                  <MudText Class="ms-2">@L[MaktabResources.Processing]</MudText>
+                                             }
+                                             else
+                                             {
+                                                  <MudText>@L[MaktabResources.Send_Message]</MudText>
+                                             }
+                                        </MudButton>
+                                   </MudStack>
+
+                              </MudStack>
+                         </MudForm>
+                    </MudCardContent>
+               </MudCard>
+          }
+          else
+          {
+               <!-- Inline success state -->
+               <MudPaper>
+               <MudStack AlignItems="AlignItems.Center" Spacing="3" Class="py-12">
+                    @if (_submitted.Value)
+                    {
+                         <MudAvatar Color="Color.Success" Size="Size.Large">
+                              <MudIcon Icon="@Icons.Material.Filled.Check" Size="Size.Medium" />
+                         </MudAvatar>
+                         <MudText Typo="Typo.h6" Style="font-weight:500;">
+                              @L[MaktabResources.Msg_Success_You_Your_Message_Sent]
+                         </MudText>
+                         <MudText Typo="Typo.body2" Align="Align.Center">
+                              @L[MaktabResources.Msg_Info_We_Get_Back_To_You]
+                         </MudText>
+
+                         <MudButton Variant="Variant.Filled"
+                                    Color="Color.Primary"
+                                    OnClick="ResetForm"
+                                    Class="mt-2">
+                              @L[MaktabResources.Send_Another_Message]
+                         </MudButton>
+                    }
+                    else
+                    {
+                         <MudAvatar Color="Color.Error" Size="Size.Large">
+                              <MudIcon Icon="@Icons.Material.Filled.Error" Size="Size.Medium" />
+                         </MudAvatar>
+                         <MudText Typo="Typo.h6" Style="font-weight:500;">
+                              @L[MaktabResources.Msg_Error_Message_Not_sent]
+                         </MudText>
+
+                         <MudButton Variant="Variant.Filled"
+                                    Color="Color.Primary"
+                                    OnClick="BackToEmailPage"
+                                    Class="mt-2">
+                              @L[MaktabResources.Try_Sending_Again]
+                         </MudButton>
+                         
+                    }
+                   
+               </MudStack>
+               </MudPaper>
+          }
+     }
+
+</MudContainer>
+
+@code {
+     [Parameter] public MaktabDataContracts.Requests.Email.SendEmailRequest EmailRequest { get; set; } = new();
+
+     private bool _isSubmitting = false;
+     private bool? _submitted = null;
+     private string _selectedCategory = string.Empty;
+     private bool _showCategoryError = false;
+     private bool isInitialized = false;
+     private bool isDataLoading = false;
+     private List<BreadcrumbItem> breadcrumbItems = new();
+
+     private UserInformationResponse userInfo => StateService.ParentState.Profile;
+
+     private record SubjectChip(string Value, string Label, string Icon);
+
+     private readonly List<SubjectChip> _subjects = new()
+    {
+        new("general",   "General",          Icons.Material.Outlined.Chat),
+        new("technical", "Technical support", Icons.Material.Outlined.Build),
+       // new("billing",   "Billing",           Icons.Material.Outlined.CreditCard),
+        new("feedback",  "Feedback",          Icons.Material.Outlined.StarBorder),
+        new("other",     "Other",             Icons.Material.Outlined.MoreHoriz),
+    };
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          InitializeBreadcrumbs();
+     }
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          var userId = await SessionService.GetLoggedInUserIdAsync();
+          await LoadData(userId);
+
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private async Task LoadData(Guid userId, bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadUserProfileData(UserService, userId, forceReload);
+
+          isDataLoading = false;
+     }
+
+     private void SelectCategory(string value)
+     {
+          _selectedCategory = value;
+          _showCategoryError = false;
+
+          // For preset categories, map to a fixed subject string.
+          // For "other" we let the user type their own via EmailRequest.Subject.
+          if (value != "other")
+          {
+               EmailRequest.Subject = _selectedCategory;//_subjects.First(s => s.Value == value).Label;
+          }
+          else
+          {
+               EmailRequest.Subject = string.Empty;
+          }
+     }
+
+     private async Task SubmitForm()
+     {
+          // Validate chip selection manually
+          if (string.IsNullOrEmpty(_selectedCategory))
+          {
+               _showCategoryError = true;
+               return;
+          }
+
+          await _form.Validate();
+          if (!_isValid) return;
+
+          EmailRequest.Recipients = new List<string> { Constants.SupportEmail };
+          EmailRequest.RecipientsCC = new List<string>{ userInfo.Email };
+
+          _isSubmitting = true;
+          RequestRender();
+
+          try
+          {
+               var emailSent =await SendEmailService.SendEmailAsync(EmailRequest);
+               _submitted = emailSent;
+          }
+          catch (Exception ex)
+          {
+               Snackbar.Add($"{L[MaktabResources.Error]}: {ex.Message}", Severity.Error);
+               _submitted = false;
+          }
+          finally
+          {
+               _isSubmitting = false;
+               RequestRender();
+          }
+     }
+
+     private void ResetForm()
+     {
+          EmailRequest = new();
+          _selectedCategory = string.Empty;
+          _showCategoryError = false;
+          _submitted = null;
+          RequestRender();
+     }
+
+     private void BackToEmailPage()
+     {
+          _submitted = null;
+          RequestRender();
+     }
+
+     private void InitializeBreadcrumbs()
+     {
+          breadcrumbItems = new List<BreadcrumbItem>
+          {
+               new BreadcrumbItem( L[MaktabResources.Dashboard], Constants.ParentDashboardRoute),
+               new BreadcrumbItem( L[MaktabResources.Contact_Us], null, true)
+          };
+     }
+}

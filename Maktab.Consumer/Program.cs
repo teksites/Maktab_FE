@@ -50,7 +50,8 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddScoped<IGlobalizationService, GlobalizationService>()
                 .AddSingleton<IClipboardService, ClipboardService>()
                 .AddScoped<IHelcimPaymentMethodService, HelcimPaymentMethodService>()
-                .AddScoped<IApplicationVersionService, ApplicationVersionService>();
+                .AddScoped<IApplicationVersionService, ApplicationVersionService>()
+                .AddScoped<IEmailService, EmailService>();
 
 // Azure Maps – dedicated HttpClient + service
 builder.Services.AddScoped<IAddressLookupService>(sp =>
