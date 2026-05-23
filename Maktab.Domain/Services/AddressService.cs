@@ -101,7 +101,7 @@ namespace Maktab.Domain.Services
                     if (result == null)
                     {
                          _logger.LogWarning("Address for connected ID {ConnectedId} not found", connectedId);
-                         return null;
+                         return Enumerable.Empty<AddressResponse>();
                     }
 
                     _logger.LogInformation("Successfully fetched address for connected ID {ConnectedId}", connectedId);

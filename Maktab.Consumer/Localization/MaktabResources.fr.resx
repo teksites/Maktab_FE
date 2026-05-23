@@ -1484,4 +1484,10 @@
   <data name="Try_Sending_Again" xml:space="preserve">
     <value>Essayez à nouveau d'envoyer</value>
   </data>
+  <data name="Active_Enrollment" xml:space="preserve">
+    <value>Inscription active</value>
+  </data>
+  <data name="InActive_Enrollment" xml:space="preserve">
+    <value>Inscription inactive</value>
+  </data>
 </root>

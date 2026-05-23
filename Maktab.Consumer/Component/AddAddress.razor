@@ -130,7 +130,7 @@
      [Parameter] public bool HideAddressType { get; set; } = false;
      [Parameter] public bool ShowHeader { get; set; } = true;
 
-     private IReadOnlyCollection<AddressType> AddressTypes { get; } = Enum.GetValues(typeof(AddressType)).Cast<AddressType>().Where(x => x != AddressType.Unknown || x != AddressType.Institute).ToList();
+     private IReadOnlyCollection<AddressType> AddressTypes { get; } = Enum.GetValues(typeof(AddressType)).Cast<AddressType>().Where(x => x != AddressType.Unknown && x != AddressType.Institute).ToList();
      private bool isSaving = false;
      private bool isInitialized = false;
 
