@@ -1,0 +1,398 @@
+@inherits LocalizeableBaseComponent<AddressLookupField>
+
+@using Maktab.Consumer.Helpers
+@using Maktab.Core.Interfaces.Models
+@using MaktabDataContracts.Responses.Addresses
+@using System.Linq.Expressions
+@* ============================================================
+   AddressLookupField.razor  (v5 — MudBlazor 8 correct API)
+
+   MudBlazor 8 API corrections from v4:
+   ──────────────────────────────────────
+   ✗ autocomplete="off"      not a MudTextField param
+                             → use UserAttributes dictionary
+   ✗ OnFocus="@OnFieldFocus" not a MudTextField param
+                             → use @onfocus on the wrapper <div>
+                               (Blazor native DOM event, always works)
+   ✓ OnBlur                  IS a valid MudTextField param (MudBaseInput)
+   ✓ Clearable + OnClearButtonClick  built-in — replaces fake adornment hack
+   ✓ UserAttributes          dict passed straight to the inner <input>*@
+
+@inject IAddressLookupService AddressLookupService
+
+@* @onfocus on the wrapper div is the MudBlazor 8 correct way    *@
+@* to detect focus on a MudTextField. The native DOM focus event *@
+@* bubbles up from the inner <input> to this div reliably.       *@
+<div class="address-lookup-wrapper"
+     @onkeydown="OnKeyDown">
+
+     <MudTextField T="string"
+                   @ref="_fieldRef"
+                   Value="@Value"
+                   ValueChanged="@OnValueChanged"
+                   Label="@Label"
+                   Placeholder="@Placeholder"
+                   Variant="@Variant"
+                   Margin="@Margin"
+                   FullWidth="true"
+                   Immediate="true"
+                   Clearable="true"
+                   OnClearButtonClick="@OnClearClicked"
+                   Adornment="@(_isSearching ? Adornment.End : Adornment.None)"
+                   AdornmentIcon="@Icons.Material.Filled.HourglassTop"
+                   AdornmentColor="Color.Primary"
+                   AdornmentAriaLabel="Searching…"
+                   HelperText="@HelperText"
+                   Error="@Error"
+                   ErrorText="@ErrorText"
+                   Disabled="@Disabled"
+                   ReadOnly="@ReadOnly"
+                   OnBlur="@OnFieldBlur"
+                   Required="@Required"
+                   For="@For"
+                   UserAttributes="@_inputAttributes" />
+
+     @* ── Floating suggestions popover ── *@
+     <MudPopover Open="@_popoverOpen"
+                 AnchorOrigin="Origin.BottomLeft"
+                 TransformOrigin="Origin.TopLeft"
+                 RelativeWidth="DropdownWidth.Relative"
+                 Paper="false">
+
+          <MudPaper Elevation="6"
+                    Style="width:100%; max-height:280px; overflow-y:auto; border-radius:4px;">
+
+               @* Skeleton shimmer while search is in flight *@
+               @if (_isSearching)
+               {
+                    <MudList T="string" Dense="true" DisablePadding="true">
+                         @for (int i = 0; i < 2; i++)
+                         {
+                              <MudListItem T="string" Class="py-2 px-3">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                        <MudSkeleton SkeletonType="SkeletonType.Circle"
+                                        Width="20px" Height="20px" />
+                                        <MudStack Spacing="1" Style="flex:1">
+                                             <MudSkeleton Width="70%" />
+                                             <MudSkeleton Width="45%" />
+                                        </MudStack>
+                                   </MudStack>
+                              </MudListItem>
+                         }
+                    </MudList>
+               }
+               else  if (_suggestions.Any())
+               {
+                    <MudList T="AddressLookupResult"
+                             Dense="true"
+                             DisablePadding="true"
+                             SelectedValue="@(_suggestions.ElementAtOrDefault(_highlightedIndex))"
+                             SelectedValueChanged="@((AddressLookupResult s) => SelectSuggestion(s))">
+
+                         @for (int i = 0; i < _suggestions.Count; i++)
+                         {
+                              var s = _suggestions[i];
+                              <MudListItem T="AddressLookupResult" Value="@s">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="py-1">
+                                        <MudIcon Icon="@Icons.Material.Filled.LocationOn" Color="Color.Info" Size="Size.Small" />
+                                        <MudText Typo="Typo.body2">@s.FormattedAddress</MudText>
+                                   </MudStack>
+                              </MudListItem>
+                              @if (i < _suggestions.Count - 1)
+                              {
+                                   <MudDivider />
+                              }
+                         }
+                    </MudList>
+               }
+               else if (_searchCompleted)
+               {
+                    <MudStack Row="true" AlignItems="AlignItems.Center"
+                    Spacing="2" Class="pa-3">
+                         <MudIcon Icon="@Icons.Material.Outlined.SearchOff"
+                         Color="Color.Info" Size="Size.Small" />
+                         <MudText Typo="Typo.body2" Color="Color.Info">
+                              @L[MaktabResources.Msg_Info_No_Address_Found]
+                         </MudText>
+                    </MudStack>
+               }
+
+</MudPaper>
+</MudPopover>
+
+</div>
+
+     @code {
+     // ── Parameters ────────────────────────────────────────────
+
+     [Parameter] public string? Value { get; set; }
+     [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+
+     /// <summary>
+     /// Fires with the full structured address when the user selects a suggestion.
+     /// Parent uses this to populate Line2, City, PostalCode, Province, Country.
+     /// </summary>
+     [Parameter] public EventCallback<AddressResponse> OnAddressSelected { get; set; }
+
+     // Visual pass-through
+     [Parameter] public string Label { get; set; } = string.Empty;
+     [Parameter] public string Placeholder { get; set; } = string.Empty;
+     [Parameter] public string? HelperText { get; set; }
+     [Parameter] public bool Error { get; set; }
+     [Parameter] public string? ErrorText { get; set; }
+     [Parameter] public bool Disabled { get; set; }
+     [Parameter] public bool ReadOnly { get; set; }
+     [Parameter] public bool Required { get; set; } = false;
+     [Parameter] public Variant Variant { get; set; } = Variant.Text;
+     [Parameter] public Margin Margin { get; set; } = Margin.Normal;
+
+     // Lookup tuning
+     [Parameter] public int DebounceMs { get; set; } = 500;
+     [Parameter] public int MinChars { get; set; } = 8;
+
+     // Add this parameter in the @code block alongside the others
+     [Parameter] public Expression<Func<string?>>? For { get; set; }
+
+     // ── UserAttributes: passes extra HTML attrs to inner <input> ──
+     // autocomplete="off" suppresses browser address autofill which
+     // would clash with our own suggestion dropdown.
+     private readonly Dictionary<string, object> _inputAttributes = new()
+    {
+        { "autocomplete", "off" }
+    };
+
+     // ── Private state ─────────────────────────────────────────
+
+     private MudTextField<string>? _fieldRef;
+     private TrailingEdgeDebounder _debouncer = default!;
+
+     // ── THE FOCUS GUARD ───────────────────────────────────────
+     // Set true only when the user physically focuses the field.
+     // OnValueChanged checks this before arming the debouncer.
+     // Programmatic changes (parent binding, SelectSuggestion)
+     // never have focus context → popover never opens spuriously.
+     //private bool _userHasFocus = false;
+     //private bool _suppressNextChange = false;
+     private bool _popoverOpen = false;
+     private bool _isSearching = false;
+     private bool _searchCompleted = false;
+     private int _highlightedIndex = -1;
+     // private int _programmaticChanges = 0;
+
+     private IList<AddressLookupResult> _suggestions = Array.Empty<AddressLookupResult>();
+
+     // ── Computed ──────────────────────────────────────────────
+
+     // private string? ComputedHelperText =>
+     //     _isSearching ? @L[MaktabResources.Msg_Searching_For_Address] : HelperText;
+
+     // ── Lifecycle ─────────────────────────────────────────────
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          _debouncer = new TrailingEdgeDebounder(async ct =>
+          {
+               await ExecuteSearchAsync(Value, ct);
+               //await InvokeAsync(RequestRender);
+          });
+     }
+
+     // ── Focus tracking (via wrapper div @onfocus) ─────────────
+
+     /// <summary>
+     /// Native DOM focus event bubbles from the inner &lt;input&gt;
+     /// up to the wrapper div. This is the MudBlazor 8 correct
+     /// way to detect focus since MudTextField has no OnFocus param.
+     /// </summary>
+     // private void OnWrapperFocus(FocusEventArgs _)
+     //     => _userHasFocus = true;
+
+     /// <summary>
+     /// MudTextField.OnBlur IS a valid MudBlazor 8 parameter.
+     /// Wait 150ms before clearing focus so a suggestion click
+     /// (which briefly blurs the input) still registers first.
+     /// </summary>
+     private async Task OnFieldBlur(FocusEventArgs _)
+     {
+          await Task.Delay(250);
+          ClosePopover();
+          RequestRender();
+     }
+
+     // ── Core value change ─────────────────────────────────────
+
+     private async Task OnValueChanged(string? newValue)
+     {
+          Value = newValue;
+          await ValueChanged.InvokeAsync(newValue);
+
+          // ── FOCUS GUARD ──────────────────────────────────────
+          // Only arm the debouncer when the user is actively typing.
+          // Parent binding (dialog open) and SelectSuggestion both
+          // set _userHasFocus = false before changing Value, so
+          // this guard is timing-independent and dialog-safe.
+
+          if(_suggestions.Any())
+          {
+               _suggestions.Clear();
+          }
+          _searchCompleted = false;
+          _highlightedIndex = -1;
+
+          if (string.IsNullOrWhiteSpace(newValue) || newValue.Length < MinChars)
+          {
+               ClosePopover();
+               return;
+          }
+
+          _debouncer.Trigger(DebounceMs);
+     }
+
+     // ── Search ────────────────────────────────────────────────
+
+     private async Task ExecuteSearchAsync(string? query, CancellationToken ct)
+     {
+          if (string.IsNullOrWhiteSpace(query) || query.Length < MinChars) return;
+
+          _isSearching = true;
+          RequestRender();
+
+          try
+          {
+               var results = await AddressLookupService.SearchAdderssAsync(query, ct);
+               // show skeleton immediately
+               _popoverOpen = true;
+               RequestRender();
+
+               if(results == null || !results.Any())
+               {
+                    if (_suggestions.Any())
+                    {
+                         _suggestions.Clear();
+                    }
+               }
+               else
+               {
+                    _suggestions = results.ToList();
+               }
+          }
+          catch (OperationCanceledException)
+          {
+               if (_suggestions.Any())
+               {
+                    _suggestions.Clear();
+               }
+               if (_popoverOpen)
+               {
+                    _popoverOpen = false;
+               }
+          }
+          catch
+          {
+               if (_suggestions.Any())
+               {
+                    _suggestions.Clear();
+               }
+               if (_popoverOpen)
+               {
+                    _popoverOpen = false;
+               }
+          }
+          finally
+          {
+               if (_isSearching)
+               {
+                    _isSearching = false;
+               }
+               _searchCompleted = true;
+               RequestRender();
+          }
+     }
+
+     // ── Selection ─────────────────────────────────────────────
+
+     private async Task SelectSuggestion(AddressLookupResult suggestion)
+     {
+          // Drop focus guard BEFORE changing Value so the
+          // ValueChanged event that fires is treated as programmatic.
+
+          var address = await AddressLookupService.GetAddressFromLookupResultAsync(suggestion);
+          await SetValueProgrammaticallyAsync(address.AddressLine1);
+          await OnAddressSelected.InvokeAsync(address);
+
+          ClosePopover();
+     }
+
+     // ── Clear button (MudTextField built-in Clearable) ────────
+
+     private async Task OnClearClicked(MouseEventArgs _)
+     {
+          await SetValueProgrammaticallyAsync(string.Empty);
+          ClosePopover();
+     }
+
+     // Called ONLY by our own code — never triggers debouncer
+     private async Task SetValueProgrammaticallyAsync(string? newValue)
+     {
+          Value = newValue;
+          await ValueChanged.InvokeAsync(newValue);
+          // No debouncer. No suggestions. Just update binding.
+     }
+
+     // ── Keyboard navigation ───────────────────────────────────
+
+     private async Task OnKeyDown(KeyboardEventArgs e)
+     {
+          if (!_popoverOpen) return;
+
+          switch (e.Key)
+          {
+               case "ArrowDown":
+                    if (_suggestions.Any())
+                    {
+                         _highlightedIndex = Math.Min(_highlightedIndex + 1, _suggestions.Count - 1);
+                         RequestRender();
+                    }
+                    break;
+
+               case "ArrowUp":
+                    if (_suggestions.Any())
+                    {
+                         _highlightedIndex = Math.Max(_highlightedIndex - 1, 0);
+                         RequestRender();
+                    }
+                    break;
+
+               case "Enter" when _highlightedIndex >= 0
+                             && _highlightedIndex < _suggestions.Count:
+                    await SelectSuggestion(_suggestions[_highlightedIndex]);
+                    break;
+
+               case "Escape":
+                    ClosePopover();
+                    RequestRender();
+                    break;
+          }
+     }
+
+     // ── Helpers ───────────────────────────────────────────────
+
+     private void ClosePopover()
+     {
+          _popoverOpen = false;
+          _highlightedIndex = -1;
+          if (_suggestions.Any())
+          {
+               _suggestions.Clear();
+          }
+          _searchCompleted = false;
+          RequestRender();
+     }
+
+     public override void Dispose()
+     {
+          base.Dispose();
+          _debouncer.Dispose();
+     }
+}

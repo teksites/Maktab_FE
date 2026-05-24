@@ -1,0 +1,31 @@
+﻿@inherits BaseDialog<EditChildDialog>
+@using MaktabDataContracts.Requests.Children
+@using MaktabDataContracts.Responses.Children
+@using MudBlazor
+
+
+<MudDialog>
+<DialogContent>
+<EditChild ChildModel="@Child"
+           OnSave="SaveChild"
+           OnCancel="CancelDialog" />
+</DialogContent>
+</MudDialog>
+
+@code {
+     [Parameter, EditorRequired] public ChildResponse Child { get; set; }
+
+     protected override void OnInitialized()
+     {
+     }
+
+     private void SaveChild(ChildResponse child)
+     {
+          MudDialog.Close(DialogResult.Ok(child));
+     }
+
+     private void CancelDialog()
+     {
+          MudDialog.Close(DialogResult.Cancel());
+     }
+}

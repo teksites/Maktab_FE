@@ -24,6 +24,7 @@
                               <th>@L[MaktabResources.Description]</th>
                               <th>@L[MaktabResources.Due_Date]</th>
                               <th>@L[MaktabResources.Amount_Due]</th>
+                              <th>@L[MaktabResources.Status]</th>
                          </tr>
                     </thead>
                     <tbody>
@@ -32,8 +33,9 @@
                          {
                               <tr>
                                    <td>@(GetPaymentDescription(g))</td>
-                                   <td>@g.DueDate</td>
+                                   <td>@g.DueDate.ToShortDateString()</td>
                                    <td>@g.Amount</td>
+                                   <td><MudChip T="string" Color="@(GetPaymentStatusColor(g.PaymentStatus))" Variant="Variant.Filled" Size="Size.Small">@(GetPaymentStatusLabel(g.PaymentStatus))</MudChip></td>
                               </tr>
                          }
                     </tbody>

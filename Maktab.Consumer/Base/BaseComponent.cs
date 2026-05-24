@@ -2,6 +2,7 @@
 using Maktab.Consumer.Helpers;
 using Maktab.Core.Interfaces.Services;
 using MaktabDataContracts.Enums;
+using MaktabDataContracts.Responses.Children;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -108,7 +109,7 @@ namespace Maktab.Consumer.Base
           /// <summary>
           /// Clean up resources when component is disposed.
           /// </summary>
-          public void Dispose()
+          public virtual void Dispose()
           {
                IsDisposed = true;
                _cts.Cancel();
@@ -248,6 +249,16 @@ namespace Maktab.Consumer.Base
                return result;
           }
 
+          protected async Task<DialogResult?> OpenEditChildDialog(IDialogService dialogService, ChildResponse childResponse)
+          {
+               var parameters = new DialogParameters { ["Child"] = childResponse };
+               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+
+               var dialog = await dialogService.ShowAsync<EditChildDialog>(null, parameters, options);
+               var result = await dialog.Result;
+               return result;
+          }
+
           protected async Task<DialogResult?> OpenAddAddressDialog(IDialogService dialogService, Guid connectedId)
           {
                var parameters = new DialogParameters { ["ConnectedId"] = connectedId };
@@ -286,6 +297,20 @@ namespace Maktab.Consumer.Base
                     default:
                          return Color.Default;
                }
+          }
+
+          protected Color GetPaymentStatusColor(PaymentStatus paymentStatus)
+          {
+               if (paymentStatus == PaymentStatus.Paid)
+                    return Color.Success;
+
+               if (paymentStatus == PaymentStatus.PartiallyPaid)
+                    return Color.Warning;
+
+               if (paymentStatus == PaymentStatus.Unpaid)
+                    return Color.Error; 
+
+               return Color.Default;
           }
      }
 }

@@ -5,10 +5,13 @@
 
 @inject IAddressService AddressService
 
-@* <EditForm Model="@AddressModel" OnValidSubmit="HandleValidSubmit"> *@
      <MudPaper Class="pa-4">
+     @if(ShowHeader)
+     {
           <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Add_Address]</MudText>
-          @if(!isInitialized)
+     }
+     
+     @if (!isInitialized)
           {
                <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
           }
@@ -16,13 +19,16 @@
      <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleAddressSave)" Validated="@(OnFormValidated)">
 
           <MudGrid Container="true" Spacing="3">
-              
+
 
                <MudItem xs="12" sm="12">
-                    <MudTextField @bind-Value="AddressModel.AddressLine1"
+                    <AddressLookupField @bind-Value="AddressModel.AddressLine1" 
                                   Label=@L[MaktabResources.Address_Line_1]
+                                        For="@(() => AddressModel.AddressLine1)"
                                   Required="true"
-                                  For="@(() => AddressModel.AddressLine1)" />
+                                        HelperText=@L[MaktabResources.Type_To_Search_Address]
+                                        OnAddressSelected="@HandleAddressSelected"/>
+
                </MudItem>
 
                <MudItem xs="12" sm="12">
@@ -73,20 +79,20 @@
                </MudItem>
 
                <MudItem xs="12" sm="6" Class="d-flex align-center" @bind-hidden="HideAddressType">
-                    <MudSwitch @bind-Value="AddressModel.HomeAddress"
-                               T="bool"
-                               Label=@L[MaktabResources.Home_Address]
-                               Color="Color.Primary" />
-               </MudItem>
+                         <MudSwitch @bind-Value="AddressModel.HomeAddress"
+                                    T="bool"
+                                    Label=@L[MaktabResources.Home_Address]
+                                    Color="Color.Primary" />
+                    </MudItem>
 
                <MudItem xs="12" sm="6" @bind-hidden="HideAddressType" Class="d-flex align-center">
                     <MudSelect @bind-Hidden="HideAddressType" T="AddressType" Label=@L[MaktabResources.Address_Type] @bind-Value="AddressModel.AddressType" Required="true">
-                         @foreach (var rel in AddressTypes)
-                         {
-                              <MudSelectItem Value="@rel">@(GetAddressTypeLabel(rel))</MudSelectItem>
-                         }
-                    </MudSelect> 
-               </MudItem>
+                              @foreach (var rel in AddressTypes)
+                              {
+                                   <MudSelectItem Value="@rel">@(GetAddressTypeLabel(rel))</MudSelectItem>
+                              }
+                         </MudSelect>
+                    </MudItem>
           </MudGrid>
 
           @if (!string.IsNullOrWhiteSpace(_errorMessage))
@@ -122,7 +128,9 @@
      [Parameter] public EventCallback OnCancel { get; set; }
      [Parameter] public Guid ConnectedId { get; set; } = Guid.Empty;
      [Parameter] public bool HideAddressType { get; set; } = false;
-     private IReadOnlyCollection<AddressType> AddressTypes { get; } = Enum.GetValues(typeof(AddressType)).Cast<AddressType>().Where(x=>x != AddressType.Unknown || x != AddressType.Institute).ToList();
+     [Parameter] public bool ShowHeader { get; set; } = true;
+
+     private IReadOnlyCollection<AddressType> AddressTypes { get; } = Enum.GetValues(typeof(AddressType)).Cast<AddressType>().Where(x => x != AddressType.Unknown && x != AddressType.Institute).ToList();
      private bool isSaving = false;
      private bool isInitialized = false;
 
@@ -189,5 +197,17 @@
           {
                await OnCancel.InvokeAsync();
           }
+     }
+
+     public void HandleAddressSelected(AddressResponse address)
+     {
+          AddressModel.AddressLine1 = address.AddressLine1;
+          AddressModel.AddressLine2 = address.AddressLine2;
+          AddressModel.PostalCode = string.Empty; // Reset postal code to allow user to enter new one based on selected address
+          AddressModel.ApartmentNo = address.ApartmentNo;
+          AddressModel.UnitNo = address.UnitNo;
+          AddressModel.City = address.City;
+          AddressModel.Province = address.Province;
+          AddressModel.Country = address.Country;
      }
 }

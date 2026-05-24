@@ -41,9 +41,9 @@ namespace Maktab.Domain.Services
                return result;
           }
 
-          public async Task<StudentCourseTransactionResponse> GetCourseEnrollmentTranasctionByIdAsync(Guid enrollmentId)
+          public async Task<StudentCourseTransactionResponse> GetCourseEnrollmentTranasctionByIdAsync(Guid transactionId)
           {
-               var formatedUrl = string.Format(getCourseEnrollmentTranasctionByIdUrl, enrollmentId);
+               var formatedUrl = string.Format(getCourseEnrollmentTranasctionByIdUrl, transactionId);
                var result = await _httpService.Get<StudentCourseTransactionResponse>(formatedUrl);
                return result;
           }

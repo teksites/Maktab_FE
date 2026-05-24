@@ -1,0 +1,83 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy ASP.Net Core app to Azure Web App - iccschooldev
+
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: read #This is required for actions/checkout
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+          
+      - name: Update Version
+        run: |
+          $buildNumber = "${{ github.run_number }}"
+          
+          if ("${{ github.ref }}" -eq "refs/heads/main") {
+            $newVersion = "1.0.$buildNumber"
+          } else {
+            $newVersion = "1.0.0-dev.$buildNumber"
+          }
+          
+          $csprojPath = "Maktab.Consumer/Maktab.Consumer.csproj"
+          $content = Get-Content $csprojPath -Raw
+          $updated = $content -replace '<Version>.*?</Version>', "<Version>$newVersion</Version>"
+          Set-Content $csprojPath -Value $updated -ErrorAction Stop
+          
+          Write-Host "Version: $newVersion"
+        shell: pwsh
+
+      - name: Build with dotnet
+        run: dotnet build --configuration Release
+
+      - name: dotnet publish
+        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
+
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    permissions:
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
+      
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A69659996FCC4FA89EF46D4B23243FE4 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2075624F31E54AEC92C48C36BB74BA90 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4ED068EAA10842FF9CBC409E2F30CA42 }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'iccschooldev'
+          slot-name: 'Production'
+          package: .
+          

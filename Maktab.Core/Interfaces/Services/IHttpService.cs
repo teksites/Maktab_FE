@@ -2,7 +2,7 @@
 {
      public interface IHttpService : IApplicationService
      {
-          Task<T> Get<T>(string uri);
+          Task<T> Get<T>(string uri, CancellationToken ct = default);
           Task Post(string uri, object value);
           Task<T> Post<T>(string uri, object? value = null, bool autoLogout = true);
           Task Put(string uri, object? value = null, bool autoLogout = true);

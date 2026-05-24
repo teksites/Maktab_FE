@@ -5,8 +5,8 @@
     <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
         <MudAvatar Size="Size.Large" Color="Color.Primary">@Initials</MudAvatar>
           <MudStack Spacing="1">
-            <MudText Typo="Typo.h5">@Parent.FirstName @Parent.LastName</MudText>
-            <MudText Typo="Typo.body2">@Parent.Email</MudText>
+            <MudText Typo="Typo.h5">@Parent.FirstName.ToTitleCase() @Parent.LastName.ToTitleCase()</MudText>
+            <MudText Typo="Typo.body2">@Parent.Email?.ToLower()</MudText>
             <MudText Typo="Typo.body2">@Parent.Phone</MudText>
         </MudStack>
 

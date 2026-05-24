@@ -91,7 +91,7 @@ namespace Maktab.Consumer.State.Parent
                }
           }
 
-          public void SetContact(IEnumerable<OtherContactResponse> items)
+          public void SetContacts(IEnumerable<OtherContactResponse> items)
           {
                lock (ContactSyncLock)
                {
@@ -153,7 +153,7 @@ namespace Maktab.Consumer.State.Parent
                }
           }
 
-          public void SetAddress(IEnumerable<AddressResponse> items)
+          public void SetAddresses(IEnumerable<AddressResponse> items)
           {
                lock (AddressSyncLock)
                {
@@ -219,8 +219,9 @@ namespace Maktab.Consumer.State.Parent
           {
                lock (EnrollmentSyncLock)
                {
-                    _courseEnrollments = items.ToList();
-                    _courseEnrollments.Sort((x, y) => x.EnrollmentStatus.CompareTo(y.EnrollmentStatus));
+                    _courseEnrollments = items?
+                        .OrderBy(x => x.GroupTitle)
+                        .ToList();
                }
 
                NotifyStateChanged();
@@ -311,6 +312,34 @@ namespace Maktab.Consumer.State.Parent
                     return result;
                }
           }
+
+          public bool UpdateCourseTransaction(StudentCourseTransactionResponse newTransaction)
+          {
+               if (newTransaction == null)
+               {
+                    return false;
+               }
+
+               lock (TransactionSyncLock)
+               {
+
+                    if (_courseTransactions == null)
+                    {
+                         _courseTransactions = new List<StudentCourseTransactionResponse>();
+                    }
+                    else
+                    {
+                         var oldTransaction = _courseTransactions.Find(x => x.StudentCourseTransactionId == newTransaction.StudentCourseTransactionId);
+                         if (oldTransaction != null)
+                         {
+                              _courseTransactions.Remove(oldTransaction);
+                         }
+                    }
+
+                    _courseTransactions.Add(newTransaction);
+                    return true;
+               }
+          } 
 
           public void ClearCourseTransactions()
           {

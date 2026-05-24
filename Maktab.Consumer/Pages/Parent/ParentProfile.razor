@@ -35,7 +35,6 @@
                     <MudCard Class="mb-4 pa-4">
 
                          <MudStack Row="true">
-
                               <MudStack>
 
                                    <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Tax_Info]</MudText>
@@ -306,6 +305,17 @@
           }
      }
 
+     private async Task OpenEditChildDialog(ChildResponse childResponse)
+     {
+          var dialogResult = await this.OpenEditChildDialog(DialogService, childResponse);
+          if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
+          {
+               //await LoadChildrenData(userInfo.FamilyId, true);
+               await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, true);
+               RequestRender();
+          }
+     }
+
      private async Task OpenAddExtendedInfoDialog()
      {
           var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId, ["AddessId"] = userInfo.FamilyId, ["UserId"] = userInfo.UserId };
@@ -340,7 +350,7 @@
           var parameters = new DialogParameters { ["EditAddress"] = address };
           var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
 
-          var dialog = await DialogService.ShowAsync<EditAddressDialog>(L[MaktabResources.Edit_Extended_Info], parameters, options);
+          var dialog = await DialogService.ShowAsync<EditAddressDialog>(L[MaktabResources.Edit_Address], parameters, options);
 
           var dialogResult = await dialog.Result;
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is AddressResponse addressResponse)

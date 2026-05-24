@@ -9,6 +9,7 @@
 @inject ThemeService ThemeService
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IGlobalizationService GlobalizationService
+@inject IApplicationVersionService VersionService
 
 @if (isInitialized)
 {
@@ -132,9 +133,16 @@
           </MudToolBar>
 
      </MudAppBar>
-     <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-          <NavMenu />
-     </MudDrawer>
+               <MudDrawer @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+                    <NavMenu />
+                    <MudSpacer />
+                    <MudContainer Style="background:var(--mud-palette-primary);">
+                         <MudText Typo="Typo.caption" Align="Align.End" Style="color:rgba(255,255,255,0.6);">
+                              @VersionService.GetApplicationVersion()
+                         </MudText>
+                    </MudContainer>
+
+               </MudDrawer>
 
      <MudMainContent>
           <ErrorBoundary>

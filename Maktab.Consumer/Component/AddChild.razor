@@ -44,6 +44,8 @@
                     <MudDatePicker @bind-Date="DateOfBirth"
                                         Label=@L[MaktabResources.Date_Of_Birth]
                                    Required="true"
+                                        MaxDate="DateTime.Today"
+                                        MinDate="DateTime.Today.AddYears(-100)"
                                    For="@(() => DateOfBirth)" />
                </MudItem>
 
@@ -61,15 +63,24 @@
                <MudItem xs="12" sm="6">
                     <MudTextField @bind-Value="ChildModel.RAMQNumber"
                                        Label=@L[MaktabResources.RAMQ_Number]
+                                       Placeholder="AAAA 0000 0000"
+                                       Mask="@_ramqMask"
+                                       Clearable="true"
+                                       Adornment="Adornment.End"
+                                       AdornmentIcon="@Icons.Material.Filled.Badge"
                                   Required="true"
-                                  For="@(() => ChildModel.RAMQNumber)" />
+                                       Error="@_ramqError"
+                                       ErrorText="@_ramqErrorText"
+                                       For="@(() => ChildModel.RAMQNumber)"
+                                       OnBlur="OnRamqBlur" />
                </MudItem>
 
                <MudItem xs="12" sm="6">
-                    <MudDatePicker @bind-Date="RAMQExpiry"
+                         <MonthYearPicker @bind-Value="RAMQExpiry"
                                         Label=@L[MaktabResources.RAMQ_Expiry]
+                                        AllowPastDates="false"
                                    Required="true"
-                                   For="@(() => RAMQExpiry)" />
+                                          For="@(() => ChildModel.RAMQExpiry)" />
                </MudItem>
 
                @* <MudItem xs="12" sm="6">
@@ -85,8 +96,7 @@
                               <MudSwitch T="bool" Label=@L[MaktabResources.Has_Allergies] @bind-Value="ChildModel.HasAllergy" />
                               @if (ChildModel.HasAllergy)
                               {
-                                   <MudTextField
-                                        @bind-Value="ChildModel.Allergies" Variant="Variant.Outlined"
+                                   <MudTextField @bind-Value="ChildModel.Allergies" Variant="Variant.Outlined"
                                         Lines="2"
                                         MaxLines="4"
                                         Placeholder=@L[MaktabResources.Text_Allergies_Placeholder]
@@ -169,6 +179,8 @@
      private IEnumerable<AcedemicGroupType> acedemicGroups;
      private static readonly IEnumerable<AcedemicGroupType> AcedemicGroupsCache = Enum.GetValues(typeof(AcedemicGroupType)).Cast<AcedemicGroupType>().ToList();
      private IReadOnlyCollection<ChildConsent> RequiredChildConsents { get; set; } = Array.Empty<ChildConsent>();
+     private bool _ramqError = false;
+     private string _ramqErrorText = string.Empty;
 
      protected override async Task OnInitializedAsync()
      {
@@ -265,12 +277,20 @@
                return;
           }
 
+          if (ChildModel.Gender == Gender.Unknown)
+          {
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Gender];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
           ChildModel.RAMQExpiry = RAMQExpiry.Value;
           ChildModel.DateOfBirth = DateOfBirth.Value;
           ChildModel.FamilyId = FamilyId;
           ChildModel.RAMQSequenceNumber = -1;
           
-          var result = await ChildrenService.AddChildToFamilyAsync(FamilyId, ChildModel, RequiredChildConsents);
+          var enabledConents = RequiredChildConsents.Where(x => x.IsAllowed);
+          var result = await ChildrenService.AddChildToFamilyAsync(FamilyId, ChildModel, enabledConents.ToArray());
           if (result?.ChildId == null || result.ChildId == Guid.Empty)
           {
                _errorMessage = @L[MaktabResources.Msg_Error_Add_Child_Save];//"Child can not be registered with system. Please try again in few minutes";
@@ -293,4 +313,44 @@
                await OnCancel.InvokeAsync();
           }
      }
+
+     private readonly PatternMask _ramqMask = new PatternMask("aaaa 0000 0000")
+     {
+          MaskChars = new[]
+          {
+               new MaskChar('a', @"[a-zA-Z]"),
+               new MaskChar('0', @"[0-9]")
+          },
+          CleanDelimiters = false,
+          Transformation = c => char.ToUpperInvariant(c)
+     };
+
+     private void OnRamqBlur()
+     {
+          if(DateOfBirth == null)
+          {
+               _ramqError = true;
+               _ramqErrorText = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Date_Of_Birth];
+               return;
+          };
+
+          // Runs all rules in order — stops at first error found
+          var error = RamqValidationHelper.ValidateAll(
+              ramq: ChildModel.RAMQNumber,
+              firstName: ChildModel.FirstName,
+              lastName: ChildModel.LastName,
+              dateOfBirth: DateOfBirth.Value,
+              gender: ChildModel.Gender,
+              L
+          );
+
+          _ramqError = error is not null;
+          _ramqErrorText = error ?? string.Empty;
+     }
+
+     // override protected void OnFormValidated()
+     // {
+     //      base.OnFormValidated();
+     //      OnRamqBlur();
+     // }
 }

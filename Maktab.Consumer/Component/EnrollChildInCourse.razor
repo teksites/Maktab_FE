@@ -292,7 +292,8 @@ else if (IsError)
 
                                    <MudGrid Class="mt-4" Spacing="2">
                                         <MudSelect T="CourseEnrollmentGroupResponse"
-                                                   ToStringFunc="g => GetCourseGroupTitle(g)"
+                                        SelectAll="true"
+                                        MultiSelectionTextFunc="@(new Func<IReadOnlyList<string>, string>(GetMultiSelectionText))"
                                                    MultiSelection="true"
                                                    SelectedValues="@SelectedGroups"
                                                    SelectedValuesChanged="@((IEnumerable<CourseEnrollmentGroupResponse> v) => SelectedGroups = v.ToHashSet() )"
@@ -301,7 +302,7 @@ else if (IsError)
                                                    TransformOrigin="Origin.TopCenter"
                                                    Dense="true">
 
-                                             @foreach (var g in SelectedCourse.CourseEnrollmentGroups)
+                                             @foreach (var g in SelectedCourseEnrollmentGroups)
                                              {
                                                   <MudSelectItem Value="@g">
                                                        <MudStack Row="true" AlignItems="AlignItems.Center">
@@ -332,6 +333,15 @@ else if (IsError)
                                                   </MudSelectItem>
                                              }
                                         </MudSelect>
+
+                                        <MudStack Row Justify="Justify.Center" Style="width: 100%" Wrap="Wrap.Wrap">
+                                             <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true" SelectionMode="SelectionMode.MultiSelection" Variant="Variant.Filled">
+                                                  @foreach (var group in SelectedGroups)
+                                                  {
+                                                       <MudChip T="CourseEnrollmentGroupResponse" Text="@(GetCourseGroupTitle(group))" Value="@group" Size="Size.Small"/>
+                                                  }
+                                             </MudChipSet>
+                                        </MudStack>
                                    </MudGrid>
                               }
                               else
@@ -340,7 +350,7 @@ else if (IsError)
                                   <MudGrid Class="mt-4" Spacing="2">
                                         <MudList T="CourseEnrollmentGroupResponse" @bind-SelectedValue="SelectedGroup" SelectionMode="SelectionMode.SingleSelection">
                                             
-                                             @foreach (var g in SelectedCourse?.CourseEnrollmentGroups)
+                                             @foreach (var g in SelectedCourseEnrollmentGroups)
                                              {
                                                   <MudListItem Value="@g">
                                                        <MudStack Row="true" AlignItems="AlignItems.Center">
@@ -395,12 +405,12 @@ else if (IsError)
                                    @L[MaktabResources.Msg_Acknowledge_Child_Consent_Completion]
                               </MudCheckBox>
 
-                              @* <MudStack Row="true" Spacing="0" Justify="Justify.FlexStart" AlignItems="AlignItems.Baseline"> *@
                               <MudCheckBox @bind-Value="HasCourseConsent">
-                                   <span>@L[MaktabResources.Msg_Acknowledge_Read_Course_Policy]</span>
-                                   <span><MudLink Href="@SelectedCourse.PolicyHyperLink" Target="_blank">[@L[MaktabResources.Policy]]</MudLink></span>
+                                   <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                                        <span>@L[MaktabResources.Msg_Acknowledge_Read_Course_Policy]</span>
+                                        <MudLink Href="@SelectedCourse.PolicyHyperLink" Color="Color.Info" Target="_blank">[@L[MaktabResources.Policy]]</MudLink>
+                                   </MudStack>
                               </MudCheckBox>
-                              @* </MudStack> *@
 
                          </MudStack>
 
@@ -618,6 +628,7 @@ else if (IsError)
 
      protected InstituteResponse? SelectedInstitute { get; set; }
      protected CourseResponseDetailed SelectedCourse { get; set; }
+     protected IReadOnlyCollection<CourseEnrollmentGroupResponse> SelectedCourseEnrollmentGroups { get; set; } = Array.Empty<CourseEnrollmentGroupResponse>(); 
      private CourseEnrollmentGroupResponse SelectedGroup { get; set; }
      protected HashSet<CourseEnrollmentGroupResponse> SelectedGroups { get; set; } = new();
      private IReadOnlyCollection<AddStudentCourseEnrollment> _StudentCourseEnrollments = Array.Empty<AddStudentCourseEnrollment>();
@@ -672,17 +683,9 @@ else if (IsError)
           await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, forceLoad);
           await StateService.LoadActiveInstitutesData(InstitutionService, forceLoad);
           await StateService.LoadActiveCoursesData(CourseService, forceLoad);
+          await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, forceLoad);
 
           IsLoadingData = false;
-
-
-          //userInfo = await UserService.GetUserByIdAsync(userId);
-          //Children = (await ChildrenService.GetChildrenByFamilyIdAsync(userInfo.FamilyId)).ToList();
-
-          //Children = await ChildrenService.GetChildrenByFamilyIdAsync
-          //Courses = (await CourseService.GetCurrentActiveCoursesAsync()).ToList();
-
-
      }
 
      protected void Reset()
@@ -708,7 +711,6 @@ else if (IsError)
                IsSaving = false;
                RequestRender();
           }
-
      }
 
      protected async Task RequestEnrollment()
@@ -772,6 +774,7 @@ else if (IsError)
                SelectedCourse = null;
                HasChildConsent =
                HasCourseConsent = false;
+               SelectedCourseEnrollmentGroups = Array.Empty<CourseEnrollmentGroupResponse>();
           }
 
           if (SelectedInstitute != null)
@@ -790,7 +793,34 @@ else if (IsError)
 
           if (SelectedGroups?.Any() == true)
           {
-               SelectedGroups = new();
+               SelectedGroups.Clear();
+          }
+
+
+          if (SelectedCourse != null)
+          {
+               var courseGroupsWithRegistrationOpen = SelectedCourse.CourseEnrollmentGroups.Where(c => c.IfRegistrationOpen).ToList();
+               if (SelectedCourse.CanSelectMultipleEnrollmentGroups)
+               {
+                    var studentCourseGroupEnrollments = StateService.ParentState.CourseEnrollments?.Where(e => e.CourseId == SelectedCourse.CourseId && e.ChildId == SelectedChild.ChildId);
+                    if (studentCourseGroupEnrollments?.Any() == true)
+                    {
+                         foreach (var enrollment in studentCourseGroupEnrollments)
+                         {
+                              var group = courseGroupsWithRegistrationOpen.FirstOrDefault(g => g.CourseEnrollmentGroupId == enrollment.CourseEnrollmentGroupId);
+                              if (group != null)
+                              {
+                                   courseGroupsWithRegistrationOpen.Remove(group);
+                              }
+                         }
+                    }
+               }
+
+               SelectedCourseEnrollmentGroups = courseGroupsWithRegistrationOpen;
+          }
+          else
+          {
+               SelectedCourseEnrollmentGroups = Array.Empty<CourseEnrollmentGroupResponse>();
           }
      }
 
@@ -987,6 +1017,21 @@ else if (IsError)
                var group = SelectedGroup;
                return group;
           }
+     }
+
+     private string GetMultiSelectionText(IReadOnlyList<string> selectedValues)
+     {
+          if (selectedValues == null || !selectedValues.Any())
+          {
+               return L[MaktabResources.Selected_Values_None_Text, "0 " + MaktabResources.Group];
+          }
+
+          if (selectedValues.Count == 1)
+          {
+               return L[MaktabResources.Selected_Values_Single_Text, selectedValues.Count + " " + MaktabResources.Group];
+          }
+
+          return L[MaktabResources.Selected_Values_Multiple_Text, selectedValues.Count + " "+ MaktabResources.Groups];
      }
 }
 

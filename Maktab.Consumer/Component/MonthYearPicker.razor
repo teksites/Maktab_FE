@@ -1,0 +1,245 @@
+@* ─────────────────────────────────────────────────────────────────
+   MonthYearPicker.razor
+   MM/YY masked input → DateTime? with full EditContext / For= support.
+
+   FIX: FieldIdentifier is a struct with no != operator defined.
+        Replaced _fieldIdentifier != default checks with a
+        _hasFieldIdentifier bool flag set in OnInitialized.
+
+   Usage inside EditForm:
+       <MonthYearPicker @bind-Value="model.ExpiryDate"
+                        For="() => model.ExpiryDate"
+                        Label="Card Expiry"
+                        AllowPastDates="false" />
+───────────────────────────────────────────────────────────────── *@
+
+@using MudBlazor
+@using System.Linq.Expressions
+@using Microsoft.AspNetCore.Components.Forms
+
+@inject IStringLocalizer<MaktabResources> L
+@inject IGlobalizationService GlobalizationService
+
+<MudTextField T="string"
+              Value="@_maskedValue"
+              Label="@Label"
+              Variant="@Variant"
+              Mask="@_mask"
+              Placeholder="MM/YY"
+              Adornment="Adornment.End"
+              AdornmentIcon="@Icons.Material.Filled.CalendarMonth"
+              AdornmentColor="Color.Primary"
+              Clearable="true"
+              Immediate="true"
+              MaxLength="5"
+              Error="@HasError"
+              ErrorText="@ErrorMessage"
+              HelperText="@HelperMessage"
+              TextChanged="OnTextChanged"
+              OnBlur="OnBlur" />
+
+@code {
+
+     // ── Parameters ────────────────────────────────────────────────
+
+     [Parameter] public DateTime? Value { get; set; }
+     [Parameter] public EventCallback<DateTime?> ValueChanged { get; set; }
+
+     /// <summary>
+     /// Wires this component into the EditContext for FluentValidation.
+     /// Example: For="() => model.ExpiryDate"
+     /// </summary>
+     [Parameter] public Expression<Func<DateTime?>>? For { get; set; }
+
+     [Parameter] public string Label { get; set; } = "MM/YY";
+     [Parameter] public Variant Variant { get; set; } = Variant.Text;
+     [Parameter] public bool Required { get; set; } = false;
+     [Parameter] public bool AllowPastDates { get; set; } = true;
+     [Parameter] public bool AllowFutureDates { get; set; } = true;
+
+     // ── EditContext — cascaded automatically inside EditForm ───────
+     [CascadingParameter] private EditContext? EditContext { get; set; }
+
+     // ── Mask ──────────────────────────────────────────────────────
+     private readonly PatternMask _mask = new PatternMask("00/00")
+    {
+        MaskChars       = new[] { new MaskChar('0', @"[0-9]") },
+        CleanDelimiters = false,
+        Transformation  = c => char.ToUpperInvariant(c)
+    };
+
+     // ── Internal state ────────────────────────────────────────────
+     private string    _maskedValue    = string.Empty;
+     private DateTime? _parsedDate     = null;
+     private bool      _hasLocalError  = false;
+     private string    _localErrorText = string.Empty;
+
+     // ── FieldIdentifier ───────────────────────────────────────────
+     // FIX: FieldIdentifier is a struct — != default is not supported.
+     //      Use a separate bool to track whether it was successfully built.
+     private FieldIdentifier _fieldIdentifier;
+     private bool            _hasFieldIdentifier = false;
+
+     // ── Combined error state ──────────────────────────────────────
+     private bool HasError =>
+         _hasLocalError ||
+         (_hasFieldIdentifier &&
+          EditContext is not null &&
+          EditContext.GetValidationMessages(_fieldIdentifier).Any());
+
+     private string ErrorMessage
+     {
+          get
+          {
+               if (_hasLocalError) return _localErrorText;
+
+               if (_hasFieldIdentifier && EditContext is not null)
+                    return string.Join(" ", EditContext.GetValidationMessages(_fieldIdentifier));
+
+               return string.Empty;
+          }
+     }
+
+     private string HelperMessage
+     {
+          get
+          {
+               if (HasError) return L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.RAMQ_Expiry];
+               //if (_parsedDate.HasValue) return L[MaktabResources.Saved_As_Param, _parsedDate?.ToString("dd/MM/yyyy")];
+               if (!AllowPastDates && !AllowFutureDates) return L[MaktabResources.MonthYear_Current_Month_Only];
+               if (!AllowPastDates) return L[MaktabResources.MonthYear_Future_Or_Current_Dates_Only];
+               if (!AllowFutureDates) return L[MaktabResources.MonthYear_Past_Or_Current_Dates_Only];
+               return L[MaktabResources.MonthYear_Default_Format];
+          }
+     }
+
+     // ── Lifecycle ─────────────────────────────────────────────────
+
+     protected override void OnInitialized()
+     {
+          if (For is not null && EditContext is not null)
+          {
+               _fieldIdentifier    = FieldIdentifier.Create(For);
+               _hasFieldIdentifier = true;
+          }
+     }
+
+     protected override void OnParametersSet()
+     {
+          if (Value.HasValue && Value != _parsedDate)
+          {
+               _maskedValue = Value.Value.ToString("MM/yy");
+               _parsedDate  = Value;
+          }
+          else if (!Value.HasValue && _parsedDate.HasValue)
+          {
+               _maskedValue    = string.Empty;
+               _parsedDate     = null;
+               _hasLocalError  = false;
+               _localErrorText = string.Empty;
+          }
+     }
+
+     // ── TextChanged ───────────────────────────────────────────────
+     private async Task OnTextChanged(string raw)
+     {
+          _maskedValue    = raw ?? string.Empty;
+          _hasLocalError  = false;
+          _localErrorText = string.Empty;
+
+          if (_maskedValue.Length == 5)
+               await TryParseAndEmit();
+          else
+          {
+               _parsedDate = null;
+               await EmitValue(null);
+          }
+     }
+
+     // ── Blur ──────────────────────────────────────────────────────
+     private async Task OnBlur()
+     {
+          if (Required && string.IsNullOrWhiteSpace(_maskedValue))
+          {
+               SetLocalError(L[MaktabResources.This_Field_Required]);
+               await EmitValue(null);
+               return;
+          }
+
+          if (_maskedValue.Length > 0 && _maskedValue.Length < 5)
+          {
+               SetLocalError(L[MaktabResources.Msg_Warning_Complete_the_date]);
+               await EmitValue(null);
+               return;
+          }
+
+          if (_maskedValue.Length == 5)
+               await TryParseAndEmit();
+
+          NotifyEditContext();
+     }
+
+     // ── Parse + range validation ──────────────────────────────────
+     private async Task TryParseAndEmit()
+     {
+          var parts = _maskedValue.Split('/');
+          if (parts.Length != 2) { SetLocalError(L[MaktabResources.Msg_Invalid_Format_With_Suggestion, "MM/YY"]); await EmitValue(null); return; }
+
+          if (!int.TryParse(parts[0], out int month) || month < 1 || month > 12)
+          {
+               SetLocalError(L[MaktabResources.Msg_Info_Month_Between_1_12]);
+               await EmitValue(null);
+               return;
+          }
+
+          if (!int.TryParse(parts[1], out int year2))
+          {
+               SetLocalError(L[MaktabResources.Msg_Error_Year_Is_Invalid]);
+               await EmitValue(null);
+               return;
+          }
+
+        var date         = new DateTime(2000 + year2, month, 1);
+        var currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+
+        if (!AllowPastDates && date < currentMonth)
+        {
+               SetLocalError(L[MaktabResources.Msg_Error_Date_Cannot_Be_In_The_Past]);
+            await EmitValue(null);
+            return;
+        }
+
+        if (!AllowFutureDates && date > currentMonth)
+        {
+               SetLocalError(L[MaktabResources.Msg_Error_Data_Cannot_Be_In_Future]);
+            await EmitValue(null);
+            return;
+        }
+
+        _parsedDate     = date;
+        _hasLocalError  = false;
+        _localErrorText = string.Empty;
+        await EmitValue(date);
+    }
+
+    // ── Emit + notify ─────────────────────────────────────────────
+    private async Task EmitValue(DateTime? date)
+    {
+        await ValueChanged.InvokeAsync(date);
+        NotifyEditContext();
+    }
+
+    private void NotifyEditContext()
+    {
+        if (_hasFieldIdentifier && EditContext is not null)
+            EditContext.NotifyFieldChanged(_fieldIdentifier);
+    }
+
+    // ── Local error helper ────────────────────────────────────────
+    private void SetLocalError(string message)
+    {
+        _hasLocalError  = true;
+        _localErrorText = message;
+        _parsedDate     = null;
+    }
+}

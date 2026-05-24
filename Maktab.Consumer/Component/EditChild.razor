@@ -1,0 +1,393 @@
+﻿@using Maktab.Consumer.State
+@using MaktabDataContracts.Requests.Children
+@using MaktabDataContracts.Enums
+@using MaktabDataContracts.Requests.Policies
+@using MaktabDataContracts.Responses.Children
+@using Maktab.Consumer.Extensions;
+@using MudBlazor
+
+@inherits BaseFormComponent<EditChild>
+
+@inject IChildrenService ChildrenService
+@inject IInstitutionService InstitutionService
+
+@inject UserStateService StateService
+
+@* <EditForm Model="@ChildModel" OnValidSubmit="HandleValidSubmit"> *@
+<MudPaper Class="pa-6" Elevation="0" Outlined="false">
+     @if (ShowLabel)
+     {
+          <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
+               @L[MaktabResources.Edit_Child]
+          </MudText>
+     }
+
+     @if (isInitialized && !isDataLoading)
+     {
+          <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandleSaving)" Validated="@(OnFormValidated)" Spacing="2">
+               <MudGrid Container="true" Spacing="3">
+                    <MudItem xs="12" sm="6">
+                         <MudTextField @bind-Value="ChildModel.FirstName"
+                                       Label=@L[MaktabResources.First_Name]
+                                       Required="true"
+                                       Disabled="@isEditing"
+                                       For="@(() => ChildModel.FirstName)" />
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                         <MudTextField @bind-Value="ChildModel.LastName"
+                                       Label=@L[MaktabResources.Last_Name]
+                                       Required="true"
+                                       Disabled="@isEditing"
+                                       For="@(() => ChildModel.LastName)" />
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                         <MudDatePicker @bind-Date="DateOfBirth"
+                                        Label=@L[MaktabResources.Date_Of_Birth]
+                                        Required="true"
+                                        Disabled="@isEditing"
+                                        MaxDate="DateTime.Today"
+                                        MinDate="DateTime.Today.AddYears(-100)"
+                                        For="@(() => DateOfBirth)" />
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                         <MudSelect T="Gender" @bind-Value="ChildModel.Gender"
+                                    Disabled="@isEditing"
+                                    Label=@L[MaktabResources.Gender] Required="true"
+                                    For="@(() => ChildModel.Gender)">
+                              @foreach (var rel in Genders)
+                              {
+                                   <MudSelectItem Value="@rel">@(GetGenderLabel(rel))</MudSelectItem>
+                              }
+                         </MudSelect>
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                         <MudTextField @bind-Value="ChildModel.RAMQNumber"
+                                       Label=@L[MaktabResources.RAMQ_Number]
+                                       Placeholder="AAAA 0000 0000"
+                                       Mask="@_ramqMask"
+                                       Clearable="true"
+                                       Disabled="@isEditing"
+                                       Adornment="Adornment.End"
+                                       AdornmentIcon="@Icons.Material.Filled.Badge"
+                                       Required="true"
+                                       Error="@_ramqError"
+                                       ErrorText="@_ramqErrorText"
+                                       For="@(() => ChildModel.RAMQNumber)"
+                                       OnBlur="OnRamqBlur" />
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                         <MonthYearPicker @bind-Value="RAMQExpiry"
+                                          Label=@L[MaktabResources.RAMQ_Expiry]
+                                          AllowPastDates="false"
+                                          Required="true"
+                                          For="@(() => ChildModel.RAMQExpiry)" />
+                    </MudItem>
+
+                    @* <MudItem xs="12" sm="6">
+                    <MudNumericField @bind-Value="ChildModel.RAMQSequenceNumber"
+                                     Label="RAMQ Sequence #"
+                                     Min="1"
+                                     Required="true"
+                                     For="@(() => ChildModel.RAMQSequenceNumber)" />
+               </MudItem> *@
+
+                    <MudItem xs="12">
+                         <MudStack>
+                              <MudSwitch T="bool" Label=@L[MaktabResources.Has_Allergies] @bind-Value="ChildModel.HasAllergy" />
+                              @if (ChildModel.HasAllergy)
+                              {
+                                   <MudTextField @bind-Value="ChildModel.Allergies" Variant="Variant.Outlined"
+                                                 Lines="2"
+                                                 MaxLines="4"
+                                                 Immediate="true"
+                                                 Placeholder=@L[MaktabResources.Text_Allergies_Placeholder]
+                                                 Label=@L[MaktabResources.Allergies]
+                                                 Required="true" For="@(() => ChildModel.Allergies)" />
+                              }
+                         </MudStack>
+                    </MudItem>
+
+                    <MudItem xs="12">
+                         <MudTextField @bind-Value="ChildModel.OtherHealthConditions"
+                                       Label=@L[MaktabResources.Other_Health__Conditions]
+                                       For="@(() => ChildModel.OtherHealthConditions)" />
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6" Class="d-flex align-center">
+                         <MudSelect Required="true" Label=@L[MaktabResources.Academic_Group_In_School] T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
+                              @foreach (var group in acedemicGroups)
+                              {
+                                   <MudSelectItem Value="group">@group.ToString()</MudSelectItem>
+                              }
+                         </MudSelect>
+                         @* <MudSwitch @bind-Checked="@(ChildModel.WillUseDayCareServices)"
+                               T="bool"
+                               Label="Will Use Daycare Services"
+                               Color="Color.Primary" /> *@
+                    </MudItem>
+               </MudGrid>
+
+               @if (ChildConsents?.Any() == true)
+               {
+                    <MudText Class="mt-2" Typo="Typo.h6">@L[MaktabResources.Child_Consent]</MudText>
+                    <ChildConsentList RequiredChildConsents="@RequiredChildConsents" />
+               }
+
+               <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Default"
+                               OnClick="@OnCancelClickedHandler"
+                               StartIcon="@Icons.Material.Filled.Close">
+                         @L[MaktabResources.Cancel]
+                    </MudButton>
+                    <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary"
+                               Disabled="@(!_isValid || isSaving)"
+                               StartIcon="@Icons.Material.Filled.Check" OnClick="@(HandleSaving)">
+                         @if (isSaving)
+                         {
+                              <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
+                              <span>@L[MaktabResources.Msg_Processing]</span>
+                         }
+                         else
+                         {
+                              <span>@L[MaktabResources.Update]</span>
+                         }
+                    </MudButton>
+               </MudStack>
+          </MudForm>
+     }
+     else
+     {
+          <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+     }
+</MudPaper>
+@* </EditForm> *@
+
+     @code {
+
+     [Parameter, EditorRequired] public ChildResponse ChildModel { get; set; }
+     [Parameter] public bool ShowLabel { get; set; } = true;
+
+     [Parameter] public EventCallback<ChildResponse> OnSave { get; set; }
+     [Parameter] public EventCallback OnCancel { get; set; }
+     private IReadOnlyCollection<Gender> Genders { get; } = Enum.GetValues(typeof(Gender)).Cast<Gender>().Where(x => x != Gender.Unknown).ToList();
+     private IReadOnlyCollection<Consent> ChildConsents => StateService.InstituteState.ChildConsents;
+     private DateTime? RAMQExpiry { get; set; }
+     private DateTime? DateOfBirth { get; set; }
+     private bool isInitialized = false;
+     private bool isDataLoading = false;
+     private bool isSaving = false;
+     private bool isEditing = true;
+     private IEnumerable<AcedemicGroupType> acedemicGroups;
+     private static readonly IEnumerable<AcedemicGroupType> AcedemicGroupsCache = Enum.GetValues(typeof(AcedemicGroupType)).Cast<AcedemicGroupType>().ToList();
+     private IReadOnlyCollection<ChildConsent> RequiredChildConsents { get; set; } = Array.Empty<ChildConsent>();
+     private bool _ramqError = false;
+     private string _ramqErrorText = string.Empty;
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+          acedemicGroups = AcedemicGroupsCache;
+          await LoadData();
+
+          RAMQExpiry = ChildModel.RAMQExpiry;
+          DateOfBirth = ChildModel.DateOfBirth;
+
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private async Task HandleSaving()
+     {
+          isSaving = true;
+          RequestRender();
+
+          try
+          {
+               await InvokeUserAction(RequestSaving);
+          }
+          finally
+          {
+               isSaving = false;
+               RequestRender();
+          }
+     }
+
+     private async Task LoadData(bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadStudentConsentData(InstitutionService, forceReload);
+
+          RequiredChildConsents = GenerateChildConsents();
+          UpdateConsentBasedOnChild(RequiredChildConsents);
+
+          isDataLoading = false;
+     }
+
+     private IReadOnlyCollection<ChildConsent> GenerateChildConsents()
+     {
+          var requiredConsents = new List<ChildConsent>();
+          foreach (var consent in ChildConsents)
+          {
+               var childConsent = new ChildConsent()
+               {
+                    ConsentType = consent.ConsentType,
+                    Name = consent.Name,
+                    NameFr = consent.NameFr,
+                    PolicyLink = consent.PolicyLink,
+                    IsAllowed = false,
+               };
+
+               requiredConsents.Add(childConsent);
+          }
+
+          return requiredConsents;
+     }
+
+     private void UpdateConsentBasedOnChild(IReadOnlyCollection<ChildConsent> childConsents)
+     {
+          if (!string.IsNullOrEmpty(ChildModel.Consent))
+               if (!ChildModel.Consent.Equals("string", StringComparison.OrdinalIgnoreCase)) // to avoid deserialization issue when consent has value string instead of null or empty array
+               {
+                    var currentConsents = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<ChildConsent>>(ChildModel.Consent);
+                    if (currentConsents?.Any() == true)
+                    {
+                         foreach (var consent in currentConsents)
+                         {
+                              var consentObject = childConsents.FirstOrDefault(x => x.ConsentType == consent.ConsentType && x.Name.Equals(consent.Name, StringComparison.OrdinalIgnoreCase));
+                              if (consentObject != null && consent.IsAllowed)
+                              {
+                                   consentObject.IsAllowed = true;
+                              }
+                         }
+                    }
+               }
+     }
+
+     private async Task RequestSaving()
+     {
+          if (ChildModel.FamilyId == Guid.Empty)
+          {
+               _errorMessage = L[MaktabResources.Msg_Error_No_Family_Id];//"Please provide valid family id to connect.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          if (!RAMQExpiry.HasValue)
+          {
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.RAMQ_Expiry];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          if (!DateOfBirth.HasValue)
+          {
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Date_Of_Birth];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          if (ChildModel.AcedemicGroup == AcedemicGroupType.None)
+          {
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Academic_Group];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          if (ChildModel.Gender == Gender.Unknown)
+          {
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Gender];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          ChildModel.RAMQExpiry = RAMQExpiry.Value;
+          ChildModel.DateOfBirth = DateOfBirth.Value;
+          ChildModel.RAMQSequenceNumber = -1;
+
+          var enabledConents = RequiredChildConsents.Where(x => x.IsAllowed);
+          ChildModel.Consent = System.Text.Json.JsonSerializer.Serialize(enabledConents);
+
+          var updateRequest = new UpdateChildRequest()
+          {
+               AcedemicGroup = ChildModel.AcedemicGroup,
+               Allergies = ChildModel.Allergies,
+               ChildId = ChildModel.ChildId,
+               Consent = ChildModel.Consent,
+               HasAllergy = ChildModel.HasAllergy,
+               OtherHealthConditions = ChildModel.OtherHealthConditions,
+               RAMQExpiry = ChildModel.RAMQExpiry,
+               RAMQNumber = ChildModel.RAMQNumber,
+               RAMQSequenceNumber = -1,
+          };
+
+          var result = await ChildrenService.UpdateChildAsync(updateRequest);//, RequiredChildConsents);
+          if (result?.ChildId == null || result.ChildId == Guid.Empty)
+          {
+               _errorMessage = @L[MaktabResources.Msg_Error_Update_Child];//"Child can not be registered with system. Please try again in few minutes";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          Snackbar.Add(L[MaktabResources.Msg_Success_Child_Updated], Severity.Success);
+
+          if (OnSave.HasDelegate)
+          {
+               await OnSave.InvokeAsync(result);
+          }
+     }
+
+     private async Task OnCancelClickedHandler()
+     {
+          if (OnCancel.HasDelegate)
+          {
+               await OnCancel.InvokeAsync();
+          }
+     }
+
+     private readonly PatternMask _ramqMask = new PatternMask("aaaa 0000 0000")
+     {
+          MaskChars = new[]
+          {
+               new MaskChar('a', @"[a-zA-Z]"),
+               new MaskChar('0', @"[0-9]")
+          },
+          CleanDelimiters = false,
+          Transformation = c => char.ToUpperInvariant(c)
+     };
+
+     private void OnRamqBlur()
+     {
+          if (DateOfBirth == null)
+          {
+               _ramqError = true;
+               _ramqErrorText = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Date_Of_Birth];
+               return;
+          }
+          ;
+
+          // Runs all rules in order — stops at first error found
+          var error = RamqValidationHelper.ValidateAll(
+              ramq: ChildModel.RAMQNumber,
+              firstName: ChildModel.FirstName,
+              lastName: ChildModel.LastName,
+              dateOfBirth: DateOfBirth.Value,
+              gender: ChildModel.Gender,
+              L
+          );
+
+          _ramqError = error is not null;
+          _ramqErrorText = error ?? string.Empty;
+     }
+
+     // override protected void OnFormValidated()
+     // {
+     //      base.OnFormValidated();
+     //      OnRamqBlur();
+     // }
+}

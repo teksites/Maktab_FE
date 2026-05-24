@@ -1,4 +1,6 @@
 ﻿@page "/payment/payment-details"
+@attribute [Authorize]
+
 @using Maktab.Consumer.Extensions
 @using Maktab.Consumer.State
 @using MaktabDataContracts.Responses.Course
@@ -6,6 +8,7 @@
 @using MaktabDataContracts.Responses.Transactions
 @using MaktabDataContracts.Responses.Users
 @using Maktab.Consumer.Dialogs
+@using Microsoft.AspNetCore.Authorization
 
 @inherits BasePaymentComponent<PaymentDetailPage>
 
@@ -327,7 +330,7 @@
                                                                                  Color="Color.Primary"
                                                                                  FullWidth="true"
                                                                                  Size="Size.Small"
-                                                                                 OnClick="@(() => OpenZeffyPaymentDialog(transaction, GetCourseResponseDetailed(courseGroup.CourseId), userInfo.Email))">
+                                                                                 OnClick="@(() => OpenHelcimPaymentPage(transaction, GetCourseResponseDetailed(courseGroup.CourseId), userInfo.Email))">
                                                                            @L[MaktabResources.Pay_Now]
                                                                       </MudButton>
                                                                  </MudCardActions>
@@ -590,14 +593,7 @@
           var course = GetCourseResponseDetailed(courseId);
           if (course != null)
           {
-               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-               {
-                    return course.NameFr;
-               }
-               else
-               {
-                    return course.Name;
-               }
+               return GetCourseName(course);
           }
 
           return string.Empty;
@@ -610,14 +606,7 @@
           var institute = _Institutes.FirstOrDefault(x => x.InstituteId == instituteId);
           if (institute != null)
           {
-               if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-               {
-                    return institute.NameFr;
-               }
-               else
-               {
-                    return institute.Name;
-               }
+               return GetInstituteName(institute);
           }
 
           return string.Empty;

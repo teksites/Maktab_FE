@@ -1,6 +1,7 @@
 ﻿using Maktab.Consumer.State;
 using Maktab.Core.Interfaces.Services;
 using MaktabDataContracts.Responses.Course;
+using MaktabDataContracts.Responses.Transactions;
 using MudBlazor;
 
 namespace Maktab.Consumer.Extensions
@@ -66,7 +67,7 @@ namespace Maktab.Consumer.Extensions
                     var enrollments = await courseEnrollmentService.GetCourseEnrollmentsByFamilyIdAsync(familyId);
                     if (enrollments?.Any() == true)
                     {
-                         var orderedEnrollment = enrollments.OrderBy(x => x.ChildName);
+                         var orderedEnrollment = enrollments.Where(x=>x.IsActive).OrderBy(x => x.ChildName);
                          userStateService.ParentState.SetCourseEnrollment(orderedEnrollment);
                     }
                     else
@@ -145,6 +146,22 @@ namespace Maktab.Consumer.Extensions
                }
           }
 
+          public static async Task<StudentCourseTransactionResponse> LoadCourseTransactionByTransactionId(this UserStateService userStateService, ICourseEnrollmentTransactionService courseEnrollmentTransactionService, Guid courseTransactionId, bool forceReload = false)
+          {
+               if (forceReload)
+               {
+                    var courseTransaction = await courseEnrollmentTransactionService.GetCourseEnrollmentTranasctionByIdAsync(courseTransactionId);
+                    if (courseTransaction != null)
+                    {
+                         userStateService.ParentState.UpdateCourseTransaction(courseTransaction);
+                         return courseTransaction;
+                    }
+               }
+
+               var transaction = userStateService.ParentState.CourseTransactions.FirstOrDefault(x => x.StudentCourseTransactionId == courseTransactionId);
+               return transaction;
+          }
+
           public static async Task LoadAddressesData(this UserStateService userStateService, IAddressService addressService, Guid connectedId, bool forceReload = false)
           {
 
@@ -153,7 +170,7 @@ namespace Maktab.Consumer.Extensions
                     var familyAddress = await addressService.GetAddressesByConnectedId(connectedId);
                     if (familyAddress?.Any() == true)
                     {
-                         userStateService.ParentState.SetAddress(familyAddress);
+                         userStateService.ParentState.SetAddresses(familyAddress);
                     }
                }
           }
@@ -166,10 +183,7 @@ namespace Maktab.Consumer.Extensions
                     if (familyContacts?.Any() == true)
                     {
                          var sortedCollection = familyContacts.OrderBy(x => x.FirstName);
-                         foreach (var contact in sortedCollection)
-                         {
-                              userStateService.ParentState.AddContact(contact);
-                         }
+                         userStateService.ParentState.SetContacts(sortedCollection);
                     }
                }
           }

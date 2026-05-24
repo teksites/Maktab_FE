@@ -19,6 +19,7 @@ namespace Maktab.Domain.Services
      {
           // API Endpoints (properly formatted, not "formated")
           private const string getChildById = @"/api/children/{0}";
+          private const string updateChildById = @"/api/children/{0}";
           private const string removeChildById = @"/api/children/{0}/delete?ifHardDelete=false";
           private const string getChildrenByFamilyId = @"/api/families/{0}/children";
           private const string addChildByFamilyId = @"/api/families/{0}/children/add";
@@ -281,6 +282,30 @@ namespace Maktab.Domain.Services
                catch (Exception ex)
                {
                     _logger.LogError(ex, "Error removing children for family {FamilyId}", familyId);
+                    throw;
+               }
+          }
+
+          public async Task<ChildResponse> UpdateChildAsync(UpdateChildRequest childResponse)
+          {
+               try
+               {
+                    _logger.LogInformation("Updating children for child {ChildId}", childResponse.ChildId);
+                    var formattedUrl = string.Format(updateChildById, childResponse.ChildId);
+                    var result = await _httpService.Put<MaktabApiResult<ChildResponse>>(formattedUrl, childResponse);
+                    // Validate response
+                    if (result == null || result.Result == null)
+                    {
+                         _logger.LogError("Server returned null response when updating child");
+                         throw new InvalidOperationException("Server did not return child updation confirmation");
+                    }
+
+                    _logger.LogInformation("Successfully updated child with {ChildId}", childResponse.ChildId);
+                    return result.Result;
+               }
+               catch (Exception ex)
+               {
+                    _logger.LogError(ex, "Error updating child with {ChildId}", childResponse.ChildId);
                     throw;
                }
           }
