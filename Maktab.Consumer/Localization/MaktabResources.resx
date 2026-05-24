@@ -1486,10 +1486,10 @@
   <data name="Try_Sending_Again" xml:space="preserve">
     <value>Try sending again</value>
   </data>
-  <data name="Active_Enrollment" xml:space="preserve">
-    <value>Active enrollment</value>
+  <data name="Cancel_Enrollment_Number" xml:space="preserve">
+    <value>{0} Cancelled</value>
   </data>
-  <data name="InActive_Enrollment" xml:space="preserve">
-    <value>Inactive enrollment</value>
+  <data name="Active_Enrollment_Number" xml:space="preserve">
+    <value>{0} Active</value>
   </data>
 </root>

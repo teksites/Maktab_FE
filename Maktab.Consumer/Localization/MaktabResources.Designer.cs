@@ -124,11 +124,11 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Active enrollment.
+        ///   Looks up a localized string similar to {0} Active.
         /// </summary>
-        public static string Active_Enrollment {
+        public static string Active_Enrollment_Number {
             get {
-                return ResourceManager.GetString("Active_Enrollment", resourceCulture);
+                return ResourceManager.GetString("Active_Enrollment_Number", resourceCulture);
             }
         }
         
@@ -496,6 +496,15 @@ namespace Maktab.Consumer.Localization {
         public static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Cancelled.
+        /// </summary>
+        public static string Cancel_Enrollment_Number {
+            get {
+                return ResourceManager.GetString("Cancel_Enrollment_Number", resourceCulture);
             }
         }
         
@@ -1438,15 +1447,6 @@ namespace Maktab.Consumer.Localization {
         public static string Inactive {
             get {
                 return ResourceManager.GetString("Inactive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Inactive enrollment.
-        /// </summary>
-        public static string InActive_Enrollment {
-            get {
-                return ResourceManager.GetString("InActive_Enrollment", resourceCulture);
             }
         }
         
