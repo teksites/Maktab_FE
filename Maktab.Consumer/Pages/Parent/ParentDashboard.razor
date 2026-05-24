@@ -101,30 +101,24 @@
                                         </MudStack>
 
                                         <!-- KPI Value and Icon -->
+                                        <MudTooltip>
+                                             <TooltipContent>
+                                                  <MudText Align="Align.Start" >@L[MaktabResources.Active_Enrollment_Number, ActiveEnrollments]</MudText>
+                                                  <MudText Align="Align.Start">@L[MaktabResources.Cancel_Enrollment_Number, CancelledEnrollments]</MudText>
+                                             </TooltipContent>
+
+                                             <ChildContent>
                                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                                             <MudTooltip Text=@L[MaktabResources.Active_Enrollment]>
                                              <MudText Typo="Typo.h4" Class="font-weight-bold" Color="Color.Success">
                                                        @ActiveEnrollments
                                                   </MudText>
-                                             </MudTooltip>
-                                             @if (ActiveEnrollments > 0 && InActiveEnrollments > 0)
-                                             {
-                                                  <MudText Typo="Typo.h6"  Color="Color.Default">
-                                                      -
-                                                  </MudText>
-                                             }
-                                             @if (InActiveEnrollments > 0)
-                                             {
-                                                  <MudTooltip Text=@L[MaktabResources.InActive_Enrollment]>
-                                                       <MudText Typo="Typo.h6" Color="Color.Default">
-                                                            @InActiveEnrollments
-                                             </MudText>
-                                                  </MudTooltip>
-                                             }
 
-                                             <MudSpacer/>
+                                                       <MudSpacer />
                                              <MudIcon Icon="@Icons.Material.Filled.MenuBook" Color="Color.Success" Style="font-size: 32px;" />
                                         </MudStack>
+                                             </ChildContent>
+                                        </MudTooltip>
+
                                    </MudStack>
                               </MudPaper>
                          </MudItem>
@@ -309,7 +303,8 @@
      private decimal TotalDaycareFeeDiscount => _CourseTransactions?.Any() == true ? _CourseTransactions.Sum(x => x.DayCareDiscount) : 0;
      private decimal AmountPayable => _CourseTransactions?.Any() == true ? TotalAmount - (AmountPaid + TotalFeeDiscount + TotalDaycareFeeDiscount) : 0;
      protected int ActiveEnrollments => _CourseEnrollments?.Any() == true ? _CourseEnrollments.Count(x => x.EnrollmentStatus != MaktabDataContracts.Enums.EnrollmentStatus.Cancelled && x.EnrollmentStatus != MaktabDataContracts.Enums.EnrollmentStatus.Refunded && x.EnrollmentStatus != MaktabDataContracts.Enums.EnrollmentStatus.Unknown) : 0;
-     protected int InActiveEnrollments => _CourseEnrollments?.Any() == true ? _CourseEnrollments.Count(x => x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Cancelled || x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Refunded || x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Unknown) : 0;
+     protected int CancelledEnrollments => _CourseEnrollments?.Any() == true ? _CourseEnrollments.Count(x => x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Cancelled ) : 0;
+     protected int RefundedEnrollments => _CourseEnrollments?.Any() == true ? _CourseEnrollments.Count(x => x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Refunded ) : 0;
 
      protected override void OnInitialized()
      {
