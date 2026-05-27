@@ -17,14 +17,14 @@
           <MudPaper Class="pa-4 pa-sm-6" Elevation="0" Outlined="true">
                <MudText Typo="Typo.h5" Class="mb-6 text-center">@L[MaktabResources.Register_User]</MudText>
                <MudForm @ref="_form" @bind-IsValid="@_isValid" OnValidSubmit="@(HandlerRegisterUser)" Validated="@(OnFormValidated)">
-                    <MudTextField T="string" @bind-Value="addUserInformation.FirstName" Label=@L[MaktabResources.First_Name] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.First_Name] />
-                    <MudTextField T="string" @bind-Value="addUserInformation.LastName" Label=@L[MaktabResources.Last_Name] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Last_Name] />
-                    <MudTextField T="string" @bind-Value="addUserInformation.Email" Label=@L[MaktabResources.Email] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Email]
+                    <MudTextField T="string" @bind-Value="addUserInformation.FirstName" Label=@L[MaktabResources.First_Name] Required="true" Immediate="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.First_Name] />
+                    <MudTextField T="string" @bind-Value="addUserInformation.LastName" Label=@L[MaktabResources.Last_Name] Required="true" Immediate="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Last_Name] />
+                    <MudTextField T="string" @bind-Value="addUserInformation.Email" Label=@L[MaktabResources.Email] Required="true" Immediate="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Email]
                                   Validation="@(new EmailAddressAttribute() {ErrorMessage = @L[MaktabResources.Msg_Error_Email_Address_Invalid]})" />
-                    <MudTextField T="string" @bind-Value="addUserInformation.Phone" Label=@L[MaktabResources.Phone] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Phone]
+                    <MudTextField T="string" @bind-Value="addUserInformation.Phone" Immediate="true" Label=@L[MaktabResources.Phone] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Phone]
                                   Validation="@(new PhoneAttribute() { ErrorMessage = @L[MaktabResources.Msg_Error_Phone_Number_Invalid]})" />
 
-                    <MudSelect @bind-Value="addUserInformation.Relationship" Label=@L[MaktabResources.Relashion_With_Children] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Relashion_With_Children]>
+                    <MudSelect @bind-Value="addUserInformation.Relationship" Immediate="true" Label=@L[MaktabResources.Relashion_With_Children] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Relashion_With_Children]>
                          @foreach (var margin in relationShips)
                          {
                               <MudSelectItem Value="margin">@margin</MudSelectItem>
@@ -37,7 +37,7 @@
                                   InputType="InputType.Password"
                                   Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
                                   RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Password] />
-                    <MudTextField T="string"
+                    <MudTextField T="string" Immediate="true"
                                   Label=@L[MaktabResources.Password] HelperText="Repeat the password" InputType="InputType.Password"
                                   Validation="@(new Func<string, string>(PasswordMatch))" />
 
@@ -49,29 +49,24 @@
                     }
 
                     <!-- For terms & conditions -->
-                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Stretch" Class="mt-4">
                          <MudCheckBox T="bool"
+                                      Class="mt-4"
                                       @bind-Value="applicationTermsAccepted"
                                       UncheckedIcon="@Icons.Material.Filled.RadioButtonUnchecked"
                                       CheckedIcon="@Icons.Material.Filled.CheckCircle"
-                                      Required="true"
-                                      Disabled="true"
-                                      Dense="true" />
+                                      ReadOnly = "true"
+                                      Dense="true">
+                              <MudLink Target="_blank" OnClick="@ShowApplicationTermsDialog">@L[MaktabResources.Read_Maktab_Terms_Conditions, MaktabResources.AppTitle]</MudLink>
+                         </MudCheckBox>
 
-                         <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="@ShowApplicationTermsDialog">@L[MaktabResources.Read_Maktab_Terms_Conditions, MaktabResources.AppTitle]</MudButton>
-                    </MudStack>
-
-                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Stretch">
                          <MudCheckBox T="bool"
                                       @bind-Value="companyTermsAccepted"
                                       UncheckedIcon="@Icons.Material.Filled.RadioButtonUnchecked"
                                       CheckedIcon="@Icons.Material.Filled.CheckCircle"
-                                      Required="true"
-                                      Disabled="true"
-                                      Dense="true" />
-
-                         <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="@ShowCompanyTermsDialog">@L[MaktabResources.Read_Company_Terms_Conditions, MaktabResources.App_Company]</MudButton>
-                    </MudStack>
+                                      ReadOnly = "true"
+                                      Dense="true">
+                              <MudLink Target="_blank" OnClick="@ShowCompanyTermsDialog">@L[MaktabResources.Read_Company_Terms_Conditions, MaktabResources.App_Company]</MudLink>
+                         </MudCheckBox>
 
                     <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
                          <MudButton Href="@Constants.LoginRoute" Variant="Variant.Outlined"
@@ -79,7 +74,7 @@
                                     Disabled="@(IsRegistering || registrationLimiter.IsLockedOut)">@L[MaktabResources.Login]</MudButton>
                          <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary"
                                     StartIcon="@Icons.Material.Filled.PersonAdd"
-                                    Disabled="@(!_isValid || IsRegistering || registrationLimiter.IsLockedOut)" OnClick="@(HandlerRegisterUser)">
+                                    Disabled="@(!_isValid || IsRegistering || registrationLimiter.IsLockedOut || !companyTermsAccepted || !applicationTermsAccepted)" OnClick="@(HandlerRegisterUser)">
                               @if (IsRegistering)
                               {
                                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
