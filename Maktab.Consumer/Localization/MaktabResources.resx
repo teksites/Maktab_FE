@@ -1492,4 +1492,7 @@
   <data name="Active_Enrollment_Number" xml:space="preserve">
     <value>{0} Active</value>
   </data>
+  <data name="Msg_Info_No_Active_Courses_Found_For_Institute" xml:space="preserve">
+    <value>No active course found</value>
+  </data>
 </root>
