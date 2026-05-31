@@ -2198,6 +2198,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No active course found.
+        /// </summary>
+        public static string Msg_Info_No_Active_Courses_Found_For_Institute {
+            get {
+                return ResourceManager.GetString("Msg_Info_No_Active_Courses_Found_For_Institute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No Address has been added.
         /// </summary>
         public static string Msg_Info_No_Address_Available {

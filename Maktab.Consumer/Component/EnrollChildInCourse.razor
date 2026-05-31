@@ -217,6 +217,14 @@ else if (IsError)
                          }
                          else
                          {
+                              @if (!Courses.Any())
+                              {
+                                   <MudAlert Severity="Severity.Warning" Elevation="0" Dense="true">
+                                        @L[MaktabResources.Msg_Info_No_Active_Courses_Found_For_Institute]
+                                   </MudAlert>
+                              }
+                              else
+                              {
                               <MudSelect T="CourseResponseDetailed"
                                          @bind-Value="SelectedCourse"
                                          Label=@L[MaktabResources.Course]
@@ -248,6 +256,7 @@ else if (IsError)
                                              </MudText>
                                         </MudStack>
                                    </MudAlert>
+                              }
                               }
 
                               <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
@@ -323,10 +332,10 @@ else if (IsError)
                                              </MudText> *@
                                                             <MudChip T="bool" Color="@(GetCourseGroupRegistrationStatusColor(g.IfRegistrationOpen))" Variant="Variant.Filled" Size="Size.Small">@(GetCourseGroupRegistrationStatusLabel(g.IfRegistrationOpen))</MudChip>
 
-                                                            <MudChipSet T="CourseEnrollmentGroupResponse"  ReadOnly="true" >
+                                                            <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true">
                                                                  @foreach (var chipSet in g.AcedemicGroups)
                                                                  {
-                                                                      <MudChip T="String" Text="@chipSet"  Size="Size.Small" />
+                                                                      <MudChip T="String" Text="@chipSet" Size="Size.Small" />
                                                                  }
                                                             </MudChipSet>
                                                        </MudStack>
@@ -338,7 +347,7 @@ else if (IsError)
                                              <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true" SelectionMode="SelectionMode.MultiSelection" Variant="Variant.Filled">
                                                   @foreach (var group in SelectedGroups)
                                                   {
-                                                       <MudChip T="CourseEnrollmentGroupResponse" Text="@(GetCourseGroupTitle(group))" Value="@group" Size="Size.Small"/>
+                                                       <MudChip T="CourseEnrollmentGroupResponse" Text="@(GetCourseGroupTitle(group))" Value="@group" Size="Size.Small" />
                                                   }
                                              </MudChipSet>
                                         </MudStack>
@@ -347,15 +356,21 @@ else if (IsError)
                               else
                               {
                                    <!-- SINGLE-SELECT: Radio button cards -->
-                                  <MudGrid Class="mt-4" Spacing="2">
-                                        <MudList T="CourseEnrollmentGroupResponse" @bind-SelectedValue="SelectedGroup" SelectionMode="SelectionMode.SingleSelection">
+                                   <MudList Class="mt-4" Spacing="2" T="CourseEnrollmentGroupResponse" @bind-SelectedValue="SelectedGroup" SelectionMode="SelectionMode.SingleSelection">
                                             
                                              @foreach (var g in SelectedCourseEnrollmentGroups)
                                              {
                                                   <MudListItem Value="@g">
-                                                       <MudStack Row="true" AlignItems="AlignItems.Center">
+                                                  <MudStack Row="true" AlignItems="AlignItems.Baseline" StretchItems="StretchItems.StartAndEnd">
                                                             <MudIcon Icon="@Icons.Material.Filled.Groups" />
+                                                       @if (SelectedGroup?.CourseEnrollmentGroupId == g.CourseEnrollmentGroupId)
+                                                       {
                                                             <strong>@(GetCourseGroupTitle(g))</strong>
+                                                       }
+                                                       else
+                                                       {
+                                                            @(GetCourseGroupTitle(g))
+                                                       }
 
                                                             <MudText Typo="Typo.caption" Class="ml-2">
                                                                  @g.Fee
@@ -373,7 +388,6 @@ else if (IsError)
                                                   </MudListItem>
                                              }
                                         </MudList>
-                                   </MudGrid> 
                               }
 
                               <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
@@ -507,7 +521,7 @@ else if (IsError)
                                         </MudAlert>
                                    }
 
-                                        <MudSimpleTable Outlined="false" Hover="false" Dense="true" Striped="true" FixedHeader="true" >
+                                   <MudSimpleTable Outlined="false" Hover="false" Dense="true" Striped="true" FixedHeader="true">
                                              <thead>
                                                   <tr>
                                                        <th style="width:40%">
@@ -782,6 +796,32 @@ else if (IsError)
               var coursesWithRegistrationOpen = StateService.InstituteState.GetCoursesByInstituteId(SelectedInstitute.InstituteId);
                Courses = coursesWithRegistrationOpen.Where(c => c.IsRegistrationOpened).ToList();
           }
+
+          if (Courses?.Any() == true)
+          {
+               var filteredCourse = new List<CourseResponseDetailed>();
+               foreach (var course in Courses)
+               {
+                    if (course.CanSelectMultipleEnrollmentGroups == false)
+                    {
+                         var activeStudentCourseEnrollments = GetActiveStudentCourseEnrollments(
+                                        StateService.ParentState.CourseEnrollments,
+                                        course.CourseId,
+                                        SelectedChild.ChildId);
+
+                         if (activeStudentCourseEnrollments?.Any() != true)
+                         {
+                              filteredCourse.Add(course);
+                         }
+                    }
+                    else
+                    {
+                         filteredCourse.Add(course);
+                    }
+               }
+
+               Courses = filteredCourse;
+          }
      }
 
      private void UpdateCourseGroupsForCourse()
@@ -796,13 +836,12 @@ else if (IsError)
                SelectedGroups.Clear();
           }
 
-
           if (SelectedCourse != null)
           {
                var courseGroupsWithRegistrationOpen = SelectedCourse.CourseEnrollmentGroups.Where(c => c.IfRegistrationOpen).ToList();
                if (SelectedCourse.CanSelectMultipleEnrollmentGroups)
                {
-                    var studentCourseGroupEnrollments = StateService.ParentState.CourseEnrollments?.Where(e => e.CourseId == SelectedCourse.CourseId && e.ChildId == SelectedChild.ChildId);
+                    var studentCourseGroupEnrollments = GetActiveStudentCourseEnrollments(StateService.ParentState.CourseEnrollments, SelectedCourse.CourseId, SelectedChild.ChildId);
                     if (studentCourseGroupEnrollments?.Any() == true)
                     {
                          foreach (var enrollment in studentCourseGroupEnrollments)
@@ -877,7 +916,7 @@ else if (IsError)
 
      private AddStudentCourseEnrollment? GetStudentEnrollmentFromEnrollmentGroup(Guid groupEnrollmentId)
      {
-          if(_StudentCourseEnrollments?.Any() == true)
+          if (_StudentCourseEnrollments?.Any() == true)
           {
                var courseEnrollment = _StudentCourseEnrollments.FirstOrDefault(x => x.CourseEnrollmentGroupId == groupEnrollmentId);
                return courseEnrollment;
@@ -891,7 +930,7 @@ else if (IsError)
           if (arg.Action == StepAction.Complete)
           {
                // occurrs when clicking next
-               if(arg.StepIndex == 2)
+               if (arg.StepIndex == 2)
                {
                     UpdateCourseEnrollments();
                }
@@ -989,13 +1028,13 @@ else if (IsError)
                case true:
                     return L[MaktabResources.Open];
                default:
-                    return  L[MaktabResources.CourseGroup_Registration_Awaiting];
+                    return L[MaktabResources.CourseGroup_Registration_Awaiting];
           }
      }
 
      protected bool HasRegistrationClosedForAnyCourseGroup()
      {
-          if(SelectedCourse.CanSelectMultipleEnrollmentGroups)
+          if (SelectedCourse.CanSelectMultipleEnrollmentGroups)
           {
                return SelectedGroups?.Any(x => x.IfRegistrationOpen == false) == true;
           }
@@ -1031,8 +1070,19 @@ else if (IsError)
                return L[MaktabResources.Selected_Values_Single_Text, selectedValues.Count + " " + MaktabResources.Group];
           }
 
-          return L[MaktabResources.Selected_Values_Multiple_Text, selectedValues.Count + " "+ MaktabResources.Groups];
+          return L[MaktabResources.Selected_Values_Multiple_Text, selectedValues.Count + " " + MaktabResources.Groups];
+     }
+
+     private static IEnumerable<StudentCourseEnrollmentResponse> GetActiveStudentCourseEnrollments(IReadOnlyCollection<StudentCourseEnrollmentResponse> enrollments, Guid courseId, Guid studentId)
+     {
+          var activeStudentCourseEnrollments = enrollments?
+               .Where(e =>
+               e.CourseId == courseId &&
+               e.ChildId == studentId &&
+               (e.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Registered ||
+                    e.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Enrolled ||
+                    e.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Awaiting));
+
+          return activeStudentCourseEnrollments ?? Array.Empty<StudentCourseEnrollmentResponse>();
      }
 }
-
-

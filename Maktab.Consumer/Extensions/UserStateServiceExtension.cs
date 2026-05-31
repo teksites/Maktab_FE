@@ -67,7 +67,10 @@ namespace Maktab.Consumer.Extensions
                     var enrollments = await courseEnrollmentService.GetCourseEnrollmentsByFamilyIdAsync(familyId);
                     if (enrollments?.Any() == true)
                     {
-                         var orderedEnrollment = enrollments.Where(x=>x.IsActive).OrderBy(x => x.ChildName);
+                         var orderedEnrollment = enrollments
+                              .Where(x => x.IsActive)
+                              .OrderBy(x => x.ChildName);
+
                          userStateService.ParentState.SetCourseEnrollment(orderedEnrollment);
                     }
                     else
