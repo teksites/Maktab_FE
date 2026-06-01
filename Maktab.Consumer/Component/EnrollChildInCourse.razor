@@ -91,7 +91,7 @@ else if (IsError)
                            Class="mb-8">
 
                     <MudStep Label=@L[MaktabResources.Child] Icon="@Icons.Material.Filled.Person" />
-                    <MudStep Label=@L[MaktabResources.Institute] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedChild is null)" />
+                    <MudStep Label=@L[MaktabResources.School] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedChild is null)" />
                     <MudStep Label=@L[MaktabResources.Course] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedInstitute is null)" />
                     <MudStep Label=@L[MaktabResources.Groups] Icon="@Icons.Material.Filled.Groups" Disabled="@(SelectedCourse is null)" />
                     <MudStep Label=@L[MaktabResources.Acknowledgement] Icon="@Icons.Material.Filled.HealthAndSafety" Disabled="@(!HasGroupsSelected())" />
@@ -152,7 +152,7 @@ else if (IsError)
                     <!-- STEP 2: Choose Institute -->
                     <MudPaper Class="pa-6" Elevation="0" Outlined="true">
                          <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
-                              @L[MaktabResources.Select_Institute]
+                              @L[MaktabResources.Select_School]
                          </MudText>
 
                          @if (Institutes == null)
@@ -166,7 +166,7 @@ else if (IsError)
                          {
                               <MudSelect T="InstituteResponse"
                                          @bind-Value="SelectedInstitute"
-                                         Label=@L[MaktabResources.Institute]
+                                         Label=@L[MaktabResources.School]
                                          Dense="false"
                                          Clearable="true"
                                          AnchorOrigin="Origin.BottomCenter"
@@ -455,9 +455,9 @@ else if (IsError)
                          <MudStack Spacing="3">
                               <!-- Child Info -->
                               <MudPaper Class="pa-4" Elevation="0" Outlined="true">
-                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                                         <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Primary" />
-                                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                        <MudText Typo="Typo.body2" Color="Color.Primary">
                                              <strong>@L[MaktabResources.Child]</strong>
                                         </MudText>
                                         <MudSpacer />
@@ -471,8 +471,8 @@ else if (IsError)
                               <MudPaper Class="pa-4" Elevation="0" Outlined="true">
                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                                         <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Primary" />
-                                        <MudText Typo="Typo.body2" Color="Color.Secondary">
-                                             <strong>@L[MaktabResources.Institute]</strong>
+                                        <MudText Typo="Typo.body2" Color="Color.Primary">
+                                             <strong>@L[MaktabResources.School]</strong>
                                         </MudText>
                                         <MudSpacer />
                                         <MudStack Spacing="0">
@@ -487,7 +487,7 @@ else if (IsError)
                               <MudPaper Class="pa-4" Elevation="0" Outlined="true">
                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                                         <MudIcon Icon="@Icons.Material.Filled.MenuBook" Color="Color.Primary" />
-                                        <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                        <MudText Typo="Typo.body2" Color="Color.Primary">
                                              <strong>@L[MaktabResources.Course]</strong>
                                         </MudText>
                                         <MudSpacer />
