@@ -144,7 +144,7 @@
                     <!-- Payment Transactions Table -->
                     <MudTable Items="@GetFlatTransactionList()" Hover="true" Striped="true" Dense="false" Class="mt-4">
                          <HeaderContent>
-                              <MudTh>@L[MaktabResources.Institute]</MudTh>
+                              <MudTh>@L[MaktabResources.School]</MudTh>
                               <MudTh>@L[MaktabResources.Course]</MudTh>
                               <MudTh>@L[MaktabResources.Status]</MudTh>
                               <MudTh Style="text-align: right;">@L[MaktabResources.Total_Amount]</MudTh>
@@ -155,7 +155,7 @@
                               <MudTh Style="text-align: center;">@L[MaktabResources.Action]</MudTh>
                          </HeaderContent>
                          <RowTemplate>
-                              <MudTd DataLabel="@L[MaktabResources.Institute]">
+                              <MudTd DataLabel="@L[MaktabResources.School]">
                                    <MudText Typo="Typo.body2" Class="font-weight-medium">
                                         @GetInstituteName(context.InstituteId)
                                    </MudText>

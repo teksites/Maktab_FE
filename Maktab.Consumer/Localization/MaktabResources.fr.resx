@@ -777,9 +777,6 @@
   <data name="Payment" xml:space="preserve">
     <value>Paiement</value>
   </data>
-  <data name="Institute" xml:space="preserve">
-    <value>Institut</value>
-  </data>
   <data name="Action" xml:space="preserve">
     <value>Action</value>
   </data>
@@ -986,23 +983,8 @@
   <data name="Other" xml:space="preserve">
     <value>Autre</value>
   </data>
-  <data name="Msg_Info_No_Institute_Found" xml:space="preserve">
-    <value>Aucune information sur l'institut n'a été trouvée</value>
-  </data>
-  <data name="Msg_Info_Loading_Institute_Details" xml:space="preserve">
-    <value>Chargement des détails de l'institut</value>
-  </data>
-  <data name="FeaturedInstitutes" xml:space="preserve">
-    <value>Instituts en vedette</value>
-  </data>
-  <data name="Select_Institute" xml:space="preserve">
-    <value>Sélectionnez l'institut</value>
-  </data>
   <data name="Address_Type_Billing" xml:space="preserve">
     <value>Facturation</value>
-  </data>
-  <data name="Address_Type_Institute" xml:space="preserve">
-    <value>Institut</value>
   </data>
   <data name="Address_Type_Parent" xml:space="preserve">
     <value>Mère</value>
@@ -1492,5 +1474,23 @@
   </data>
   <data name="Msg_Info_No_Active_Courses_Found_For_Institute" xml:space="preserve">
     <value>Aucun cours actif trouvé</value>
+  </data>
+  <data name="School" xml:space="preserve">
+    <value>École</value>
+  </data>
+  <data name="Msg_Info_No_Institute_Found" xml:space="preserve">
+    <value>Aucune information sur l'école n'a été trouvée</value>
+  </data>
+  <data name="Msg_Info_Loading_Institute_Details" xml:space="preserve">
+    <value>Chargement des détails de l'école</value>
+  </data>
+  <data name="FeaturedInstitutes" xml:space="preserve">
+    <value>Écoles en vedette</value>
+  </data>
+  <data name="Select_School" xml:space="preserve">
+    <value>Sélectionnez l'école / les activités</value>
+  </data>
+  <data name="Address_Type_Institute" xml:space="preserve">
+    <value>École</value>
   </data>
 </root>
