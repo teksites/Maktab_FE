@@ -544,7 +544,7 @@
                ["CourseTitle"] = GetCourseName(course),
                ["ChildName"] = GetChildName(e.ChildId)
           };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Small, CloseButton = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Small, CloseButton = true, BackdropClick = false };
           var dialog = await DialogService.ShowAsync<EnrollmentDetailsDialog>(L[MaktabResources.Enrollment_Details], parameters, options);
           //return dialog.Result.ContinueWith(_ => Snackbar.Add($"Viewed {GetCourseTitle(e.CourseId)}", Severity.Info));
      }

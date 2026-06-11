@@ -242,7 +242,7 @@ namespace Maktab.Consumer.Base
           protected async Task<DialogResult?> OpenAddChildDialog(IDialogService dialogService, Guid familyId)
           {
                var parameters = new DialogParameters { ["FamilyId"] = familyId };
-               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true, BackdropClick = false };
 
                var dialog = await dialogService.ShowAsync<AddChildDialog>(null, parameters, options);
                var result = await dialog.Result;
@@ -252,7 +252,7 @@ namespace Maktab.Consumer.Base
           protected async Task<DialogResult?> OpenEditChildDialog(IDialogService dialogService, ChildResponse childResponse)
           {
                var parameters = new DialogParameters { ["Child"] = childResponse };
-               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true, BackdropClick = false };
 
                var dialog = await dialogService.ShowAsync<EditChildDialog>(null, parameters, options);
                var result = await dialog.Result;
@@ -262,7 +262,7 @@ namespace Maktab.Consumer.Base
           protected async Task<DialogResult?> OpenAddAddressDialog(IDialogService dialogService, Guid connectedId)
           {
                var parameters = new DialogParameters { ["ConnectedId"] = connectedId };
-               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true, BackdropClick = false };
 
                var dialog = await dialogService.ShowAsync<AddAddressDialog>("Add Address", parameters, options);
                var result = await dialog.Result;
@@ -273,7 +273,7 @@ namespace Maktab.Consumer.Base
           protected async Task<DialogResult?> OpenAddContactDialog(IDialogService dialogService, Guid familyId)
           {
                var parameters = new DialogParameters { ["FamilyId"] = familyId };
-               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true, BackdropClick = false };
 
                var dialog = await dialogService.ShowAsync<AddContactDialog>("Add Contact", parameters, options);
                var result = await dialog.Result;

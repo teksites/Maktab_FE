@@ -90,7 +90,7 @@
      private async Task OpenAddChildDialog()
      {
           var parameters = new DialogParameters { ["FamilyId"] = FamilyId };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true, BackdropClick = false };
 
           var dialog = await DialogService.ShowAsync<AddChildDialog>(@L[MaktabResources.Add_Child], parameters, options);
           var result = await dialog.Result;
@@ -105,7 +105,7 @@
      private async Task OpenAssignCourseDialog(ChildResponse childResponse)
      {
           var parameters = new DialogParameters { }; //["Child"] = childResponse };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true, BackdropClick = false };
 
           var dialog = await DialogService.ShowAsync<EnrollChildInCourseDialog>(L[MaktabResources.Enroll_Child], parameters, options);
           var result = await dialog.Result;
