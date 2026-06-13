@@ -1493,4 +1493,7 @@
   <data name="Msg_Info_No_Active_Courses_Found_For_Institute" xml:space="preserve">
     <value>No active course found</value>
   </data>
+  <data name="Msg_Child_Consent_Required" xml:space="preserve">
+    <value>Consent: {0} is required </value>
+  </data>
 </root>
