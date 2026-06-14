@@ -24,8 +24,8 @@
           <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@Constants.CourseSearchRoute">@L[MaktabResources.ViewAllCourses]</MudButton>
      </MudPaper>
 
-     <!-- Courses Section -->
-     <MudText Typo="Typo.h5" Class="mt-10 mb-6">@L[MaktabResources.Activities_Offered]</MudText>
+     <!-- Schools Section -->
+     <MudText Typo="Typo.h5" Class="mt-10 mb-6">@L[MaktabResources.School] / @L[MaktabResources.Activities_Offered]</MudText>
      @if (isInitialized && !isDataLoading)
      {
           <InstituteList Institutes=@_institute/>
