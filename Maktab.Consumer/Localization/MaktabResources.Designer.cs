@@ -1595,6 +1595,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Consent: {0} is required .
+        /// </summary>
+        public static string Msg_Child_Consent_Required {
+            get {
+                return ResourceManager.GetString("Msg_Child_Consent_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} has active enrollments and can not be deleted.
         /// </summary>
         public static string Msg_Child_Has_Active_Enrollments {

@@ -137,7 +137,7 @@
                ["MarkupString"] = new MarkupString(L[MaktabResources.Application_Terms_And_Conditions_Content]),
           };
 
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = false };
           var dialog = await DialogService.ShowAsync<TermsAndConditionsDialog>(@L[MaktabResources.Terms_And_Conditions], parameters, options);
           var result = await dialog.Result;
           if (result?.Data is bool accepted)
@@ -153,7 +153,7 @@
      {
                ["MarkupString"] = new MarkupString(L[MaktabResources.Company_Terms_And_Conditions_Content]),
           };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, BackdropClick = false };
           var dialog = await DialogService.ShowAsync<TermsAndConditionsDialog>(@L[MaktabResources.Terms_And_Conditions], parameters, options);
           var result = await dialog.Result;
           if (result?.Data is bool accepted)

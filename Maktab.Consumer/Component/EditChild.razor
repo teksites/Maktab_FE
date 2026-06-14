@@ -306,12 +306,27 @@
                return;
           }
 
+          var medicalEmergencyConsent = RequiredChildConsents?.FirstOrDefault(x => x.ConsentType == ConsentType.MedicalEmergencies);
+          if (medicalEmergencyConsent != null && !medicalEmergencyConsent.IsAllowed)
+          {
+               _errorMessage = @L[MaktabResources.Msg_Child_Consent_Required, GetConsentDescription(medicalEmergencyConsent)];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
           ChildModel.RAMQExpiry = RAMQExpiry.Value;
           ChildModel.DateOfBirth = DateOfBirth.Value;
           ChildModel.RAMQSequenceNumber = -1;
 
-          var enabledConents = RequiredChildConsents.Where(x => x.IsAllowed);
-          ChildModel.Consent = System.Text.Json.JsonSerializer.Serialize(enabledConents);
+          var enabledConents = RequiredChildConsents?.Where(x => x.IsAllowed);
+          if (enabledConents != null)
+          {
+               ChildModel.Consent = System.Text.Json.JsonSerializer.Serialize(enabledConents);
+          }
+          else
+          {
+               ChildModel.Consent = string.Empty;
+          }
 
           var updateRequest = new UpdateChildRequest()
           {
@@ -326,7 +341,7 @@
                RAMQSequenceNumber = -1,
           };
 
-          var result = await ChildrenService.UpdateChildAsync(updateRequest);//, RequiredChildConsents);
+          var result = await ChildrenService.UpdateChildAsync(updateRequest);
           if (result?.ChildId == null || result.ChildId == Guid.Empty)
           {
                _errorMessage = @L[MaktabResources.Msg_Error_Update_Child];//"Child can not be registered with system. Please try again in few minutes";

@@ -238,7 +238,7 @@
      private async Task OnEditUserProfile(UserInformationResponse parent)
      {
           var parameters = new DialogParameters { ["Profile"] = userInfo };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true, BackdropClick = false };
 
           var dialog = await DialogService.ShowAsync<EditUserInfoDialog>(L[MaktabResources.Edit_Profile], parameters, options);
           var dialogResult = await dialog.Result;
@@ -266,7 +266,7 @@
      private async Task OpenAddSpouseDialog()
      {
           var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true, BackdropClick = false };
 
           var dialog = await DialogService.ShowAsync<AddSpouseDialog>(L[MaktabResources.Add_Spouse], parameters, options);
           var dialogResult = await dialog.Result;
@@ -319,7 +319,7 @@
      private async Task OpenAddExtendedInfoDialog()
      {
           var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId, ["AddessId"] = userInfo.FamilyId, ["UserId"] = userInfo.UserId };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true, BackdropClick = false };
 
           var dialog = await DialogService.ShowAsync<AddExtendedInfoDialog>(L[MaktabResources.Add_Extended_Info], parameters, options);
           var dialogResult = await dialog.Result;
@@ -333,7 +333,7 @@
      private async Task OpenEditExtendedInfoDialog()
      {
           var parameters = new DialogParameters { ["ExtendedInfo"] = _ExtendedInfoResponse };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true, BackdropClick = false };
 
           var dialog = await DialogService.ShowAsync<EditExtendedInfoDialog>(L[MaktabResources.Edit_Extended_Info], parameters, options);
 
@@ -348,7 +348,7 @@
      private async Task OpenEditAddressDialog(AddressResponse address)
      {
           var parameters = new DialogParameters { ["EditAddress"] = address };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true, BackdropClick = false };
 
           var dialog = await DialogService.ShowAsync<EditAddressDialog>(L[MaktabResources.Edit_Address], parameters, options);
 
@@ -371,7 +371,7 @@
      private async Task OpenChangePasswordDialog()
      {
           var parameters = new DialogParameters { ["UserId"] = userInfo.UserId };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = false, CloseButton = true, BackdropClick = false };
 
           var dialog = await DialogService.ShowAsync<ChangePasswordDialog>(L[MaktabResources.Change_Password], parameters, options);
           var dialogResult = await dialog.Result;
@@ -394,7 +394,7 @@
      private async Task OnContactEdit(OtherContactResponse contact)
      {
           var parameters = new DialogParameters { ["Contact"] = contact };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true, BackdropClick = false };
 
           var dialog = await DialogService.ShowAsync<EditContactDialog>(L[MaktabResources.Edit_Contact], parameters, options);
           var dialogResult = await dialog.Result;

@@ -284,13 +284,27 @@
                return;
           }
 
+          var medicalEmergencyConsent = RequiredChildConsents?.FirstOrDefault(x => x.ConsentType == ConsentType.MedicalEmergencies);
+          if (medicalEmergencyConsent != null && !medicalEmergencyConsent.IsAllowed)
+          {
+               _errorMessage = @L[MaktabResources.Msg_Child_Consent_Required, GetConsentDescription(medicalEmergencyConsent)];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
           ChildModel.RAMQExpiry = RAMQExpiry.Value;
           ChildModel.DateOfBirth = DateOfBirth.Value;
           ChildModel.FamilyId = FamilyId;
           ChildModel.RAMQSequenceNumber = -1;
           
-          var enabledConents = RequiredChildConsents.Where(x => x.IsAllowed);
-          var result = await ChildrenService.AddChildToFamilyAsync(FamilyId, ChildModel, enabledConents.ToArray());
+          var enabledConents = RequiredChildConsents?.Where(x => x.IsAllowed);
+          var result = await ChildrenService.AddChildToFamilyAsync(
+                    FamilyId,
+                    ChildModel,
+                    enabledConents == null ?
+                         Array.Empty<ChildConsent>() :
+                         enabledConents.ToArray());
+
           if (result?.ChildId == null || result.ChildId == Guid.Empty)
           {
                _errorMessage = @L[MaktabResources.Msg_Error_Add_Child_Save];//"Child can not be registered with system. Please try again in few minutes";

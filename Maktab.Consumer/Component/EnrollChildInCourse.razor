@@ -183,6 +183,13 @@ else if (IsError)
                                    }
                               </MudSelect>
 
+                              @if (SelectedInstitute != null)
+                              {
+                                   <MudAlert Severity="Severity.Info" Elevation="0" Dense="true" Class="mt-4">
+                                        @(GetInstituteDescription(SelectedInstitute))
+                                   </MudAlert>
+                              }
+
                               <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
                                    <MudButton Variant="Variant.Outlined" Color="Color.Default"
                                               OnClick="@(()=> ActiveStep = 0)"

@@ -8,6 +8,7 @@
 @using Maktab.Consumer.Extensions;
 @using MaktabDataContracts.Responses.Children
 @using MaktabDataContracts.Responses.Course
+@using MaktabDataContracts.Responses.Institute
 @using MaktabDataContracts.Responses.Transactions
 @using MaktabDataContracts.Responses.Users
 @using Microsoft.AspNetCore.Authorization
@@ -20,6 +21,7 @@
 @inject ICourseEnrollmentService CourseEnrollmentService
 @inject ICourseEnrollmentTransactionService CourseEnrollmentTransactionService
 @inject ICourseService CourseService
+@inject IInstitutionService InstitutionService
 @inject UserStateService StateService
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
@@ -225,9 +227,9 @@
                }
 
                <MudItem xs="12" md="12">
-                    <!-- Courses Section -->
-                    <MudText Typo="Typo.h5" Class="mt-10 mb-6">@L[MaktabResources.Courses_Offered]</MudText>
-                    <CourseList Courses="_Courses" />
+                    <!-- Schools Section -->
+                    <MudText Typo="Typo.h5" Class="mt-10 mb-6">@L[MaktabResources.School] / @L[MaktabResources.Activities_Offered]</MudText>
+                    <InstituteList Institutes=@_institute />
                </MudItem>
 
 
@@ -296,6 +298,7 @@
      IReadOnlyCollection<StudentCourseEnrollmentResponse> _CourseEnrollments => StateService.ParentState.CourseEnrollments ?? Array.Empty<StudentCourseEnrollmentResponse>();
      IReadOnlyCollection<StudentCourseTransactionResponse> _CourseTransactions => StateService.ParentState.CourseTransactions ?? Array.Empty<StudentCourseTransactionResponse>();
      IReadOnlyCollection<CourseResponseDetailed> _Courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
+     IReadOnlyCollection<InstituteResponse> _institute => StateService.InstituteState.Institutes ?? Array.Empty<InstituteResponse>();
 
      private decimal AmountPaid => _CourseTransactions?.Any() == true ? _CourseTransactions.Sum(x => x.TotalAmountPaid) : 0;
      private decimal TotalAmount => _CourseTransactions?.Any() == true ? _CourseTransactions.Sum(x => x.TotalPayable) : 0;
@@ -404,6 +407,8 @@
           await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, forceReload);
 
           await StateService.LoadActiveCoursesData(CourseService, forceReload);
+
+          await StateService.LoadActiveInstitutesData(InstitutionService, forceReload);
 
           if (_CourseEnrollments?.Any() == true)
           {
@@ -544,7 +549,7 @@
                ["CourseTitle"] = GetCourseName(course),
                ["ChildName"] = GetChildName(e.ChildId)
           };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Small, CloseButton = true };
+          var options = new DialogOptions { MaxWidth = MaxWidth.Small, CloseButton = true, BackdropClick = false };
           var dialog = await DialogService.ShowAsync<EnrollmentDetailsDialog>(L[MaktabResources.Enrollment_Details], parameters, options);
           //return dialog.Result.ContinueWith(_ => Snackbar.Add($"Viewed {GetCourseTitle(e.CourseId)}", Severity.Info));
      }
