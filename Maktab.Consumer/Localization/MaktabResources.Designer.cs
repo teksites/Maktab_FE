@@ -151,20 +151,20 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activities.
+        /// </summary>
+        public static string Activities {
+            get {
+                return ResourceManager.GetString("Activities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Activities Offered.
         /// </summary>
         public static string Activities_Offered {
             get {
                 return ResourceManager.GetString("Activities_Offered", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Activties.
-        /// </summary>
-        public static string Activties {
-            get {
-                return ResourceManager.GetString("Activties", resourceCulture);
             }
         }
         
