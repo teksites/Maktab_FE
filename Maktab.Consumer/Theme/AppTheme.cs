@@ -16,6 +16,7 @@
                     Secondary = "#D4871A",
                     SecondaryDarken = "#A86510",
                     SecondaryLighten = "#FAC775",
+                    SecondaryContrastText = "#FFFFFF",
 
                     Background = "#FAF7F2",
                     BackgroundGray = "#F0EBE0",
@@ -53,6 +54,7 @@
                     Secondary = "#F0A030",
                     SecondaryDarken = "#D4871A",
                     SecondaryLighten = "#FAB84A",
+                    SecondaryContrastText = "#1A1209",
 
                     Background = "#1A1510",
                     BackgroundGray = "#221D16",
@@ -80,55 +82,29 @@
                     Info = "#3498DB",
                },
 
-               // v8: ALL typography class names have "Typography" suffix
-               // v8: FontWeight and LineHeight are now strings, not ints
-               Typography = new Typography
+               Typography = new Typography()
                {
-                    Default = new DefaultTypography
+                    Default = new DefaultTypography()
                     {
                          FontFamily = new[] { "Inter", "Segoe UI", "sans-serif" },
                          FontSize = "0.875rem",
-                         FontWeight = "400",          // string in v8
-                         LineHeight = "1.6",          // string in v8
+                         FontWeight = "400",
+                         LineHeight = "1.6",
                     },
-                    H4 = new H4Typography
-                    {
-                         FontWeight = "600",
-                         FontSize = "1.4rem",
-                    },
-                    H5 = new H5Typography
-                    {
-                         FontWeight = "600",
-                         FontSize = "1.15rem",
-                    },
-                    H6 = new H6Typography
-                    {
-                         FontWeight = "600",
-                         FontSize = "1rem",
-                    },
-                    Body1 = new Body1Typography
-                    {
-                         FontSize = "0.9rem",
-                         LineHeight = "1.65",
-                    },
-                    Body2 = new Body2Typography
-                    {
-                         FontSize = "0.8rem",
-                         LineHeight = "1.55",
-                    },
-                    Button = new ButtonTypography
+                    H5 = new H5Typography() { FontWeight = "600", FontSize = "1.15rem" },
+                    H6 = new H6Typography() { FontWeight = "600", FontSize = "1rem" },
+                    Body1 = new Body1Typography() { FontSize = "0.9rem", LineHeight = "1.65" },
+                    Body2 = new Body2Typography() { FontSize = "0.8rem", LineHeight = "1.55" },
+                    Button = new ButtonTypography()
                     {
                          FontSize = "0.875rem",
                          FontWeight = "500",
-                         TextTransform = "none",      // removes ALL CAPS from buttons
+                         TextTransform = "none",
                     },
-                    Caption = new CaptionTypography
-                    {
-                         FontSize = "0.75rem",
-                    },
+                    Caption = new CaptionTypography() { FontSize = "0.75rem" },
                },
 
-               LayoutProperties = new LayoutProperties
+               LayoutProperties = new LayoutProperties()
                {
                     DefaultBorderRadius = "10px",
                     DrawerWidthLeft = "260px",
