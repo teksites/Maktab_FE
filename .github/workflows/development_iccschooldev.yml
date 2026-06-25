@@ -28,17 +28,39 @@ jobs:
           $buildNumber = "${{ github.run_number }}"
           
           if ("${{ github.ref }}" -eq "refs/heads/main") {
-            $newVersion = "1.0.$buildNumber"
+            $packageVersion = "1.0.$buildNumber"
           } else {
-            $newVersion = "1.0.0-dev.$buildNumber"
+            $packageVersion = "1.0.0-dev.$buildNumber"
           }
+          
+          # numeric 4-part version for assembly/service-worker
+          $assemblyVersion = "1.0.$buildNumber.0"
           
           $csprojPath = "Maktab.Consumer/Maktab.Consumer.csproj"
           $content = Get-Content $csprojPath -Raw
-          $updated = $content -replace '<Version>.*?</Version>', "<Version>$newVersion</Version>"
-          Set-Content $csprojPath -Value $updated -ErrorAction Stop
           
-          Write-Host "Version: $newVersion"
+          if ($content -match '<Version>.*?</Version>') {
+            $content = $content -replace '<Version>.*?</Version>', "<Version>$packageVersion</Version>"
+          } else {
+            $content = $content -replace '(<PropertyGroup>)', "$1`n    <Version>$packageVersion</Version>"
+          }
+          
+          if ($content -match '<AssemblyVersion>.*?</AssemblyVersion>') {
+            $content = $content -replace '<AssemblyVersion>.*?</AssemblyVersion>', "<AssemblyVersion>$assemblyVersion</AssemblyVersion>"
+          } else {
+            $content = $content -replace '(<PropertyGroup>)', "$1`n    <AssemblyVersion>$assemblyVersion</AssemblyVersion>"
+          }
+          
+          if ($content -match '<FileVersion>.*?</FileVersion>') {
+            $content = $content -replace '<FileVersion>.*?</FileVersion>', "<FileVersion>$assemblyVersion</FileVersion>"
+          } else {
+            $content = $content -replace '(<PropertyGroup>)', "$1`n    <FileVersion>$assemblyVersion</FileVersion>"
+          }
+          
+          Set-Content $csprojPath -Value $content -ErrorAction Stop
+          
+          Write-Host "Package Version: $packageVersion"
+          Write-Host "Assembly/File Version: $assemblyVersion"
         shell: pwsh
 
       - name: Build with dotnet
@@ -80,4 +102,3 @@ jobs:
           app-name: 'iccschooldev'
           slot-name: 'Production'
           package: .
-          
