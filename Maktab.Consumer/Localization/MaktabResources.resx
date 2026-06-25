@@ -1179,8 +1179,8 @@
   <data name="Profile" xml:space="preserve">
     <value>Profile</value>
   </data>
-  <data name="Activties" xml:space="preserve">
-    <value>Activties</value>
+  <data name="Activities" xml:space="preserve">
+    <value>Activities</value>
   </data>
   <data name="LogOut" xml:space="preserve">
     <value>Log out</value>
