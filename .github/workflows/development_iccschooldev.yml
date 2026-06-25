@@ -26,41 +26,19 @@ jobs:
       - name: Update Version
         run: |
           $buildNumber = "${{ github.run_number }}"
-          
+
           if ("${{ github.ref }}" -eq "refs/heads/main") {
             $packageVersion = "1.0.$buildNumber"
           } else {
-            $packageVersion = "1.0.0-dev.$buildNumber"
+            $packageVersion = "0.0.$buildNumber"
           }
-          
-          # numeric 4-part version for assembly/service-worker
-          $assemblyVersion = "1.0.$buildNumber.0"
-          
+
           $csprojPath = "Maktab.Consumer/Maktab.Consumer.csproj"
           $content = Get-Content $csprojPath -Raw
-          
-          if ($content -match '<Version>.*?</Version>') {
-            $content = $content -replace '<Version>.*?</Version>', "<Version>$packageVersion</Version>"
-          } else {
-            $content = $content -replace '(<PropertyGroup>)', "$1`n    <Version>$packageVersion</Version>"
-          }
-          
-          if ($content -match '<AssemblyVersion>.*?</AssemblyVersion>') {
-            $content = $content -replace '<AssemblyVersion>.*?</AssemblyVersion>', "<AssemblyVersion>$assemblyVersion</AssemblyVersion>"
-          } else {
-            $content = $content -replace '(<PropertyGroup>)', "$1`n    <AssemblyVersion>$assemblyVersion</AssemblyVersion>"
-          }
-          
-          if ($content -match '<FileVersion>.*?</FileVersion>') {
-            $content = $content -replace '<FileVersion>.*?</FileVersion>', "<FileVersion>$assemblyVersion</FileVersion>"
-          } else {
-            $content = $content -replace '(<PropertyGroup>)', "$1`n    <FileVersion>$assemblyVersion</FileVersion>"
-          }
-          
-          Set-Content $csprojPath -Value $content -ErrorAction Stop
-          
-          Write-Host "Package Version: $packageVersion"
-          Write-Host "Assembly/File Version: $assemblyVersion"
+          $updated = $content -replace '<Version>.*?</Version>', "<Version>$packageVersion</Version>"
+          Set-Content $csprojPath -Value $updated -ErrorAction Stop
+
+          Write-Host "Version: $packageVersion"
         shell: pwsh
 
       - name: Build with dotnet
