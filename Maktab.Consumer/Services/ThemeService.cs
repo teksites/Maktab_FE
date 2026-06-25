@@ -1,4 +1,5 @@
-﻿using Maktab.Core.Interfaces.Services;
+﻿using Maktab.Consumer.Theme;
+using Maktab.Core.Interfaces.Services;
 using MudBlazor;
 
 namespace Maktab.Consumer.Services
@@ -18,7 +19,7 @@ namespace Maktab.Consumer.Services
           public ThemeService(ILocalStorageService storageService)
           {
                _storageService = storageService;
-               CurrentTheme = new MudTheme();
+               CurrentTheme = AppTheme.IccBrossardTheme;
           }
 
           public async Task InitializeAsync()
