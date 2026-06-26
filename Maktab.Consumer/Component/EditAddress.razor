@@ -81,7 +81,7 @@
                     <MudSelect T="AddressType" Label=@L[MaktabResources.Address_Type] @bind-Value="AddressModel.AddressType" Required="true">
                          @foreach (var rel in AddressTypes)
                          {
-                              <MudSelectItem Value="@rel">@(GetAddressTypeLabel(rel))</MudSelectItem>
+                              <MudSelectItem @key="rel" Value="@rel">@(GetAddressTypeLabel(rel))</MudSelectItem>
                          }
                     </MudSelect> 
                </MudItem>

@@ -127,7 +127,7 @@ else if (IsError)
 
                                    @foreach (var child in Children)
                                    {
-                                        <MudSelectItem Value="@child">
+                                        <MudSelectItem @key="child.ChildId" Value="@child">
                                              <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
                                                   <MudIcon Icon="@Icons.Material.Filled.PersonOutline" Size="Size.Small" />
                                                   <span>@child.FirstName @child.LastName</span>
@@ -174,7 +174,7 @@ else if (IsError)
 
                                    @foreach (var c in Institutes)
                                    {
-                                        <MudSelectItem Value="@c">
+                                        <MudSelectItem @key="c.InstituteId" Value="@c">
                                              <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
                                                   <MudIcon Icon="@Icons.Material.Filled.School" Size="Size.Small" />
                                                   <span>@(GetInstituteName(c))</span>
@@ -242,7 +242,7 @@ else if (IsError)
 
                                    @foreach (var c in Courses)
                                    {
-                                        <MudSelectItem Value="@c">
+                                             <MudSelectItem @key="c.CourseId" Value="@c">
                                              <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
                                                   <MudIcon Icon="@Icons.Material.Filled.MenuBook" Size="Size.Small" />
                                                   <span>@(GetCourseName(c))</span>
@@ -320,7 +320,7 @@ else if (IsError)
 
                                              @foreach (var g in SelectedCourseEnrollmentGroups)
                                              {
-                                                  <MudSelectItem Value="@g">
+                                                  <MudSelectItem @key="g.CourseEnrollmentGroupId" Value="@g">
                                                        <MudStack Row="true" AlignItems="AlignItems.Center">
                                                             <MudIcon Icon="@Icons.Material.Filled.Groups" />
                                                             <strong>@(GetCourseGroupTitle(g))</strong>

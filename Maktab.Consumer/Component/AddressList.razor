@@ -44,7 +44,7 @@ else if (Addresses is not null && Addresses.Any())
      <MudList T="AddressResponse" ReadOnly="true" Dense="false" Class="px-0">
           @foreach (var address in Addresses)
           {
-               <MudListItem Class="address-list-item pa-3 my-2 rounded-lg" Style="border: 1px solid var(--mud-palette-divider);">
+               <MudListItem @key="address.AddressId" Class="address-list-item pa-3 my-2 rounded-lg" Style="border: 1px solid var(--mud-palette-divider);">
                     <MudStack Spacing="2" Style="width: 100%;">
                          <!-- Header Row: Icon, Title, Badge, Menu -->
                          <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="width: 100%;">

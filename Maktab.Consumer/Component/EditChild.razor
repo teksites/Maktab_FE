@@ -59,7 +59,7 @@
                                     For="@(() => ChildModel.Gender)">
                               @foreach (var rel in Genders)
                               {
-                                   <MudSelectItem Value="@rel">@(GetGenderLabel(rel))</MudSelectItem>
+                                   <MudSelectItem @key="rel" Value="@rel">@(GetGenderLabel(rel))</MudSelectItem>
                               }
                          </MudSelect>
                     </MudItem>
@@ -122,7 +122,7 @@
                          <MudSelect Required="true" Label=@L[MaktabResources.Academic_Group_In_School] T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
                               @foreach (var group in acedemicGroups)
                               {
-                                   <MudSelectItem Value="group">@group.ToString()</MudSelectItem>
+                                   <MudSelectItem @key="group" Value="group">@group.ToString()</MudSelectItem>
                               }
                          </MudSelect>
                          @* <MudSwitch @bind-Checked="@(ChildModel.WillUseDayCareServices)"

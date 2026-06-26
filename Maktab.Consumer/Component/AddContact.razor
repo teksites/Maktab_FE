@@ -15,16 +15,16 @@
                <MudTextField @bind-Value="Contact.Phone" Label=@L[MaktabResources.Phone] Required="true" />
 
                <MudSelect T="ContactType" Label=@L[MaktabResources.Contact_Type] @bind-Value="Contact.ContactType" Required="true">
-                    @foreach (var type in Enum.GetValues<ContactType>())
+                    @foreach (var contactType in Enum.GetValues<ContactType>())
                     {
-                         <MudSelectItem Value="@type">@(GetContactTypeLabel(type))</MudSelectItem>
+                         <MudSelectItem @key="contactType" Value="@contactType">@(GetContactTypeLabel(contactType))</MudSelectItem>
                     }
                </MudSelect>
 
                <MudSelect T="Relationship" Label=@L[MaktabResources.Relationship] @bind-Value="Contact.Relationship" Required="true">
                     @foreach (var rel in Enum.GetValues<Relationship>())
                     {
-                         <MudSelectItem Value="@rel">@(GetRelationshipLabel(rel))</MudSelectItem>
+                         <MudSelectItem @key="rel" Value="@rel">@(GetRelationshipLabel(rel))</MudSelectItem>
                     }
                </MudSelect>
 

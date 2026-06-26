@@ -6,7 +6,7 @@
      <MudList T="ChildResponse">
         @foreach (var child in Children)
         {
-            <MudListItem>
+            <MudListItem @key="child.ChildId">
                     <MudAvatar Size="Size.Small" Color="Color.Secondary">@child.FirstName[0]</MudAvatar>
                 <MudText>@child.FirstName (Age: @child.)</MudText>
                 <MudSpacer />
