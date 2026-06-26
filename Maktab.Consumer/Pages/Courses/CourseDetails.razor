@@ -12,23 +12,30 @@
 @inject UserStateService StateService
 
 <MudContainer  Class="mt-8 mb-8">
-    @if (_course is null)
-    {
-        <MudText Typo="Typo.h6">@L[MaktabResources.Msg_Loading_Course_Details]</MudText>
-    }
-    else
-    {
-        <MudPaper Class="pa-6">
-            <!-- Back Navigation -->
-            @* <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="BackToCourses" Class="mb-4">
+
+     @if (isInitialized && !isDataLoading)
+     {
+          <MudPaper Class="pa-6">
+               <!-- Back Navigation -->
+               @* <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="BackToCourses" Class="mb-4">
                 <MudIcon Icon="@Icons.Material.Filled.ArrowBack" /> Back to Courses
             </MudButton> *@
 
-            <MudStack>
-            <!-- Title + Category -->
-                    <MudText Typo="Typo.h4" GutterBottom="true">@(GetCourseName())</MudText>
+               <MudStack>
+                    <!-- Title + Category -->
+                    <div class="d-flex align-start gap-3 mb-3">
+                         <MudAvatar Size="Size.Large" Style="background-color: var(--mud-palette-primary-lighten);
+                              color: var(--mud-palette-primary);"
+                         Rounded="true">
+                              <MudIcon Icon="@Icons.Material.Outlined.MenuBook" Size="Size.Medium" />
+                         </MudAvatar>
+                         <MudText Typo="Typo.h4" Class="fw-semibold mt-1">
+                              @GetCourseName(_course)
+                         </MudText>
+                    </div>
+                    @* <MudText Typo="Typo.h4" GutterBottom="true">@(GetCourseName())</MudText> *@
                     <MudText Typo="Typo.subtitle1" Color="Color.Info" Class="mb-2">
-                         @(GetCourseDetails())
+                         @(GetCourseDetails(_course))
                     </MudText>
                     @* <MudText Typo="Typo.subtitle1" Color="Color.Secondary" Class="mb-2">
                     @_course.Instructor
@@ -38,14 +45,14 @@
                     <!-- Image -->
                     <MudImage Src="images/courses/quran-recitation.jpg" Alt="@_course.Name" Width="300" Class="mb-4 rounded-lg" Elevation="2" />
 
-            <!-- Description -->
-                    <MudText Typo="Typo.body1" Class="mb-4">@(GetCourseDescription())</MudText>
+                    <!-- Description -->
+                    <MudText Typo="Typo.body1" Class="mb-4">@(GetCourseDescription(_course))</MudText>
 
                     <!-- Institute -->
                     <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
                          <MudIcon Icon="@Icons.Material.Filled.School" Color="Color.Info" />
                          <MudText Typo="Typo.subtitle1">
-                              <b>@L[MaktabResources.School]</b> @(GetInstituteName())
+                              <b>@L[MaktabResources.School]</b> @(GetInstituteName(_institute))
                          </MudText>
                     </MudStack>
 
@@ -54,17 +61,17 @@
                          <MudLink Target="" Href="@_course.PolicyHyperLink">@L[MaktabResources.Policy]</MudLink>
                     }
 
-            <MudDivider />
+                    <MudDivider />
 
-             <!-- Dates -->
-            <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
-                <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Color="Color.Info" />
-                <MudText Typo="Typo.subtitle1">
+                    <!-- Dates -->
+                    <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
+                         <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Color="Color.Info" />
+                         <MudText Typo="Typo.subtitle1">
                               <b>@L[MaktabResources.Date_Start]</b> @_course.StartDate.ToString("dd MMM yyyy")
-                </MudText>
-                    <MudText Typo="Typo.subtitle1">
+                         </MudText>
+                         <MudText Typo="Typo.subtitle1">
                               <b>@L[MaktabResources.Date_End]</b> @_course.EndDate.ToString("dd MMM yyyy")
-                    </MudText>
+                         </MudText>
 
                          @if (_course.IsRegistrationOpened)
                          {
@@ -77,23 +84,23 @@
                     </MudStack>
 
 
-            <!-- Modules -->
-           @*  <CourseModules Modules="@_course.Modules" /> *@
+                    <!-- Modules -->
+                    @*  <CourseModules Modules="@_course.Modules" /> *@
 
                     <CourseGroupList CourseGroups="@_course.CourseEnrollmentGroups" />
 
-            
+
                </MudStack>
                <!-- CTA -->
 
-@*                <MudChipSet T="string">
+               @*                <MudChipSet T="string">
                     @foreach (var cat in _course.AcedemicGroups)
                     {
                          <MudChip Color="Color.Secondary" Variant="Variant.Outlined">@cat</MudChip>
                     }
                </MudChipSet> *@
 
-@*                <MudChip T="string" Color="Color.Secondary" Variant="Variant.Outlined">
+               @*                <MudChip T="string" Color="Color.Secondary" Variant="Variant.Outlined">
                     @_course.Category
                </MudChip> *@
 
@@ -103,8 +110,12 @@
                <MudButton Variant="Variant.Filled" Class="mt-4" Color="Color.Primary" Size="Size.Large" OnClick="@EnrollChild">
                     @L[MaktabResources.Enroll_Now]
                </MudButton>
-        </MudPaper>
-    }
+          </MudPaper>
+     }
+     else
+     {
+          <BusyContent DisplayText="@L[MaktabResources.Msg_Loading_Course_Details]" />
+     }
 </MudContainer>
 
      @code {
@@ -167,29 +178,5 @@
           {
                NavigationManager.NavigateTo(Constants.LoginRoute);
           }
-
-     }
-
-     private void BackToCourses() => NavigationManager.NavigateTo("/");
-
-     private string GetCourseName()
-     {
-          return GetCourseName(_course);
-     }
-
-     private string GetCourseDetails()
-     {
-          return GetCourseDetails(_course);
-     }
-
-     private string GetCourseDescription()
-     {
-          return GetCourseDescription(_course);
-               
-     }
-
-     private string GetInstituteName()
-     {
-          return GetInstituteName(_institute);
      }
 }

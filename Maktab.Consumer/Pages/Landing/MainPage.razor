@@ -2,186 +2,111 @@
 @using Maktab.Consumer.Helpers
 @using Maktab.Consumer.State
 @using MaktabDataContracts.Responses.Course
-@using Maktab.Consumer.Extensions;
+@using Maktab.Consumer.Extensions
 @using MaktabDataContracts.Responses.Institute
 
 @inherits LocalizeableBaseComponent<MainPage>
 
-@* @inject IAccountService AccountService *@
-@* @inject IUserService UserService *@
 @inject IInstitutionService InstitutionService
 @inject ICourseService CourseService
-
-
 @inject UserStateService StateService
 
-<MudContainer Class="mt-10 mb-10" >
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-8">
 
-     <!-- Hero Section -->
-     <MudPaper Class="pa-8 d-flex flex-column align-center justify-center text-center" Elevation="0">
-          <MudText Typo="Typo.h3" GutterBottom="true">@L[MaktabResources.MainPage_Title]</MudText>
-          <MudText Typo="Typo.subtitle1" Class="mb-6">@L[MaktabResources.MainPage_Description]</MudText>
-          <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@Constants.CourseSearchRoute">@L[MaktabResources.ViewAllCourses]</MudButton>
-     </MudPaper>
+    @* !-- Hero Section -- *@
+    <MudPaper Elevation="0"
+              Class="pa-10 mb-10 rounded-lg d-flex flex-column align-center justify-center text-center"
+               Style="border: 1px solid var(--mud-palette-divider);">
+        <MudText Typo="Typo.h4" Class="mb-2 fw-semibold">
+            @L[MaktabResources.MainPage_Title]
+        </MudText>
+          <MudText Typo="Typo.body1" Class="mb-6" Style="color: var(--mud-palette-text-secondary);">
+            @L[MaktabResources.MainPage_Description]
+        </MudText>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Size="Size.Medium"
+                   StartIcon="@Icons.Material.Outlined.MenuBook"
+                   Href="@Constants.CourseSearchRoute">
+            @L[MaktabResources.ViewAllCourses]
+        </MudButton>
+    </MudPaper>
 
-     <!-- Schools Section -->
-     <MudText Typo="Typo.h5" Class="mt-10 mb-6">@L[MaktabResources.School] / @L[MaktabResources.Activities_Offered]</MudText>
-     @if (isInitialized && !isDataLoading)
-     {
-          <InstituteList Institutes=@_institute/>
-          @* ShowCourseCount="true" /> *@
-          @* <CourseList Courses=@_courses ShowProgress="false"
-          /> *@
-          @*  <MudGrid GutterSize="3">
-        @foreach (var course in _courses)
-        {
-            <MudItem xs="12" sm="6" md="4" lg="3">
-                <MudCard Class="h-100 d-flex flex-column">
-                    <MudCardMedia Image="@course.ImageUrl" Height="180" />
-                    <MudCardContent>
-                        <MudText Typo="Typo.h6">@course.Title</MudText>
-                        <MudText Typo="Typo.body2" Class="mb-2">@course.Description</MudText>
-                        <MudChip T="string" Color="Color.Primary" Variant="Variant.Outlined">@(course.Category)</MudChip>
-                    </MudCardContent>
-                    <MudCardActions Class="mt-auto">
-                        <MudButton Variant="Variant.Text" Color="Color.Primary" Href="@($"/courses/{course.Id}")">
-                            Learn More
-                        </MudButton>
-                    </MudCardActions>
-                </MudCard>
-            </MudItem>
-        }
-    </MudGrid> *@
-     }
-     else
-     {
-          <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
-     }
+    @* !-- Section heading -- *@
+    <div class="d-flex align-center mb-4">
+          <MudText Typo="Typo.h6" Class="mb-2" Style="font-weight: 600;">
+            @L[MaktabResources.School] / @L[MaktabResources.Activities_Offered]
+        </MudText>
+    </div>
 
-
+    @* !-- Institute list or loading state -- *@
+    @if (isInitialized && !isDataLoading)
+    {
+        <InstituteList Institutes="@_institute" />
+    }
+    else
+    {
+          <MudGrid Spacing="3">
+               @for (int i = 0; i < 4; i++)
+               {
+                    <MudItem xs="12" sm="6" md="4" lg="3">
+                         <MudCard Style="border-radius: 12px; border: 1px solid var(--mud-palette-divider);">
+                              <MudCardContent Class="pa-5">
+                                   <div class="d-flex align-center gap-3 mb-4">
+                                        <MudSkeleton SkeletonType="SkeletonType.Rectangle"
+                                                     Width="40px" Height="40px"
+                                                     Style="border-radius: 10px;" />
+                                        <MudSkeleton Width="60%" Height="20px" />
+                                   </div>
+                                   <MudSkeleton Width="100%" Height="14px" Class="mb-2" />
+                                   <MudSkeleton Width="80%" Height="14px" Class="mb-2" />
+                                   <MudSkeleton Width="55%" Height="14px" />
+                              </MudCardContent>
+                              <MudDivider />
+                              <MudCardActions Class="pa-4">
+                                   <MudSkeleton Width="90px" Height="32px"
+                                                Style="border-radius: 6px;" />
+                              </MudCardActions>
+                         </MudCard>
+                    </MudItem>
+               }
+          </MudGrid>
+    }
 
 </MudContainer>
 
 @code {
-     // string username;
-     // Guid userId = Guid.Empty;
-     // bool success;
-     // bool isCodeValidating = false;
-     // bool isSendingCodeAgain = false;
-     bool isInitialized = false;
-     bool isDataLoading;
-     // string emailValidationCode = string.Empty;
+    bool isInitialized = false;
+    bool isDataLoading;
 
-     //private IEnumerable<CourseResponseDetailed> _courses = Enumerable.Empty<CourseResponseDetailed>();
-     //private IReadOnlyCollection<CourseResponseDetailed> _courses => StateService.InstituteState.Courses ?? Array.Empty<CourseResponseDetailed>();
-     private IReadOnlyCollection<InstituteResponse> _institute => StateService.InstituteState.Institutes ?? Array.Empty<InstituteResponse>();
+    private IReadOnlyCollection<InstituteResponse> _institute =>
+        StateService.InstituteState.Institutes ?? Array.Empty<InstituteResponse>();
 
-     protected override void OnInitialized()
-     {
-          base.OnInitialized();
-          StateService.InstituteState.OnChange += HandleStateChange;
-     }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        StateService.InstituteState.OnChange += HandleStateChange;
+    }
 
-     protected override async Task OnInitializedAsync()
-     {
-          //isInitialized = true;
-          await base.OnInitializedAsync();
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await LoadData();
+        isInitialized = true;
+        RequestRender();
+    }
 
-          //_courses = await CourseService.GetCurrentActiveCoursesAsync();
+    private async Task LoadData(bool forceReload = false)
+    {
+        isDataLoading = true;
+        await StateService.LoadActiveInstitutesData(InstitutionService, forceReload);
+        isDataLoading = false;
+    }
 
-          await LoadData();
+    protected virtual void HandleStateChange() => RequestRender();
 
-          isInitialized = true;
-          RequestRender();
-
-     }
-
-     private async Task LoadData(bool forceReload = false)
-     {
-          isDataLoading = true;
-
-          //await StateService.LoadActiveCoursesData(CourseService, forceReload);
-          await StateService.LoadActiveInstitutesData(InstitutionService, forceReload);
-
-          // if (StateService.InstituteState.Courses == null || forceReload)
-          // {
-          //      var courses = await CourseService.GetCurrentActiveCoursesAsync();
-          //      StateService.InstituteState.SetCourses(courses);
-          // }
-
-          isDataLoading = false;
-     }
-
-     protected virtual void HandleStateChange()
-     {
-          RequestRender();
-     }
-
-     public void OnDispose()
-     {
-          StateService.InstituteState.OnChange -= HandleStateChange;
-     }
-
-     // private async void HandleCodeValidation()
-     // {
-     //      try
-     //      {
-     //           isCodeValidating = true;
-     //           RequestRender();
-
-     //           await InvokeUserAction(ValidateUserCode);
-
-     //      }
-     //      finally
-     //      {
-     //           isCodeValidating = false;
-     //           RequestRender();
-     //      }
-     // }
-
-     // private async Task ValidateUserCode()
-     // {
-
-     //      var activated = await UserService.ActivateUserByCodeAsync(userId,
-     //           new MaktabDataContracts.Requests.Users.UserVerificationRequest()
-     //           {
-     //                EmailVerificationCode = emailValidationCode,
-     //           });
-
-     //      if (activated)
-     //      {
-     //           NavigationManager.NavigateTo(Constants.CustomerAddProfileDetailRoute);
-     //      }
-     //      else
-     //      {
-     //           _errorMessage = "Code can not be validated.";
-     //           Snackbar.Add(_errorMessage, Severity.Error);
-     //      }
-     // }
-
-
-     // private async void HandleSendUserCode()
-     // {
-     //      try
-     //      {
-     //           isSendingCodeAgain = true;
-     //           RequestRender();
-     //           await InvokeUserAction(SendUserCode);
-     //      }
-     //      finally
-     //      {
-     //           isSendingCodeAgain = false;
-     //           RequestRender();
-     //      }
-     // }
-
-     // private async Task SendUserCode()
-     // {
-     //      var codeSent = await UserService.SendUserActivationCodeAsync(userId);
-     //      if (!codeSent)
-     //      {
-     //           _errorMessage = "Can not process, please try again in few minutes.";
-     //           Snackbar.Add(_errorMessage, Severity.Error);
-     //      }
-     // }
+    public void OnDispose()
+    {
+        StateService.InstituteState.OnChange -= HandleStateChange;
+    }
 }
