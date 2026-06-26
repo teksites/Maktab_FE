@@ -8,7 +8,7 @@
           {
                PaletteLight = new PaletteLight()
                {
-                    Primary = "#2A8C7A",
+                    Primary = "#1A5C50",
                     PrimaryDarken = "#1F6B5D",
                     PrimaryLighten = "#B3DDD5",
                     PrimaryContrastText = "#FFFFFF",
