@@ -53,9 +53,9 @@
                     <MudSelect T="Gender" @bind-Value="ChildModel.Gender"
                                Label=@L[MaktabResources.Gender] Required="true"
                                For="@(() => ChildModel.Gender)">
-                              @foreach (var rel in Genders)
+                              @foreach (var gender in Genders)
                               {
-                                   <MudSelectItem @key="rel" Value="@rel">@(GetGenderLabel(rel))</MudSelectItem>
+                                   <MudSelectItem @key="gender" Value="@gender">@(GetGenderLabel(gender))</MudSelectItem>
                               }
                     </MudSelect>
                </MudItem>
