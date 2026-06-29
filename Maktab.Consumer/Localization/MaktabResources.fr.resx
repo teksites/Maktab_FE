@@ -904,7 +904,7 @@
     <value>Les mots de passe ne correspondent pas</value>
   </data>
   <data name="Agree_Terms_Conditions" xml:space="preserve">
-    <value>J'accepte les termes et conditions</value>
+    <value>J'accepte les conditions générales</value>
   </data>
   <data name="Msg_Info_Password_Policy" xml:space="preserve">
     <value>Minimum 8 caractères, 1 majuscule, 1 chiffre</value>
@@ -913,7 +913,7 @@
     <value>Accepter</value>
   </data>
   <data name="Terms_And_Conditions" xml:space="preserve">
-    <value>Termes et conditions</value>
+    <value>Conditions Générales</value>
   </data>
   <data name="Application_Terms_And_Conditions_Content" xml:space="preserve">
     <value>&lt;strong&gt;1. Acceptation des conditions&lt;/strong&gt;
@@ -1299,13 +1299,13 @@
     <value>ICC Brossard</value>
   </data>
   <data name="Read_Maktab_Terms_Conditions" xml:space="preserve">
-    <value>Lire {0} termes et conditions</value>
+    <value>Lire {0} conditions générales</value>
   </data>
   <data name="Register_User" xml:space="preserve">
     <value>Enregistrer un utilisateur</value>
   </data>
   <data name="Read_Company_Terms_Conditions" xml:space="preserve">
-    <value>Lire {0} termes et conditions</value>
+    <value>Lire {0} conditions générales</value>
   </data>
   <data name="Selected_Values_Single_Text" xml:space="preserve">
     <value>{0} a été sélectionné</value>
