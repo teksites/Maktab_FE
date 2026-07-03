@@ -10,11 +10,11 @@
 
           @* -- Icon + Title row -- *@
           <div  class="d-flex align-start gap-3 mb-3">
-               <MudAvatar Size="Size.Medium"  Style="background-color: var(--mud-palette-primary-lighten);
+               @* <MudAvatar Size="Size.Medium"  Style="background-color: var(--mud-palette-primary-lighten);
                     color: var(--mud-palette-primary);"
                           Rounded="true" >
                     <MudIcon Icon="@Icons.Material.Outlined.StarBorder" Size="Size.Small" />
-               </MudAvatar>
+               </MudAvatar> *@
                <MudText Typo="Typo.h6" Class="fw-semibold mt-1">
                     @GetInstituteName(Institute)
                </MudText>
@@ -30,7 +30,7 @@
      </MudCardContent>
 
      <MudCardActions Class="pa-4">
-          <MudButton Variant="@(HighlightButton ? Variant.Filled : Variant.Text)"
+          <MudButton Variant="@(HighlightButton ? Variant.Outlined : Variant.Text)"
                      Color="Color.Primary"
                      Size="Size.Small"
                      EndIcon="@Icons.Material.Outlined.ArrowForward"
