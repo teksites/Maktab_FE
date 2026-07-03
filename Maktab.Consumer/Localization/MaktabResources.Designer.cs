@@ -394,6 +394,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Age.
+        /// </summary>
+        public static string Age {
+            get {
+                return ResourceManager.GetString("Age", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to I agree to terms and conditions.
         /// </summary>
         public static string Agree_Terms_Conditions {
@@ -1595,7 +1604,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Consent: {0} is required .
+        ///   Looks up a localized string similar to Consent: {0} is required.
         /// </summary>
         public static string Msg_Child_Consent_Required {
             get {
@@ -1744,6 +1753,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Error_Cannot_Remove_Home_Address {
             get {
                 return ResourceManager.GetString("Msg_Error_Cannot_Remove_Home_Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Child can not enrolled in course group due to age restriction, Please choose relevant group with age limit.
+        /// </summary>
+        public static string Msg_Error_Child_Age_Invalid_Group_Assigned {
+            get {
+                return ResourceManager.GetString("Msg_Error_Child_Age_Invalid_Group_Assigned", resourceCulture);
             }
         }
         
