@@ -28,12 +28,23 @@
                     }
                </MudSelect>
 
-               <MudStack Row="true" JustifyContent="flex-end" Class="mt-4">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isSaving)" OnClick="@HandleSaving">
+               <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
+                    @if (ShowCancelButton)
+                    {
+                         <MudButton Variant="Variant.Outlined" Color="Color.Default"
+                         OnClick="@OnCancelClickedHandler"
+                         StartIcon="@Icons.Material.Filled.Close">
+                              @L[MaktabResources.Cancel]
+                         </MudButton>
+                    }
+                    <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Check"
+                               OnClick="@HandleSaving"
+                               Disabled="@(!_isValid || isSaving)">
                          @if (isSaving)
                          {
                               <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="me-2" />
-                              <span>@L[MaktabResources.Msg_Processing] </span>
+                              <span>@L[MaktabResources.Msg_Processing]</span>
                          }
                          else
                          {
@@ -55,6 +66,7 @@
      [Parameter] public AddOtherContact? Contact { get; set; } = new();
      [Parameter, EditorRequired] public Guid FamilyId { get; set; } = Guid.Empty;
      [Parameter] public ContactType ContactType { get; set; } = ContactType.Unknown;
+     [Parameter] public bool ShowCancelButton { get; set; } = false;
 
      [Parameter] public EventCallback<OtherContactResponse> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }
