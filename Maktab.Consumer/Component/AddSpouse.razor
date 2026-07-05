@@ -106,6 +106,13 @@
                return;
           }
 
+          if (Spouse.Relationship == Relationship.Unknown)
+          {
+               _errorMessage = L[MaktabResources.Msg_Error_User_Resgister_No_RelationShip_Defined];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
           Spouse.FamilyId = FamilyId;
           Spouse.Password = "Test1234!";
 
