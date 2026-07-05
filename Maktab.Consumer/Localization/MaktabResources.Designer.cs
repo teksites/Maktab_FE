@@ -1685,6 +1685,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please add emergency contact.
+        /// </summary>
+        public static string Msg_Error_Add_Emergency_Contact {
+            get {
+                return ResourceManager.GetString("Msg_Error_Add_Emergency_Contact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error saving extended info. please try in few moments.
         /// </summary>
         public static string Msg_Error_Add_ExtendedInfo_Save {
@@ -1699,6 +1708,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Error_Add_Home_Address {
             get {
                 return ResourceManager.GetString("Msg_Error_Add_Home_Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please add spouse details.
+        /// </summary>
+        public static string Msg_Error_Add_Spouse_Info {
+            get {
+                return ResourceManager.GetString("Msg_Error_Add_Spouse_Info", resourceCulture);
             }
         }
         
@@ -2929,9 +2947,18 @@ namespace Maktab.Consumer.Localization {
         /// <summary>
         ///   Looks up a localized string similar to Other Health Conditions.
         /// </summary>
-        public static string Other_Health__Conditions {
+        public static string Other_Health_Conditions {
             get {
-                return ResourceManager.GetString("Other_Health _Conditions", resourceCulture);
+                return ResourceManager.GetString("Other_Health_Conditions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other health conditions or behavioral/developmental concerns (e.g., hyperactivity or autism).
+        /// </summary>
+        public static string Other_Health_Conditions_HelperText {
+            get {
+                return ResourceManager.GetString("Other_Health_Conditions_HelperText", resourceCulture);
             }
         }
         
@@ -3701,7 +3728,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add an emergency contact person. The school will use this contact if we cannot reach you. This step is optional..
+        ///   Looks up a localized string similar to Add an emergency contact person. The school will use this contact if we cannot reach you.
         /// </summary>
         public static string Step_Instruction_Emergency_Contact {
             get {
@@ -3728,7 +3755,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add information about your spouse or co-guardian. This step is optional but recommended..
+        ///   Looks up a localized string similar to Add information about your spouse or co-guardian.
         /// </summary>
         public static string Step_Instruction_Spouse {
             get {

@@ -246,7 +246,7 @@
   <data name="Allergies" xml:space="preserve">
     <value>Allergies</value>
   </data>
-  <data name="Other_Health _Conditions" xml:space="preserve">
+  <data name="Other_Health_Conditions" xml:space="preserve">
     <value>Autres problèmes de santé</value>
   </data>
   <data name="Academic_Group" xml:space="preserve">
@@ -861,14 +861,8 @@
   <data name="Step_Instruction_Family_Address" xml:space="preserve">
     <value>Veuillez entrer votre adresse personnelle afin que l'école puisse vous contacter si nécessaire.</value>
   </data>
-  <data name="Step_Instruction_Spouse" xml:space="preserve">
-    <value>Ajoutez des informations sur votre conjoint ou co-tuteur. Cette étape est facultative mais recommandée.</value>
-  </data>
   <data name="Step_Instruction_Extended_Info" xml:space="preserve">
     <value>Ajoutez des informations familiales supplémentaires pour les dossiers scolaires. Cette étape est facultative.</value>
-  </data>
-  <data name="Step_Instruction_Emergency_Contact" xml:space="preserve">
-    <value>Ajoutez une personne à contacter en cas d'urgence. L'école utilisera ce contact si nous ne pouvons pas vous joindre. Cette étape est facultative.</value>
   </data>
   <data name="Confirm_Skip" xml:space="preserve">
     <value>Passer cette étape ?</value>
@@ -1501,5 +1495,20 @@
   </data>
   <data name="Age" xml:space="preserve">
     <value>Âge</value>
+  </data>
+  <data name="Msg_Error_Add_Spouse_Info" xml:space="preserve">
+    <value>Veuillez ajouter les détails du conjoint</value>
+  </data>
+  <data name="Msg_Error_Add_Emergency_Contact" xml:space="preserve">
+    <value>Veuillez ajouter un contact d'urgence</value>
+  </data>
+  <data name="Step_Instruction_Spouse" xml:space="preserve">
+    <value>Ajoutez des informations sur votre conjoint ou co-tuteur</value>
+  </data>
+  <data name="Step_Instruction_Emergency_Contact" xml:space="preserve">
+    <value>Ajoutez une personne à contacter en cas d'urgence. L'école utilisera ce contact si nous ne pouvons pas vous joindre</value>
+  </data>
+  <data name="Other_Health_Conditions_HelperText" xml:space="preserve">
+    <value>Autres problèmes de santé ou Troubles du comportement (hyperactivité, autisme, etc.)</value>
   </data>
 </root>
