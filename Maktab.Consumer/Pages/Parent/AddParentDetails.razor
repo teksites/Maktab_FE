@@ -19,10 +19,10 @@
                {
                     <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
 
-                         <MudStepper @ref=@stepper OnPreviewInteraction="OnPreviewInteraction">
+                         <MudStepper @ref=@stepper IsCompleted="@isStepperCompleted" OnPreviewInteraction="OnPreviewInteraction">
                               <ChildContent>
                                    <!-- Step 1: Home Address (Required) -->
-                                   <MudStep Title=@L[MaktabResources.Add_Home_Address] SecondaryText=@L[MaktabResources.Step_Number, "1"] HasError="@(!isFamilyAddressAdded)">
+                                   <MudStep Title=@L[MaktabResources.Add_Home_Address] SecondaryText=@L[MaktabResources.Step_Number, "1"] @bind-Disabled="isFamilyAddressAdded" HasError="@(!isFamilyAddressAdded)">
                                         <MudAlert Severity="Severity.Info" Icon="@Icons.Material.Outlined.Info" Class="mb-4">
                                              <MudText Typo="Typo.body2">
                                                   @L[MaktabResources.Step_Instruction_Family_Address]
@@ -32,7 +32,7 @@
                                    </MudStep>
 
                                    <!-- Step 2: Spouse (Optional) -->
-                                   <MudStep Title=@L[MaktabResources.Add_Spouse] SecondaryText=@L[MaktabResources.Step_Number, "2"] Skippable="true">
+                                   <MudStep Title=@L[MaktabResources.Add_Spouse] SecondaryText=@L[MaktabResources.Step_Number, "2"] @bind-Disabled="isSpouseAdded">
                                         <MudAlert Severity="Severity.Info" Icon="@Icons.Material.Outlined.Info" Class="mb-4">
                                              <MudText Typo="Typo.body2">
                                                   @L[MaktabResources.Step_Instruction_Spouse]
@@ -44,7 +44,7 @@
                                    </MudStep>
 
                                    <!-- Step 3: Extended Info - RL24 (Optional) -->
-                                   <MudStep Title=@L[MaktabResources.Add_RL24] SecondaryText=@L[MaktabResources.Step_Number, "3"] Skippable="true">
+                                   <MudStep Title=@L[MaktabResources.Add_RL24] SecondaryText=@L[MaktabResources.Step_Number, "3"] Skippable="true" @bind-Disabled="isExtendedInfoAdded">
                                         <MudAlert Severity="Severity.Info" Icon="@Icons.Material.Outlined.Info" Class="mb-4">
                                              <MudText Typo="Typo.body2">
                                                   @L[MaktabResources.Step_Instruction_Extended_Info]
@@ -54,7 +54,7 @@
                                    </MudStep>
 
                                    <!-- Step 4: Emergency Contact (Optional) -->
-                                   <MudStep Title=@L[MaktabResources.Add_Emergency_Contact] SecondaryText=@L[MaktabResources.Step_Number, "4"] Skippable="true">
+                                   <MudStep Title=@L[MaktabResources.Add_Emergency_Contact] SecondaryText=@L[MaktabResources.Step_Number, "4"] >
                                         <MudAlert Severity="Severity.Info" Icon="@Icons.Material.Outlined.Info" Class="mb-4">
                                              <MudText Typo="Typo.body2">
                                                   @L[MaktabResources.Step_Instruction_Emergency_Contact]
@@ -144,6 +144,7 @@
      bool isPickupContactAdded;
      string username = string.Empty;
      MudStepper stepper;
+     bool isStepperCompleted;
 
      protected override async Task OnInitializedAsync()
      {
@@ -189,6 +190,20 @@
                          arg.Cancel = true;
                     }
                     break;
+               case 1:
+                    if (!isSpouseAdded)
+                    {
+                         await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Add_Spouse_Info]);
+                         arg.Cancel = true;
+                    }
+                    break;
+               case 3:
+                    if (!isEmergencyContactAdded)
+                    {
+                         await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Add_Emergency_Contact]);
+                         arg.Cancel = true;
+                    }
+                    break;
           }
      }
 
@@ -199,7 +214,21 @@
                case 1:
                     if (!isFamilyAddressAdded)
                     {
-                         await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Complete_Step_Number, "1"]);
+                         await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Complete_Step_Number, arg.StepIndex.ToString()]);
+                         arg.Cancel = true;
+                    }
+                    break;
+               case 2:
+                    if (!isSpouseAdded)
+                    {
+                         await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Complete_Step_Number, arg.StepIndex.ToString()]);
+                         arg.Cancel = true;
+                    }
+                    break;
+               case 4:
+                    if (!isEmergencyContactAdded)
+                    {
+                         await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Complete_Step_Number, arg.StepIndex.ToString()]);
                          arg.Cancel = true;
                     }
                     break;
@@ -276,7 +305,14 @@
           if (emergencyContact != null)
           {
                isEmergencyContactAdded = true;
-               NavigateToParentDasboard();
+
+               if (stepper?.ActiveStep != null)
+               {
+                    stepper.ActiveStep.Completed = true;
+                    isStepperCompleted = true;
+               }
+
+               RequestRender();
           }
      }
 
