@@ -247,7 +247,7 @@
   <data name="Allergies" xml:space="preserve">
     <value>Allergies</value>
   </data>
-  <data name="Other_Health _Conditions" xml:space="preserve">
+  <data name="Other_Health_Conditions" xml:space="preserve">
     <value>Other Health Conditions</value>
   </data>
   <data name="Academic_Group" xml:space="preserve">
@@ -872,13 +872,13 @@
     <value>Please enter your home address so the school can contact you if needed.</value>
   </data>
   <data name="Step_Instruction_Spouse" xml:space="preserve">
-    <value>Add information about your spouse or co-guardian. This step is optional but recommended.</value>
+    <value>Add information about your spouse or co-guardian</value>
   </data>
   <data name="Step_Instruction_Extended_Info" xml:space="preserve">
     <value>Add additional family information for school records. This step is optional.</value>
   </data>
   <data name="Step_Instruction_Emergency_Contact" xml:space="preserve">
-    <value>Add an emergency contact person. The school will use this contact if we cannot reach you. This step is optional.</value>
+    <value>Add an emergency contact person. The school will use this contact if we cannot reach you</value>
   </data>
   <data name="Confirm_Skip" xml:space="preserve">
     <value>Skip This Step?</value>
@@ -1503,5 +1503,14 @@
   </data>
   <data name="Age" xml:space="preserve">
     <value>Age</value>
+  </data>
+  <data name="Msg_Error_Add_Spouse_Info" xml:space="preserve">
+    <value>Please add spouse details</value>
+  </data>
+  <data name="Msg_Error_Add_Emergency_Contact" xml:space="preserve">
+    <value>Please add emergency contact</value>
+  </data>
+  <data name="Other_Health_Conditions_HelperText" xml:space="preserve">
+    <value>Other health conditions or behavioral/developmental concerns (e.g., hyperactivity or autism)</value>
   </data>
 </root>
