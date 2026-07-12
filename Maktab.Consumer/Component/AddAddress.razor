@@ -53,6 +53,7 @@
                <MudItem xs="12" sm="4">
                     <MudTextField @bind-Value="AddressModel.PostalCode"
                                   Label=@L[MaktabResources.Postal_Code]
+                                  Immediate="true"
                                   Required="true"
                                   For="@(() => AddressModel.PostalCode)" />
                </MudItem>
@@ -170,6 +171,13 @@
           if (AddressModel.AddressType == AddressType.Unknown)
           {
                _errorMessage = L[MaktabResources.Msg_Error_Address_No_AddressType];//"Please provide valid address type.";
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          if (AddressModel?.PostalCode?.Length < 4)
+          {
+               _errorMessage = L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Postal_Code];
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
