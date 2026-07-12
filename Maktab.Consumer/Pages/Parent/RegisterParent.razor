@@ -55,7 +55,7 @@
                                       CheckedIcon="@Icons.Material.Filled.CheckCircle"
                                       ReadOnly = "true"
                                       Dense="true">
-                              <MudLink Target="_blank" OnClick="@ShowApplicationTermsDialog">@L[MaktabResources.Read_Maktab_Terms_Conditions, MaktabResources.AppTitle]</MudLink>
+                         <MudLink Target="_blank" Color="@ApplicationTermsAcceptedColor" OnClick="@ShowApplicationTermsDialog">@L[MaktabResources.Read_Maktab_Terms_Conditions, MaktabResources.AppTitle]</MudLink>
                          </MudCheckBox>
 
                          <MudCheckBox T="bool"
@@ -64,7 +64,7 @@
                                       CheckedIcon="@Icons.Material.Filled.CheckCircle"
                                       ReadOnly = "true"
                                       Dense="true">
-                              <MudLink Target="_blank" OnClick="@ShowCompanyTermsDialog">@L[MaktabResources.Read_Company_Terms_Conditions, MaktabResources.App_Company]</MudLink>
+                         <MudLink Target="_blank" Color="@CompanyTermsAcceptedColor" OnClick="@ShowCompanyTermsDialog">@L[MaktabResources.Read_Company_Terms_Conditions, MaktabResources.App_Company]</MudLink>
                          </MudCheckBox>
 
                     <MudStack Row="true" Spacing="2" Class="mt-6" Justify="Justify.FlexEnd">
@@ -111,6 +111,9 @@
      MudTextField<string> pwField1;
      IEnumerable<Relationship> relationShips = Array.Empty<Relationship>();
      private RateLimitHandler registrationLimiter = new RateLimitHandler(maxAttempts: 3, lockoutDurationSeconds: 30);
+
+     private Color ApplicationTermsAcceptedColor => (!applicationTermsAccepted) ? Color.Error : Color.Primary;
+     private Color CompanyTermsAcceptedColor => (!companyTermsAccepted) ? Color.Error : Color.Primary;
 
      protected override async Task OnInitializedAsync()
      {
