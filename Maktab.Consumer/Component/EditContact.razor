@@ -1,5 +1,4 @@
 ﻿@using MaktabDataContracts.Enums
-@using MaktabDataContracts.Requests.OtherContacts
 @using MaktabDataContracts.Responses.OtherContacts
 @inherits BaseFormComponent<EditContact>
 
@@ -22,7 +21,7 @@
                </MudSelect>
 
                <MudSelect T="Relationship" Label=@L[MaktabResources.Relationship] @bind-Value="Contact.Relationship" Required="true">
-                    @foreach (var rel in Enum.GetValues<Relationship>())
+                    @foreach (var rel in Relationships)
                     {
                          <MudSelectItem @key="rel" Value="@rel">@(GetRelationshipLabel(rel))</MudSelectItem>
                     }
@@ -67,6 +66,12 @@
 
      [Parameter] public EventCallback<OtherContactResponse> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }
+
+     IEnumerable<Relationship> Relationships => Enum.GetValues<Relationship>()
+                         .Where(x => 
+                              x != Relationship.Mother &&
+                              x != Relationship.Father &&
+                              x != Relationship.Unknown);
 
      private bool isSaving = false;
      private bool isInitialized = false;
