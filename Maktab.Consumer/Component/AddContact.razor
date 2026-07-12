@@ -15,9 +15,9 @@
                <MudTextField @bind-Value="Contact.Phone" Label=@L[MaktabResources.Phone] Required="true" />
 
                <MudSelect T="ContactType" Label=@L[MaktabResources.Contact_Type] @bind-Value="Contact.ContactType" Required="true">
-                    @foreach (var type in Enum.GetValues<ContactType>())
+                    @foreach (var contactType in ContactTypes)
                     {
-                         <MudSelectItem Value="@type">@(GetContactTypeLabel(type))</MudSelectItem>
+                         <MudSelectItem Value="@contactType">@(GetContactTypeLabel(contactType))</MudSelectItem>
                     }
                </MudSelect>
 
@@ -76,6 +76,10 @@
                               x != Relationship.Mother &&
                               x != Relationship.Father &&
                               x != Relationship.Unknown);
+
+     IEnumerable<ContactType> ContactTypes => Enum.GetValues<ContactType>()
+                         .Where(x =>
+                              x != ContactType.Unknown);
 
      private bool isSaving = false;
      private bool isInitialized = false;
