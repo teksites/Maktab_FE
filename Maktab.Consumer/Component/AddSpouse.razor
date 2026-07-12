@@ -55,7 +55,7 @@
 @code {
      [Parameter] public Guid FamilyId { get; set; } = Guid.Empty;
      [Parameter] public AddUserInformation Spouse { get; set; } = new AddUserInformation();
-
+     [Parameter, EditorRequired] public Relationship RelationshipToAdd { get; set; } = Relationship.Mother;
      [Parameter] public EventCallback<MaktabDataContracts.Responses.Users.UserInformationResponse> OnSave { get; set; }
      [Parameter] public EventCallback OnCancel { get; set; }
 
@@ -67,7 +67,7 @@
      {
           await base.OnInitializedAsync();
 
-          relationShips = Enum.GetValues(typeof(Relationship)).Cast<Relationship>().Where(x=> x == Relationship.Mother || x== Relationship.Father);
+          relationShips = Enum.GetValues(typeof(Relationship)).Cast<Relationship>().Where(x => x == RelationshipToAdd);
      }
 
      private async Task HandleSaving()
