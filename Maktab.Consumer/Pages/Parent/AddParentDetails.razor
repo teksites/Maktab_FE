@@ -39,7 +39,7 @@
                                              </MudText>
                                         </MudAlert>
                                         <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
-                                             <AddSpouse FamilyId="@userInfo.FamilyId" OnSave="@(OnSpouseSaved)" />
+                                             <AddSpouse FamilyId="@userInfo.FamilyId" RelationshipToAdd="@spouseRelationship" OnSave="@(OnSpouseSaved)" />
                                         </MudStack>
                                    </MudStep>
 
@@ -145,6 +145,7 @@
      string username = string.Empty;
      MudStepper stepper;
      bool isStepperCompleted;
+     Relationship spouseRelationship = Relationship.Mother;
 
      protected override async Task OnInitializedAsync()
      {
@@ -158,6 +159,9 @@
           parentAddress.ConnectedId = userInfo.UserId;
           parentAddress.AddressType = AddressType.Parent;
           parentAddress.HomeAddress = true;
+
+          spouseRelationship = userInfo.Relationship == Relationship.Mother ? Relationship.Father : Relationship.Mother;
+          
           RequestRender();
      }
 

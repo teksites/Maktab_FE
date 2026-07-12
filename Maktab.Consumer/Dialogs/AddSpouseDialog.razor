@@ -1,12 +1,10 @@
 ﻿@inherits BaseDialog<AddSpouseDialog>
-@using MaktabDataContracts.Requests.Children
 @using MaktabDataContracts.Requests.Users
-@using MaktabDataContracts.Responses.Children
 @using MudBlazor
 
 <MudDialog>
      <DialogContent>
-          <AddSpouse Spouse="@Spouse" FamilyId=@FamilyId
+          <AddSpouse Spouse="@Spouse" FamilyId=@FamilyId RelationshipToAdd="@RelationshipToAddAsSpouse"
                      OnSave="SaveSpouse"
                      OnCancel="CancelDialog" />
      </DialogContent>
@@ -14,6 +12,7 @@
 
 @code {
      [Parameter] public Guid FamilyId { get; set; }
+     [Parameter, EditorRequired] public MaktabDataContracts.Enums.Relationship RelationshipToAddAsSpouse { get; set; }
      [Parameter] public AddUserInformation Spouse { get; set; } = new AddUserInformation();
 
      protected override void OnInitialized()
