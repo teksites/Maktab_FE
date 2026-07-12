@@ -7,7 +7,9 @@
           @foreach (var consent in RequiredChildConsents)
           {
                <MudStack Row="true" StretchItems="StretchItems.Start" AlignItems="AlignItems.Baseline">
-                    <MudCheckBox @bind-Value="consent.IsAllowed">@(GetConsentDescription(consent))</MudCheckBox>
+                    <MudCheckBox @bind-Value="consent.IsAllowed">
+                         @GetConsentDescriptionMarkupString(consent)
+                    </MudCheckBox>
                     <MudLink Href="@consent.PolicyLink" Color="Color.Info" Target="_blank">@L[MaktabResources.Policy]</MudLink>
                </MudStack>
           }

@@ -187,6 +187,11 @@ namespace Maktab.Consumer.Base
                }
           }
 
+          protected MarkupString GetConsentDescriptionMarkupString(ChildConsent conset)
+          {
+               return new MarkupString(GetConsentDescription(conset));
+          }
+
           protected string GetPaymentDescription(FeeInstallment installment)
           {
                if (installment == null) return string.Empty;

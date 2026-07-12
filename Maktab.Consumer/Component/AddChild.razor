@@ -288,8 +288,8 @@
           var medicalEmergencyConsent = RequiredChildConsents?.FirstOrDefault(x => x.ConsentType == ConsentType.MedicalEmergencies);
           if (medicalEmergencyConsent != null && !medicalEmergencyConsent.IsAllowed)
           {
-               _errorMessage = @L[MaktabResources.Msg_Child_Consent_Required, GetConsentDescription(medicalEmergencyConsent)];
-               Snackbar.Add(_errorMessage, Severity.Error);
+               _errorMessage = @L[MaktabResources.Msg_Child_Consent_Required, GetConsentDescriptionMarkupString(medicalEmergencyConsent)];
+               Snackbar.Add(new MarkupString(_errorMessage), Severity.Error);
                return;
           }
 
