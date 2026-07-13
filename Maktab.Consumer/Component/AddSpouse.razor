@@ -89,7 +89,7 @@
      private async Task RequestSaving()
      {
           Spouse.Email = Spouse.Email.ToLowerInvariant();
-          Spouse.UserName = Spouse.Email;
+          Spouse.UserName = Spouse.Email.Trim();
 
           if (FamilyId == Guid.Empty)
           {
