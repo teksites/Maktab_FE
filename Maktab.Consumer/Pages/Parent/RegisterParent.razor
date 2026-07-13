@@ -193,7 +193,7 @@
      private async Task RegisterUser()
      {
           addUserInformation.Email = addUserInformation.Email.ToLowerInvariant();
-          addUserInformation.UserName = addUserInformation.Email;
+          addUserInformation.UserName = addUserInformation.Email.Trim();
 
           if (addUserInformation.Relationship == Relationship.Unknown)
           {
