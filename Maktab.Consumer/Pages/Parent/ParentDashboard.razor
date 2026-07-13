@@ -323,10 +323,11 @@
           RequestRender();
      }
 
-     public void OnDispose()
+     protected override void OnDispose()
      {
           StateService.ParentState.OnChange -= HandleStateChange;
           StateService.InstituteState.OnChange -= HandleStateChange;
+          base.OnDispose();
      }
 
      protected override async Task OnInitializedAsync()

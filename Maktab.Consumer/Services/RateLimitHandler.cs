@@ -6,7 +6,7 @@ namespace Maktab.Consumer.Services
     /// Handles rate limiting with configurable failed attempts threshold and lockout duration.
     /// Prevents brute force attacks by locking out after N failed attempts for M seconds.
     /// </summary>
-    public class RateLimitHandler
+    public class RateLimitHandler : IDisposable
     {
         private int _failedAttempts = 0;
         private DateTime? _lockoutUntil = null;

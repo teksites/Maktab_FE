@@ -82,9 +82,10 @@
           RequestRender();
      }
 
-     public void OnDispose()
+     protected override void OnDispose()
      {
           StateService.ParentState.OnChange -= HandleStateChange;
+          base.OnDispose();
      }
 
      private async Task OpenAddChildDialog()
