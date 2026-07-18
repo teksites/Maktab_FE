@@ -1,12 +1,15 @@
-﻿using Maktab.Consumer.Localization;
+﻿using Maktab.Consumer.Dialogs;
+using Maktab.Consumer.Localization;
 using Maktab.Core.Interfaces.Services;
 using MaktabDataContracts.Enums;
 using MaktabDataContracts.Requests.Policies;
 using MaktabDataContracts.Responses.Course;
 using MaktabDataContracts.Responses.Institute;
 using MaktabDataContracts.Responses.Transactions;
+using MaktabDataContracts.Responses.Users;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using MudBlazor;
 
 namespace Maktab.Consumer.Base
 {
@@ -204,6 +207,93 @@ namespace Maktab.Consumer.Base
                {
                     return installment.Description;
                }
+          }
+
+          protected Task<bool?> ShowMessageBoxAsync(IDialogService dialogService, string title, string message, string yesText, string noText = null)
+          {
+               var messageBoxOptions = new MessageBoxOptions
+               {
+                    Title = title,
+                    Message = message,
+                    YesText = yesText,
+                    NoText = noText
+               };
+               var options = new DialogOptions { MaxWidth = MaxWidth.Small, CloseButton = true, BackdropClick = false };
+               var resultTask = dialogService.ShowMessageBox(messageBoxOptions, options);
+               return resultTask;
+          }
+
+          protected Task<bool?> ShowMessagePromptAsync(IDialogService dialogService, string title, string message)
+          {
+               return ShowMessageBoxAsync(
+                    dialogService,
+                    title,
+                    message,
+                    L[MaktabResources.OK]);
+          }
+
+          protected async Task<DialogResult?> OpenEnrollChildDialog(IDialogService dialogService)
+          {
+               var parameters = new DialogParameters { };
+               var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true, BackdropClick = false };
+
+               var dialog = await dialogService.ShowAsync<EnrollChildInCourseDialog>(L[MaktabResources.Enroll_Child], parameters, options);
+               var result = await dialog.Result;
+
+               return result;
+          }
+
+          protected async Task<bool> HasValidFamilyDetails(IUserService userService, IDialogService dialogService, UserInformationResponse userInfo)
+          {
+               bool hasValidSpouse = false;
+               bool hasEmergencyContact = false;
+               var familyDetails = await userService.GetFamilyDetailInfoByFamilyId(userInfo.FamilyId);
+               if (familyDetails != null)
+               {
+                    if (familyDetails.FamilyInformation?.Count() == 2)
+                    {
+                         var spouse = familyDetails.FamilyInformation.FirstOrDefault(x => x.UserId != userInfo.UserId && x.Relationship != userInfo.Relationship);
+                         if (spouse != null)
+                         {
+                              hasValidSpouse = true;
+                         }
+                    }
+
+                    if (familyDetails.OtherContacts?.Where(c => c.ContactType == MaktabDataContracts.Enums.ContactType.Emergency).Any() == true)
+                    {
+                         hasEmergencyContact = true;
+                    }
+
+               }
+
+               if (!hasValidSpouse && !hasEmergencyContact)
+               {
+                    await ShowMessagePromptAsync(
+                         dialogService,
+                         L[MaktabResources.Error],
+                         L[MaktabResources.Msg_Error_Add_Spouse_And_Emergency_Details_To_Add_Enrollment]);
+
+                    return false;
+
+               }
+               else if (!hasValidSpouse)
+               {
+                    await ShowMessagePromptAsync(
+                         dialogService,
+                         L[MaktabResources.Error],
+                         L[MaktabResources.Msg_Error_Add_Spouse_Details_To_Continue]);
+                    return false;
+               }
+               else if (!hasEmergencyContact)
+               {
+                    await ShowMessagePromptAsync(
+                         dialogService,
+                         L[MaktabResources.Error],
+                         L[MaktabResources.Msg_Error_Add_Emergency_Contact_To_Continue]);
+                    return false;
+               }
+
+               return true;
           }
      }
 }
