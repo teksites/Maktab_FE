@@ -70,6 +70,7 @@
      [Parameter] public bool ShowAddButton { get; set; } = true;
      [Parameter] public bool ShowHeader { get; set; } = true;
      [Parameter] public bool ShowEnrollMenu { get; set; } = false;
+     [Parameter] public Func<Task<bool>> PreEnrollmentValidationTask { get; set; } = null;
 
      protected override void OnInitialized()
      {
@@ -104,11 +105,16 @@
 
      private async Task OpenAssignCourseDialog(ChildResponse childResponse)
      {
-          var parameters = new DialogParameters { }; //["Child"] = childResponse };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true, BackdropClick = false };
+          if (PreEnrollmentValidationTask != null)
+          {
+              var isErollmentValidated = await PreEnrollmentValidationTask.Invoke();
+              if (!isErollmentValidated)
+              {
+                  return;
+              }
+          }
 
-          var dialog = await DialogService.ShowAsync<EnrollChildInCourseDialog>(L[MaktabResources.Enroll_Child], parameters, options);
-          var result = await dialog.Result;
+          var result = await OpenEnrollChildDialog(DialogService);
 
           //Updated enrollments if enrollment was successful, even if dialog was closed with close button
           RequestRender();
