@@ -606,6 +606,12 @@
 
      private async Task OpenEnrollChildDialog()
      {
+          bool hasValidFamilyDetails = await PreEnrollmentValidation(UserService, DialogService, userInfo);
+          if (!hasValidFamilyDetails)
+          {
+               return;
+          }
+
           var result = await OpenEnrollChildDialog(DialogService);
           if (!result.Canceled)
           {
@@ -618,5 +624,4 @@
 
           RequestRender();
      }
-
 }
