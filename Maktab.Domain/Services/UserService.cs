@@ -31,6 +31,7 @@ namespace Maktab.Domain.Services
           private const string updateExtendedInfo = @"/api/users/{0}/extendedinfo";
           private const string deleteExtendedInfo = @"/api/users/{0}/extendedinfo";
           private const string getFamilyDetails = @"/api/users/family/{0}";
+          private const string getFamilyDetailInfo = @"/api/users/family/{0}/information";
 
           private readonly ILogger<UserService> _logger;
 
@@ -560,6 +561,42 @@ namespace Maktab.Domain.Services
                catch (Exception ex)
                {
                     _logger.LogError(ex, "Error fetching family members for family {FamilyId}", familyId);
+                    throw;
+               }
+          }
+
+          /// <summary>
+          /// Get family detail info by family ID with error handling
+          /// </summary>
+          public async Task<FamilyInformationDetailsResponse> GetFamilyDetailInfoByFamilyId(Guid familyId)
+          {
+               try
+               {
+                    // Validate input
+                    if (familyId == Guid.Empty)
+                    {    
+                         _logger.LogWarning("GetFamilyDetailInfoByFamilyId called with empty GUID");
+                         throw new ArgumentException("Family ID cannot be empty", nameof(familyId));
+                    }
+
+                    _logger.LogInformation("Fetching family detail info for family {FamilyId}", familyId);
+
+                    // Make request
+                    var formattedUrl = string.Format(getFamilyDetailInfo, familyId);
+                    var result = await _httpService.Get<FamilyInformationDetailsResponse>(formattedUrl);
+
+                    if (result == null)
+                    {
+                         _logger.LogWarning("Family {FamilyId} not found", familyId);
+                         return null;
+                    }
+
+                    _logger.LogInformation("Successfully fetched family detail info for family {FamilyId}", familyId);
+                    return result;
+               }
+               catch (Exception ex)
+               {
+                    _logger.LogError(ex, "Error fetching family detail info for family {FamilyId}", familyId);
                     throw;
                }
           }
