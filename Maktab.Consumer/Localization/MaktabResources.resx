@@ -1513,4 +1513,16 @@
   <data name="Other_Health_Conditions_HelperText" xml:space="preserve">
     <value>Other health conditions or behavioral/developmental concerns (e.g., hyperactivity or autism)</value>
   </data>
+  <data name="Msg_Error_Add_Spouse_Details_To_Continue" xml:space="preserve">
+    <value>Please add spouse details in profile page to continue</value>
+  </data>
+  <data name="Msg_Error_Add_Emergency_Contact_To_Continue" xml:space="preserve">
+    <value>Please add at least one emergency contact in profile page to continue</value>
+  </data>
+  <data name="Msg_Error_Add_Spouse_And_Emergency_Details_To_Add_Enrollment" xml:space="preserve">
+    <value>Please add spouse and emergency contact in profile page to continue enrollment</value>
+  </data>
+  <data name="Msg_Error_Validating_Family_Details" xml:space="preserve">
+    <value>Validation for family details can not be process, Please try in few moments</value>
+  </data>
 </root>

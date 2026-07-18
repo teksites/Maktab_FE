@@ -1694,6 +1694,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please add at least one emergency contact in profile page to continue.
+        /// </summary>
+        public static string Msg_Error_Add_Emergency_Contact_To_Continue {
+            get {
+                return ResourceManager.GetString("Msg_Error_Add_Emergency_Contact_To_Continue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error saving extended info. please try in few moments.
         /// </summary>
         public static string Msg_Error_Add_ExtendedInfo_Save {
@@ -1708,6 +1717,24 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Error_Add_Home_Address {
             get {
                 return ResourceManager.GetString("Msg_Error_Add_Home_Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please add spouse and emergency contact in profile page to continue enrollment.
+        /// </summary>
+        public static string Msg_Error_Add_Spouse_And_Emergency_Details_To_Add_Enrollment {
+            get {
+                return ResourceManager.GetString("Msg_Error_Add_Spouse_And_Emergency_Details_To_Add_Enrollment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please add spouse details in profile page to continue.
+        /// </summary>
+        public static string Msg_Error_Add_Spouse_Details_To_Continue {
+            get {
+                return ResourceManager.GetString("Msg_Error_Add_Spouse_Details_To_Continue", resourceCulture);
             }
         }
         
@@ -2068,6 +2095,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Error_User_Resgister_No_RelationShip_Defined {
             get {
                 return ResourceManager.GetString("Msg_Error_User_Resgister_No_RelationShip_Defined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Validation for family details can not be process, Please try in few moments.
+        /// </summary>
+        public static string Msg_Error_Validating_Family_Details {
+            get {
+                return ResourceManager.GetString("Msg_Error_Validating_Family_Details", resourceCulture);
             }
         }
         

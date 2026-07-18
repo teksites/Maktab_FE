@@ -1491,7 +1491,7 @@
     <value>Enregistrer</value>
   </data>
   <data name="Msg_Error_Child_Age_Invalid_Group_Assigned" xml:space="preserve">
-    <value>L'enfant ne peut pas s'inscrire au groupe de cours en raison d'une restriction d'âge. Veuillez choisir le groupe concerné avec une limite d'âge.</value>
+    <value>L'enfant ne peut pas s'inscrire au groupe de cours en raison d'une restriction d'âge. Veuillez choisir le groupe concerné avec une limite d'âge</value>
   </data>
   <data name="Age" xml:space="preserve">
     <value>Âge</value>
@@ -1510,5 +1510,17 @@
   </data>
   <data name="Other_Health_Conditions_HelperText" xml:space="preserve">
     <value>Autres problèmes de santé ou Troubles du comportement (hyperactivité, autisme, etc.)</value>
+  </data>
+  <data name="Msg_Error_Add_Spouse_Details_To_Continue" xml:space="preserve">
+    <value>Veuillez ajouter les détails de votre conjoint dans la page de profil pour continuer</value>
+  </data>
+  <data name="Msg_Error_Add_Emergency_Contact_To_Continue" xml:space="preserve">
+    <value>Veuillez ajouter au moins un contact d'urgence dans la page de profil pour continuer</value>
+  </data>
+  <data name="Msg_Error_Add_Spouse_And_Emergency_Details_To_Add_Enrollment" xml:space="preserve">
+    <value>Veuillez ajouter votre conjoint et votre contact en cas d'urgence dans la page de profil pour continuer l'inscription</value>
+  </data>
+  <data name="Msg_Error_Validating_Family_Details" xml:space="preserve">
+    <value>La validation des détails de la famille ne peut pas être effectuée. Veuillez essayer dans quelques instants</value>
   </data>
 </root>
