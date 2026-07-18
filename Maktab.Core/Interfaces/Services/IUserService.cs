@@ -78,5 +78,6 @@ namespace Maktab.Core.Interfaces.Services
           /// Get family members by family ID
           /// </summary>
           Task<IEnumerable<UserInformationResponse>> GetFamilyByFamilyId(Guid familyId);
+          Task<FamilyInformationDetailsResponse> GetFamilyDetailInfoByFamilyId(Guid familyId);
      }
 }
