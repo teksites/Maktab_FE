@@ -1,7 +1,7 @@
 ﻿@using MaktabDataContracts.Responses.Users
 @inherits LocalizeableBaseComponent<ParentInfoCard>
 
-<MudCard Class="mb-4 pa-4">
+<MudCard Class="mb-4 pa-4" Elevation="@((ShowElevation) ? 1 : 0)">
     <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
         <MudAvatar Size="Size.Large" Color="Color.Primary">@Initials</MudAvatar>
           <MudStack Spacing="1">
@@ -23,6 +23,7 @@
 
 @code {
      [Parameter] public bool ShowEditButton { get; set; } = true;
+     [Parameter] public bool ShowElevation { get; set; } = true;
      [Parameter] public UserInformationResponse Parent { get; set; } = default!;
      [Parameter] public EventCallback<UserInformationResponse> OnEdit { get; set; }
 
