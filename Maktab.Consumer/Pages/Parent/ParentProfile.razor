@@ -6,7 +6,6 @@
 @using Maktab.Consumer.Extensions;
 @using MaktabDataContracts.Responses.Addresses
 @using MaktabDataContracts.Responses.Children
-@using MaktabDataContracts.Responses.Course
 @using MaktabDataContracts.Responses.OtherContacts
 @using MaktabDataContracts.Responses.Users
 @using Microsoft.AspNetCore.Authorization
@@ -125,7 +124,7 @@
                                    @L[MaktabResources.Add_Child]
                               </MudButton>
                          </MudStack>
-                         <ChildList ShowEnrollMenu="true" ShowHeader="false" FamilyId="@userInfo.FamilyId" />
+                         <ChildList ShowEnrollMenu="true" ShowHeader="false" FamilyId="@userInfo.FamilyId" PreEnrollmentValidationTask="PreEnrollmentValidation" />
                     </MudCard>
                </MudItem>
 
@@ -418,6 +417,11 @@
                await StateService.LoadContactsData(ContactService, userInfo.FamilyId, true);
                this.RequestRender();
           }
+     }
+
+     private async Task<bool> PreEnrollmentValidation()
+     {
+          return await PreEnrollmentValidation(UserService, DialogService, userInfo);
      }
 
 }
