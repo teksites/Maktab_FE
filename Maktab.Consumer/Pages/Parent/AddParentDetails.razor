@@ -1,4 +1,6 @@
 @page "/parent/adddetails"
+@using Maktab.Consumer.Extensions;
+@using Maktab.Consumer.State
 @using MaktabDataContracts.Enums
 @using MaktabDataContracts.Responses;
 @using MaktabDataContracts.Responses.Addresses
@@ -11,6 +13,7 @@
 @inject IUserService UserService
 @inject IDialogService DialogService
 @inject IChildrenService ChildrenService
+@inject UserStateService StateService
 
 <MudGrid>
      <MudItem xs="12" sm="12" md="12">
@@ -154,14 +157,21 @@
           username = await SessionService.GetUserNameAsync();
           userId = await SessionService.GetLoggedInUserIdAsync();
           userInfo = await UserService.GetUserByIdAsync(userId);
+          await StateService.LoadUserSpouseData(UserService, userInfo, true);
+          if (StateService.ParentState.Spouse != null)
+          {
+               isSpouseAdded = true;
+          }
+          else
+          {
+               spouseRelationship = userInfo.Relationship == Relationship.Mother ? Relationship.Father : Relationship.Mother;
+          }
 
           isInitialized = true;
           parentAddress.ConnectedId = userInfo.UserId;
           parentAddress.AddressType = AddressType.Parent;
           parentAddress.HomeAddress = true;
 
-          spouseRelationship = userInfo.Relationship == Relationship.Mother ? Relationship.Father : Relationship.Mother;
-          
           RequestRender();
      }
 
@@ -287,6 +297,12 @@
                this.homeAddressId = addressInfo.AddressId;
                if (stepper.CanGoToNextStep)
                {
+                    if (isSpouseAdded) // If spouse is already added, Navigate to parent dashboard
+                    {
+                         NavigateToParentDasboard();
+                         return;
+                    }
+
                     await stepper.NextStepAsync();
                }
           }
