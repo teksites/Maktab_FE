@@ -1525,4 +1525,7 @@
   <data name="Msg_Error_Validating_Family_Details" xml:space="preserve">
     <value>Validation for family details can not be process, Please try in few moments</value>
   </data>
+  <data name="Msg_Error_Invalid_Spouse_Details" xml:space="preserve">
+    <value>Spouse details can not be validated, Please contact support</value>
+  </data>
 </root>

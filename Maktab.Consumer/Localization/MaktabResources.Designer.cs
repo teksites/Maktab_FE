@@ -1955,6 +1955,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spouse details can not be validated, Please contact support.
+        /// </summary>
+        public static string Msg_Error_Invalid_Spouse_Details {
+            get {
+                return ResourceManager.GetString("Msg_Error_Invalid_Spouse_Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Message was not delivered, Please try in few moments..
         /// </summary>
         public static string Msg_Error_Message_Not_sent {
