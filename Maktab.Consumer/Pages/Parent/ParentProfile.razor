@@ -264,6 +264,12 @@
 
      private async Task OpenAddSpouseDialog()
      {
+          var isValidSpouse = await ValidateSpouseDataAsync(UserService, DialogService, userInfo);
+          if (!isValidSpouse)
+          {
+               return;
+          }
+
           var relationshipToAdd = userInfo.Relationship == MaktabDataContracts.Enums.Relationship.Mother ? MaktabDataContracts.Enums.Relationship.Father : MaktabDataContracts.Enums.Relationship.Mother;
           var parameters = new DialogParameters { ["FamilyId"] = userInfo.FamilyId, ["RelationshipToAddAsSpouse"] = relationshipToAdd };
           var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = false, CloseButton = true, BackdropClick = false };

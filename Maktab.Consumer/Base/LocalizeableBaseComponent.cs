@@ -295,5 +295,37 @@ namespace Maktab.Consumer.Base
 
                return true;
           }
+
+          protected async Task<bool> ValidateSpouseDataAsync(IUserService userService, IDialogService dialogService, UserInformationResponse userInfo)
+          {
+               bool hasValidSpouse = false;
+               var familyDetails = await userService.GetFamilyDetailInfoByFamilyId(userInfo.FamilyId);
+               if (familyDetails?.FamilyInformation?.Any() == true)
+               {
+                    var familyUserCount = familyDetails.FamilyInformation.Count();
+                    if (familyUserCount == 1)
+                    {
+                         hasValidSpouse = true; // If there is only one user in the family, we consider it valid (the user themselves).
+                    }
+                    else if (familyUserCount == 2)
+                    {
+                         var spouse = familyDetails.FamilyInformation.FirstOrDefault(x => x.UserId != userInfo.UserId && x.Relationship != userInfo.Relationship);
+                         if (spouse != null)
+                         {
+                              hasValidSpouse = true; // If there is a spouse in the family, we consider it valid.
+                         }
+                    }
+               }
+
+               if (!hasValidSpouse)
+               {
+                    await ShowMessagePromptAsync(
+                              dialogService,
+                              L[MaktabResources.Error],
+                              L[MaktabResources.Msg_Error_Invalid_Spouse_Details]);
+               }
+
+               return hasValidSpouse;
+          }
      }
 }
