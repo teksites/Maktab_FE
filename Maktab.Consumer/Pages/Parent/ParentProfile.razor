@@ -216,7 +216,7 @@
           //Can be moved to child component if we want to load it on demand when user click on children section
           await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, forceReload);
 
-          await StateService.LoadUserSpouseData(UserService, userId, userInfo.FamilyId, forceReload);
+          await StateService.LoadUserSpouseData(UserService, userInfo, forceReload);
 
           await StateService.LoadUserExtendedProfileData(UserService, userId, forceReload);
 

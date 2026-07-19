@@ -2,6 +2,7 @@
 using Maktab.Core.Interfaces.Services;
 using MaktabDataContracts.Responses.Course;
 using MaktabDataContracts.Responses.Transactions;
+using MaktabDataContracts.Responses.Users;
 using MudBlazor;
 
 namespace Maktab.Consumer.Extensions
@@ -34,17 +35,20 @@ namespace Maktab.Consumer.Extensions
                }
           }
 
-          public static async Task LoadUserSpouseData(this UserStateService userStateService, IUserService userService, Guid userId, Guid familyId, bool forceReload = false)
+          public static async Task LoadUserSpouseData(this UserStateService userStateService, IUserService userService, UserInformationResponse userInfo, bool forceReload = false)
           {
                if (userStateService.ParentState.Spouse == null || forceReload)
                {
-                    var familyDetails = await userService.GetFamilyByFamilyId(familyId);
+                    var familyDetails = await userService.GetFamilyByFamilyId(userInfo.FamilyId);
                     if (familyDetails?.Any() == true)
                     {
-                         var spouse = familyDetails.FirstOrDefault(x => x.UserId != userId);
-                         if (spouse != null)
+                         if (familyDetails.Count() == 2)
                          {
-                              userStateService.ParentState.SetSpouse(spouse);
+                              var spouse = familyDetails.FirstOrDefault(x => x.UserId != userInfo.UserId && x.Relationship != userInfo.Relationship);
+                              if (spouse != null)
+                              {
+                                   userStateService.ParentState.SetSpouse(spouse);
+                              }
                          }
                     }
                }
