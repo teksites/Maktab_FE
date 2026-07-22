@@ -3017,6 +3017,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parent&apos;s consent for children.
+        /// </summary>
+        public static string Parent_Consent_For_Child {
+            get {
+                return ResourceManager.GetString("Parent_Consent_For_Child", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parent Dashboard.
         /// </summary>
         public static string Parent_Dashboard {

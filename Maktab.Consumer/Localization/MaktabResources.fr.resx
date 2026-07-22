@@ -1524,6 +1524,9 @@
     <value>La validation des détails de la famille ne peut pas être effectuée. Veuillez essayer dans quelques instants</value>
   </data>
   <data name="Msg_Error_Invalid_Spouse_Details" xml:space="preserve">
-    <value>Les détails du conjoint ne peuvent pas être validés. Veuillez contacter l'assistance.</value>
+    <value>Les détails du conjoint ne peuvent pas être validés. Veuillez contacter l'assistance</value>
+  </data>
+  <data name="Parent_Consent_For_Child" xml:space="preserve">
+    <value>Consentement des parents pour les enfants</value>
   </data>
 </root>

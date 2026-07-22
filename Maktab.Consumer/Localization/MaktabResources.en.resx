@@ -1526,4 +1526,7 @@
   <data name="Msg_Error_Invalid_Spouse_Details" xml:space="preserve">
     <value>Spouse details can not be validated, Please contact support</value>
   </data>
+  <data name="Parent_Consent_For_Child" xml:space="preserve">
+    <value>Parent's consent for children</value>
+  </data>
 </root>
