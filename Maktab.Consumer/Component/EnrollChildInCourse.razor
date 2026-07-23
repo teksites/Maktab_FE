@@ -343,8 +343,10 @@ else if (IsError)
                                              </MudText> *@
                                                             <MudChip T="bool" Color="@(GetCourseGroupRegistrationStatusColor(g.IfRegistrationOpen))" Variant="Variant.Filled" Size="Size.Small">@(GetCourseGroupRegistrationStatusLabel(g.IfRegistrationOpen))</MudChip>
 
-                                                            <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge - @g.MaxAge</MudChip>
-
+                                                            @if (CourseGroupHasValidAgeRestriction(g))
+                                                            {
+                                                                 <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge - @g.MaxAge</MudChip>
+                                                            }
                                                             <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true">
                                                                  @foreach (var chipSet in g.AcedemicGroups)
                                                                  {
@@ -389,7 +391,10 @@ else if (IsError)
                                                                  @g.Fee
                                                             </MudText>
 
+                                                       @if (CourseGroupHasValidAgeRestriction(g))
+                                                       {
                                                             <MudChip T="bool" Color="@(GetCourseGroupRegistrationStatusColor(g.IfRegistrationOpen))" Variant="Variant.Filled" Size="Size.Small">@(GetCourseGroupRegistrationStatusLabel(g.IfRegistrationOpen))</MudChip>
+                                                       }
 
                                                             <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge - @g.MaxAge</MudChip>
 
@@ -924,8 +929,16 @@ else if (IsError)
           {
                return false;
           }
-          var childAge = child.GetAge();
-          return childAge >= group.MinAge && childAge <= group.MaxAge && group.IfRegistrationOpen;
+          bool isEligible = group.IfRegistrationOpen;
+
+          // Check age restrictions if they exist
+          if(CourseGroupHasValidAgeRestriction(group))
+          {
+               var childAge = child.GetAge();
+               isEligible = isEligible && (childAge >= group.MinAge && childAge <= group.MaxAge);
+          }    
+
+          return isEligible;
      }
 
      private void UpdateCourseEnrollments()
@@ -1084,6 +1097,12 @@ else if (IsError)
                default:
                     return Color.Warning;
           }
+     }
+
+     protected bool CourseGroupHasValidAgeRestriction(CourseEnrollmentGroupResponse group)
+     {
+          if (group == null) return false;
+          return group.MinAge > 0 || group.MaxAge > 0;
      }
 
      protected string GetCourseGroupRegistrationStatusLabel(bool isRegistrationOpen)
