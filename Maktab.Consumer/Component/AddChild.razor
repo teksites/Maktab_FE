@@ -93,7 +93,7 @@
 
                <MudItem xs="12">
                          <MudStack>
-                              <MudSwitch T="bool" Label=@L[MaktabResources.Has_Allergies] @bind-Value="ChildModel.HasAllergy" />
+                              <MudSwitch T="bool" Label=@L[MaktabResources.Has_Allergies] Color="Color.Warning" @bind-Value="ChildModel.HasAllergy" />
                               @if (ChildModel.HasAllergy)
                               {
                                    <MudTextField @bind-Value="ChildModel.Allergies" Variant="Variant.Outlined"
