@@ -1068,7 +1068,7 @@
     <value>En attente</value>
   </data>
   <data name="Msg_Info_CourseGroup_Registration_Full" xml:space="preserve">
-    <value>Un des groupes est complet. Si vous continuez, les enfants seront placés sur la liste d'attente et les frais les incluront</value>
+    <value>Le groupe sélectionné est complet. Veuillez choisir un autre groupe. En poursuivant l'inscription dans le meme groupe, votre enfant sera placé sur une liste d'attente. Le paiement des frais est également requis pour figurer sur cette liste. Si aucune place ne se libère, ces frais vous seront remboursés</value>
   </data>
   <data name="Description" xml:space="preserve">
     <value>Description</value>

@@ -2216,7 +2216,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to One of the group is full. If you proceed, children will be placed on the waiting list and fees will include them.
+        ///   Looks up a localized string similar to The selected group is full. If available, select another group. If you proceed with choosing the group that is full, your child will be placed on the waiting list.  Payment of fees is also required to be on a waiting list.  If no spot becomes available, those fees will be refunded to you.
         /// </summary>
         public static string Msg_Info_CourseGroup_Registration_Full {
             get {
