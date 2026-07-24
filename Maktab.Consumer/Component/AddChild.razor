@@ -97,11 +97,15 @@
                               @if (ChildModel.HasAllergy)
                               {
                                    <MudTextField @bind-Value="ChildModel.Allergies" Variant="Variant.Outlined"
-                                        Lines="2"
-                                        MaxLines="4"
-                                        Placeholder=@L[MaktabResources.Text_Allergies_Placeholder]
-                                        Label=@L[MaktabResources.Allergies]
-                                        Required="true" For="@(() => ChildModel.Allergies)" />
+                                   Adornment="Adornment.Start"
+                                   AdornmentColor="Color.Warning"
+                                   AdornmentIcon="@Icons.Material.Filled.HealthAndSafety"
+                                   IconSize="Size.Large"
+                                   Lines="2"
+                                   MaxLines="4"
+                                   Placeholder=@L[MaktabResources.Text_Allergies_Placeholder]
+                                   Label=@L[MaktabResources.Allergies]
+                                   Required="true" For="@(() => ChildModel.Allergies)" />
                               }
                          </MudStack>
                </MudItem>
