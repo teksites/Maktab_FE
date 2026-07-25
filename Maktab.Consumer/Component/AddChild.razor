@@ -93,19 +93,24 @@
 
                <MudItem xs="12">
                          <MudStack>
-                              <MudSwitch T="bool" Label=@L[MaktabResources.Has_Allergies] Color="Color.Warning" @bind-Value="ChildModel.HasAllergy" />
+                              <MudSwitch T="bool" Color="Color.Warning" @bind-Value="ChildModel.HasAllergy">
+                                   <MudText Color="@(ChildModel.HasAllergy ? Color.Warning : Color.Default)">
+                                        @L[MaktabResources.Has_Allergies]
+                                    </MudText>
+                              </MudSwitch>
                               @if (ChildModel.HasAllergy)
                               {
                                    <MudTextField @bind-Value="ChildModel.Allergies" Variant="Variant.Outlined"
-                                   Adornment="Adornment.Start"
-                                   AdornmentColor="Color.Warning"
-                                   AdornmentIcon="@Icons.Material.Filled.HealthAndSafety"
-                                   IconSize="Size.Large"
-                                   Lines="2"
-                                   MaxLines="4"
-                                   Placeholder=@L[MaktabResources.Text_Allergies_Placeholder]
-                                   Label=@L[MaktabResources.Allergies]
-                                   Required="true" For="@(() => ChildModel.Allergies)" />
+                                                 Adornment="Adornment.Start"
+                                                 AdornmentColor="Color.Warning"
+                                                 AdornmentIcon="@Icons.Material.Filled.HealthAndSafety"
+                                                 IconSize="Size.Large"
+                                                 Lines="2"
+                                                 MaxLines="4"
+                                                 Placeholder=@L[MaktabResources.Text_Allergies_Placeholder]
+                                                 Label=@L[MaktabResources.Allergies]
+                                                 Required="true"
+                                                 For="@(() => ChildModel.Allergies)" />
                               }
                          </MudStack>
                </MudItem>
