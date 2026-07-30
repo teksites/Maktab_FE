@@ -345,7 +345,7 @@ else if (IsError)
 
                                                             @if (CourseGroupHasValidAgeRestriction(g))
                                                             {
-                                                                 <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge - @g.MaxAge</MudChip>
+                                                                 <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @ConvertMonthToYearsCeiling(g.MinAge) - @ConvertMonthToYearsCeiling(g.MaxAge)</MudChip>
                                                             }
                                                             <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true">
                                                                  @foreach (var chipSet in g.AcedemicGroups)
@@ -391,14 +391,15 @@ else if (IsError)
                                                                  @g.Fee
                                                             </MudText>
 
+                                                       
+                                                       <MudChip T="bool" Color="@(GetCourseGroupRegistrationStatusColor(g.IfRegistrationOpen))" Variant="Variant.Filled" Size="Size.Small">@(GetCourseGroupRegistrationStatusLabel(g.IfRegistrationOpen))</MudChip>
+
                                                        @if (CourseGroupHasValidAgeRestriction(g))
                                                        {
-                                                            <MudChip T="bool" Color="@(GetCourseGroupRegistrationStatusColor(g.IfRegistrationOpen))" Variant="Variant.Filled" Size="Size.Small">@(GetCourseGroupRegistrationStatusLabel(g.IfRegistrationOpen))</MudChip>
+                                                            <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @ConvertMonthToYearsCeiling(g.MinAge) - @ConvertMonthToYearsCeiling(g.MaxAge)</MudChip>
                                                        }
 
-                                                            <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge - @g.MaxAge</MudChip>
-
-                                                            <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true">
+                                                       <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true">
                                                                  @foreach (var chipSet in g.AcedemicGroups)
                                                                  {
                                                                       <MudChip T="String" Text="@chipSet" Size="Size.Small" />
