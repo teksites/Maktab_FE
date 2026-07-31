@@ -5,6 +5,7 @@
 @using MaktabDataContracts.Responses.Course
 @using MaktabDataContracts.Responses.Institute
 @using MaktabDataContracts.Responses.Users
+@using Maktab.Core.Extensions;
 @using Maktab.Domain.Extensions;
 
 @inherits LocalizeableBaseComponent<EnrollChildInCourse>
@@ -345,7 +346,7 @@ else if (IsError)
 
                                                             @if (CourseGroupHasValidAgeRestriction(g))
                                                             {
-                                                                 <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @ConvertMonthToYearsCeiling(g.MinAge) - @ConvertMonthToYearsCeiling(g.MaxAge)</MudChip>
+                                                                 <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge.MonthToYearsCeiling() - @g.MaxAge.MonthToYearsCeiling()</MudChip>
                                                             }
                                                             <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true">
                                                                  @foreach (var chipSet in g.AcedemicGroups)
@@ -396,7 +397,7 @@ else if (IsError)
 
                                                        @if (CourseGroupHasValidAgeRestriction(g))
                                                        {
-                                                            <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @ConvertMonthToYearsCeiling(g.MinAge) - @ConvertMonthToYearsCeiling(g.MaxAge)</MudChip>
+                                                            <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge.MonthToYearsCeiling() - @g.MaxAge.MonthToYearsCeiling()</MudChip>
                                                        }
 
                                                        <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true">
@@ -936,7 +937,8 @@ else if (IsError)
           if(CourseGroupHasValidAgeRestriction(group))
           {
                var childAge = child.GetAge();
-               isEligible = isEligible && (childAge >= group.MinAge && childAge <= group.MaxAge);
+               isEligible = isEligible && (childAge >= group.MinAge.MonthToYearsCeiling() &&
+                                           childAge <= group.MaxAge.MonthToYearsCeiling());
           }    
 
           return isEligible;
