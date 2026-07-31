@@ -346,7 +346,7 @@ else if (IsError)
 
                                                             @if (CourseGroupHasValidAgeRestriction(g))
                                                             {
-                                                                 <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge.MonthToYearsCeiling() - @g.MaxAge.MonthToYearsCeiling()</MudChip>
+                                                                 <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge.MonthToYearsAdjustedMidPoint() - @g.MaxAge.MonthToYearsAdjustedMidPoint()</MudChip>
                                                             }
                                                             <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true">
                                                                  @foreach (var chipSet in g.AcedemicGroups)
@@ -397,7 +397,7 @@ else if (IsError)
 
                                                        @if (CourseGroupHasValidAgeRestriction(g))
                                                        {
-                                                            <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge.MonthToYearsCeiling() - @g.MaxAge.MonthToYearsCeiling()</MudChip>
+                                                            <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge.MonthToYearsAdjustedMidPoint() - @g.MaxAge.MonthToYearsAdjustedMidPoint()</MudChip>
                                                        }
 
                                                        <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true">
@@ -937,8 +937,8 @@ else if (IsError)
           if(CourseGroupHasValidAgeRestriction(group))
           {
                var childAge = child.GetAge();
-               isEligible = isEligible && (childAge >= group.MinAge.MonthToYearsCeiling() &&
-                                           childAge <= group.MaxAge.MonthToYearsCeiling());
+               isEligible = isEligible && (childAge >= group.MinAge.MonthToYearsAdjustedMidPoint() &&
+                                           childAge <= group.MaxAge.MonthToYearsAdjustedMidPoint());
           }    
 
           return isEligible;

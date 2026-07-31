@@ -7,9 +7,13 @@
                return ageInMonths / 12.0f;
           }
 
-          public static int MonthToYearsCeiling(this int ageInMonths)
+          public static int MonthToYearsAdjustedMidPoint(this int ageInMonths)
           {
-               return Convert.ToInt32(Math.Ceiling(MonthToYears(ageInMonths)));
+               var years = MonthToYears(ageInMonths);
+               var yearInt = Convert.ToInt32(years);
+               var executeCeling = years - yearInt > 0.4;
+               return executeCeling ? Convert.ToInt32(Math.Ceiling(years)) : yearInt;
+
           }
      }
 }
