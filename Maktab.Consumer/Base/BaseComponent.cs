@@ -317,15 +317,5 @@ namespace Maktab.Consumer.Base
 
                return Color.Default;
           }
-
-          protected float ConvertMonthToYears(int ageInMonths)
-          {
-               return ageInMonths / 12.0f;
-          }
-
-          protected int ConvertMonthToYearsCeiling(int ageInMonths)
-          {
-               return Convert.ToInt32(Math.Ceiling(ConvertMonthToYears(ageInMonths)));
-          }
      }
 }
