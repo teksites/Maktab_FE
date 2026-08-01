@@ -134,7 +134,7 @@ else if (IsError)
                                                   <MudIcon Icon="@Icons.Material.Filled.PersonOutline" Size="Size.Small" />
                                                   <span>@child.FirstName @child.LastName</span>
                                                   <MudSpacer/>
-                                                  <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @child.GetAge() </MudChip>
+                                                  <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @child.DateOfBirth.GetAge() </MudChip>
 
                                              </MudStack>
                                         </MudSelectItem>
@@ -936,7 +936,7 @@ else if (IsError)
           // Check age restrictions if they exist
           if(CourseGroupHasValidAgeRestriction(group))
           {
-               var childAge = child.GetAge();
+               var childAge = child.DateOfBirth.GetAge();
                isEligible = isEligible && (childAge >= group.MinAge.MonthToYearsAdjustedMidPoint() &&
                                            childAge <= group.MaxAge.MonthToYearsAdjustedMidPoint());
           }    
