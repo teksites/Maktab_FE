@@ -1,10 +1,8 @@
-﻿using MaktabDataContracts.Responses.Children;
-
-namespace Maktab.Domain.Extensions
+﻿namespace Maktab.Core.Extensions
 {
-     public static class ChildExtensions
+     public static class DateTimeExtensions
      {
-          public static int GetAge(this ChildResponse childResponse)
+          public static int GetAge(this DateTime dateOfBirth)
           {
                int age = 0;
 
@@ -12,16 +10,15 @@ namespace Maktab.Domain.Extensions
                DateTime today = DateTime.Today;
 
                // Calculate the age in years
-               age = today.Year - childResponse.DateOfBirth.Year;
+               age = today.Year - dateOfBirth.Year;
 
                // Adjust age if the birthday hasn't occurred yet this year
-               if (childResponse.DateOfBirth > today.AddYears(-age))
+               if (dateOfBirth > today.AddYears(-age))
                {
                     age--;
                }
 
                return age;
           }
-
      }
 }
