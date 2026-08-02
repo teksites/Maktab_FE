@@ -118,10 +118,10 @@
                     <MudCard Class="mb-4 pa-4">
                          <MudStack Row="true">
                               <!-- Children Overview via reusable component -->
-                              <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Children]</MudText>
+                              <MudText Typo="Typo.h5" Class="mb-4">@L[MaktabResources.Participants]</MudText>
                               <MudSpacer />
                               <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
-                                   @L[MaktabResources.Add_Child]
+                                   @L[MaktabResources.Add_Participant]
                               </MudButton>
                          </MudStack>
                          <ChildList ShowEnrollMenu="true" ShowHeader="false" FamilyId="@userInfo.FamilyId" PreEnrollmentValidationTask="PreEnrollmentValidation" />

@@ -61,9 +61,9 @@
                                    <MudStack Spacing="4">
                                         <!-- Header with label, info icon, and action button -->
                                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                                             <MudTooltip Text=@L[MaktabResources.Msg_Info_Total_Registered_Child]>
+                                             <MudTooltip Text=@L[MaktabResources.Msg_Info_Total_Registered_Participant]>
                                              <MudText Typo="Typo.body1" Class="font-weight-medium" Style="opacity: 0.9;">
-                                                  @L[MaktabResources.Child]
+                                                  @L[MaktabResources.Participant]
                                              </MudText>
                                              </MudTooltip>
                                              
@@ -190,7 +190,7 @@
                @if (_Children?.Any() != true)
                {
                     <MudItem xs="12" md="12">
-                         <MudAlert Severity="Severity.Warning" Elevation="0" Class="mt-2">@L[MaktabResources.Msg_Info_Add_Children_To_Enroll]</MudAlert>
+                         <MudAlert Severity="Severity.Warning" Elevation="0" Class="mt-2">@L[MaktabResources.Msg_Info_Add_Participants_To_Enroll]</MudAlert>
                     </MudItem>
                }
 

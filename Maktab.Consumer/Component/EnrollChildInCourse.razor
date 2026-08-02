@@ -33,7 +33,7 @@
                </MudText>
                     
                <MudText Typo="Typo.body2" Color="Color.Secondary">
-                    @L[MaktabResources.Msg_Success_Child_Enrolled_Course_Variable, @SelectedChild?.FirstName, @SelectedCourse?.Name]
+                    @L[MaktabResources.Msg_Success_Enrolled_Course_Variable, @SelectedChild?.FirstName, @SelectedCourse?.Name]
                </MudText>
 
                <MudStack Row="true" Spacing="2" Class="mt-4">
@@ -92,7 +92,7 @@ else if (IsError)
                            OnPreviewInteraction="OnPreviewInteraction"
                            Class="mb-8">
 
-                    <MudStep Label=@L[MaktabResources.Child] Icon="@Icons.Material.Filled.Person" />
+                    <MudStep Label=@L[MaktabResources.Participant] Icon="@Icons.Material.Filled.Person" />
                     <MudStep Label=@L[MaktabResources.School] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedChild is null)" />
                     <MudStep Label=@L[MaktabResources.Course] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedInstitute is null)" />
                     <MudStep Label=@L[MaktabResources.Groups] Icon="@Icons.Material.Filled.Groups" Disabled="@(SelectedCourse is null)" />
@@ -107,7 +107,7 @@ else if (IsError)
                     <!-- STEP 1: Choose Child -->
                     <MudPaper Class="pa-6" Elevation="0" Outlined="true">
                          <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
-                              @L[MaktabResources.Select_Child]
+                              @L[MaktabResources.Select_Participant]
                          </MudText>
 
                          @if (Children == null)
@@ -121,7 +121,7 @@ else if (IsError)
                          {
                               <MudSelect T="ChildResponse"
                                          @bind-Value="SelectedChild"
-                                         Label=@L[MaktabResources.Children]
+                                         Label=@L[MaktabResources.Participants]
                                          Dense="false"
                                          Clearable="true"
                                          AnchorOrigin="Origin.BottomCenter"
@@ -436,7 +436,7 @@ else if (IsError)
                          
                          <MudStack Spacing="2">
                               <MudCheckBox @bind-Value="HasChildConsent">
-                                   @L[MaktabResources.Msg_Acknowledge_Child_Consent_Completion]
+                                   @L[MaktabResources.Msg_Acknowledge_Participant_Consent_Completion]
                               </MudCheckBox>
 
                               <MudCheckBox @bind-Value="HasCourseConsent">
@@ -478,7 +478,7 @@ else if (IsError)
                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                                         <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Primary" />
                                         <MudText Typo="Typo.body2" Color="Color.Primary">
-                                             <strong>@L[MaktabResources.Child]</strong>
+                                             <strong>@L[MaktabResources.Participant]</strong>
                                         </MudText>
                                         <MudSpacer />
                                         <MudText Typo="Typo.body2">
@@ -755,7 +755,7 @@ else if (IsError)
                {
                     await DialogService.ShowMessageBox(
                    L[MaktabResources.Warning],
-                   L[MaktabResources.Msg_Error_Not_All_Child_Valid_Group],
+                   L[MaktabResources.Msg_Error_Not_All_Participant_Valid_Group],
                    L[MaktabResources.OK]);
                     return;
                }
@@ -766,7 +766,7 @@ else if (IsError)
                {
                     await DialogService.ShowMessageBox(
                          L[MaktabResources.Warning],
-                         L[MaktabResources.Msg_Error_Not_All_Child_Valid_Group],
+                         L[MaktabResources.Msg_Error_Not_All_Participant_Valid_Group],
                          L[MaktabResources.OK]);
                     return;
                }
@@ -911,7 +911,7 @@ else if (IsError)
           {
                DialogService.ShowMessageBox(
                     L[MaktabResources.Error],
-                    L[MaktabResources.Msg_Error_Child_Age_Invalid_Group_Assigned],
+                    L[MaktabResources.Msg_Error_Participant_Age_Invalid_Group_Assigned],
                     L[MaktabResources.OK]);
           }
           else

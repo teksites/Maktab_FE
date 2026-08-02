@@ -237,7 +237,7 @@ namespace Maktab.Consumer.Base
                var parameters = new DialogParameters { };
                var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true, BackdropClick = false };
 
-               var dialog = await dialogService.ShowAsync<EnrollChildInCourseDialog>(L[MaktabResources.Enroll_Child], parameters, options);
+               var dialog = await dialogService.ShowAsync<EnrollChildInCourseDialog>(L[MaktabResources.Enroll_Participant], parameters, options);
                var result = await dialog.Result;
 
                return result;

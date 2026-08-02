@@ -15,12 +15,12 @@
 @if (ShowHeader)
 {
      <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
-          <MudText Typo="Typo.h6">@L[MaktabResources.Children]</MudText>
+          <MudText Typo="Typo.h6">@L[MaktabResources.Participants]</MudText>
           @if (ShowAddButton)
           {
                <MudSpacer />
                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
-                    @L[MaktabResources.Add_Child]
+                    @L[MaktabResources.Add_Participant]
                </MudButton>
           }
      </MudStack>
@@ -91,13 +91,9 @@
 
      private async Task OpenAddChildDialog()
      {
-          var parameters = new DialogParameters { ["FamilyId"] = FamilyId };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true, BackdropClick = false };
+          var result = await OpenAddChildDialog(DialogService, FamilyId);
 
-          var dialog = await DialogService.ShowAsync<AddChildDialog>(@L[MaktabResources.Add_Child], parameters, options);
-          var result = await dialog.Result;
-
-          if (!result.Canceled && result.Data is ChildResponse child)
+          if (result!= null && !result.Canceled && result.Data is ChildResponse child)
           {
                await StateService.LoadChildrenData(ChildrenService, FamilyId, true);
                RequestRender();
@@ -141,7 +137,7 @@
 
                await DialogService.ShowMessageBox(
                    L[MaktabResources.Error],
-                   L[MaktabResources.Msg_Error_Child_Cannot_Be_Removed], L[MaktabResources.OK]);
+                   L[MaktabResources.Msg_Error_Participant_Cannot_Be_Removed], L[MaktabResources.OK]);
 
 
           // bool? result = await DialogService.ShowMessageBox(

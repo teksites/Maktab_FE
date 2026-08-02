@@ -2,7 +2,7 @@
 @inherits LocalizeableBaseComponent<ChildSimplifiedList>
 
 
-<MudExpansionPanel Text=@L[MaktabResources.Children]>
+<MudExpansionPanel Text=@L[MaktabResources.Participants]>
      <MudList T="ChildResponse">
         @foreach (var child in Children)
         {
@@ -18,7 +18,7 @@
     </MudList>
     <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Add"
                OnClick="OnAddChild">
-         @L[MaktabResources.Add_Child]
+         @L[MaktabResources.Add_Participant]
     </MudButton>
 </MudExpansionPanel>
 
