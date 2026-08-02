@@ -112,11 +112,21 @@ namespace Maktab.Consumer.Base
           public void Dispose()
           {
                OnDispose();
+               Dispose(true);
                IsDisposed = true;
-               _cts.Cancel();
-               _cts.Dispose();
+               GC.SuppressFinalize(this);
           }
 
+          protected virtual void Dispose(bool disposing)
+          {
+               if (disposing)
+               {
+                    _cts.Cancel();
+                    _cts.Dispose();
+               }
+          }
+
+          //Todo: remove this method and use Dispose(bool disposing) instead. This is here for backward compatibility.
           protected virtual void OnDispose()
           {
                //Intentionally left blank for derived classes to override if needed.
