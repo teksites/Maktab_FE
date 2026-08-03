@@ -45,8 +45,8 @@
                     <MudItem xs="12" sm="6">
                          <MudDatePicker @bind-Date="DateOfBirth"
                                         Label=@L[MaktabResources.Date_Of_Birth]
-                                        Required="true"
-                                        Disabled="@isEditing"
+                                        Required="@isChild"
+                                        Disabled="@isChild"
                                         MaxDate="DateTime.Today"
                                         MinDate="DateTime.Today.AddYears(-100)"
                                         For="@(() => DateOfBirth)" />
@@ -54,8 +54,9 @@
 
                     <MudItem xs="12" sm="6">
                          <MudSelect T="Gender" @bind-Value="ChildModel.Gender"
-                                    Disabled="@isEditing"
-                                    Label=@L[MaktabResources.Gender] Required="true"
+                                    Disabled="@isNotGuardian"
+                                    Label=@L[MaktabResources.Gender]
+                                    Required="@isChild"
                                     For="@(() => ChildModel.Gender)">
                               @foreach (var rel in Genders)
                               {
@@ -70,10 +71,10 @@
                                        Placeholder="AAAA 0000 0000"
                                        Mask="@_ramqMask"
                                        Clearable="true"
-                                       Disabled="@isEditing"
+                                       Disabled="@isChild"
                                        Adornment="Adornment.End"
                                        AdornmentIcon="@Icons.Material.Filled.Badge"
-                                       Required="true"
+                                       Required="@isChild"
                                        Error="@_ramqError"
                                        ErrorText="@_ramqErrorText"
                                        For="@(() => ChildModel.RAMQNumber)"
@@ -83,8 +84,8 @@
                     <MudItem xs="12" sm="6">
                          <MonthYearPicker @bind-Value="RAMQExpiry"
                                           Label=@L[MaktabResources.RAMQ_Expiry]
-                                          AllowPastDates="false"
-                                          Required="true"
+                                          AllowPastDates="@isAdultUser"
+                                          Required="@isChild"
                                           For="@(() => ChildModel.RAMQExpiry)" />
                     </MudItem>
 
@@ -129,7 +130,7 @@
                     </MudItem>
 
                     <MudItem xs="12" sm="6" Class="d-flex align-center">
-                         <MudSelect Required="true" Label=@L[MaktabResources.Academic_Group_In_School] T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
+                         <MudSelect Required="@isChild" Label=@L[MaktabResources.Academic_Group_In_School] T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
                               @foreach (var group in acedemicGroups)
                               {
                                    <MudSelectItem @key="group" Value="group">@group.ToString()</MudSelectItem>
@@ -197,6 +198,32 @@
      private IReadOnlyCollection<ChildConsent> RequiredChildConsents { get; set; } = Array.Empty<ChildConsent>();
      private bool _ramqError = false;
      private string _ramqErrorText = string.Empty;
+
+     private bool isAdultUser
+     {
+          get
+          {
+               if (ChildModel == null)
+               {
+                    return false;
+               }
+
+               return ChildModel.UserType == MaktabDataContracts.Enums.UserType.Father ||
+                      ChildModel.UserType == MaktabDataContracts.Enums.UserType.Mother ||
+                      ChildModel.UserType == MaktabDataContracts.Enums.UserType.Guardian;
+
+          }
+     }
+
+     private bool isChild => !isAdultUser;
+
+     private bool isGuardian => ChildModel.UserType == MaktabDataContracts.Enums.UserType.Guardian;
+
+     private bool isNotGuardian => !isGuardian;
+
+     private bool isParent => ChildModel.UserType == MaktabDataContracts.Enums.UserType.Father ||
+                              ChildModel.UserType == MaktabDataContracts.Enums.UserType.Mother;
+
 
      protected override async Task OnInitializedAsync()
      {
@@ -326,7 +353,6 @@
 
           ChildModel.RAMQExpiry = RAMQExpiry.Value;
           ChildModel.DateOfBirth = DateOfBirth.Value;
-          ChildModel.RAMQSequenceNumber = -1;
 
           var enabledConents = RequiredChildConsents?.Where(x => x.IsAllowed);
           if (enabledConents != null)
@@ -348,7 +374,10 @@
                OtherHealthConditions = ChildModel.OtherHealthConditions,
                RAMQExpiry = ChildModel.RAMQExpiry,
                RAMQNumber = ChildModel.RAMQNumber,
-               RAMQSequenceNumber = -1,
+               RAMQSequenceNumber = ChildModel.RAMQSequenceNumber,
+               UserType = ChildModel.UserType,
+               DateOfBirth = ChildModel.DateOfBirth,
+               Gender = ChildModel.Gender
           };
 
           var result = await ChildrenService.UpdateChildAsync(updateRequest);
