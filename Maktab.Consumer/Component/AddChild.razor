@@ -18,7 +18,7 @@
      @if (ShowLabel)
      {
           <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
-               @L[MaktabResources.Add_Participant]
+               @L[MaktabResources.Add_Student_Participant]
           </MudText>
      }
 
@@ -306,6 +306,7 @@
           ChildModel.DateOfBirth = DateOfBirth.Value;
           ChildModel.FamilyId = FamilyId;
           ChildModel.RAMQSequenceNumber = -1;
+          ChildModel.UserType = UserType.Child;
           
           var enabledConents = RequiredChildConsents?.Where(x => x.IsAllowed);
           var result = await ChildrenService.AddChildToFamilyAsync(
