@@ -11,6 +11,7 @@
           public const string AddParentProfileDetailRoute = "/parent/adddetails";
           public const string RegisterParentRoute = "/parent/register";
           public const string ParentProfileRoute = "/parent/profile";
+          public const string ParentHelpRoute = "/parent/help";
 
           public const string AppLandingPage = "/landing/mainpage";
 
