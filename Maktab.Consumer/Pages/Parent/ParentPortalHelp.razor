@@ -1,0 +1,180 @@
+@page "/parent/help"
+@attribute [Authorize]
+
+@using Maktab.Consumer.Extensions
+@using Maktab.Consumer.State
+@using MaktabDataContracts.Responses.Users
+@using Microsoft.AspNetCore.Authorization
+
+@inherits LocalizeableBaseComponent<ParentPortalHelp>
+
+@inject UserStateService StateService
+@inject IUserService UserService
+@inject IEmailService SendEmailService
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-10 mb-10">
+
+@if (!isInitialized || isDataLoading)
+     {
+          <!-- Loading State -->
+          <MudStack Spacing="3">
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="120px" Class="rounded-lg" />
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="300px" Class="rounded-lg" />
+               <MudSkeleton SkeletonType="SkeletonType.Rectangle" Height="300px" Class="rounded-lg" />
+          </MudStack>
+     }
+     else
+     {
+          <!-- Breadcrumbs Navigation -->
+          <MudBreadcrumbs Items="breadcrumbItems" Class="mb-6" />
+
+          <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6 mb-10">
+               <MudText Typo="Typo.h5" Class="mb-1" >Help / Aider</MudText>
+               <MudText Typo="Typo.body2" Class="mb-6">
+                    Tutorials and Guides / Tutoriels et guides
+               </MudText>
+
+               <MudExpansionPanels MultiExpansion="true" Elevation="2" Class="help-panels" >
+                    @foreach (var course in Courses)
+                    {
+                         <MudExpansionPanel Text="@course.Name">
+                              <TitleContent>
+                                   <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                        <MudIcon Icon="@Icons.Material.Filled.MenuBook" Color="Color.Primary" />
+                                        <MudText Typo="Typo.body2">@course.Name</MudText>
+                                   </MudStack>
+                              </TitleContent>
+                              <ChildContent>
+                                   @if (course.Pdfs.Any())
+                                   {
+                                        <MudText Typo="Typo.subtitle2" Class="mt-2 mb-1" >
+                                             Guide
+                                        </MudText>
+                                        <MudList T="string" Dense="true">
+                                             @foreach (var pdf in course.Pdfs)
+                                             {
+                                                  <MudListItem T="string" Icon="@Icons.Material.Filled.PictureAsPdf" IconColor="Color.Secondary">
+                                                       <MudLink Href="@pdf.Url" Color="Color.Info" Target="_blank">
+                                                            @pdf.Title
+                                                       </MudLink>
+                                                  </MudListItem>
+                                             }
+                                        </MudList>
+                                   }
+
+                                   @if (course.Videos.Any())
+                                   {
+                                        <MudText Typo="Typo.subtitle2" Class="mt-4 mb-1" >
+                                             Video / Vidéo
+                                        </MudText>
+                                        <MudList T="string" Dense="true">
+                                             @foreach (var video in course.Videos)
+                                             {
+                                                  <MudListItem T="string" Icon="@Icons.Material.Filled.PlayCircle" IconColor="Color.Primary">
+                                                       <MudLink Href="@video.Url" Color="Color.Info" Target="_blank">
+                                                            @video.Title
+                                                       </MudLink>
+                                                  </MudListItem>
+                                             }
+                                        </MudList>
+                                   }
+
+                              </ChildContent>
+                         </MudExpansionPanel>
+                    }
+
+               </MudExpansionPanels>
+          </MudContainer>
+     }
+
+</MudContainer>
+
+@code {
+     private bool isInitialized = false;
+     private bool isDataLoading = false;
+     private List<BreadcrumbItem> breadcrumbItems = new();
+     private List<CourseHelp> Courses = new();
+
+     private UserInformationResponse userInfo => StateService.ParentState.Profile;
+
+     protected override void OnInitialized()
+     {
+          base.OnInitialized();
+          InitializeBreadcrumbs();
+          InitializeCourses();
+     }
+
+     protected override async Task OnInitializedAsync()
+     {
+          await base.OnInitializedAsync();
+
+          var userId = await SessionService.GetLoggedInUserIdAsync();
+          await LoadData(userId);
+
+          isInitialized = true;
+          RequestRender();
+     }
+
+     private async Task LoadData(Guid userId, bool forceReload = false)
+     {
+          isDataLoading = true;
+
+          await StateService.LoadUserProfileData(UserService, userId, forceReload);
+
+          isDataLoading = false;
+     }
+
+     private void InitializeBreadcrumbs()
+     {
+          breadcrumbItems = new List<BreadcrumbItem>
+          {
+               new BreadcrumbItem( L[MaktabResources.Dashboard], Constants.ParentDashboardRoute),
+               new BreadcrumbItem( /* L[MaktabResources.Help] */"Help - Aider", null, true)
+          };
+     }
+
+     private void InitializeCourses()
+     {
+          Courses = new List<CourseHelp>
+          {
+               new CourseHelp
+               {
+                    Name = "Rattel School / École Rattel",
+                    Pdfs = new()
+                    {
+                         new HelpLink("Registration Instructions", "https://drive.google.com/file/d/1-gNhTHfmidZv3mP-1cnEobA9j1HTY4kY/view"),
+                         new HelpLink("Directives d'inscription", "https://drive.google.com/file/d/1YmScXT374NVc6D5NNzlOmKJDJiAUTmmm/view"),
+                    },
+                    Videos = new()
+                    {
+                         new HelpLink("Link to Tutorial Video", "https://drive.google.com/file/d/1qi3CgcXqL4AAlkPEWspO8bY0BozVCtJr/view"),
+                         new HelpLink("Lien vers la vidéo explicative", "https://drive.google.com/file/d/1u_4v505p-44a-c0mGNY55WeW-Z8HhbRp/view"),
+
+                    }
+               },
+             new CourseHelp
+             {
+                 Name = "Qobaa Arabic School / École Arabe Qobaa",
+                  Pdfs = new()
+                    {
+                         new HelpLink("Registration Instructions", "https://drive.google.com/file/d/1PtIcGNwlhEY5ojl6CubTtFlktze8AYWK/view"),
+                         new HelpLink("Directives d'inscription", "https://drive.google.com/file/d/1KEsDm5EQgafyx9zExgIcHFcpmsQR0tlZ/view"),
+                    },
+                    Videos = new()
+                    {
+                         new HelpLink("Link to Tutorial Video", "https://drive.google.com/file/d/1_HfABk8i2Vglbht_fd1AsAmfoV-K7haO/view"),
+                         new HelpLink("Lien vers la vidéo explicative", "https://drive.google.com/file/d/1wD11QGXCdhidwO15-yfH6e_5px-KeiCF/view"),
+                    }
+             },
+          };
+     }
+
+     private class CourseHelp
+     {
+          public string Name { get; set; } = "";
+          public List<HelpLink> Pdfs { get; set; } = new();
+          public List<HelpLink> Videos { get; set; } = new();
+     }
+
+     private record HelpLink(string Title, string Url);
+}

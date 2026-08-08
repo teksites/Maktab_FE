@@ -19,6 +19,8 @@
      <MudNavLink Href="@Constants.AppLandingPage" Icon="@Icons.Material.Filled.Mosque" Match="NavLinkMatch.All">@L[MaktabResources.Activities]</MudNavLink>
      @if (isAuthenticated)
      {
+          <MudNavLink Href="@Constants.ParentHelpRoute" Icon="@Icons.Material.Rounded.Help">Help / Aider</MudNavLink>
+
           <MudNavLink Href="@Constants.ContactUsRoute" Icon="@Icons.Material.Filled.ContactSupport">@L[MaktabResources.Contact_Us]</MudNavLink>
      }
      @* <MudNavGroup Title="Settings" Expanded="true">
