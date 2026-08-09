@@ -75,6 +75,7 @@
                          .Where(x =>
                               x != Relationship.Mother &&
                               x != Relationship.Father &&
+                              x != Relationship.Guardian &&
                               x != Relationship.Unknown);
 
      IEnumerable<ContactType> ContactTypes => Enum.GetValues<ContactType>()
