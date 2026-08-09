@@ -344,7 +344,7 @@ else if (IsError)
 
                                                             @if (CourseGroupHasValidAgeRestriction(g))
                                                             {
-                                                                 <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge.MonthToYearsAdjustedMidPoint() - @g.MaxAge.MonthToYearsAdjustedMidPoint()</MudChip>
+                                                                 <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @GetAgeRestictionInString(g) </MudChip>
                                                             }
                                                             <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true">
                                                                  @foreach (var chipSet in g.AcedemicGroups)
@@ -395,7 +395,7 @@ else if (IsError)
 
                                                        @if (CourseGroupHasValidAgeRestriction(g))
                                                        {
-                                                            <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @g.MinAge.MonthToYearsAdjustedMidPoint() - @g.MaxAge.MonthToYearsAdjustedMidPoint()</MudChip>
+                                                            <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@L[MaktabResources.Age]: @GetAgeRestictionInString(g)</MudChip>
                                                        }
 
                                                        <MudChipSet T="CourseEnrollmentGroupResponse" ReadOnly="true">
@@ -695,6 +695,24 @@ else if (IsError)
           StateService.ParentState.OnChange -= HandleStateChange;
           StateService.InstituteState.OnChange -= HandleStateChange;
           base.OnDispose();
+     }
+
+     protected string GetAgeRestictionInString(CourseEnrollmentGroupResponse group)
+     {
+          var minAge = group.MinAge.MonthToYearsInString();
+          var maxAge = group.MaxAge.MonthToYearsInString();
+
+          if(minAge == string.Empty)
+          {
+               minAge = "0y";
+          }
+
+          if(maxAge == string.Empty)
+          {
+               maxAge = "18y+";
+          }
+
+          return $"{minAge} - {maxAge}";
      }
 
      protected override async Task OnInitializedAsync()
