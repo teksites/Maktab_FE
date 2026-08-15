@@ -2207,7 +2207,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The selected group is full. If available, select another group. If you proceed with choosing the group that is full, your participant will be placed on the waiting list.  Payment of fees is also required to be on a waiting list.  If no spot becomes available, those fees will be refunded to you.
+        ///   Looks up a localized string similar to  Participant has been enrolled in the waiting list for a group that is full. The fee showing as payable above includes this enrollment. If you wish to guarantee a spot for your child in the school / activity, you must enroll your child in another available group. You will need to delete the enrollment marked as “In Waiting” from below and enroll in another available group for the same school and course..
         /// </summary>
         public static string Msg_Info_CourseGroup_Registration_Full {
             get {

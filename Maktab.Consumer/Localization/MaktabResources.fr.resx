@@ -1490,9 +1490,6 @@
   <data name="Contact_Type_Pickup" xml:space="preserve">
     <value>Ramasser</value>
   </data>
-  <data name="Msg_Info_CourseGroup_Registration_Full" xml:space="preserve">
-    <value>Le groupe sélectionné est complet. Si disponible, sélectionnez un autre groupe. Si vous procédez au choix du groupe complet, votre participant sera placé sur la liste d'attente.  Le paiement des frais est également requis pour être inscrit sur une liste d’attente.  Si aucune place n'est disponible, ces frais vous seront remboursés</value>
-  </data>
   <data name="Msg_Acknowledge_Participant_Consent_Completion" xml:space="preserve">
     <value>Je reconnais avoir répondu aux différentes questions de consentement du participant</value>
   </data>
@@ -1534,5 +1531,8 @@
   </data>
   <data name="Edit_Student_Participant" xml:space="preserve">
     <value>Modifier un étudiant/un participant</value>
+  </data>
+  <data name="Msg_Info_CourseGroup_Registration_Full" xml:space="preserve">
+    <value>Le participant a été inscrit sur la liste d'attente d'un groupe complet. Les frais indiqués comme payables ci-dessus incluent cette inscription. Si vous souhaitez garantir une place à votre enfant dans l'école/activité, vous devez inscrire votre enfant dans un autre groupe disponible. Vous devrez supprimer l’inscription marquée comme « En attente » ci-dessous et vous inscrire dans un autre groupe disponible pour la même école et le même cours.</value>
   </data>
 </root>
