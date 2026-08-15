@@ -1535,4 +1535,16 @@
   <data name="Edit_Participant" xml:space="preserve">
     <value>Edit Participant</value>
   </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Tutorial_Guide" xml:space="preserve">
+    <value>Tutorials and Guides</value>
+  </data>
+  <data name="Guide" xml:space="preserve">
+    <value>Guide</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
 </root>

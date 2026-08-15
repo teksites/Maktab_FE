@@ -10,17 +10,15 @@
      {
           <MudNavLink Href="@Constants.ParentDashboardRoute" Icon="@Icons.Material.Rounded.Dashboard">@L[MaktabResources.Parent_Dashboard]</MudNavLink>
           <MudNavLink Href="@Constants.ParentProfileRoute" Icon="@Icons.Material.Rounded.Person">@L[MaktabResources.Profile]</MudNavLink>
+          <MudNavLink Href="@Constants.ParentHelpRoute" Icon="@Icons.Material.Rounded.Help">@L[MaktabResources.Help]</MudNavLink>
 
           <MudDivider />
-
           @* <MudNavLink Href="@Constants.LogoutRoute" Icon="@Icons.Material.Filled.Logout">Logout</MudNavLink> *@
      }
 
      <MudNavLink Href="@Constants.AppLandingPage" Icon="@Icons.Material.Rounded.Mosque" Match="NavLinkMatch.All">@L[MaktabResources.Activities]</MudNavLink>
      @if (isAuthenticated)
      {
-          <MudNavLink Href="@Constants.ParentHelpRoute" Icon="@Icons.Material.Rounded.Help">Help / Aider</MudNavLink>
-
           <MudNavLink Href="@Constants.ContactUsRoute" Icon="@Icons.Material.Rounded.Email">@L[MaktabResources.Contact_Us]</MudNavLink>
      }
      @* <MudNavGroup Title="Settings" Expanded="true">

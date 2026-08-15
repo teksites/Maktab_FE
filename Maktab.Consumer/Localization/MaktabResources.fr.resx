@@ -1506,7 +1506,7 @@
     <value>Le participant a été mis à jour avec succès</value>
   </data>
   <data name="Msg_Error_Participant_Age_Invalid_Group_Assigned" xml:space="preserve">
-    <value>Le participant ne peut pas s'inscrire au groupe de cours en raison d'une restriction d'âge. Veuillez choisir le groupe concerné avec une limite d'âge.</value>
+    <value>Le participant ne peut pas s'inscrire au groupe de cours en raison d'une restriction d'âge. Veuillez choisir le groupe concerné avec une limite d'âge</value>
   </data>
   <data name="Consent_On_Behalf_Of_Participant" xml:space="preserve">
     <value>Consentement au nom du participant</value>
@@ -1534,5 +1534,14 @@
   </data>
   <data name="Msg_Info_CourseGroup_Registration_Full" xml:space="preserve">
     <value>Le participant a été inscrit sur la liste d'attente d'un groupe complet. Les frais indiqués comme payables ci-dessus incluent cette inscription. Si vous souhaitez garantir une place à votre enfant dans l'école/activité, vous devez inscrire votre enfant dans un autre groupe disponible. Vous devrez supprimer l’inscription marquée comme « En attente » ci-dessous et vous inscrire dans un autre groupe disponible pour la même école et le même cours.</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Aider</value>
+  </data>
+  <data name="Tutorial_Guide" xml:space="preserve">
+    <value>Tutoriels et guides</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Vidéo</value>
   </data>
 </root>
