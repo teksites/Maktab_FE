@@ -1005,10 +1005,6 @@ else if (IsError)
                          isEligible = false;
                          break;
                }
-
-               var childAge = child.DateOfBirth.GetAgeInMonths(course.StartDate);
-               isEligible = isEligible && (childAge >= group.MinAge &&
-                                           childAge <= group.MaxAge);
           }    
 
           return isEligible;
