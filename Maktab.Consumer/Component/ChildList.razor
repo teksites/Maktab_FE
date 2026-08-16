@@ -43,10 +43,10 @@
      <RowTemplate>
           <MudTd>@context.FirstName</MudTd>
           <MudTd>@context.LastName</MudTd>
-          <MudTd>@context.DateOfBirth.ToShortDateString()</MudTd>
+          <MudTd>@GetValidDateOfBirth(context)</MudTd>
           <MudTd>@(GetGenderLabel(context.Gender))</MudTd>
           <MudTd>@context.RAMQNumber</MudTd>
-          <MudTd>@context.RAMQExpiry.ToString("MM/yy")</MudTd>
+          <MudTd>@GetValidRAMQExpiry(context)</MudTd>
           @* <MudTd>@context.Allergies</MudTd>
           <MudTd>@context.OtherHealthConditions</MudTd> *@
           <MudTd>
@@ -159,6 +159,18 @@
           // }
 
           RequestRender();
+     }
+
+     private string GetValidDateOfBirth(ChildResponse childResponse)
+     {
+          var dob = childResponse.DateOfBirth == Constants.DefaultDateTime ? "-" : childResponse.DateOfBirth.ToShortDateString();
+          return dob;
+     }
+
+     private string GetValidRAMQExpiry(ChildResponse childResponse)
+     {
+          var expiry = childResponse.RAMQExpiry == Constants.DefaultDateTime ? "-" : childResponse.RAMQExpiry.ToString("MM/yy");
+          return expiry;
      }
 
      private async Task OpenEditChildDialog(ChildResponse childResponse)
