@@ -9,11 +9,11 @@ namespace Maktab.Consumer.Extensions
 {
      public static class UserStateServiceExtension
      {
-          public static async Task LoadChildrenData(this UserStateService userStateService, IChildrenService childrenService, Guid familyId, bool forceReload = false)
+          public static async Task LoadChildrenData(this UserStateService userStateService, IChildrenService childrenService, Guid familyId, bool includeAdults, bool forceReload = false)
           {
                if (userStateService.ParentState.Children == null || forceReload)
                {
-                    var childCollection = await childrenService.GetChildrenByFamilyIdAsync(familyId);
+                    var childCollection = await childrenService.GetChildrenByFamilyIdAsync(familyId, includeAdults);
                     if (childCollection?.Any() == true)
                     {
                          var sortedCollection = childCollection.Where(x => x.IsActive).OrderBy(x => x.FirstName);

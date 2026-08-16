@@ -18,7 +18,7 @@ namespace Maktab.Core.Interfaces.Services
           /// <summary>
           /// Get all children for a family with error handling
           /// </summary>
-          Task<IEnumerable<ChildResponse>> GetChildrenByFamilyIdAsync(Guid familyId);
+          Task<IEnumerable<ChildResponse>> GetChildrenByFamilyIdAsync(Guid familyId, bool includeAdults = false);
 
           /// <summary>
           /// Add child to family with validation

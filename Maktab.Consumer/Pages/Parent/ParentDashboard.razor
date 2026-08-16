@@ -405,7 +405,7 @@
 
           await StateService.LoadUserProfileData(UserService, userId, forceReload);
 
-          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, forceReload);
+          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, true, forceReload);
 
           await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, forceReload);
 
@@ -599,7 +599,7 @@
           var dialogResult = await this.OpenAddChildDialog(DialogService, userInfo.FamilyId);
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
           {
-               await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, true);
+               await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, true, true);
                RequestRender();
           }
      }

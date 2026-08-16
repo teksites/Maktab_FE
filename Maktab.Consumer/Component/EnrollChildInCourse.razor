@@ -732,7 +732,7 @@ else if (IsError)
           IsLoadingData = true;
 
           await StateService.LoadUserProfileData(UserService, userId, forceLoad);
-          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, forceLoad);
+          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, true, forceLoad);
           await StateService.LoadActiveInstitutesData(InstitutionService, forceLoad);
           await StateService.LoadActiveCoursesData(CourseService, forceLoad);
           await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, forceLoad);

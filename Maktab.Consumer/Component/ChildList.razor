@@ -95,7 +95,7 @@
 
           if (result!= null && !result.Canceled && result.Data is ChildResponse child)
           {
-               await StateService.LoadChildrenData(ChildrenService, FamilyId, true);
+               await StateService.LoadChildrenData(ChildrenService, FamilyId, true, true);
                RequestRender();
           }
      }
@@ -179,7 +179,7 @@
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
           {
                //await LoadChildrenData(userInfo.FamilyId, true);
-               await StateService.LoadChildrenData(ChildrenService, child.FamilyId, true);
+               await StateService.LoadChildrenData(ChildrenService, child.FamilyId, true, true);
                RequestRender();
           }
      }
