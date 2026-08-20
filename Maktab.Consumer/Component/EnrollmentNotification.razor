@@ -15,10 +15,8 @@
 @inject IDialogService DialogService
 @inject UserStateService StateService
 
-<MudPaper Class="pa-4 rounded-lg" Elevation="1">
-     <MudStack>
-          <MudText Typo="Typo.h6">@L[MaktabResources.Enrollments]</MudText>
 
+<MudContainer>
           @* <MudExpansionPanel Expanded="true">
           <TitleContent>
                <MudContainer>
@@ -43,13 +41,32 @@
                          </MudAlert>
                     }
 
+     <MudPaper Class="pa-4 rounded-lg" Elevation="1">
+          <MudStack>
+               <MudText Typo="Typo.h6">@L[MaktabResources.Enrollments]</MudText>
                     <MudExpansionPanels MultiExpansion="true" Outlined="true" Elevation="1">
                          @foreach (var childItem in Enrollments?.GroupBy(x => x.ChildName))
                          {
                          <MudExpansionPanel>
                               <TitleContent>
                                    <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                                        <MudText Typo="Typo.body1">@childItem.Key.ToTitleCase() <MudChip T="string" Variant="Variant.Text" Color="Color.Info">@GetChildPanelTitle(childItem)</MudChip></MudText>
+                                             <MudText Typo="Typo.body1">@childItem.Key.ToTitleCase() </MudText>
+                                             <MudSpacer/>
+
+                                             <MudChipSet T="string">
+                                                  @if (GetAwatingEnrollmentCount(childItem) > 0)
+                                                  {
+                                                       <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Warning">@GetAwatingEnrollmentCount(childItem) : @L[MaktabResources.EnrollmentStatus_Awaiting]</MudChip>
+                                                  }
+                                                  @if (GetEnrolledCount(childItem) > 0)
+                                                  {
+                                                       <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success">@GetEnrolledCount(childItem) : @L[MaktabResources.EnrollmentStatus_Enrolled]</MudChip>
+                                                  }
+                                                  @if (GetCancelledCount(childItem) > 0)
+                                                  {
+                                                       <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Error">@GetCancelledCount(childItem) : @L[MaktabResources.EnrollmentStatus_Cancelled]</MudChip>
+                                                  }
+                                             </MudChipSet>
                                    </MudStack>
 
                               </TitleContent>
@@ -58,11 +75,28 @@
                                    <MudExpansionPanels MultiExpansion="true" Outlined="true" Elevation="0">
                                         @foreach (var courseItem in childItem?.GroupBy(x => x.CourseId))
                                         {
-                                             <MudExpansionPanel Text=@GetCoursePanelTitle(courseItem)>
+                                             <MudExpansionPanel >
 
                                                   <TitleContent>
                                                        <MudStack Row="true" AlignItems="AlignItems.Stretch">
-                                                            <MudText Typo="Typo.body1">@GetCourseName(courseItem.Key)?.ToTitleCase() <MudChip T="string" Variant="Variant.Text" Color="Color.Info">@GetCoursePanelTitle(courseItem)</MudChip></MudText>
+                                                                 <MudText Typo="Typo.body1">@GetCourseName(courseItem.Key)?.ToTitleCase()</MudText>
+                                                                 <MudSpacer />
+
+                                                                 <MudChipSet T="string">
+                                                                      @if (GetAwatingEnrollmentCount(courseItem) > 0)
+                                                                      {
+                                                                           <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Warning">@GetAwatingEnrollmentCount(courseItem) : @L[MaktabResources.EnrollmentStatus_Awaiting]</MudChip>
+                                                                      }
+                                                                      @if (GetEnrolledCount(courseItem) > 0)
+                                                                      {
+                                                                           <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success">@GetEnrolledCount(courseItem) : @L[MaktabResources.EnrollmentStatus_Enrolled]</MudChip>
+                                                                      }
+                                                                      @if (GetCancelledCount(courseItem) > 0)
+                                                                      {
+                                                                           <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Error">@GetCancelledCount(courseItem) : @L[MaktabResources.EnrollmentStatus_Cancelled]</MudChip>
+                                                                      }
+                                                                 </MudChipSet>
+
                                                        </MudStack>
 
                                                   </TitleContent>
@@ -118,15 +152,18 @@
                               </MudExpansionPanel>
                          }
                     </MudExpansionPanels>
+          </MudStack>
+     </MudPaper>
                }
                else
                {
+                    <MudPaper Class="pa-4 rounded-lg" Elevation="1">
                     <MudText Typo="Typo.body2" Color="Color.Secondary">@L[MaktabResources.Msg_Info_No_Enrollment]</MudText>
+     </MudPaper>
                }
           @* </ChildContent>
      </MudExpansionPanel> *@
-     </MudStack>
-</MudPaper>
+</MudContainer>
 
 @code {
      private IReadOnlyCollection<StudentCourseEnrollmentResponse> Enrollments => StateService.ParentState.CourseEnrollments ?? Array.Empty<StudentCourseEnrollmentResponse>();
@@ -136,6 +173,16 @@
      private int GetAwatingEnrollmentCount(IEnumerable<StudentCourseEnrollmentResponse> studentEnrollments)
      {
           return studentEnrollments?.Count(x => x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Awaiting) ?? 0;
+     }
+
+     private int GetEnrolledCount(IEnumerable<StudentCourseEnrollmentResponse> studentEnrollments)
+     {
+          return studentEnrollments?.Count(x => x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Enrolled || x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Registered) ?? 0;
+     }
+
+     private int GetCancelledCount(IEnumerable<StudentCourseEnrollmentResponse> studentEnrollments)
+     {
+          return studentEnrollments?.Count(x => x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Refunded || x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Cancelled) ?? 0;
      }
 
      [Parameter] public EventCallback<StudentCourseEnrollmentResponse> OnViewDetails { get; set; }
@@ -156,11 +203,11 @@
           RequestRender();
      }
 
-     public void OnDispose()
+     protected override void OnDispose()
      {
           StateService.ParentState.OnChange -= HandleStateChange;
           StateService.InstituteState.OnChange -= HandleStateChange;
-
+          base.OnDispose();
      }
 
      private Task ViewDetails(StudentCourseEnrollmentResponse e) => OnViewDetails.InvokeAsync(e);
@@ -314,97 +361,97 @@
           return sortedEnrollments;
      }
 
-     private string GetChildPanelTitle(IGrouping<string, StudentCourseEnrollmentResponse> group)
-     {
-          var countOfAwaitingEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Awaiting);
-          var countOfRegistedEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Enrolled || x.EnrollmentStatus == EnrollmentStatus.Registered);
-          var countOfCancelledEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Refunded || x.EnrollmentStatus == EnrollmentStatus.Cancelled);
+     // private string GetChildPanelTitle(IGrouping<string, StudentCourseEnrollmentResponse> group)
+     // {
+     //      var countOfAwaitingEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Awaiting);
+     //      var countOfRegistedEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Enrolled || x.EnrollmentStatus == EnrollmentStatus.Registered);
+     //      var countOfCancelledEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Refunded || x.EnrollmentStatus == EnrollmentStatus.Cancelled);
 
-          var titleBuilder = new StringBuilder();
+     //      var titleBuilder = new StringBuilder();
 
-          if (countOfRegistedEnrollments > 0 || countOfCancelledEnrollments > 0 || countOfAwaitingEnrollments > 0)
-          {
-               //titleBuilder.Append(" (");
-               bool addedSeparator = false;
-               if (countOfRegistedEnrollments > 0)
-               {
-                    titleBuilder.Append($" {countOfRegistedEnrollments}: {L[MaktabResources.EnrollmentStatus_Enrolled]} ");
-                    addedSeparator = true;
-               }
+     //      if (countOfRegistedEnrollments > 0 || countOfCancelledEnrollments > 0 || countOfAwaitingEnrollments > 0)
+     //      {
+     //           //titleBuilder.Append(" (");
+     //           bool addedSeparator = false;
+     //           if (countOfRegistedEnrollments > 0)
+     //           {
+     //                titleBuilder.Append($" {countOfRegistedEnrollments}: {L[MaktabResources.EnrollmentStatus_Enrolled]} ");
+     //                addedSeparator = true;
+     //           }
 
-               if (countOfAwaitingEnrollments > 0)
-               {
-                    if (addedSeparator)
-                    {
-                         titleBuilder.Append(" / ");
-                         addedSeparator = false;
-                    }
+     //           if (countOfAwaitingEnrollments > 0)
+     //           {
+     //                if (addedSeparator)
+     //                {
+     //                     titleBuilder.Append(" / ");
+     //                     addedSeparator = false;
+     //                }
 
-                    titleBuilder.Append($" {countOfAwaitingEnrollments}: {L[MaktabResources.EnrollmentStatus_Awaiting]} ");
-               }
+     //                titleBuilder.Append($" {countOfAwaitingEnrollments}: {L[MaktabResources.EnrollmentStatus_Awaiting]} ");
+     //           }
 
-               if (countOfCancelledEnrollments > 0)
-               {
-                    if (addedSeparator)
-                    {
-                         titleBuilder.Append(" / ");
-                         addedSeparator = false;
-                    }
+     //           if (countOfCancelledEnrollments > 0)
+     //           {
+     //                if (addedSeparator)
+     //                {
+     //                     titleBuilder.Append(" / ");
+     //                     addedSeparator = false;
+     //                }
 
-                    titleBuilder.Append($" {countOfCancelledEnrollments}: {L[MaktabResources.EnrollmentStatus_Cancelled]} ");
-               }
+     //                titleBuilder.Append($" {countOfCancelledEnrollments}: {L[MaktabResources.EnrollmentStatus_Cancelled]} ");
+     //           }
 
-               //titleBuilder.Append(" )");
-          }
+     //           //titleBuilder.Append(" )");
+     //      }
 
-          return titleBuilder.ToString();
-     }
+     //      return titleBuilder.ToString();
+     // }
 
-     private string GetCoursePanelTitle(IGrouping<Guid, StudentCourseEnrollmentResponse> group)
-     {
-          var countOfAwaitingEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Awaiting);
-          var countOfRegistedEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Enrolled || x.EnrollmentStatus == EnrollmentStatus.Registered);
-          var countOfCancelledEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Refunded || x.EnrollmentStatus == EnrollmentStatus.Cancelled);
+     // private string GetCoursePanelTitle(IGrouping<Guid, StudentCourseEnrollmentResponse> group)
+     // {
+     //      var countOfAwaitingEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Awaiting);
+     //      var countOfRegistedEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Enrolled || x.EnrollmentStatus == EnrollmentStatus.Registered);
+     //      var countOfCancelledEnrollments = group.Count(x => x.EnrollmentStatus == EnrollmentStatus.Refunded || x.EnrollmentStatus == EnrollmentStatus.Cancelled);
 
-          var titleBuilder = new StringBuilder();
+     //      var titleBuilder = new StringBuilder();
 
-          if (countOfRegistedEnrollments > 0 || countOfCancelledEnrollments > 0 || countOfAwaitingEnrollments > 0)
-          {
-               //titleBuilder.Append(" (");
-               bool addedSeparator = false;
-               if (countOfRegistedEnrollments > 0)
-               {
-                    titleBuilder.Append($" {countOfRegistedEnrollments}: {L[MaktabResources.EnrollmentStatus_Enrolled]} ");
-                    addedSeparator = true;
-               }
+     //      if (countOfRegistedEnrollments > 0 || countOfCancelledEnrollments > 0 || countOfAwaitingEnrollments > 0)
+     //      {
+     //           //titleBuilder.Append(" (");
+     //           bool addedSeparator = false;
+     //           if (countOfRegistedEnrollments > 0)
+     //           {
+     //                titleBuilder.Append($" {countOfRegistedEnrollments}: {L[MaktabResources.EnrollmentStatus_Enrolled]} ");
+     //                addedSeparator = true;
+     //           }
 
-               if (countOfAwaitingEnrollments > 0)
-               {
-                    if (addedSeparator)
-                    {
-                         titleBuilder.Append(" / ");
-                         addedSeparator = false;
-                    }
+     //           if (countOfAwaitingEnrollments > 0)
+     //           {
+     //                if (addedSeparator)
+     //                {
+     //                     titleBuilder.Append(" / ");
+     //                     addedSeparator = false;
+     //                }
 
-                    titleBuilder.Append($" {countOfAwaitingEnrollments}: {L[MaktabResources.EnrollmentStatus_Awaiting]} ");
-               }
+     //                titleBuilder.Append($" {countOfAwaitingEnrollments}: {L[MaktabResources.EnrollmentStatus_Awaiting]} ");
+     //           }
 
-               if (countOfCancelledEnrollments > 0)
-               {
-                    if (addedSeparator)
-                    {
-                         titleBuilder.Append(" / ");
-                         addedSeparator = false;
-                    }
+     //           if (countOfCancelledEnrollments > 0)
+     //           {
+     //                if (addedSeparator)
+     //                {
+     //                     titleBuilder.Append(" / ");
+     //                     addedSeparator = false;
+     //                }
 
-                    titleBuilder.Append($" {countOfCancelledEnrollments}: {L[MaktabResources.EnrollmentStatus_Cancelled]} ");
-               }
+     //                titleBuilder.Append($" {countOfCancelledEnrollments}: {L[MaktabResources.EnrollmentStatus_Cancelled]} ");
+     //           }
 
-               //titleBuilder.Append(" )");
-          }
+     //           //titleBuilder.Append(" )");
+     //      }
 
-          return titleBuilder.ToString();
-     }
+     //      return titleBuilder.ToString();
+     // }
 }
 
 

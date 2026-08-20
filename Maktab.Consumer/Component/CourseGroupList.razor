@@ -27,7 +27,7 @@
                </MudTimeline> *@
 
 
-          <MudList T="CourseEnrollmentGroupResponse" Dense="true">
+          <MudList T="CourseEnrollmentGroupResponse" ReadOnly="true">
                @foreach (var group in CourseGroups)
                {
                     <MudListItem Icon="@Icons.Material.Outlined.Groups">
@@ -37,10 +37,10 @@
                                    <MudText>@(GetCourseGroupTitle(group))</MudText>
                          @* <MudText>@group.Description</MudText> *@
                          <MudSpacer/> 
-                         <MudChipSet  >
+                         <MudChipSet >
                               @foreach( var chipSet in group.AcedemicGroups)
                                    {
-                                      <MudChip T="String" Text="@chipSet"/>
+                                      <MudChip T="String" Text="@chipSet" Value="@chipSet"/>
                                    }
                               </MudChipSet>
                     </MudStack>
@@ -56,30 +56,5 @@
 </MudPaper>
 
 @code {
-     [Parameter] public IEnumerable<CourseEnrollmentGroupResponse> CourseGroups { get; set; }
-
-
-     private string GetCourseGroupTitle(CourseEnrollmentGroupResponse group)
-     {
-          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-          {
-               return group.GroupTitleFr;
-          }
-          else
-          {
-               return group.GroupTitle;
-          }
-     }
-
-     private string GetCourseDetails(CourseEnrollmentGroupResponse group)
-     {
-          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-          {
-               return group.DetailsFr;
-          }
-          else
-          {
-               return group.Details;
-          }
-     }
+     [Parameter, EditorRequired] public IEnumerable<CourseEnrollmentGroupResponse> CourseGroups { get; set; }
 }

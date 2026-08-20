@@ -87,7 +87,7 @@ namespace Maktab.Domain.Services
           /// <summary>
           /// Get all children for a family with error handling
           /// </summary>
-          public async Task<IEnumerable<ChildResponse>> GetChildrenByFamilyIdAsync(Guid familyId)
+          public async Task<IEnumerable<ChildResponse>> GetChildrenByFamilyIdAsync(Guid familyId, bool includeAdults = false)
           {
                try
                {
@@ -98,10 +98,16 @@ namespace Maktab.Domain.Services
                          throw new ArgumentException("Family ID cannot be empty", nameof(familyId));
                     }
 
-                    _logger.LogInformation("Fetching children for family {FamilyId}", familyId);
+                    _logger.LogInformation("Fetching children for family {FamilyId} with includeAdults: {IncludeAdults}", familyId, includeAdults);
 
                     // Make request
                     var formattedUrl = string.Format(getChildrenByFamilyId, familyId);
+
+                    if (includeAdults)
+                    {
+                         formattedUrl += "?fetchAdults=true";
+                    }
+
                     var result = await _httpService.Get<List<MaktabApiResult<ChildResponse>>>(formattedUrl);
 
                     // Validate response and unwrap

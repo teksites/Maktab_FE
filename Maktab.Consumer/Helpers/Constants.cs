@@ -29,5 +29,10 @@
           public const string ContactUsRoute = "/contact-us";
           public const string SupportEmail = "maktab.info@iccbrossard.com";
 
+          public const string EnglishResource = "en";
+          public const string FrenchResource = "fr";
+
+          public static readonly DateTime DefaultDateTime = new DateTime(1900, 1, 1);
+
      }
 }

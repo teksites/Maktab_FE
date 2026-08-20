@@ -18,10 +18,10 @@
           <MudTextField T="string" @bind-Value="Spouse.Phone" Label=@L[MaktabResources.Phone] Required="true" RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Phone]
                         Validation="@(new PhoneAttribute() { ErrorMessage = @L[MaktabResources.Msg_Error_Phone_Number_Invalid]})" />
 
-          <MudSelect @bind-Value="Spouse.Relationship" Label=@L[MaktabResources.Relashion_With_Children]>
-               @foreach (var margin in relationShips)
+          <MudSelect @bind-Value="Spouse.Relationship" Label=@L[MaktabResources.Relation_With_Student]>
+               @foreach (var relationship in relationShips)
                {
-                    <MudSelectItem Value="margin">@(GetRelationshipLabel(margin))</MudSelectItem>
+                    <MudSelectItem @key="relationship" Value="relationship">@(GetRelationshipLabel(relationship))</MudSelectItem>
                }
           </MudSelect>
 

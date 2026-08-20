@@ -15,12 +15,12 @@
 @if (ShowHeader)
 {
      <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
-          <MudText Typo="Typo.h6">@L[MaktabResources.Children]</MudText>
+          <MudText Typo="Typo.h6">@L[MaktabResources.Participants]</MudText>
           @if (ShowAddButton)
           {
                <MudSpacer />
                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddChildDialog" Class="mb-4">
-                    @L[MaktabResources.Add_Child]
+                    @L[MaktabResources.Add_Participant]
                </MudButton>
           }
      </MudStack>
@@ -43,10 +43,10 @@
      <RowTemplate>
           <MudTd>@context.FirstName</MudTd>
           <MudTd>@context.LastName</MudTd>
-          <MudTd>@context.DateOfBirth.ToShortDateString()</MudTd>
+          <MudTd>@GetValidDateOfBirth(context)</MudTd>
           <MudTd>@(GetGenderLabel(context.Gender))</MudTd>
           <MudTd>@context.RAMQNumber</MudTd>
-          <MudTd>@context.RAMQExpiry.ToString("MM/yy")</MudTd>
+          <MudTd>@GetValidRAMQExpiry(context)</MudTd>
           @* <MudTd>@context.Allergies</MudTd>
           <MudTd>@context.OtherHealthConditions</MudTd> *@
           <MudTd>
@@ -83,22 +83,19 @@
           RequestRender();
      }
 
-     public void OnDispose()
+     protected override void OnDispose()
      {
           StateService.ParentState.OnChange -= HandleStateChange;
+          base.OnDispose();
      }
 
      private async Task OpenAddChildDialog()
      {
-          var parameters = new DialogParameters { ["FamilyId"] = FamilyId };
-          var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseButton = true, BackdropClick = false };
+          var result = await OpenAddChildDialog(DialogService, FamilyId);
 
-          var dialog = await DialogService.ShowAsync<AddChildDialog>(@L[MaktabResources.Add_Child], parameters, options);
-          var result = await dialog.Result;
-
-          if (!result.Canceled && result.Data is ChildResponse child)
+          if (result!= null && !result.Canceled && result.Data is ChildResponse child)
           {
-               await StateService.LoadChildrenData(ChildrenService, FamilyId, true);
+               await StateService.LoadChildrenData(ChildrenService, FamilyId, true, true);
                RequestRender();
           }
      }
@@ -140,7 +137,7 @@
 
                await DialogService.ShowMessageBox(
                    L[MaktabResources.Error],
-                   L[MaktabResources.Msg_Error_Child_Cannot_Be_Removed], L[MaktabResources.OK]);
+                   L[MaktabResources.Msg_Error_Participant_Cannot_Be_Removed], L[MaktabResources.OK]);
 
 
           // bool? result = await DialogService.ShowMessageBox(
@@ -164,13 +161,25 @@
           RequestRender();
      }
 
+     private string GetValidDateOfBirth(ChildResponse childResponse)
+     {
+          var dob = childResponse.DateOfBirth == Constants.DefaultDateTime ? "-" : childResponse.DateOfBirth.ToShortDateString();
+          return dob;
+     }
+
+     private string GetValidRAMQExpiry(ChildResponse childResponse)
+     {
+          var expiry = childResponse.RAMQExpiry == Constants.DefaultDateTime ? "-" : childResponse.RAMQExpiry.ToString("MM/yy");
+          return expiry;
+     }
+
      private async Task OpenEditChildDialog(ChildResponse childResponse)
      {
           var dialogResult = await this.OpenEditChildDialog(DialogService, childResponse);
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
           {
                //await LoadChildrenData(userInfo.FamilyId, true);
-               await StateService.LoadChildrenData(ChildrenService, child.FamilyId, true);
+               await StateService.LoadChildrenData(ChildrenService, child.FamilyId, true, true);
                RequestRender();
           }
      }

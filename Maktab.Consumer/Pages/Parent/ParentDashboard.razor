@@ -24,7 +24,7 @@
 @inject IInstitutionService InstitutionService
 @inject UserStateService StateService
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="py-6">
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-6">
 
      @if (isInitialized && !isDataLoading)
      {
@@ -57,18 +57,18 @@
                     <MudGrid Class="mb-6" Spacing="3">
                          <!-- Children Count Card -->
                          <MudItem xs="12" sm="6" md="3">
-                              <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(156, 39, 176, 0.05) 100%); border-left: 4px solid #9C27B0;">
+                              <MudPaper Class="pa-6 rounded-lg" Elevation="1" Style="border-top: 3px solid var(--mud-palette-primary); border-radius: 10px;">
                                    <MudStack Spacing="4">
                                         <!-- Header with label, info icon, and action button -->
                                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                                             <MudTooltip Text=@L[MaktabResources.Msg_Info_Total_Registered_Child]>
+                                             <MudTooltip Text=@L[MaktabResources.Msg_Info_Total_Registered_Participant]>
                                              <MudText Typo="Typo.body1" Class="font-weight-medium" Style="opacity: 0.9;">
-                                                  @L[MaktabResources.Child]
+                                                  @L[MaktabResources.Participant]
                                              </MudText>
                                              </MudTooltip>
                                              
                                              <MudSpacer />
-                                             <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Size="Size.Small" OnClick="@OpenAddChildDialog">
+                                             <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" OnClick="@OpenAddChildDialog">
                                                   @L[MaktabResources.Add]
                                              </MudButton>
                                         </MudStack>
@@ -86,7 +86,7 @@
 
                          <!-- Enrollments Card -->
                          <MudItem xs="12" sm="6" md="3">
-                              <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%); border-left: 4px solid #4CAF50;">
+                              <MudPaper Class="pa-6 rounded-lg" Elevation="1" Style="border-top: 3px solid var(--mud-palette-primary); border-radius: 10px;">
                                    <MudStack Spacing="4">
                                         <!-- Header with label, info icon, and action button -->
                                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
@@ -97,7 +97,7 @@
                                              </MudTooltip>
                                              
                                              <MudSpacer />
-                                             <MudButton Variant="Variant.Outlined" Color="Color.Success" Size="Size.Small" Disabled="(_Children?.Any() != true)" OnClick="@OpenEnrollChildDialog">
+                                             <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" Disabled="(_Children?.Any() != true)" OnClick="@OpenEnrollChildDialog">
                                                   @L[MaktabResources.Enroll]
                                              </MudButton>
                                         </MudStack>
@@ -127,7 +127,7 @@
 
                          <!-- Total Amount Card -->
                          <MudItem xs="12" sm="6" md="3">
-                              <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(33, 150, 243, 0.05) 100%); border-left: 4px solid #2196F3;">
+                              <MudPaper Class="pa-6 rounded-lg" Elevation="1" Style="border-top: 3px solid var(--mud-palette-secondary); border-radius: 10px;">
                                    <MudStack Spacing="4">
                                         <!-- Header with label, info icon, and action button -->
                                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
@@ -137,14 +137,14 @@
                                              </MudText>
                                              </MudTooltip>
                                              <MudSpacer />
-                                             <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" Disabled="(this.TotalAmount <= 0)" OnClick="NavigateToPaymentDetailsPage">
+                                             <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Disabled="(this.TotalAmount <= 0)" OnClick="NavigateToPaymentDetailsPage">
                                                   @L[MaktabResources.Details]
                                              </MudButton>
                                         </MudStack>
 
                                         <!-- KPI Value and Icon -->
                                         <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="2">
-                                             <MudText Typo="Typo.h4" Class="font-weight-bold">
+                                             <MudText Typo="Typo.h4" Color="Color.Info" Class="font-weight-bold">
                                                   @TotalAmount
                                              </MudText>
                                              <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Info" Style="font-size: 32px;" />
@@ -155,7 +155,7 @@
 
                          <!-- Amount Due Card -->
                          <MudItem xs="12" sm="6" md="3">
-                              <MudPaper Class="pa-6 rounded-lg" Elevation="0" Style="background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(244, 67, 54, 0.05) 100%); border-left: 4px solid #F44336;">
+                              <MudPaper Class="pa-6 rounded-lg" Elevation="1" Style="border-top: 3px solid var(--mud-palette-error); border-radius: 10px;">
                                    <MudStack Spacing="4">
                                         <!-- Header with label, info icon, and action button -->
                                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
@@ -168,7 +168,7 @@
                                              <MudSpacer />
                                              @if (this.AmountPayable != 0)
                                              {
-                                                  <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" OnClick="NavigateToPaymentInfoPage">
+                                                  <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" OnClick="NavigateToPaymentInfoPage">
                                                        @L[MaktabResources.Pay]
                                                   </MudButton>
                                              }
@@ -190,7 +190,7 @@
                @if (_Children?.Any() != true)
                {
                     <MudItem xs="12" md="12">
-                         <MudAlert Severity="Severity.Warning" Elevation="0" Class="mt-2">@L[MaktabResources.Msg_Info_Add_Children_To_Enroll]</MudAlert>
+                         <MudAlert Severity="Severity.Warning" Elevation="0" Class="mt-2">@L[MaktabResources.Msg_Info_Add_Participants_To_Enroll]</MudAlert>
                     </MudItem>
                }
 
@@ -265,7 +265,9 @@
      }
      else
      {
-          <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+          <MudPaper Class="pa-6" Elevation="0" Outlined="false">
+               <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+          </MudPaper>
      }
 
 </MudContainer>
@@ -321,10 +323,11 @@
           RequestRender();
      }
 
-     public void OnDispose()
+     protected override void OnDispose()
      {
           StateService.ParentState.OnChange -= HandleStateChange;
           StateService.InstituteState.OnChange -= HandleStateChange;
+          base.OnDispose();
      }
 
      protected override async Task OnInitializedAsync()
@@ -402,7 +405,7 @@
 
           await StateService.LoadUserProfileData(UserService, userId, forceReload);
 
-          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, forceReload);
+          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, true, forceReload);
 
           await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, forceReload);
 
@@ -596,7 +599,7 @@
           var dialogResult = await this.OpenAddChildDialog(DialogService, userInfo.FamilyId);
           if (dialogResult != null && !dialogResult.Canceled && dialogResult.Data is ChildResponse child)
           {
-               await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, true);
+               await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, true, true);
                RequestRender();
           }
      }

@@ -109,13 +109,28 @@ namespace Maktab.Consumer.Base
           /// <summary>
           /// Clean up resources when component is disposed.
           /// </summary>
-          public virtual void Dispose()
+          public void Dispose()
           {
+               OnDispose();
+               Dispose(true);
                IsDisposed = true;
-               _cts.Cancel();
-               _cts.Dispose();
+               GC.SuppressFinalize(this);
           }
 
+          protected virtual void Dispose(bool disposing)
+          {
+               if (disposing)
+               {
+                    _cts.Cancel();
+                    _cts.Dispose();
+               }
+          }
+
+          //Todo: remove this method and use Dispose(bool disposing) instead. This is here for backward compatibility.
+          protected virtual void OnDispose()
+          {
+               //Intentionally left blank for derived classes to override if needed.
+          }
 
           protected virtual void ShowError(string message)
           {

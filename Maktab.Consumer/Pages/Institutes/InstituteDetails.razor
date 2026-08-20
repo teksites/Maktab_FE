@@ -27,9 +27,19 @@
                {
                     <MudStack>
                          <!-- Title + Category -->
-                         <MudText Typo="Typo.h4" GutterBottom="true">@(GetInstituteName())</MudText>
+                         <div class="d-flex align-start gap-3 mb-3">
+                              <MudAvatar Size="Size.Large" Style="background-color: var(--mud-palette-primary-lighten);
+                                   color: var(--mud-palette-primary);"
+                                         Rounded="true">
+                                   <MudIcon Icon="@Icons.Material.Outlined.School" Size="Size.Medium" />
+                              </MudAvatar>
+                              <MudText Typo="Typo.h4" Class="fw-semibold mt-1">
+                                   @GetInstituteName(_institute)
+                              </MudText>
+                         </div>
+                         @* <MudText Typo="Typo.h4" GutterBottom="true">@(GetInstituteName())</MudText> *@
                          <MudText Typo="Typo.subtitle1" Color="Color.Info" Class="mb-2">
-                              @(GetInstituteDescription())
+                              @(GetInstituteDescription(_institute))
                          </MudText>
 
                          <!-- Email -->
@@ -58,7 +68,9 @@
                }
                else
                {
-                    <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+                    <MudPaper Class="pa-6" Elevation="0" Outlined="false">
+                         <BusyContent DisplayText=@L[MaktabResources.Msg_Initializing] />
+                    </MudPaper>
                }
           </MudPaper>
      }
@@ -84,9 +96,10 @@
           RequestRender();
      }
 
-     public void OnDispose()
+     protected override void OnDispose()
      {
           StateService.InstituteState.OnChange -= HandleStateChange;
+          base.OnDispose();
      }
 
      protected override async Task OnInitializedAsync()
@@ -109,15 +122,5 @@
           _courses = StateService.InstituteState.GetCoursesByInstituteId(InstituteId) ?? Array.Empty<CourseResponseDetailed>();
 
           isDataLoading = false;
-     }
-
-     private string GetInstituteName()
-     {
-          return GetInstituteName(_institute);
-     }
-
-     private string GetInstituteDescription()
-     {
-          return GetInstituteDescription(_institute);
      }
 }

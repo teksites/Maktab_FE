@@ -18,7 +18,7 @@
      @if (ShowLabel)
      {
           <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
-               @L[MaktabResources.Add_Child]
+               @L[MaktabResources.Add_Student_Participant]
           </MudText>
      }
 
@@ -53,9 +53,9 @@
                     <MudSelect T="Gender" @bind-Value="ChildModel.Gender"
                                Label=@L[MaktabResources.Gender] Required="true"
                                For="@(() => ChildModel.Gender)">
-                              @foreach (var rel in Genders)
+                              @foreach (var gender in Genders)
                               {
-                                   <MudSelectItem Value="@rel">@(GetGenderLabel(rel))</MudSelectItem>
+                                   <MudSelectItem @key="gender" Value="@gender">@(GetGenderLabel(gender))</MudSelectItem>
                               }
                     </MudSelect>
                </MudItem>
@@ -126,7 +126,7 @@
                          <MudSelect Required="true" Label=@L[MaktabResources.Academic_Group_In_School] T="AcedemicGroupType" @bind-Value="ChildModel.AcedemicGroup">
                          @foreach (var group in acedemicGroups)
                          {
-                              <MudSelectItem Value="group">@group.ToString()</MudSelectItem>
+                              <MudSelectItem @key="group" Value="@group">@group.ToString()</MudSelectItem>
                          }
                     </MudSelect>
                     @* <MudSwitch @bind-Checked="@(ChildModel.WillUseDayCareServices)"
@@ -138,7 +138,7 @@
 
                @if (ChildConsents?.Any() == true)
                {
-                    <MudText Class="mt-2" Typo="Typo.h6">@L[MaktabResources.Parent_Consent_For_Child]</MudText>
+                    <MudText Class="mt-2" Typo="Typo.h6">@L[MaktabResources.Consent_On_Behalf_Of_Participant]</MudText>
                     <ChildConsentList RequiredChildConsents="@RequiredChildConsents" />
                }
 
@@ -261,7 +261,7 @@
           var isAlreadyExists = await ChildrenService.IsChildExistWithRamQNumberAsync(FamilyId, ChildModel.RAMQNumber);
           if (isAlreadyExists)
           {
-               _errorMessage = @L[MaktabResources.Msg_Error_Add_Child_RAMQ_Already_Added];//"Child is already registered with system. Please contact support";
+               _errorMessage = @L[MaktabResources.Msg_Error_RAMQ_Already_Exist];//"Child is already registered with system. Please contact support";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
@@ -297,7 +297,7 @@
           var medicalEmergencyConsent = RequiredChildConsents?.FirstOrDefault(x => x.ConsentType == ConsentType.MedicalEmergencies);
           if (medicalEmergencyConsent != null && !medicalEmergencyConsent.IsAllowed)
           {
-               _errorMessage = @L[MaktabResources.Msg_Child_Consent_Required, GetConsentDescriptionMarkupString(medicalEmergencyConsent)];
+               _errorMessage = @L[MaktabResources.Msg_Consent_Required, GetConsentDescriptionMarkupString(medicalEmergencyConsent)];
                Snackbar.Add(new MarkupString(_errorMessage), Severity.Error);
                return;
           }
@@ -306,6 +306,7 @@
           ChildModel.DateOfBirth = DateOfBirth.Value;
           ChildModel.FamilyId = FamilyId;
           ChildModel.RAMQSequenceNumber = -1;
+          ChildModel.UserType = UserType.Child;
           
           var enabledConents = RequiredChildConsents?.Where(x => x.IsAllowed);
           var result = await ChildrenService.AddChildToFamilyAsync(
@@ -317,12 +318,12 @@
 
           if (result?.ChildId == null || result.ChildId == Guid.Empty)
           {
-               _errorMessage = @L[MaktabResources.Msg_Error_Add_Child_Save];//"Child can not be registered with system. Please try again in few minutes";
+               _errorMessage = @L[MaktabResources.Msg_Error_Add_Participant_Save];//"Child can not be registered with system. Please try again in few minutes";
                Snackbar.Add(_errorMessage, Severity.Error);
                return;
           }
 
-          Snackbar.Add(L[MaktabResources.Msg_Success_Child_Added], Severity.Success);
+          Snackbar.Add(L[MaktabResources.Msg_Success_Participant_Added], Severity.Success);
 
           if (OnSave.HasDelegate)
           {

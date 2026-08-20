@@ -390,9 +390,9 @@
           RequestRender();
      }
 
-     public override void Dispose()
+     protected override void OnDispose()
      {
-          base.Dispose();
           _debouncer.Dispose();
+          base.OnDispose();
      }
 }

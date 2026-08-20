@@ -1,74 +1,57 @@
 ﻿@using Maktab.Consumer.Helpers
-@using Maktab.Domain.Extensions
 @using MaktabDataContracts.Responses.Institute
 
 @inherits LocalizeableBaseComponent<InstituteCard>
-
 @inject NavigationManager Navigation
 
-<MudCard Class="flex-auto mb-4">
-     <MudCardHeader>
-          <MudText Typo="Typo.h5">@GetInstituteName()</MudText>
-     </MudCardHeader>
-     @* <MudCardMedia Image="@Course.ImageUrl" Height="180" /> *@
-     <MudCardContent>
-          <MudText Typo="Typo.body2" Class="truncate-2">@(GetInstituteDescription())</MudText>
+<MudCard Class="d-flex flex-column flex-auto"
+         Style="height: 100%; border: 1px solid var(--mud-palette-divider); border-radius: 12px; transition: box-shadow 0.2s ease;">
+     <MudCardContent Class="flex-grow-1 pa-5">
+
+          @* -- Icon + Title row -- *@
+          <div  class="d-flex align-start gap-3 mb-3">
+               <MudAvatar Size="Size.Medium"  Style="background-color: var(--mud-palette-primary-lighten);
+                    color: var(--mud-palette-primary);"
+                          Rounded="true" >
+                    <MudIcon Icon="@Icons.Material.Outlined.StarBorder" Size="Size.Small" />
+               </MudAvatar>
+               <MudText Typo="Typo.h6" Class="fw-semibold mt-1">
+                    @GetInstituteName(Institute)
+               </MudText>
+          </div>
+
+          @* -- Description -- *@
+          <MudText Typo="Typo.body2"
+                   Style="color: var(--mud-palette-text-secondary);"
+                   Class="truncate-3">
+               @GetInstituteDescription(Institute)
+          </MudText>
 
      </MudCardContent>
 
-     <MudCardActions>
-          @if (HighlightButton)
-          {
-               <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="NavigateToDetails">
-                    @L[MaktabResources.View_Details]
-               </MudButton>
-          }
-          else
-          {
-               <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="NavigateToDetails">
-                    @L[MaktabResources.View_Details]
-               </MudButton>
-          }
+     <MudCardActions Class="pa-4">
+          <MudButton Variant="@(HighlightButton ? Variant.Filled : Variant.Text)"
+                     Color="Color.Primary"
+                     Size="Size.Small"
+                     EndIcon="@Icons.Material.Outlined.ArrowForward"
+                     OnClick="NavigateToDetails">
+               @L[MaktabResources.View_Details]
+          </MudButton>
      </MudCardActions>
 </MudCard>
 
 @code {
-     [Parameter] public InstituteResponse Institute { get; set; } = new();
+
+     [Parameter, EditorRequired] public InstituteResponse Institute { get; set; }
      [Parameter] public bool HighlightButton { get; set; } = false;
-     bool isInitialized = false;
 
      protected override async Task OnInitializedAsync()
      {
           await base.OnInitializedAsync();
-          isInitialized = true;
      }
 
      private void NavigateToDetails()
      {
           Navigation.NavigateTo(string.Format(Constants.InstituteDetailsRoute, Institute.InstituteId));
-     }
-
-     private string GetInstituteName()
-     {
-          if(GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-          {
-               return Institute.NameFr;
-          }
-          else
-          {
-               return Institute.Name;
-          }
-     }
-
-     private string GetInstituteDescription()
-     {
-          if (GlobalizationService.CurrentCulture.TwoLetterISOLanguageName == "fr")
-          {
-               return Institute.DescriptionFr;
-          }
-          else
-          {
-               return Institute.Description;
-          }
      }
 }

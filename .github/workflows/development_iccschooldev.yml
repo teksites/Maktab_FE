@@ -26,19 +26,19 @@ jobs:
       - name: Update Version
         run: |
           $buildNumber = "${{ github.run_number }}"
-          
+
           if ("${{ github.ref }}" -eq "refs/heads/main") {
-            $newVersion = "1.0.$buildNumber"
+            $packageVersion = "1.0.$buildNumber"
           } else {
-            $newVersion = "1.0.0-dev.$buildNumber"
+            $packageVersion = "0.0.$buildNumber"
           }
-          
+
           $csprojPath = "Maktab.Consumer/Maktab.Consumer.csproj"
           $content = Get-Content $csprojPath -Raw
-          $updated = $content -replace '<Version>.*?</Version>', "<Version>$newVersion</Version>"
+          $updated = $content -replace '<Version>.*?</Version>', "<Version>$packageVersion</Version>"
           Set-Content $csprojPath -Value $updated -ErrorAction Stop
-          
-          Write-Host "Version: $newVersion"
+
+          Write-Host "Version: $packageVersion"
         shell: pwsh
 
       - name: Build with dotnet
@@ -80,4 +80,3 @@ jobs:
           app-name: 'iccschooldev'
           slot-name: 'Production'
           package: .
-          

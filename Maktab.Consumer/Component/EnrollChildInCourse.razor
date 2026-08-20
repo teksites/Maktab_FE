@@ -33,7 +33,7 @@
                </MudText>
                     
                <MudText Typo="Typo.body2" Color="Color.Secondary">
-                    @L[MaktabResources.Msg_Success_Child_Enrolled_Course_Variable, @SelectedChild?.FirstName, @SelectedCourse?.Name]
+                    @L[MaktabResources.Msg_Success_Enrolled_Course_Variable, @SelectedChild?.FirstName, @SelectedCourse?.Name]
                </MudText>
 
                <MudStack Row="true" Spacing="2" Class="mt-4">
@@ -92,7 +92,7 @@ else if (IsError)
                            OnPreviewInteraction="OnPreviewInteraction"
                            Class="mb-8">
 
-                    <MudStep Label=@L[MaktabResources.Child] Icon="@Icons.Material.Filled.Person" />
+                    <MudStep Label=@L[MaktabResources.Participant] Icon="@Icons.Material.Filled.Person" />
                     <MudStep Label=@L[MaktabResources.School] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedChild is null)" />
                     <MudStep Label=@L[MaktabResources.Course] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedInstitute is null)" />
                     <MudStep Label=@L[MaktabResources.Groups] Icon="@Icons.Material.Filled.Groups" Disabled="@(SelectedCourse is null)" />
@@ -107,7 +107,7 @@ else if (IsError)
                     <!-- STEP 1: Choose Child -->
                     <MudPaper Class="pa-6" Elevation="0" Outlined="true">
                          <MudText Typo="Typo.h6" Class="mb-4" GutterBottom="true">
-                              @L[MaktabResources.Select_Child]
+                              @L[MaktabResources.Select_Participant]
                          </MudText>
 
                          @if (Children == null)
@@ -121,7 +121,7 @@ else if (IsError)
                          {
                               <MudSelect T="ChildResponse"
                                          @bind-Value="SelectedChild"
-                                         Label=@L[MaktabResources.Children]
+                                         Label=@L[MaktabResources.Participants]
                                          Dense="false"
                                          Clearable="true"
                                          AnchorOrigin="Origin.BottomCenter"
@@ -129,7 +129,7 @@ else if (IsError)
 
                                    @foreach (var child in Children)
                                    {
-                                        <MudSelectItem Value="@child">
+                                        <MudSelectItem @key="child.ChildId" Value="@child">
                                              <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
                                                   <MudIcon Icon="@Icons.Material.Filled.PersonOutline" Size="Size.Small" />
                                                   <span>@child.FirstName @child.LastName</span>
@@ -177,7 +177,7 @@ else if (IsError)
 
                                    @foreach (var c in Institutes)
                                    {
-                                        <MudSelectItem Value="@c">
+                                        <MudSelectItem @key="c.InstituteId" Value="@c">
                                              <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
                                                   <MudIcon Icon="@Icons.Material.Filled.School" Size="Size.Small" />
                                                   <span>@(GetInstituteName(c))</span>
@@ -245,7 +245,7 @@ else if (IsError)
 
                                    @foreach (var c in Courses)
                                    {
-                                        <MudSelectItem Value="@c">
+                                             <MudSelectItem @key="c.CourseId" Value="@c">
                                              <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
                                                   <MudIcon Icon="@Icons.Material.Filled.MenuBook" Size="Size.Small" />
                                                   <span>@(GetCourseName(c))</span>
@@ -323,7 +323,7 @@ else if (IsError)
 
                                              @foreach (var g in SelectedCourseEnrollmentGroups)
                                              {
-                                                  <MudSelectItem Value="@g">
+                                                  <MudSelectItem @key="g.CourseEnrollmentGroupId" Value="@g">
                                                        <MudStack Row="true" AlignItems="AlignItems.Center">
                                                             <MudIcon Icon="@Icons.Material.Filled.Groups" />
                                                             <strong>@(GetCourseGroupTitle(g))</strong>
@@ -436,7 +436,7 @@ else if (IsError)
                          
                          <MudStack Spacing="2">
                               <MudCheckBox @bind-Value="HasChildConsent">
-                                   @L[MaktabResources.Msg_Acknowledge_Child_Consent_Completion]
+                                   @L[MaktabResources.Msg_Acknowledge_Participant_Consent_Completion]
                               </MudCheckBox>
 
                               <MudCheckBox @bind-Value="HasCourseConsent">
@@ -478,7 +478,7 @@ else if (IsError)
                                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                                         <MudIcon Icon="@Icons.Material.Filled.Person" Color="Color.Primary" />
                                         <MudText Typo="Typo.body2" Color="Color.Primary">
-                                             <strong>@L[MaktabResources.Child]</strong>
+                                             <strong>@L[MaktabResources.Participant]</strong>
                                         </MudText>
                                         <MudSpacer />
                                         <MudText Typo="Typo.body2">
@@ -690,10 +690,11 @@ else if (IsError)
           RequestRender();
      }
 
-     public void OnDispose()
+     protected override void OnDispose()
      {
           StateService.ParentState.OnChange -= HandleStateChange;
           StateService.InstituteState.OnChange -= HandleStateChange;
+          base.OnDispose();
      }
 
      protected string GetAgeRestictionInString(CourseEnrollmentGroupResponse group)
@@ -731,7 +732,7 @@ else if (IsError)
           IsLoadingData = true;
 
           await StateService.LoadUserProfileData(UserService, userId, forceLoad);
-          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, forceLoad);
+          await StateService.LoadChildrenData(ChildrenService, userInfo.FamilyId, true, forceLoad);
           await StateService.LoadActiveInstitutesData(InstitutionService, forceLoad);
           await StateService.LoadActiveCoursesData(CourseService, forceLoad);
           await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, forceLoad);
@@ -772,7 +773,7 @@ else if (IsError)
                {
                     await DialogService.ShowMessageBox(
                    L[MaktabResources.Warning],
-                   L[MaktabResources.Msg_Error_Not_All_Child_Valid_Group],
+                   L[MaktabResources.Msg_Error_Not_All_Participant_Valid_Group],
                    L[MaktabResources.OK]);
                     return;
                }
@@ -783,7 +784,7 @@ else if (IsError)
                {
                     await DialogService.ShowMessageBox(
                          L[MaktabResources.Warning],
-                         L[MaktabResources.Msg_Error_Not_All_Child_Valid_Group],
+                         L[MaktabResources.Msg_Error_Not_All_Participant_Valid_Group],
                          L[MaktabResources.OK]);
                     return;
                }
@@ -928,7 +929,7 @@ else if (IsError)
           {
                DialogService.ShowMessageBox(
                     L[MaktabResources.Error],
-                    L[MaktabResources.Msg_Error_Child_Age_Invalid_Group_Assigned],
+                    L[MaktabResources.Msg_Error_Participant_Age_Invalid_Group_Assigned],
                     L[MaktabResources.OK]);
           }
           else
@@ -938,6 +939,75 @@ else if (IsError)
 
           }
 
+     }
+
+     private bool IsChildEligibleForCourseGroup(ChildResponse child, CourseResponseDetailed course, CourseEnrollmentGroupResponse group)
+     {
+          if (group == null || child == null)
+          {
+               return false;
+          }
+          bool isEligible = group.IfRegistrationOpen;
+
+          // Check age restrictions if they exist
+          if(CourseGroupHasValidAgeRestriction(group))
+          {
+               // Child and adults are validated using user roles
+               // For children, we calculate age in months and compare with group min/max age in months
+               // For adults, we calculate if group min/max age is 216 months (18 years) or more, and if so, we consider them eligible
+
+               switch(SelectedChild.UserType)
+               {
+                    case MaktabDataContracts.Enums.UserType.Child:
+                         var childAgeInMonths = child.DateOfBirth.GetAgeInMonths(course.StartDate);
+                         //isEligible = isEligible && (childAgeInMonths >= group.MinAge && childAgeInMonths <= group.MaxAge);
+                         if(isEligible)
+                         {
+                              if (group.MinAge > 0 && group.MaxAge > 0)
+                              {
+                                   isEligible = isEligible && (childAgeInMonths >= group.MinAge && childAgeInMonths <= group.MaxAge);
+                              }
+                              else if (group.MinAge > 0)
+                              {
+                                   isEligible = isEligible && (childAgeInMonths >= group.MinAge);
+                              }
+                              else if (group.MaxAge > 0)
+                              {
+                                   isEligible = isEligible && (childAgeInMonths <= group.MaxAge);
+                              }
+                         }
+
+
+                         break;
+                    case MaktabDataContracts.Enums.UserType.Father:
+                    case MaktabDataContracts.Enums.UserType.Mother:
+                    case MaktabDataContracts.Enums.UserType.Guardian:
+                         // For adults, we consider them eligible if the group min/max age is 216 months (18 years) or more
+                         var ageInMonths = 216; // 18 years in months
+
+                         if (isEligible)
+                         {
+                              if (group.MinAge > 0 && group.MaxAge > 0)
+                              {
+                                   isEligible = isEligible && (ageInMonths >= group.MinAge && ageInMonths <= group.MaxAge);
+                              }
+                              else if (group.MinAge > 0)
+                              {
+                                   isEligible = isEligible && (ageInMonths >= group.MinAge);
+                              }
+                              else if (group.MaxAge > 0)
+                              {
+                                   isEligible = isEligible && (ageInMonths <= group.MaxAge);
+                              }
+                         }
+                         break;
+                    default:
+                         isEligible = false;
+                         break;
+               }
+          }    
+
+          return isEligible;
      }
 
      private bool IsChildEligibleForCourseGroup(ChildResponse child, CourseResponseDetailed course, CourseEnrollmentGroupResponse group)
