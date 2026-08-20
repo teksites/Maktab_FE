@@ -3035,7 +3035,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parent Dashboard.
+        ///   Looks up a localized string similar to Dashboard.
         /// </summary>
         public static string Parent_Dashboard {
             get {
