@@ -52,15 +52,17 @@
                          <MudMenu Class="me-2">
                               @* Class="IconDia"> *@
                               <ActivatorContent>
-                                   <MudImage Src="@_SelectedFlag" Style="width: 24px" />
+                                   <MudAvatar Size="Size.Medium" Style="color: #fffd; border: 1.5px solid #fffd;" Variant="Variant.Outlined" Class="me-2">@_CurrentCultureInitials</MudAvatar>
+
+                                   @* <MudImage Src="@_SelectedFlag" Style="width: 24px" />*@
                               </ActivatorContent>
 
                               <ChildContent>
                                    <MudMenuItem OnClick="@(async () => await SelectLanguage("en"))">
-                                        <MudImage Src="/images/flag_canada.png" Style="width: 24px" Class="me-2" /> English
+                                        English
                                    </MudMenuItem>
                                    <MudMenuItem OnClick="@(async () => await SelectLanguage("fr"))">
-                                        <MudImage Src="/images/flag_france.png" Style="width: 24px" Class="me-2" /> French
+                                        French
                                    </MudMenuItem>
                               </ChildContent>
                          </MudMenu>
@@ -185,13 +187,34 @@ else
      private string _userInitials = "?";
      private string _defaultCulture = "en";
      private string _SelectedFlag = "/images/flag_canada.png";
+     private string _CurrentCultureInitials = "Fr";
 
      private string[] manifestName;
      private IStringLocalizer localizer;
 
      protected override async Task OnInitializedAsync()
      {
-          _defaultCulture = await GlobalizationService.GetPersistedCultureName() ?? "en";
+          var persistedCulture = await GlobalizationService.GetPersistedCultureName();
+          if (string.IsNullOrEmpty(persistedCulture))
+          {
+               var browserCulture = await GlobalizationService.GetBrowserLocale();
+               if (string.IsNullOrEmpty(browserCulture))
+               {
+                    _defaultCulture = GlobalizationService.MapToSupportedCulture(browserCulture);
+                    await OnCultureChanged(_defaultCulture);
+               }
+               else
+               {
+                    _defaultCulture = browserCulture;
+               }
+          }
+          else
+          {
+               _defaultCulture = persistedCulture;
+          }
+
+          
+
           UpdateLanguageFlag(_defaultCulture);
 
           var authState = await AuthStateProvider.GetAuthenticationStateAsync();
@@ -266,9 +289,11 @@ else
                {
                     case "fr":
                          _SelectedFlag = "/images/flag_france.png";
+                         _CurrentCultureInitials = "Fr";
                          break;
                     default:
                          _SelectedFlag = "/images/flag_canada.png";
+                         _CurrentCultureInitials = "En";
                          break;
                }
           }

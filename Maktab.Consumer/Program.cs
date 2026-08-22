@@ -83,8 +83,5 @@ builder.Services.AddScoped(x =>
 
 var host = builder.Build();
 
-var globalizationService = host.Services.GetRequiredService<IGlobalizationService>();
-var culture = await globalizationService.GetPersistedCultureName();
-globalizationService.ApplyCultureOnUI(culture);
 
 await host.RunAsync();
