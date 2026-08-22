@@ -34,7 +34,7 @@ namespace Maktab.Consumer.Services
           public async Task SaveCultureAsync(string culture)
           {
                await _localStorageService.SetItem(CultureKey, culture);
-              
+
                ApplyCultureOnUI(culture);
 
                // force a full page reload to ensure all components pick new culture

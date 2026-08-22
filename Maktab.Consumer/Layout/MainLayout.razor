@@ -1,7 +1,6 @@
 ﻿@using System.Security.Claims
 @using Maktab.Consumer.Helpers
 @using Microsoft.AspNetCore.Components.Authorization
-@using System.Globalization;
 
 @inherits LayoutComponentBase
 
@@ -185,7 +184,6 @@ else
      private string? _userName;
      private string? _userRole;
      private string _userInitials = "?";
-     private string _defaultCulture = "en";
      private string _SelectedFlag = "/images/flag_canada.png";
      private string _CurrentCultureInitials = "Fr";
 
@@ -194,28 +192,8 @@ else
 
      protected override async Task OnInitializedAsync()
      {
-          var persistedCulture = await GlobalizationService.GetPersistedCultureName();
-          if (string.IsNullOrEmpty(persistedCulture))
-          {
-               var browserCulture = await GlobalizationService.GetBrowserLocale();
-               if (string.IsNullOrEmpty(browserCulture))
-               {
-                    _defaultCulture = GlobalizationService.MapToSupportedCulture(browserCulture);
-                    await OnCultureChanged(_defaultCulture);
-               }
-               else
-               {
-                    _defaultCulture = browserCulture;
-               }
-          }
-          else
-          {
-               _defaultCulture = persistedCulture;
-          }
-
-          
-
-          UpdateLanguageFlag(_defaultCulture);
+          var currentCultureName = GlobalizationService.CurrentCulture.TwoLetterISOLanguageName;
+          UpdateLanguageFlag(currentCultureName);
 
           var authState = await AuthStateProvider.GetAuthenticationStateAsync();
           var user = authState.User;
