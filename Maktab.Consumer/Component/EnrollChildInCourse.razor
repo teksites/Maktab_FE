@@ -133,7 +133,8 @@ else if (IsError)
                                              <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
                                                   <MudIcon Icon="@Icons.Material.Filled.PersonOutline" Size="Size.Small" />
                                                   <span>@child.FirstName @child.LastName</span>
-
+                                                  <MudSpacer />
+                                                  <MudChip T="String" Color="Color.Info" Variant="Variant.Text" Size="Size.Small">@(GetUserType(child.UserType))</MudChip>
                                              </MudStack>
                                         </MudSelectItem>
                                    }

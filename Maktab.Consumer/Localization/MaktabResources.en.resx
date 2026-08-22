@@ -1550,4 +1550,7 @@
   <data name="Msg_Info_Enroll_Button_Enroll_Participant" xml:space="preserve">
     <value>Please click on ENROLL button above to start enrollment process</value>
   </data>
+  <data name="Child" xml:space="preserve">
+    <value>Child</value>
+  </data>
 </root>

@@ -545,6 +545,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Child.
+        /// </summary>
+        public static string Child {
+            get {
+                return ResourceManager.GetString("Child", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Choose Your Amount.
         /// </summary>
         public static string Choose_Your_Amount {

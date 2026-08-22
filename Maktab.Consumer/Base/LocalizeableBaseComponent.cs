@@ -93,6 +93,17 @@ namespace Maktab.Consumer.Base
                     _ => L[MaktabResources.Gender_Type_Unknown]
                };
           }
+          protected string GetUserType(UserType userType)
+          {
+               return userType switch
+               {
+                    UserType.Child => L[MaktabResources.Child],
+                    UserType.Father => L[MaktabResources.Relationship_Type_Father],
+                    UserType.Mother => L[MaktabResources.Relationship_Type_Mother],
+                    UserType.Guardian => L[MaktabResources.Relationship_Type_Guardian],
+                    _ => L[MaktabResources.Relationship_Type_Unknown]
+               };
+          }
 
           protected string GetInstituteName(InstituteResponse institute)
           {
