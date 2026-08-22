@@ -451,7 +451,7 @@
     <value>Amount Due</value>
   </data>
   <data name="Msg_Info_Add_Participants_To_Enroll" xml:space="preserve">
-    <value>Please Add participants to start enrollments</value>
+    <value>Please click on ADD button above to start enrollment process</value>
   </data>
   <data name="Enrollment_Details" xml:space="preserve">
     <value>Enrollment Details</value>
@@ -1546,5 +1546,8 @@
   </data>
   <data name="Video" xml:space="preserve">
     <value>Video</value>
+  </data>
+  <data name="Msg_Info_Enroll_Button_Enroll_Participant" xml:space="preserve">
+    <value>Please click on ENROLL button above to start enrollment process</value>
   </data>
 </root>

@@ -2153,7 +2153,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please Add participants to start enrollments.
+        ///   Looks up a localized string similar to Please click on ADD button above to start enrollment process.
         /// </summary>
         public static string Msg_Info_Add_Participants_To_Enroll {
             get {
@@ -2230,6 +2230,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Info_CourseGroup_Registration_Full {
             get {
                 return ResourceManager.GetString("Msg_Info_CourseGroup_Registration_Full", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please click on ENROLL button above to start enrollment process.
+        /// </summary>
+        public static string Msg_Info_Enroll_Button_Enroll_Participant {
+            get {
+                return ResourceManager.GetString("Msg_Info_Enroll_Button_Enroll_Participant", resourceCulture);
             }
         }
         

@@ -190,10 +190,9 @@
                @if (_Children?.Any() != true)
                {
                     <MudItem xs="12" md="12">
-                         <MudAlert Severity="Severity.Warning" Elevation="0" Class="mt-2">@L[MaktabResources.Msg_Info_Add_Participants_To_Enroll]</MudAlert>
+                         <EnhancedAlertBar Class="mt-2" AlertText="@L[MaktabResources.Msg_Info_Add_Participants_To_Enroll]" Severity="Severity.Success" />
                     </MudItem>
                }
-
 
                @if (_CourseEnrollments?.Any() == true)
                {
@@ -224,6 +223,12 @@
                     }
                </MudGrid> *@
 
+               }
+               else
+               {
+                    <MudItem xs="12" md="12">
+                         <EnhancedAlertBar Class="mt-2" AlertText="@L[MaktabResources.Msg_Info_Enroll_Button_Enroll_Participant]" Severity="Severity.Warning" />
+                    </MudItem>
                }
 
                <MudItem xs="12" md="12">

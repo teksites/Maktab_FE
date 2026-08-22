@@ -1460,9 +1460,6 @@
   <data name="Relation_With_Student" xml:space="preserve">
     <value>Relation avec l'étudiant</value>
   </data>
-  <data name="Msg_Info_Add_Participants_To_Enroll" xml:space="preserve">
-    <value>Veuillez ajouter des participants pour commencer les inscriptions</value>
-  </data>
   <data name="Enroll_Participant" xml:space="preserve">
     <value>Inscrire un participant</value>
   </data>
@@ -1546,5 +1543,11 @@
   </data>
   <data name="Parent_Dashboard" xml:space="preserve">
     <value>Tableau de bord</value>
+  </data>
+  <data name="Msg_Info_Add_Participants_To_Enroll" xml:space="preserve">
+    <value>Veuillez cliquer sur le bouton AJOUTER ci-dessus pour démarrer le processus d'inscription.</value>
+  </data>
+  <data name="Msg_Info_Enroll_Button_Enroll_Participant" xml:space="preserve">
+    <value>Veuillez cliquer sur le bouton INSCRIPTION ci-dessus pour démarrer le processus d'inscription.</value>
   </data>
 </root>
