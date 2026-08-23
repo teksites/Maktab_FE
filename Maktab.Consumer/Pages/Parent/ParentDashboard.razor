@@ -57,7 +57,7 @@
                     <MudGrid Class="mb-6" Spacing="3">
                          <!-- Children Count Card -->
                          <MudItem xs="12" sm="6" md="3">
-                              <MudPaper Class="pa-6 rounded-lg" Elevation="1" Style="border-top: 3px solid var(--mud-palette-primary); border-radius: 10px;">
+                              <MudPaper Class="pa-6 rounded-lg" Elevation="1" Style="border-top: 3px solid var(--mud-palette-success); border-radius: 10px;">
                                    <MudStack Spacing="4">
                                         <!-- Header with label, info icon, and action button -->
                                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
@@ -68,17 +68,18 @@
                                              </MudTooltip>
                                              
                                              <MudSpacer />
-                                             <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" OnClick="@OpenAddChildDialog">
+                                             <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" OnClick="@OpenAddChildDialog"
+                                                        Style="box-shadow: 0 2px 5px var(--mud-palette-success); font-weight: 600;">
                                                   @L[MaktabResources.Add]
                                              </MudButton>
                                         </MudStack>
 
                                         <!-- KPI Value and Icon -->
                                         <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="2">
-                                             <MudText Typo="Typo.h4" Class="font-weight-bold">
+                                             <MudText Typo="Typo.h4" Class="font-weight-bold" Color="Color.Success">
                                                   @(_Children?.Count())
                                              </MudText>
-                                             <MudIcon Icon="@Icons.Material.Filled.Groups2" Color="Color.Secondary" Style="font-size: 32px;" />
+                                             <MudIcon Icon="@Icons.Material.Filled.Groups2" Color="Color.Success" Style="font-size: 32px;" />
                                         </MudStack>
                                    </MudStack>
                               </MudPaper>
@@ -86,7 +87,7 @@
 
                          <!-- Enrollments Card -->
                          <MudItem xs="12" sm="6" md="3">
-                              <MudPaper Class="pa-6 rounded-lg" Elevation="1" Style="border-top: 3px solid var(--mud-palette-primary); border-radius: 10px;">
+                              <MudPaper Class="pa-6 rounded-lg" Elevation="1" Style="border-top: 3px solid var(--mud-palette-warning); border-radius: 10px;">
                                    <MudStack Spacing="4">
                                         <!-- Header with label, info icon, and action button -->
                                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
@@ -97,7 +98,8 @@
                                              </MudTooltip>
                                              
                                              <MudSpacer />
-                                             <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" Disabled="(_Children?.Any() != true)" OnClick="@OpenEnrollChildDialog">
+                                             <MudButton Variant="Variant.Filled" Size="Size.Small" Disabled="@(!HasActiveChildren)" OnClick="@OpenEnrollChildDialog"
+                                                        Style="@($"font-weight: 600; {(HasActiveChildren ? "background-color: #C96A2A; box-shadow: 0 2px 5px var(--mud-palette-warning); color: #fff" : "box-shadow: none;")}")">
                                                   @L[MaktabResources.Enroll]
                                              </MudButton>
                                         </MudStack>
@@ -111,12 +113,12 @@
 
                                              <ChildContent>
                                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                                             <MudText Typo="Typo.h4" Class="font-weight-bold" Color="Color.Success">
+                                                       <MudText Typo="Typo.h4" Class="font-weight-bold" Color="Color.Warning">
                                                        @ActiveEnrollments
                                                   </MudText>
 
                                                        <MudSpacer />
-                                             <MudIcon Icon="@Icons.Material.Filled.MenuBook" Color="Color.Success" Style="font-size: 32px;" />
+                                                       <MudIcon Icon="@Icons.Material.Filled.MenuBook" Color="Color.Warning" Style="font-size: 32px;" />
                                         </MudStack>
                                              </ChildContent>
                                         </MudTooltip>
@@ -127,7 +129,7 @@
 
                          <!-- Total Amount Card -->
                          <MudItem xs="12" sm="6" md="3">
-                              <MudPaper Class="pa-6 rounded-lg" Elevation="1" Style="border-top: 3px solid var(--mud-palette-secondary); border-radius: 10px;">
+                              <MudPaper Class="pa-6 rounded-lg" Elevation="1" Style="border-top: 3px solid var(--mud-palette-info); border-radius: 10px;">
                                    <MudStack Spacing="4">
                                         <!-- Header with label, info icon, and action button -->
                                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
@@ -137,7 +139,8 @@
                                              </MudText>
                                              </MudTooltip>
                                              <MudSpacer />
-                                             <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Disabled="(this.TotalAmount <= 0)" OnClick="NavigateToPaymentDetailsPage">
+                                             <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Disabled="@(!HasTotalAmount)" OnClick="NavigateToPaymentDetailsPage"
+                                                        Style="@($"{(HasTotalAmount ? "box-shadow: 0 2px 5px var(--mud-palette-info);": string.Empty)} font-weight: 600;")">
                                                   @L[MaktabResources.Details]
                                              </MudButton>
                                         </MudStack>
@@ -166,12 +169,10 @@
                                              </MudText>
                                              </MudTooltip>
                                              <MudSpacer />
-                                             @if (this.AmountPayable != 0)
-                                             {
-                                                  <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" OnClick="NavigateToPaymentInfoPage">
+                                                  <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Disabled="@(!HasAmountPayable)" OnClick="NavigateToPaymentInfoPage"
+                                                        Style="@($"{(HasAmountPayable ? "box-shadow: 0 2px 5px var(--mud-palette-error);": string.Empty)} font-weight: 600;")">
                                                        @L[MaktabResources.Pay]
                                                   </MudButton>
-                                             }
                                         </MudStack>
 
                                         <!-- KPI Value and Icon -->
@@ -190,10 +191,9 @@
                @if (_Children?.Any() != true)
                {
                     <MudItem xs="12" md="12">
-                         <MudAlert Severity="Severity.Warning" Elevation="0" Class="mt-2">@L[MaktabResources.Msg_Info_Add_Participants_To_Enroll]</MudAlert>
+                         <EnhancedAlertBar Class="mt-2" AlertText="@L[MaktabResources.Msg_Info_Add_Participants_To_Enroll]" Severity="Severity.Success" />
                     </MudItem>
                }
-
 
                @if (_CourseEnrollments?.Any() == true)
                {
@@ -224,6 +224,12 @@
                     }
                </MudGrid> *@
 
+               }
+               else
+               {
+                    <MudItem xs="12" md="12">
+                         <EnhancedAlertBar Class="mt-2" AlertText="@L[MaktabResources.Msg_Info_Enroll_Button_Enroll_Participant]" Severity="Severity.Warning" />
+                    </MudItem>
                }
 
                <MudItem xs="12" md="12">
@@ -310,6 +316,11 @@
      protected int ActiveEnrollments => _CourseEnrollments?.Any() == true ? _CourseEnrollments.Count(x => x.EnrollmentStatus != MaktabDataContracts.Enums.EnrollmentStatus.Cancelled && x.EnrollmentStatus != MaktabDataContracts.Enums.EnrollmentStatus.Refunded && x.EnrollmentStatus != MaktabDataContracts.Enums.EnrollmentStatus.Unknown) : 0;
      protected int CancelledEnrollments => _CourseEnrollments?.Any() == true ? _CourseEnrollments.Count(x => x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Cancelled ) : 0;
      protected int RefundedEnrollments => _CourseEnrollments?.Any() == true ? _CourseEnrollments.Count(x => x.EnrollmentStatus == MaktabDataContracts.Enums.EnrollmentStatus.Refunded ) : 0;
+
+     protected bool HasAmountPayable => AmountPayable > 0;
+     protected bool HasTotalAmount => TotalAmount > 0;
+     protected bool HasActiveEnrollments => ActiveEnrollments > 0;
+     protected bool HasActiveChildren => _Children?.Any() == true;
 
      protected override void OnInitialized()
      {

@@ -84,7 +84,18 @@ builder.Services.AddScoped(x =>
 var host = builder.Build();
 
 var globalizationService = host.Services.GetRequiredService<IGlobalizationService>();
-var culture = await globalizationService.GetPersistedCultureName();
-globalizationService.ApplyCultureOnUI(culture);
+
+var persistedCulture = await globalizationService.GetPersistedCultureName();
+if (string.IsNullOrEmpty(persistedCulture))
+{
+     var browserCulture = await globalizationService.GetBrowserLocale();
+     var culture = globalizationService.MapToSupportedCulture(browserCulture);
+     globalizationService.ApplyCultureOnUI(culture);
+}
+else
+{
+     var culture = globalizationService.MapToSupportedCulture(persistedCulture);
+     globalizationService.ApplyCultureOnUI(culture);
+}
 
 await host.RunAsync();

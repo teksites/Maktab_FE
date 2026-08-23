@@ -1,0 +1,17 @@
+﻿@inherits MudComponentBase
+
+<MudContainer >
+     <MudAlert Severity="Severity" Elevation="0" Variant="@Variant">
+          <ChildContent>
+               <MudText Typo="Typo.h6">@AlertText</MudText>
+          </ChildContent>
+     </MudAlert>
+</MudContainer>
+
+@code {
+
+     [Parameter] public string AlertText { get; set; } = string.Empty;
+     [Parameter] public Severity Severity { get; set; } = Severity.Warning;
+     [Parameter] public Variant Variant { get; set; } = Variant.Outlined;
+
+}

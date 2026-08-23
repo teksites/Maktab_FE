@@ -8,7 +8,7 @@ namespace Maktab.Consumer.Services
      public class GlobalizationService : IGlobalizationService
      {
           private const string CultureKey = "AppCulture";
-
+          private const string defaultCulture = "fr";
           private readonly ILocalStorageService _localStorageService;
           private readonly NavigationManager _navigationManager;
           private readonly IJSRuntime _jsInterop;
@@ -20,7 +20,7 @@ namespace Maktab.Consumer.Services
                _jsInterop = jsInterop;
                _localStorageService = localStorage;
                _navigationManager = navigationManager;
-               _supportedCultures = new List<string>() { "en", "fr" };
+               _supportedCultures = new List<string>() { "en", defaultCulture };
           }
 
           public CultureInfo CurrentCulture
@@ -34,23 +34,41 @@ namespace Maktab.Consumer.Services
           public async Task SaveCultureAsync(string culture)
           {
                await _localStorageService.SetItem(CultureKey, culture);
-              
+
                ApplyCultureOnUI(culture);
 
                // force a full page reload to ensure all components pick new culture
                _navigationManager.NavigateTo(_navigationManager.Uri, forceLoad: true);
           }
 
-          public async Task<string> GetBrowserLocale()
+          public async Task<string?> GetBrowserLocale()
           {
-               var browserLocale = await _jsInterop.InvokeAsync<string>("getBrowserLocale");
+               string? browserLocale;
+               try
+               {
+                    browserLocale = await _jsInterop.InvokeAsync<string>("getBrowserLocale");
+               }
+               catch (JSException)
+               {
+                    // JS interop failed (e.g. navigator.language unavailable) — nothing to fall back on here
+                    return null;
+               }
 
-               // Create a CultureInfo from the browser locale
+               if (string.IsNullOrEmpty(browserLocale))
+                    return null;
+
+               try
+               {
                var browserCulture = new CultureInfo(browserLocale);
                // Extract the two-letter ISO language name
                var twoLetterCode = browserCulture.TwoLetterISOLanguageName.ToLower();
-
                return twoLetterCode;
+          }
+               catch (CultureNotFoundException)
+               {
+                    // navigator.language returned something .NET's ICU data doesn't recognize
+                    return null;
+               }
           }
 
           public async Task<string> GetPersistedCultureName()
@@ -78,10 +96,21 @@ namespace Maktab.Consumer.Services
                     //CultureInfo.CurrentUICulture =
                     // Default culture (can be configured via appsettings)
                     CultureInfo.DefaultThreadCurrentCulture =
-                    CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en");
+                    CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(defaultCulture);
                }
 
                return true;
+          }
+
+          public string MapToSupportedCulture(string? rawCulture)
+          {
+               if (string.IsNullOrEmpty(rawCulture))
+                    return defaultCulture;
+
+               var match = _supportedCultures.FirstOrDefault(s =>
+                   rawCulture.StartsWith(s, StringComparison.OrdinalIgnoreCase));
+
+               return match ?? defaultCulture;
           }
      }
 }

@@ -8,8 +8,9 @@ namespace Maktab.Core.Interfaces.Services
           CultureInfo CurrentCulture { get; }
 
           bool ApplyCultureOnUI(string culture);
-          Task<string> GetBrowserLocale();
+          Task<string?> GetBrowserLocale();
           Task<string> GetPersistedCultureName();
+          string MapToSupportedCulture(string? rawCulture);
           Task SaveCultureAsync(string culture);
      }
 }
