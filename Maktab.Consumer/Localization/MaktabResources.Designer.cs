@@ -1919,6 +1919,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your IP address can not be processed at the moment, Please try in few minutes.
+        /// </summary>
+        public static string Msg_Error_Failed_Getting_User_IP {
+            get {
+                return ResourceManager.GetString("Msg_Error_Failed_Getting_User_IP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to initiate payment. Please try again later.
         /// </summary>
         public static string Msg_Error_Failed_Initiate_Payment {

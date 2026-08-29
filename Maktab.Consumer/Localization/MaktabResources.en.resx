@@ -1553,4 +1553,7 @@
   <data name="Child" xml:space="preserve">
     <value>Child</value>
   </data>
+  <data name="Msg_Error_Failed_Getting_User_IP" xml:space="preserve">
+    <value>Your IP address can not be processed at the moment, Please try in few minutes</value>
+  </data>
 </root>
