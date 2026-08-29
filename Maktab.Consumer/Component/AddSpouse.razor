@@ -32,7 +32,7 @@
                </MudAlert>
           }
 
-          <MudStack Direction="Row" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
+          <MudStack Row="true" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
                <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isSaving)" StartIcon="@Icons.Material.Filled.Check" OnClick="@(HandleSaving)">
                     @if (isSaving)
                     {
