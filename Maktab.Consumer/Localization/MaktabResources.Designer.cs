@@ -482,6 +482,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Arabic Name.
+        /// </summary>
+        public static string Arabic_Name {
+            get {
+                return ResourceManager.GetString("Arabic_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Available courses.
         /// </summary>
         public static string Available_Courses {
@@ -2212,6 +2221,24 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Info_Amount_Paid {
             get {
                 return ResourceManager.GetString("Msg_Info_Amount_Paid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only Arabic characters and spaces are allowed.
+        /// </summary>
+        public static string Msg_Info_Arabic_Letters_And_Spaces_Are_Allowed {
+            get {
+                return ResourceManager.GetString("Msg_Info_Arabic_Letters_And_Spaces_Are_Allowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please copy and paste your text or type it directly when applicable.
+        /// </summary>
+        public static string Msg_Info_Arabic_Name_Copy_Or_Type {
+            get {
+                return ResourceManager.GetString("Msg_Info_Arabic_Name_Copy_Or_Type", resourceCulture);
             }
         }
         

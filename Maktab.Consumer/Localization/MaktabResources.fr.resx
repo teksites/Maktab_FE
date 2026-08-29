@@ -1556,4 +1556,13 @@
   <data name="Msg_Error_Failed_Getting_User_IP" xml:space="preserve">
     <value>Votre adresse IP ne peut pas être traitée pour le moment. Essayez de nouveau dans quelques minutes</value>
   </data>
+  <data name="Msg_Info_Arabic_Letters_And_Spaces_Are_Allowed" xml:space="preserve">
+    <value>Seuls les caractères arabes et les espaces sont autorisés</value>
+  </data>
+  <data name="Arabic_Name" xml:space="preserve">
+    <value>Nom arabe</value>
+  </data>
+  <data name="Msg_Info_Arabic_Name_Copy_Or_Type" xml:space="preserve">
+    <value>Veuillez copier-coller votre texte ou le saisir directement le cas échéant</value>
+  </data>
 </root>

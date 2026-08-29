@@ -1558,4 +1558,13 @@
   <data name="Msg_Error_Failed_Getting_User_IP" xml:space="preserve">
     <value>Your IP address can not be processed at the moment, Please try in few minutes</value>
   </data>
+  <data name="Msg_Info_Arabic_Letters_And_Spaces_Are_Allowed" xml:space="preserve">
+    <value>Only Arabic characters and spaces are allowed</value>
+  </data>
+  <data name="Arabic_Name" xml:space="preserve">
+    <value>Arabic Name</value>
+  </data>
+  <data name="Msg_Info_Arabic_Name_Copy_Or_Type" xml:space="preserve">
+    <value>Please copy and paste your text or type it directly when applicable</value>
+  </data>
 </root>
