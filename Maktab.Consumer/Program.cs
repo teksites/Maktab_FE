@@ -52,7 +52,8 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddScoped<IHelcimPaymentMethodService, HelcimPaymentMethodService>()
                 .AddScoped<IApplicationVersionService, ApplicationVersionService>()
                 .AddScoped<IEmailService, EmailService>()
-                .AddScoped<IIpHelperService, IpHelperService>();
+                .AddScoped<IIpHelperService, IpHelperService>()
+                .AddScoped<IQuranService, QuranService>();
 
 // Azure Maps – dedicated HttpClient + service
 builder.Services.AddScoped<IAddressLookupService>(sp =>
