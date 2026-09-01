@@ -91,13 +91,17 @@ else if (IsError)
                            Rounded="Rounded.Small"
                            OnPreviewInteraction="OnPreviewInteraction"
                            Class="mb-8">
-
-                    <MudStep Label=@L[MaktabResources.Participant] Icon="@Icons.Material.Filled.Person" />
-                    <MudStep Label=@L[MaktabResources.School] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedChild is null)" />
-                    <MudStep Label=@L[MaktabResources.Course] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedInstitute is null)" />
-                    <MudStep Label=@L[MaktabResources.Groups] Icon="@Icons.Material.Filled.Groups" Disabled="@(SelectedCourse is null)" />
-                    <MudStep Label=@L[MaktabResources.Acknowledgement] Icon="@Icons.Material.Filled.HealthAndSafety" Disabled="@(!HasGroupsSelected())" />
-                    <MudStep Label=@L[MaktabResources.Review] Icon="@Icons.Material.Filled.CheckCircle" Disabled="@(!(HasChildConsent && HasCourseConsent))" />
+                    <ChildContent> 
+                         <MudStep Label=@L[MaktabResources.Participant] Icon="@Icons.Material.Filled.Person" />
+                         <MudStep Label=@L[MaktabResources.School] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedChild is null)" />
+                         <MudStep Label=@L[MaktabResources.Course] Icon="@Icons.Material.Filled.MenuBook" Disabled="@(SelectedInstitute is null)" />
+                         <MudStep Label=@L[MaktabResources.Groups] Icon="@Icons.Material.Filled.Groups" Disabled="@(SelectedCourse is null)" />
+                         <MudStep Label=@L[MaktabResources.Acknowledgement] Icon="@Icons.Material.Filled.HealthAndSafety" Disabled="@(!HasGroupsSelected())" />
+                         <MudStep Label=@L[MaktabResources.Review] Icon="@Icons.Material.Filled.CheckCircle" Disabled="@(!(HasChildConsent && HasCourseConsent))" />
+                    </ChildContent> 
+                    <ActionContent>
+                     
+                    </ActionContent>
 
                </MudStepper>
 
