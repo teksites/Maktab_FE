@@ -1573,4 +1573,7 @@
   <data name="Btn_Refresh_Now" xml:space="preserve">
     <value>Refresh Now</value>
   </data>
+  <data name="Arabic_Name_New_Rattle_School_Student" xml:space="preserve">
+    <value>Arabic name (for new students of Rattel School)</value>
+  </data>
 </root>

@@ -1568,6 +1568,9 @@
   <data name="Msg_Info_Update_Available" xml:space="preserve">
     <value>Une nouvelle version est disponible. Actualisez pour obtenir les dernières mises à jour.</value>
   </data>
+  <data name="Arabic_Name_New_Rattle_School_Student" xml:space="preserve">
+    <value>Nom en arabe (pour nouveaux éléves de l'École Rattel)</value>
+  </data>
   <data name="Btn_Refresh_Now" xml:space="preserve">
     <value>Actualiser</value>
   </data>

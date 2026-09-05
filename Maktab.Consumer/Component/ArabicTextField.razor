@@ -17,12 +17,17 @@
                    For="@(For ?? ValueExpression)"
                    HelperText="@HelperMessage"
                    Class="@Class"
+                   ReadOnly="@ReadOnly"
+                   Disabled="@Disabled"
                    @attributes="InputAttributes" />
 @* </MudRTLProvider> *@
 
 @code {
      /// <summary>Field label. No localized default is applied — pass a localized string from the caller.</summary>
      [Parameter] public string Label { get; set; } = "Arabic Text";
+
+     [Parameter] public bool ReadOnly { get; set; } = false;
+     [Parameter] public bool Disabled { get; set; } = false;
 
      /// <summary>Current value. Intended usage from the parent: @bind-Value="Model.Prop".</summary>
      [Parameter] public string? Value { get; set; }

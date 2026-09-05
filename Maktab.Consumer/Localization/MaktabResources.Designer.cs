@@ -491,6 +491,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Arabic name (for new students of Rattel School).
+        /// </summary>
+        public static string Arabic_Name_New_Rattle_School_Student {
+            get {
+                return ResourceManager.GetString("Arabic_Name_New_Rattle_School_Student", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Available courses.
         /// </summary>
         public static string Available_Courses {
