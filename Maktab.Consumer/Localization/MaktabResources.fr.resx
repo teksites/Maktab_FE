@@ -1565,4 +1565,10 @@
   <data name="Msg_Info_Arabic_Name_Copy_Or_Type" xml:space="preserve">
     <value>Veuillez copier-coller votre texte ou le saisir directement le cas échéant</value>
   </data>
+  <data name="Msg_Info_Update_Available" xml:space="preserve">
+    <value>Une nouvelle version est disponible. Actualisez pour obtenir les dernières mises à jour.</value>
+  </data>
+  <data name="Btn_Refresh_Now" xml:space="preserve">
+    <value>Actualiser</value>
+  </data>
 </root>

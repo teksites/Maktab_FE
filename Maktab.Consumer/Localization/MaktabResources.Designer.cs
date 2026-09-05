@@ -518,6 +518,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Refresh Now.
+        /// </summary>
+        public static string Btn_Refresh_Now {
+            get {
+                return ResourceManager.GetString("Btn_Refresh_Now", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Cancel {
@@ -2509,6 +2518,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Info_Total_Registered_Participant {
             get {
                 return ResourceManager.GetString("Msg_Info_Total_Registered_Participant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A new version is available. Refresh to get the latest updates..
+        /// </summary>
+        public static string Msg_Info_Update_Available {
+            get {
+                return ResourceManager.GetString("Msg_Info_Update_Available", resourceCulture);
             }
         }
         

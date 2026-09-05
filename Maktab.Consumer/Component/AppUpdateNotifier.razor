@@ -1,0 +1,52 @@
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
+@inject ISnackbar Snackbar
+@inject IJSRuntime JS
+@inject IStringLocalizer<MaktabResources> Loc
+@inject IWebAssemblyHostEnvironment HostEnvironment
+@inject NavigationManager Navigation
+@implements IAsyncDisposable
+
+@code {
+    private DotNetObjectReference<AppUpdateNotifier>? _dotNetRef;
+    private bool _promptShown;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        if (HostEnvironment.IsDevelopment())
+        {
+            if (Navigation.Uri.Contains("testUpdate", StringComparison.OrdinalIgnoreCase))
+                ShowUpdatePrompt();
+            return;
+        }
+
+        _dotNetRef = DotNetObjectReference.Create(this);
+        await JS.InvokeVoidAsync("appUpdateChecker.init", _dotNetRef);
+    }
+
+    [JSInvokable]
+    public Task OnUpdateAvailable() => InvokeAsync(ShowUpdatePrompt);
+
+    private void ShowUpdatePrompt()
+    {
+        if (_promptShown) return;
+        _promptShown = true;
+
+        Snackbar.Add(Loc[MaktabResources.Msg_Info_Update_Available], Severity.Info, config =>
+        {
+            config.RequireInteraction = true;
+            config.VisibleStateDuration = int.MaxValue;
+            config.Action = Loc[MaktabResources.Btn_Refresh_Now];
+            config.ActionColor = Color.Secondary;
+            config.OnClick = async _ =>
+                await JS.InvokeVoidAsync("appUpdateChecker.applyUpdate");
+        });
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        _dotNetRef?.Dispose();
+        return ValueTask.CompletedTask;
+    }
+}
