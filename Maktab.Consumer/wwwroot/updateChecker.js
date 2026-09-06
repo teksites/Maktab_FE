@@ -1,6 +1,7 @@
 window.appUpdateChecker = (() => {
     let dotNetRef = null;
     let notified = false;
+    let reloading = false;
 
     function isLocalDev() {
         return location.hostname === 'localhost' || location.hostname === '127.0.0.1';
@@ -15,6 +16,12 @@ window.appUpdateChecker = (() => {
         navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' });
     }
 
+    function reload() {
+        if (reloading) return;
+        reloading = true;
+        window.location.reload();
+    }
+
     function notifyUpdate() {
         if (notified || !dotNetRef) return;
         notified = true;
@@ -25,7 +32,7 @@ window.appUpdateChecker = (() => {
         dotNetRef = ref;
         if (!('serviceWorker' in navigator) || isLocalDev()) return;
 
-        navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload());
+        navigator.serviceWorker.addEventListener('controllerchange', reload);
 
         const reg = await navigator.serviceWorker.ready;
         if (reg.waiting) notifyUpdate();
@@ -45,8 +52,10 @@ window.appUpdateChecker = (() => {
         const reg = await navigator.serviceWorker.getRegistration();
         if (reg?.waiting) {
             reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+            // ponytail: fallback if controllerchange never fires (Safari / edge cases)
+            setTimeout(reload, 2000);
         } else {
-            window.location.reload();
+            reload();
         }
     }
 
