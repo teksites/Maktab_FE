@@ -1548,9 +1548,30 @@
     <value>Veuillez cliquer sur le bouton AJOUTER ci-dessus pour démarrer le processus d'inscription</value>
   </data>
   <data name="Msg_Info_Enroll_Button_Enroll_Participant" xml:space="preserve">
-    <value>Veuillez cliquer sur le bouton INSCRIPTION ci-dessus pour démarrer le processus d'inscription</value>
+    <value>Après avoir AJOUTER des participant(s), veuillez cliquer sur le bouton INSCRIRE ci-dessus pour commencer le processus d'inscription</value>
   </data>
   <data name="Child" xml:space="preserve">
     <value>Enfant</value>
+  </data>
+  <data name="Msg_Error_Failed_Getting_User_IP" xml:space="preserve">
+    <value>Votre adresse IP ne peut pas être traitée pour le moment. Essayez de nouveau dans quelques minutes</value>
+  </data>
+  <data name="Msg_Info_Arabic_Letters_And_Spaces_Are_Allowed" xml:space="preserve">
+    <value>Seuls les caractères arabes et les espaces sont autorisés</value>
+  </data>
+  <data name="Arabic_Name" xml:space="preserve">
+    <value>Nom arabe</value>
+  </data>
+  <data name="Msg_Info_Arabic_Name_Copy_Or_Type" xml:space="preserve">
+    <value>Veuillez copier-coller votre texte ou le saisir directement le cas échéant</value>
+  </data>
+  <data name="Msg_Info_Update_Available" xml:space="preserve">
+    <value>Une nouvelle version est disponible. Actualisez pour obtenir les dernières mises à jour.</value>
+  </data>
+  <data name="Arabic_Name_New_Rattle_School_Student" xml:space="preserve">
+    <value>Nom en arabe (pour nouveaux éléves de l'École Rattel)</value>
+  </data>
+  <data name="Btn_Refresh_Now" xml:space="preserve">
+    <value>Actualiser</value>
   </data>
 </root>

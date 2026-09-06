@@ -1548,9 +1548,30 @@
     <value>Video</value>
   </data>
   <data name="Msg_Info_Enroll_Button_Enroll_Participant" xml:space="preserve">
-    <value>Please click on ENROLL button above to start enrollment process</value>
+    <value>After adding participant(s), please click on ENROLL button above to start enrollement process</value>
   </data>
   <data name="Child" xml:space="preserve">
     <value>Child</value>
+  </data>
+  <data name="Msg_Error_Failed_Getting_User_IP" xml:space="preserve">
+    <value>Your IP address can not be processed at the moment, Please try in few minutes</value>
+  </data>
+  <data name="Msg_Info_Arabic_Letters_And_Spaces_Are_Allowed" xml:space="preserve">
+    <value>Only Arabic characters and spaces are allowed</value>
+  </data>
+  <data name="Arabic_Name" xml:space="preserve">
+    <value>Arabic Name</value>
+  </data>
+  <data name="Msg_Info_Arabic_Name_Copy_Or_Type" xml:space="preserve">
+    <value>Please copy and paste your text or type it directly when applicable</value>
+  </data>
+  <data name="Msg_Info_Update_Available" xml:space="preserve">
+    <value>A new version is available. Refresh to get the latest updates.</value>
+  </data>
+  <data name="Btn_Refresh_Now" xml:space="preserve">
+    <value>Refresh Now</value>
+  </data>
+  <data name="Arabic_Name_New_Rattle_School_Student" xml:space="preserve">
+    <value>Arabic name (for new students of Rattel School)</value>
   </data>
 </root>

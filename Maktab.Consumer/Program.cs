@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor;
 using MudBlazor.Services;
 using MudBlazor.Translations;
 
@@ -17,7 +18,10 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 // Add MudBlazor
-builder.Services.AddMudServices();
+builder.Services.AddMudServices(config =>
+{
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomEnd;
+});
 
 //var baseUri = builder.Configuration["apiUrl"]; //builder.HostEnvironment.BaseAddress
 
@@ -51,7 +55,9 @@ builder.Services//.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseUr
                 .AddSingleton<IClipboardService, ClipboardService>()
                 .AddScoped<IHelcimPaymentMethodService, HelcimPaymentMethodService>()
                 .AddScoped<IApplicationVersionService, ApplicationVersionService>()
-                .AddScoped<IEmailService, EmailService>();
+                .AddScoped<IEmailService, EmailService>()
+                .AddScoped<IIpHelperService, IpHelperService>()
+                .AddScoped<IQuranService, QuranService>();
 
 // Azure Maps – dedicated HttpClient + service
 builder.Services.AddScoped<IAddressLookupService>(sp =>

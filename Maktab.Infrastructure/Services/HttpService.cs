@@ -47,40 +47,40 @@ namespace Maktab.Infrastructure.Services
                return await sendRequest<T>(request, cancellationToken:ct);
           }
 
-          public async Task Post(string uri, object value)
+          public async Task Post(string uri, object value, CancellationToken cancellationToken = default)
           {
                var request = createRequest(HttpMethod.Post, uri, value);
-               await sendRequest(request);
+               await sendRequest(request, cancellationToken: cancellationToken);
           }
 
-          public async Task<T> Post<T>(string uri, object? value = null, bool autoLogout = true)
+          public async Task<T> Post<T>(string uri, object? value = null, bool autoLogout = true, CancellationToken cancellationToken = default)
           {
                var request = createRequest(HttpMethod.Post, uri, value);
-               return await sendRequest<T>(request, autoLogout);
+               return await sendRequest<T>(request, autoLogout, cancellationToken);
           }
 
-          public async Task Put(string uri, object value = null, bool autoLogout = true)
+          public async Task Put(string uri, object value = null, bool autoLogout = true, CancellationToken cancellationToken = default)
           {
                var request = createRequest(HttpMethod.Put, uri, value);
-               await sendRequest(request, autoLogout);
+               await sendRequest(request, autoLogout, cancellationToken);
           }
 
-          public async Task<T> Put<T>(string uri, object value = null)
+          public async Task<T> Put<T>(string uri, object value = null, CancellationToken cancellationToken = default)
           {
                var request = createRequest(HttpMethod.Put, uri, value);
-               return await sendRequest<T>(request);
+               return await sendRequest<T>(request, cancellationToken: cancellationToken);
           }
 
-          public async Task Delete(string uri)
+          public async Task Delete(string uri, CancellationToken cancellationToken = default)
           {
                var request = createRequest(HttpMethod.Delete, uri);
-               await sendRequest(request);
+               await sendRequest(request, cancellationToken: cancellationToken);
           }
 
-          public async Task<T> Delete<T>(string uri)
+          public async Task<T> Delete<T>(string uri, CancellationToken cancellationToken = default)
           {
                var request = createRequest(HttpMethod.Delete, uri);
-               return await sendRequest<T>(request);
+               return await sendRequest<T>(request, cancellationToken: cancellationToken);
           }
 
           // helper methods

@@ -34,5 +34,7 @@
 
           public static readonly DateTime DefaultDateTime = new DateTime(1900, 1, 1);
 
+          public const string PhoneNumberPattern = "000-000-0000";
+
      }
 }

@@ -25,6 +25,17 @@
                }
           </MudSelect>
 
+          <MudTextField T="string" Label=@L[MaktabResources.Password]
+                        HelperText=@L[MaktabResources.Msg_Info_Password_Policy]
+                        @ref="pwField1"
+                        InputType="InputType.Password"
+                        Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                        RequiredError=@L[MaktabResources.Msg_Info_Value_Is_Required, MaktabResources.Password] />
+          <MudTextField T="string" Immediate="true"
+                        Label=@L[MaktabResources.Password] HelperText=@L[MaktabResources.Repeat_Password_HelperText] InputType="InputType.Password"
+                        Validation="@(new Func<string, string>(PasswordMatch))" />
+
+
           @if (!string.IsNullOrWhiteSpace(_errorMessage))
           {
                <MudAlert Severity="Severity.Error" Elevation="0" Class="my-4">
@@ -32,7 +43,7 @@
                </MudAlert>
           }
 
-          <MudStack Direction="Row" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
+          <MudStack Row="true" Justify="Justify.FlexEnd" Spacing="2" Class="mt-4">
                <MudButton Type="Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!_isValid || isSaving)" StartIcon="@Icons.Material.Filled.Check" OnClick="@(HandleSaving)">
                     @if (isSaving)
                     {
@@ -60,7 +71,7 @@
      [Parameter] public EventCallback OnCancel { get; set; }
 
      private bool isSaving = false;
-
+     MudTextField<string> pwField1;
      IEnumerable<Relationship> relationShips;
 
      protected override async Task OnInitializedAsync()
@@ -114,7 +125,15 @@
           }
 
           Spouse.FamilyId = FamilyId;
-          Spouse.Password = "Test1234!";
+
+          if (string.IsNullOrWhiteSpace(pwField1.Value))
+          {
+               _errorMessage = L[MaktabResources.Password_Required];
+               Snackbar.Add(_errorMessage, Severity.Error);
+               return;
+          }
+
+          Spouse.Password = pwField1.Value;
 
           var souseProfile = await UserService.RegisterUserAsync(Spouse);
           if (souseProfile == null)
@@ -133,6 +152,14 @@
      private async Task OnCancelClickedHandler()
      {
           await OnCancel.InvokeAsync();
+     }
+     
+     private string PasswordMatch(string arg)
+     {
+          if (pwField1.Value != arg)
+               return L[MaktabResources.Msg_Error_Password_Not_Match];
+
+          return null;
      }
      
 }

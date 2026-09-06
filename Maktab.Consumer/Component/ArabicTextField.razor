@@ -1,0 +1,133 @@
+﻿@using System.Linq.Expressions
+@using System.Text.RegularExpressions
+@using MudBlazor
+
+@inject IStringLocalizer<MaktabResources> L
+
+@* <MudRTLProvider RightToLeft="true"> *@
+     <MudTextField T="string"
+                   Label="@Label"
+                   Value="@Value"
+                   ValueChanged="OnValueChanged"
+                   Immediate="true"
+                   Variant="@Variant"
+                   Required="@Required"
+                   RequiredError="@L[MaktabResources.This_Field_Required]"
+                   Validation="@((Func<string, string>)ValidateArabicName)"
+                   For="@(For ?? ValueExpression)"
+                   HelperText="@HelperMessage"
+                   Class="@Class"
+                   ReadOnly="@ReadOnly"
+                   Disabled="@Disabled"
+                   @attributes="InputAttributes" />
+@* </MudRTLProvider> *@
+
+@code {
+     /// <summary>Field label. No localized default is applied — pass a localized string from the caller.</summary>
+     [Parameter] public string Label { get; set; } = "Arabic Text";
+
+     [Parameter] public bool ReadOnly { get; set; } = false;
+     [Parameter] public bool Disabled { get; set; } = false;
+
+     /// <summary>Current value. Intended usage from the parent: @bind-Value="Model.Prop".</summary>
+     [Parameter] public string? Value { get; set; }
+
+     [Parameter] public EventCallback<string> ValueChanged { get; set; }
+
+     /// <summary>
+     /// Auto-populated by Blazor's compiler when the caller writes @bind-Value="Model.Prop".
+     /// Lets EditForm-based validation (ValidationMessage/DataAnnotationsValidator) work out of the box
+     /// without the caller having to also pass For="..." explicitly.
+     /// </summary>
+     [Parameter] public Expression<Func<string>>? ValueExpression { get; set; }
+
+     /// <summary>
+     /// Optional explicit override of the field identifier used for validation, for cases where it
+     /// should differ from ValueExpression (e.g. binding a local copy but validating a different model member).
+     /// Falls back to ValueExpression when not supplied.
+     /// </summary>
+     [Parameter] public Expression<Func<string>>? For { get; set; }
+
+     [Parameter] public Variant Variant { get; set; } = Variant.Text;
+     [Parameter] public bool Required { get; set; } = false;
+     [Parameter] public string Class { get; set; } = string.Empty;
+
+     /// <summary>
+     /// Catch-all for any other MudTextField parameter (Placeholder, HelperText, Disabled, MaxLength,
+     /// Lines, Adornment, AdornmentIcon, OnAdornmentClick, etc.). Splatted straight through untouched.
+     /// </summary>
+     [Parameter(CaptureUnmatchedValues = true)]
+     public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+     /// <summary>
+     /// Merges the mandatory lang/dir hints (see below) with whatever the caller supplied via
+     /// AdditionalAttributes, letting the caller override either if they ever need to.
+     /// </summary>
+     private Dictionary<string, object> InputAttributes
+     {
+          get
+          {
+               // lang="ar" + dir="rtl" are a best-effort hint for the on-screen keyboard on mobile
+               // (notably iOS Safari, and Gboard to a degree) to default to Arabic when this field is
+               // focused. There is no web API to force an OS/browser keyboard layout switch, so this
+               // is NOT guaranteed — desktop physical keyboards ignore it entirely, and support varies
+               // across mobile browsers/OS versions. Verified as the best available option 2026-08-30;
+               // see ArabicNameField-notes.md.
+               var attrs = new Dictionary<string, object>
+               {
+                    ["lang"] = "ar",
+                    ["dir"] = "rtl"
+               };
+
+               if (AdditionalAttributes is not null)
+               {
+                    foreach (var kvp in AdditionalAttributes)
+                         attrs[kvp.Key] = kvp.Value; // caller-supplied values win
+               }
+
+               return attrs;
+          }
+     }
+
+     // Matches everything EXCEPT: Arabic letters (\u0621-\u064A), whitespace, and hyphen
+     // (hyphen allowed for compound names, e.g. "عبد-الله").
+     // Deliberately EXCLUDES Arabic-Indic digits (٠-٩) and diacritics/tashkeel (\u064B-\u0652)
+     // per product decision on 2026-08-30 — see ArabicNameField-notes.md if this needs revisiting.
+     private static readonly Regex DisallowedCharsPattern = new(@"[^\u0621-\u064A\s\-]", RegexOptions.Compiled);
+
+     private bool _invalidAttempt;
+
+     private async Task OnValueChanged(string? input)
+     {
+          var filtered = FilterInput(input);
+
+          // Flag it only when the user actually typed something that got stripped,
+          // so the message disappears again once they delete/correct it.
+          _invalidAttempt = (input?.Length ?? 0) != filtered.Length;
+
+          // NOTE: we deliberately do NOT write back to the `Value` parameter here.
+          // Parameters are owned by the parent; the round trip through ValueChanged -> the
+          // parent's bound property -> the next render is what feeds the corrected value
+          // back down into this component and into MudTextField.
+          await ValueChanged.InvokeAsync(filtered);
+     }
+
+     private static string FilterInput(string? input)
+         => string.IsNullOrEmpty(input) ? string.Empty : DisallowedCharsPattern.Replace(input, string.Empty);
+
+     // Required-empty is handled natively by MudTextField's Required/RequiredError above,
+     // so this only needs to cover the "you typed something invalid" case.
+     private string? ValidateArabicName(string? value)
+         => _invalidAttempt ? L[MaktabResources.Msg_Info_Arabic_Letters_And_Spaces_Are_Allowed] : null;
+
+     private string HelperMessage
+     {
+          get
+          {
+               //if (HasError) return L[MaktabResources.Required];
+               return L[MaktabResources.Msg_Info_Arabic_Name_Copy_Or_Type];
+          }
+     }
+
+     
+}
