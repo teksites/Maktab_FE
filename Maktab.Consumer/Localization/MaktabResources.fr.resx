@@ -1548,7 +1548,7 @@
     <value>Veuillez cliquer sur le bouton AJOUTER ci-dessus pour démarrer le processus d'inscription</value>
   </data>
   <data name="Msg_Info_Enroll_Button_Enroll_Participant" xml:space="preserve">
-    <value>Veuillez cliquer sur le bouton INSCRIPTION ci-dessus pour démarrer le processus d'inscription</value>
+    <value>Après avoir AJOUTER des participant(s), veuillez cliquer sur le bouton INSCRIRE ci-dessus pour commencer le processus d'inscription</value>
   </data>
   <data name="Child" xml:space="preserve">
     <value>Enfant</value>

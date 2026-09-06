@@ -2297,7 +2297,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please click on ENROLL button above to start enrollment process.
+        ///   Looks up a localized string similar to After adding participant(s), please click on ENROLL button above to start enrollement process.
         /// </summary>
         public static string Msg_Info_Enroll_Button_Enroll_Participant {
             get {
