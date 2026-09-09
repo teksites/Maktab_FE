@@ -482,6 +482,24 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Arabic Name.
+        /// </summary>
+        public static string Arabic_Name {
+            get {
+                return ResourceManager.GetString("Arabic_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arabic name (for new students of Rattel School).
+        /// </summary>
+        public static string Arabic_Name_New_Rattle_School_Student {
+            get {
+                return ResourceManager.GetString("Arabic_Name_New_Rattle_School_Student", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Available courses.
         /// </summary>
         public static string Available_Courses {
@@ -505,6 +523,15 @@ namespace Maktab.Consumer.Localization {
         public static string Back_To_Dashboard {
             get {
                 return ResourceManager.GetString("Back_To_Dashboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh Now.
+        /// </summary>
+        public static string Btn_Refresh_Now {
+            get {
+                return ResourceManager.GetString("Btn_Refresh_Now", resourceCulture);
             }
         }
         
@@ -1919,6 +1946,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your IP address can not be processed at the moment, Please try in few minutes.
+        /// </summary>
+        public static string Msg_Error_Failed_Getting_User_IP {
+            get {
+                return ResourceManager.GetString("Msg_Error_Failed_Getting_User_IP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to initiate payment. Please try again later.
         /// </summary>
         public static string Msg_Error_Failed_Initiate_Payment {
@@ -2207,6 +2243,24 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only Arabic characters and spaces are allowed.
+        /// </summary>
+        public static string Msg_Info_Arabic_Letters_And_Spaces_Are_Allowed {
+            get {
+                return ResourceManager.GetString("Msg_Info_Arabic_Letters_And_Spaces_Are_Allowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please copy and paste your text or type it directly when applicable.
+        /// </summary>
+        public static string Msg_Info_Arabic_Name_Copy_Or_Type {
+            get {
+                return ResourceManager.GetString("Msg_Info_Arabic_Name_Copy_Or_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Authenticating....
         /// </summary>
         public static string Msg_Info_Authenticating {
@@ -2243,7 +2297,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please click on ENROLL button above to start enrollment process.
+        ///   Looks up a localized string similar to After adding participant(s), please click on ENROLL button above to start enrollement process.
         /// </summary>
         public static string Msg_Info_Enroll_Button_Enroll_Participant {
             get {
@@ -2473,6 +2527,15 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Info_Total_Registered_Participant {
             get {
                 return ResourceManager.GetString("Msg_Info_Total_Registered_Participant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A new version is available. Refresh to get the latest updates..
+        /// </summary>
+        public static string Msg_Info_Update_Available {
+            get {
+                return ResourceManager.GetString("Msg_Info_Update_Available", resourceCulture);
             }
         }
         

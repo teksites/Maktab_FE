@@ -40,5 +40,7 @@ namespace Maktab.Core.Interfaces.Services
           /// </summary>
           Task<bool> RemoveChildByIdAsync(Guid childId);
           Task<ChildResponse> UpdateChildAsync(UpdateChildRequest updateChildResponse);
+          Task<ChildEducationalProfileResponse> GetEducationalProfileByChildIdAsync(Guid childId);
+          Task<ChildEducationalProfileResponse> PostEducationalProfileByChildIdAsync(Guid childId, Guid familyId, UpsertChildEducationalProfileRequest childEducationalProfileRequest, CancellationToken cancellationToken = default);
      }
 }

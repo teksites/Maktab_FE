@@ -56,6 +56,24 @@
                          </MudText>
                     </MudStack>
 
+                    <!-- Institute email -->
+                    @if (!string.IsNullOrEmpty(_institute?.Email))
+                    {
+                         <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
+                              <MudIcon Icon="@Icons.Material.Filled.Email" Color="Color.Info" />
+                              <MudText Typo="Typo.subtitle1">@_institute.Email</MudText>
+                         </MudStack>
+                    }
+                    
+                    <!-- Institute phone -->
+                    @if (!string.IsNullOrEmpty(_institute?.Phone))
+                    {
+                         <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
+                              <MudIcon Icon="@Icons.Material.Filled.Phone" Color="Color.Info" />
+                              <MudText Typo="Typo.subtitle1">@_institute.Phone</MudText>
+                         </MudStack>
+                    }
+
                     @if (!string.IsNullOrEmpty(_course.PolicyHyperLink))
                     {
                          <MudLink Target="" Href="@_course.PolicyHyperLink">@L[MaktabResources.Policy]</MudLink>

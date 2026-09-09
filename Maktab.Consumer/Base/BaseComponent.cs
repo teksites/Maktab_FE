@@ -25,6 +25,15 @@ namespace Maktab.Consumer.Base
           private RenderThrottle _throttle;
           private readonly CancellationTokenSource _cts = new();
 
+          protected static readonly PatternMask _PhoneMask = new PatternMask(Constants.PhoneNumberPattern)
+          {
+               MaskChars = new[]
+               {
+                    new MaskChar('0', @"[0-9]")
+               },
+               CleanDelimiters = false,
+          };
+
           protected override void OnInitialized()
           {
                _throttle = new RenderThrottle(() => InvokeAsync(StateHasChanged));

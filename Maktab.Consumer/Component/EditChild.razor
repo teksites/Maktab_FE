@@ -43,6 +43,19 @@
                     </MudItem>
 
                     <MudItem xs="12" sm="6">
+                         <ArabicTextField @bind-Value="ChildModel.ArabicName"
+                                          Label=@L[MaktabResources.Arabic_Name_New_Rattle_School_Student]
+                                          Required="false"
+                                          Disabled="@isArabicNameDefined"
+                                          For="@(() => ChildModel.ArabicName)" />
+
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
+                         @* Intentionly left blank for future use *@
+                    </MudItem>
+
+                    <MudItem xs="12" sm="6">
                          <MudDatePicker @bind-Date="DateOfBirth"
                                         Label=@L[MaktabResources.Date_Of_Birth]
                                         Required="@isChild"
@@ -224,6 +237,7 @@
      private bool isParent => ChildModel.UserType == MaktabDataContracts.Enums.UserType.Father ||
                               ChildModel.UserType == MaktabDataContracts.Enums.UserType.Mother;
 
+     private bool isArabicNameDefined => isEditing && !string.IsNullOrEmpty(ChildModel.ArabicName);
 
      protected override async Task OnInitializedAsync()
      {

@@ -92,15 +92,14 @@
           RequestRender();
      }
 
-     public void OnDispose()
+     protected override void Dispose(bool disposing)
      {
           StateService.InstituteState.OnChange -= HandleStateChange;
+          base.Dispose(disposing);
      }
-
 
      protected override async Task OnInitializedAsync()
      {
-
           await LoadData();
 
           isInitialized = true;

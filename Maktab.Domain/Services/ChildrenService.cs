@@ -4,10 +4,6 @@ using MaktabDataContracts.Requests.Children;
 using MaktabDataContracts.Requests.Policies;
 using MaktabDataContracts.Responses.Children;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Maktab.Domain.Services
 {
@@ -25,6 +21,8 @@ namespace Maktab.Domain.Services
           private const string addChildByFamilyId = @"/api/families/{0}/children/add";
           private const string removeChildByFamilyId = @"/api/families/{0}/children/delete?ifHardDelete=false";
           private const string isChildrenExistByRamQNumber = @"/api/children/check";
+          private const string getEducationalProfileById = @"/api/children/{0}/educational-profile";
+          private const string updateEducationalProfileById = @"/api/children/{0}/educational-profile";
 
           private readonly ILogger<ChildrenService> _logger;
 
@@ -312,6 +310,103 @@ namespace Maktab.Domain.Services
                catch (Exception ex)
                {
                     _logger.LogError(ex, "Error updating child with {ChildId}", childResponse.ChildId);
+                    throw;
+               }
+          }
+
+          public async Task<ChildEducationalProfileResponse> GetEducationalProfileByChildIdAsync(Guid childId)
+          {
+               try
+               {
+                    // Validate input
+                    if (childId == Guid.Empty)
+                    {
+                         _logger.LogWarning("GetEducationalProfileByChildIdAsync called with empty GUID");
+                         throw new ArgumentException("Child ID cannot be empty", nameof(childId));
+                    }
+
+                    _logger.LogInformation("Fetching educational profile for child {ChildId}", childId);
+                         
+                    // Make request
+                    var formattedUrl = string.Format(getEducationalProfileById, childId);
+                    var childEducationProfile = await _httpService.Get<ChildEducationalProfileResponse>(formattedUrl);
+
+                    // Validate response and unwrap
+                    if (childEducationProfile == null)
+                    {
+                         _logger.LogWarning("No educational profile found for child {ChildId}", childId);
+                         return new ChildEducationalProfileResponse();
+                    }
+
+                    _logger.LogInformation("Successfully fetched educational profile for child {ChildId}", childId);
+                    return childEducationProfile;
+               }
+               catch (HttpRequestException ex)
+               {
+                    _logger.LogError(ex, "Network error fetching educational profile for child {ChildId}", childId);
+                    throw;
+               }
+               catch (TaskCanceledException ex)
+               {
+                    _logger.LogError(ex, "Request timeout fetching educational profile for child {ChildId}", childId);
+                    throw;
+               }
+               catch (Exception ex)
+               {
+                    _logger.LogError(ex, "Unexpected error fetching educational profile for child {ChildId}", childId);
+                    throw;
+               }
+          }
+
+
+          public async Task<ChildEducationalProfileResponse> PostEducationalProfileByChildIdAsync(Guid childId, Guid familyId, UpsertChildEducationalProfileRequest childEducationalProfileRequest, CancellationToken cancellationToken = default)
+          {
+               try
+               {
+                    // Validate input
+                    if (childId == Guid.Empty)
+                    {
+                         _logger.LogWarning("PostEducationalProfileByChildIdAsync called with empty childId");
+                         throw new ArgumentException("Child ID cannot be empty", nameof(childId));
+                    }
+
+                    if (familyId == Guid.Empty)
+                    {
+                         _logger.LogWarning("PostEducationalProfileByChildIdAsync called with empty familyId");
+                         throw new ArgumentException("Family ID cannot be empty", nameof(familyId));
+                    }
+
+                    _logger.LogInformation("Posting educational profile for child {ChildId}", childId);
+
+                    childEducationalProfileRequest.FamilyId = familyId;
+
+                    // Make request
+                    var formattedUrl = string.Format(updateEducationalProfileById, childId);
+                    var childEducationProfile = await _httpService.Post<ChildEducationalProfileResponse>(formattedUrl, childEducationalProfileRequest);
+
+                    // Validate response and unwrap
+                    if (childEducationProfile == null)
+                    {
+                         _logger.LogWarning("No educational profile found for child {ChildId}", childId);
+                         return new ChildEducationalProfileResponse();
+                    }
+
+                    _logger.LogInformation("Successfully posted educational profile for child {ChildId}", childId);
+                    return childEducationProfile;
+               }
+               catch (HttpRequestException ex)
+               {
+                    _logger.LogError(ex, "Network error fetching educational profile for child {ChildId}", childId);
+                    throw;
+               }
+               catch (TaskCanceledException ex)
+               {
+                    _logger.LogError(ex, "Request timeout fetching educational profile for child {ChildId}", childId);
+                    throw;
+               }
+               catch (Exception ex)
+               {
+                    _logger.LogError(ex, "Unexpected error posting educational profile for child {ChildId}", childId);
                     throw;
                }
           }

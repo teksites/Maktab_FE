@@ -37,13 +37,15 @@
      </div>
      <script src="https://secure.helcim.app/helcim-pay/services/start.js"></script>
      <script src="helcimInterop.js"></script>
+     <script src="ipHelper.js"></script>
      <script>
           window.getBrowserLocale = () => {
                return navigator.language || navigator.userLanguage || null;
           };
      </script>
      <script src="_framework/blazor.webassembly.js"></script>
-     <script>navigator.serviceWorker.register('service-worker.js');</script>
+     <script src="updateChecker.js"></script>
+     <script>appUpdateChecker.register();</script>
      <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 </body>
 

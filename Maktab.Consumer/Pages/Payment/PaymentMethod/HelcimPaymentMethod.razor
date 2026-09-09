@@ -16,6 +16,7 @@
 @inject IClipboardService ClipboardService
 @inject IHelcimPaymentMethodService HelcimPaymentMethodService
 @inject IJSRuntime JS
+@inject IIpHelperService IpService
 @inject IDialogService DialogService
 
 <MudContainer MaxWidth="MaxWidth.Small" Class="py-8">
@@ -298,7 +299,6 @@
           _dotNetRef = DotNetObjectReference.Create(this);
 
           var userId = await SessionService.GetLoggedInUserIdAsync();
-
           if (TranactionId == Guid.Empty)
           {
                isInitialized = true;
@@ -332,7 +332,6 @@
                minMaxValueText = L[MaktabResources.Payment_Min_Amount, MaxAmount];
 
                SelectedAmount = MaxAmount;
-
           }
           else
           {
@@ -421,13 +420,20 @@
      {
           try
           {
-          // NavigationManager.NavigateTo($"/checkout?amount={SelectedAmount}");
+               string userIp = await IpService.GetUserIp();
+               if (string.IsNullOrEmpty(userIp))
+               {
+                    // Handle error case
+                    await DialogService.ShowMessageBox(L[MaktabResources.Error], L[MaktabResources.Msg_Error_Failed_Getting_User_IP], L[MaktabResources.OK]);
+                    return;
+               }
+
           var request = new InitiatePaymentRequest()
           {
                PaymentCode = PaymentCode,
                Amount = SelectedAmount,
                TransactionId = this.TranactionId,
-                    UserIp = "-----"
+                         UserIp = userIp
           };
           var responseWithCode = await HelcimPaymentMethodService.InitializePaymentAsync(request);
           CheckoutToken = responseWithCode.CheckoutToken;
