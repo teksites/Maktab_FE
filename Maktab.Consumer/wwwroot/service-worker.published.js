@@ -42,6 +42,9 @@ async function onActivate(event) {
         .map(key => caches.delete(key)));
 
     await self.clients.claim();
+
+    const clients = await self.clients.matchAll({ type: 'window' });
+    clients.forEach(client => client.postMessage({ type: 'SW_READY' }));
 }
 
 async function onFetch(event) {
