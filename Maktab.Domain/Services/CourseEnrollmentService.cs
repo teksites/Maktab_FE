@@ -10,7 +10,7 @@ namespace Maktab.Domain.Services
           private const string getCourseEnrollmentByIdUrl = @"/api/student-course-enrollments/{0}";
           private const string addCourseEnrollmentUrl = @"/api/student-course-enrollments";
           private const string updateCourseEnrollmentByIdUrl = @"/api/student-course-enrollments/{0}";
-          private const string removeCourseEnrollmentByIdUrl = @"/api/student-course-enrollments/{0}?hardDelete=true";
+          private const string removeCourseEnrollmentByIdUrl = @"/api/student-course-enrollments/{0}?hardDelete=false";
 
 
           //private IDictionary<Guid, List<StudentCourseEnrollmentResponse>> courseResponses = new Dictionary<Guid, List<StudentCourseEnrollmentResponse>>();
@@ -33,10 +33,10 @@ namespace Maktab.Domain.Services
                return result;
           }
 
-          public async Task<CourseEnrollmentGroupResponse> UpdateCourseEnrollmentByIdAsync(Guid enrollmentId, StudentCourseEnrollmentResponse enrollmentResponse)
+          public async Task<bool> UpdateCourseEnrollmentByIdAsync(Guid enrollmentId, AddStudentCourseEnrollment enrollmentResponse)
           {
                var formatedUrl = string.Format(updateCourseEnrollmentByIdUrl, enrollmentId);
-               var result = await _httpService.Put<CourseEnrollmentGroupResponse>(formatedUrl, enrollmentResponse);
+               var result = await _httpService.Put<bool>(formatedUrl, enrollmentResponse);
                return result;
           }
 

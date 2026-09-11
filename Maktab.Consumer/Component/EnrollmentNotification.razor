@@ -135,7 +135,7 @@
                                                                            {
                                                                                 <MudMenuItem OnClick="OpenAssignCourseDialog">Enroll</MudMenuItem>
                                                                            } *@
-                                                                           <MudMenuItem OnClick="@(() => RemoveEnrollment(context))">@L[MaktabResources.Delete]</MudMenuItem>
+                                                                           <MudMenuItem OnClick="@(() => RemoveEnrollment(context))">@L[MaktabResources.Cancel]</MudMenuItem>
                                                                       </MudMenu>
 
                                                                  </MudTd>
@@ -306,8 +306,21 @@
                       yesText: L[MaktabResources.Remove], cancelText: L[MaktabResources.Cancel]);
                if (result.HasValue && result.Value)
                {
-                    var enrollmentRemoved = await CourseEnrollmentService.RemoveCourseEnrollmentByIdAsync(e.StudentCourseEnrollmentId);
-                    if (enrollmentRemoved)
+                    var addEnrollmentTransactionRequest = new MaktabDataContracts.Requests.Course.AddStudentCourseEnrollment()
+                    {
+                         CourseEnrollmentGroupId = e.CourseEnrollmentGroupId,
+                         CourseId = e.CourseId,
+                         FamilyId = e.FamilyId,
+                         ChildId = e.ChildId,
+                         DayCareDays = e.DayCareDays,
+                         IsActive = e.IsActive,
+                         WillUseDayCare = e.WillUseDayCare,
+                         EnrollmentIndex = e.EnrollmentIndex,
+                         EnrollmentStatus = MaktabDataContracts.Enums.EnrollmentStatus.Cancelled,
+                    };
+
+                    var isUpdated = await CourseEnrollmentService.UpdateCourseEnrollmentByIdAsync(e.StudentCourseEnrollmentId, addEnrollmentTransactionRequest);
+                    if (isUpdated)
                     {
                          await StateService.LoadCourseEnrollments(CourseEnrollmentService, userInfo.FamilyId, true);
                          await StateService.LoadCourseTransactionsByCourse(
@@ -315,11 +328,11 @@
                                    Enrollments,
                                    userInfo.FamilyId,
                                    true);
-                         Snackbar.Add(L[MaktabResources.Msg_Success_Remove_Enrollment], Severity.Success);
+                         Snackbar.Add(L[MaktabResources.Msg_Success_Enrollment_Status_Updated], Severity.Success);
                     }
                     else
                     {
-                         Snackbar.Add(L[MaktabResources.Msg_Error_Remove_Enrollment], Severity.Error);
+                         Snackbar.Add(L[MaktabResources.Msg_Error_Enrollment_Status_Not_Updated], Severity.Error);
                     }
                }
           }
