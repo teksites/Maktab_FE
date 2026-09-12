@@ -19,7 +19,7 @@ window.appUpdateChecker = (() => {
     function reload() {
         if (reloading) return;
         reloading = true;
-        window.location.reload();
+        window.location.replace(window.location.href);
     }
 
     function notifyUpdate() {
@@ -28,11 +28,23 @@ window.appUpdateChecker = (() => {
         dotNetRef.invokeMethodAsync('OnUpdateAvailable');
     }
 
+    function waitForSwReady(timeoutMs) {
+        return new Promise(resolve => {
+            const timeout = setTimeout(resolve, timeoutMs);
+            const onMessage = (event) => {
+                if (event.data?.type === 'SW_READY') {
+                    clearTimeout(timeout);
+                    navigator.serviceWorker.removeEventListener('message', onMessage);
+                    resolve();
+                }
+            };
+            navigator.serviceWorker.addEventListener('message', onMessage);
+        });
+    }
+
     async function init(ref) {
         dotNetRef = ref;
         if (!('serviceWorker' in navigator) || isLocalDev()) return;
-
-        navigator.serviceWorker.addEventListener('controllerchange', reload);
 
         const reg = await navigator.serviceWorker.ready;
         if (reg.waiting) notifyUpdate();
@@ -49,14 +61,15 @@ window.appUpdateChecker = (() => {
     }
 
     async function applyUpdate() {
+        if (reloading) return;
+
         const reg = await navigator.serviceWorker.getRegistration();
         if (reg?.waiting) {
             reg.waiting.postMessage({ type: 'SKIP_WAITING' });
-            // ponytail: fallback if controllerchange never fires (Safari / edge cases)
-            setTimeout(reload, 2000);
-        } else {
-            reload();
+            await waitForSwReady(3000);
         }
+
+        reload();
     }
 
     return { register, init, applyUpdate };

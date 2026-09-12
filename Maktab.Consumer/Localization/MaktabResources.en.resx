@@ -385,13 +385,15 @@
     <value>No</value>
   </data>
   <data name="Msg_Question_Remove_Enrollment" xml:space="preserve">
-    <value>Would you like to remove enrollment?</value>
+    <value>By confirming cancellation, you acknowledge that this enrollment will be cancelled.
+
+Do you wish to proceed with the cancellation?</value>
   </data>
-  <data name="Msg_Error_Remove_Enrollment" xml:space="preserve">
-    <value>Enrollment can not be removed at the moment, please try in few minutes</value>
+  <data name="Msg_Error_Enrollment_Status_Not_Updated" xml:space="preserve">
+    <value>Enrollment status can not be updated at the moment, please try in few minutes</value>
   </data>
-  <data name="Msg_Success_Remove_Enrollment" xml:space="preserve">
-    <value>Enrollment Remove successfully</value>
+  <data name="Msg_Success_Enrollment_Status_Updated" xml:space="preserve">
+    <value>Enrollment status updated successfully</value>
   </data>
   <data name="Course" xml:space="preserve">
     <value>Course</value>
@@ -1071,7 +1073,7 @@
     <value>Unknown</value>
   </data>
   <data name="Msg_Info_Has_Awaiting_Enrollment" xml:space="preserve">
-    <value>Participant has been enrolled in the waiting list for a group that is full. The fee showing as payable above includes this enrollment. If you wish to guarantee a spot for your child in the school / activity, you must enroll your child in another available group. You will need to delete the enrollment marked as “In Waiting” from below and enroll in another available group for the same school and course</value>
+    <value>Participant has been enrolled in the waiting list for a group that is full. The fee showing as payable above includes this enrollment. If you wish to guarantee a spot for your child in the school / activity, you must enroll your child in another available group. You will need to cancel the enrollment marked as “In Waiting” from below and enroll in another available group for the same school and course</value>
   </data>
   <data name="EnrollmentStatus_Enrolled" xml:space="preserve">
     <value>Enrolled</value>

@@ -11,6 +11,6 @@ namespace Maktab.Core.Interfaces.Services
           Task<IEnumerable<StudentCourseEnrollmentResponse>> GetCourseEnrollmentsByFamilyIdAsync(Guid familyId);
           //Task<StudentCourseTransactionResponse> GetCoursePaymentDetailsForFamily(Guid familyId);
           Task<bool> RemoveCourseEnrollmentByIdAsync(Guid enrollmentId);
-          Task<CourseEnrollmentGroupResponse> UpdateCourseEnrollmentByIdAsync(Guid enrollmentId, StudentCourseEnrollmentResponse enrollmentResponse);
+          Task<bool> UpdateCourseEnrollmentByIdAsync(Guid enrollmentId, AddStudentCourseEnrollment enrollmentResponse);
      }
 }

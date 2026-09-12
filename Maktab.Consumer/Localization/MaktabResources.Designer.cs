@@ -1946,6 +1946,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enrollment status can not be updated at the moment, please try in few minutes.
+        /// </summary>
+        public static string Msg_Error_Enrollment_Status_Not_Updated {
+            get {
+                return ResourceManager.GetString("Msg_Error_Enrollment_Status_Not_Updated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your IP address can not be processed at the moment, Please try in few minutes.
         /// </summary>
         public static string Msg_Error_Failed_Getting_User_IP {
@@ -2095,15 +2104,6 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Error_RAMQ_Already_Exist {
             get {
                 return ResourceManager.GetString("Msg_Error_RAMQ_Already_Exist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Enrollment can not be removed at the moment, please try in few minutes.
-        /// </summary>
-        public static string Msg_Error_Remove_Enrollment {
-            get {
-                return ResourceManager.GetString("Msg_Error_Remove_Enrollment", resourceCulture);
             }
         }
         
@@ -2324,7 +2324,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Participant has been enrolled in the waiting list for a group that is full. The fee showing as payable above includes this enrollment. If you wish to guarantee a spot for your child in the school / activity, you must enroll your child in another available group. You will need to delete the enrollment marked as “In Waiting” from below and enroll in another available group for the same school and course.
+        ///   Looks up a localized string similar to Participant has been enrolled in the waiting list for a group that is full. The fee showing as payable above includes this enrollment. If you wish to guarantee a spot for your child in the school / activity, you must enroll your child in another available group. You will need to cancel the enrollment marked as “In Waiting” from below and enroll in another available group for the same school and course.
         /// </summary>
         public static string Msg_Info_Has_Awaiting_Enrollment {
             get {
@@ -2639,7 +2639,9 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Would you like to remove enrollment?.
+        ///   Looks up a localized string similar to By confirming cancellation, you acknowledge that this enrollment will be cancelled.
+        ///
+        ///Do you wish to proceed with the cancellation?.
         /// </summary>
         public static string Msg_Question_Remove_Enrollment {
             get {
@@ -2819,6 +2821,15 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enrollment status updated successfully.
+        /// </summary>
+        public static string Msg_Success_Enrollment_Status_Updated {
+            get {
+                return ResourceManager.GetString("Msg_Success_Enrollment_Status_Updated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thank you {0} for registration with {1}..
         /// </summary>
         public static string Msg_Success_Parent_Registration {
@@ -2851,15 +2862,6 @@ namespace Maktab.Consumer.Localization {
         public static string Msg_Success_Participant_Updated {
             get {
                 return ResourceManager.GetString("Msg_Success_Participant_Updated", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Enrollment Remove successfully.
-        /// </summary>
-        public static string Msg_Success_Remove_Enrollment {
-            get {
-                return ResourceManager.GetString("Msg_Success_Remove_Enrollment", resourceCulture);
             }
         }
         
