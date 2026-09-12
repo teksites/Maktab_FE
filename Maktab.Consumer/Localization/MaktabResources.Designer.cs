@@ -2324,7 +2324,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Participant has been enrolled in the waiting list for a group that is full. The fee showing as payable above includes this enrollment. If you wish to guarantee a spot for your child in the school / activity, you must enroll your child in another available group. You will need to delete the enrollment marked as “In Waiting” from below and enroll in another available group for the same school and course.
+        ///   Looks up a localized string similar to Participant has been enrolled in the waiting list for a group that is full. The fee showing as payable above includes this enrollment. If you wish to guarantee a spot for your child in the school / activity, you must enroll your child in another available group. You will need to cancel the enrollment marked as “In Waiting” from below and enroll in another available group for the same school and course.
         /// </summary>
         public static string Msg_Info_Has_Awaiting_Enrollment {
             get {
