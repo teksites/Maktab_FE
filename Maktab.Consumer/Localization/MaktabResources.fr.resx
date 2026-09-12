@@ -1565,15 +1565,15 @@
   <data name="Btn_Refresh_Now" xml:space="preserve">
     <value>Actualiser</value>
   </data>
-  <data name="Msg_Question_Remove_Enrollment" xml:space="preserve">
-    <value>En confirmant l'annulation, vous reconnaissez que cette inscription sera résiliée et que pour vous réinscrire au même cours/groupe, vous devez contacter l'administrateur de l'école.
-
-Souhaitez-vous procéder à l'annulation ?</value>
-  </data>
   <data name="Msg_Error_Enrollment_Status_Not_Updated" xml:space="preserve">
     <value>Le statut d'inscription ne peut pas être mis à jour pour le moment, veuillez essayer dans quelques minutes</value>
   </data>
   <data name="Msg_Success_Enrollment_Status_Updated" xml:space="preserve">
     <value>Statut d'inscription mis à jour avec succès</value>
+  </data>
+  <data name="Msg_Question_Remove_Enrollment" xml:space="preserve">
+    <value>En confirmant l'annulation, vous reconnaissez que cette inscription sera annulée.
+
+Souhaitez-vous procéder à l'annulation ?</value>
   </data>
 </root>

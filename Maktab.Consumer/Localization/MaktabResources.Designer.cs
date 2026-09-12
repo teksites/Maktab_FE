@@ -2639,7 +2639,7 @@ namespace Maktab.Consumer.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to By confirming cancellation, you acknowledge that this enrollment will be terminated, and to re-enroll in the same course/group, you must reach out to the school administrator.
+        ///   Looks up a localized string similar to By confirming cancellation, you acknowledge that this enrollment will be cancelled.
         ///
         ///Do you wish to proceed with the cancellation?.
         /// </summary>
