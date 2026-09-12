@@ -303,7 +303,7 @@
                bool? result = await DialogService.ShowMessageBox(
                       L[MaktabResources.Warning],
                      L[MaktabResources.Msg_Question_Remove_Enrollment],
-                      yesText: L[MaktabResources.Remove], cancelText: L[MaktabResources.Cancel]);
+                      yesText: L[MaktabResources.Cancel], cancelText: L[MaktabResources.Go_Back]);
                if (result.HasValue && result.Value)
                {
                     var addEnrollmentTransactionRequest = new MaktabDataContracts.Requests.Course.AddStudentCourseEnrollment()
